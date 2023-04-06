@@ -18,6 +18,7 @@ import {
 } from "./utils";
 import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar from "@/components/LeftSidebar";
+import Datepicker from "react-tailwindcss-datepicker";
 
 const tooltipSytles = {
   backgroundColor: "black",
@@ -45,7 +46,78 @@ const inputFromType = (
   >,
   type?: string
 ) => {
+  console.log(element.id, type);
   switch (type) {
+    case "Age":
+      return (
+        <input
+          type="number"
+          id={removeDots(element.id)}
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder=""
+          onChange={(e) => {
+            setInputData([
+              ...inputData,
+              { id: element.id, value: e.target.value },
+            ]);
+          }}
+        />
+      );
+    case "dateTime":
+      return (
+        <input
+          type="text"
+          id={removeDots(element.id)}
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="YYYY/MM/DD"
+          onChange={(e) => {
+            setInputData([
+              ...inputData,
+              { id: element.id, value: e.target.value },
+            ]);
+          }}
+        />
+      );
+    case "Period":
+      return (
+        <div className="flex flex-row w-full gap-8">
+          <div className="flex flex-col w-1/2">
+            <label className="light text-xs">Start</label>
+            <input
+              type="text"
+              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="YYYY/MM/DD"
+            />
+          </div>
+          <div className="flex flex-col w-1/2">
+            <label className="light text-xs">End</label>
+            <input
+              type="text"
+              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="YYYY/MM/DD"
+            />
+          </div>
+        </div>
+      );
+    case "CodeableConcept":
+      return (
+        <div className="flex flex-row w-full gap-8">
+          <div className="flex flex-col w-1/2">
+            <label className="light text-xs">system</label>
+            <input
+              type="text"
+              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
+          <div className="flex flex-col w-1/2">
+            <label className="light text-xs">code</label>
+            <input
+              type="text"
+              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
+        </div>
+      );
     case "string":
       return <input type="text" className="w-full" />;
     default:
@@ -171,7 +243,7 @@ const index = () => {
                       .map((element) => (
                         <div
                           key={element.id}
-                          className="flex flex-col gap-1 p-2"
+                          className="flex flex-col gap-0.5 py-4"
                         >
                           <div className="flex flex-row justify-between items-center">
                             <div className="flex flex-row gap-4 items-center">
@@ -188,6 +260,20 @@ const index = () => {
                               <select
                                 id="countries"
                                 className="bg-gray-50 py-1 px-4 border w-56 border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                onChange={(e) => {
+                                  setElementTypes(
+                                    elementTypes.map((type) => {
+                                      if (type.id === element.id) {
+                                        return {
+                                          id: type.id,
+                                          type: e.target.value,
+                                        };
+                                      } else {
+                                        return type;
+                                      }
+                                    })
+                                  );
+                                }}
                               >
                                 {element.type ? (
                                   element.type.map((type) => (
@@ -229,11 +315,9 @@ const index = () => {
                             element,
                             inputData,
                             setInputData,
-                            elementTypes.map((el) => {
-                              if (el.id === element.id) {
-                                return el.type;
-                              }
-                            })[0]
+                            elementTypes.filter((el) => {
+                              return el.id == element.id;
+                            })[0].type
                           )}
                         </div>
                       ))}
