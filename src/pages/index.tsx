@@ -30,7 +30,6 @@ const tooltipSytles = {
 };
 
 const inputFromType = (
-  type: string,
   element: Element,
   inputData: {
     id: string;
@@ -43,7 +42,8 @@ const inputFromType = (
         value: string;
       }[]
     >
-  >
+  >,
+  type?: string
 ) => {
   switch (type) {
     case "string":
@@ -53,7 +53,7 @@ const inputFromType = (
         <input
           type="text"
           id={removeDots(element.id)}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder=""
           onChange={(e) => {
             setInputData([
@@ -66,12 +66,18 @@ const inputFromType = (
   }
 };
 
+type ElementType = {
+  id: string;
+  type: string;
+};
+
 const index = () => {
   const [selectedResource, setSelectedResource] =
     React.useState<string>("Patient");
   const [profile, setProfile] = React.useState<StructureDefinition>();
   const [profileElements, setProfileElements] = React.useState<Elements>();
   const [checkedIds, setCheckedIds] = React.useState<string[]>([]);
+  const [elementTypes, setElementTypes] = React.useState<ElementType[]>([]);
 
   const [inputData, setInputData] = React.useState<
     { id: string; value: string }[]
@@ -90,6 +96,15 @@ const index = () => {
         } else {
           elements = { element: [] };
         }
+        setElementTypes(
+          elements.element.map((element) => {
+            if (element.type) {
+              return { id: element.id, type: element.type[0].code };
+            } else {
+              return { id: element.id, type: "string" };
+            }
+          })
+        );
         setProfileElements(elements);
         setCheckedIds(
           elements.element
@@ -117,10 +132,10 @@ const index = () => {
               }}
             ></Select>
             <div className="flex flex-row gap-4">
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded">
                 Upload Profile
               </button>
-              <button className="bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded">
+              <button className="bg-green-600 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded">
                 Submit
               </button>
             </div>
@@ -154,18 +169,37 @@ const index = () => {
                           checkedIds.includes(element.id)
                       )
                       .map((element) => (
-                        <div key={element.id} className="p-2">
+                        <div
+                          key={element.id}
+                          className="flex flex-col gap-1 p-2"
+                        >
                           <div className="flex flex-row justify-between items-center">
-                            <label
-                              htmlFor="element-value"
-                              className={`block text-sm font-medium text-gray-900 dark:text-white ${
-                                element.min > 0
-                                  ? "after:text-red-600 after:content-['*']"
-                                  : ""
-                              }`}
-                            >
-                              {element.id}
-                            </label>
+                            <div className="flex flex-row gap-4 items-center">
+                              <label
+                                htmlFor="element-value"
+                                className={`block w-48 text-sm font-medium text-gray-900 dark:text-white ${
+                                  element.min > 0
+                                    ? "after:text-red-600 after:content-['*']"
+                                    : ""
+                                }`}
+                              >
+                                {element.id}
+                              </label>
+                              <select
+                                id="countries"
+                                className="bg-gray-50 py-1 px-4 border w-56 border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                              >
+                                {element.type ? (
+                                  element.type.map((type) => (
+                                    <option value={type.code}>
+                                      {type.code}
+                                    </option>
+                                  ))
+                                ) : (
+                                  <option value="string">string</option>
+                                )}
+                              </select>
+                            </div>
                             <div className="flex flex-row gap-4 items-center">
                               {parseMaxString(element.max) > 1 ? (
                                 <button>
@@ -192,10 +226,14 @@ const index = () => {
                             </div>
                           </div>
                           {inputFromType(
-                            element.type![0].code,
                             element,
                             inputData,
-                            setInputData
+                            setInputData,
+                            elementTypes.map((el) => {
+                              if (el.id === element.id) {
+                                return el.type;
+                              }
+                            })[0]
                           )}
                         </div>
                       ))}
