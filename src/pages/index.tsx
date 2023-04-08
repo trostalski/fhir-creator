@@ -1,7 +1,7 @@
 import React from "react";
 import Select from "react-select";
 import { resourceOptions } from "@/constants";
-import { Elements, StructureDefinition, Element } from "@/types";
+import { Elements, StructureDefinition } from "@/types";
 import Header from "@/components/Header";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { GrFormAdd } from "react-icons/gr";
@@ -18,7 +18,8 @@ import {
 } from "./utils";
 import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar from "@/components/LeftSidebar";
-import Datepicker from "react-tailwindcss-datepicker";
+import InputFromType from "@/components/InputFromType";
+import { CodeableConcept, Age, Period, Range } from "fhir/r4";
 
 const tooltipSytles = {
   backgroundColor: "black",
@@ -30,113 +31,6 @@ const tooltipSytles = {
   width: "300px",
 };
 
-const inputFromType = (
-  element: Element,
-  inputData: {
-    id: string;
-    value: string;
-  }[],
-  setInputData: React.Dispatch<
-    React.SetStateAction<
-      {
-        id: string;
-        value: string;
-      }[]
-    >
-  >,
-  type?: string
-) => {
-  console.log(element.id, type);
-  switch (type) {
-    case "Age":
-      return (
-        <input
-          type="number"
-          id={removeDots(element.id)}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder=""
-          onChange={(e) => {
-            setInputData([
-              ...inputData,
-              { id: element.id, value: e.target.value },
-            ]);
-          }}
-        />
-      );
-    case "dateTime":
-      return (
-        <input
-          type="text"
-          id={removeDots(element.id)}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="YYYY/MM/DD"
-          onChange={(e) => {
-            setInputData([
-              ...inputData,
-              { id: element.id, value: e.target.value },
-            ]);
-          }}
-        />
-      );
-    case "Period":
-      return (
-        <div className="flex flex-row w-full gap-8">
-          <div className="flex flex-col w-1/2">
-            <label className="light text-xs">Start</label>
-            <input
-              type="text"
-              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="YYYY/MM/DD"
-            />
-          </div>
-          <div className="flex flex-col w-1/2">
-            <label className="light text-xs">End</label>
-            <input
-              type="text"
-              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="YYYY/MM/DD"
-            />
-          </div>
-        </div>
-      );
-    case "CodeableConcept":
-      return (
-        <div className="flex flex-row w-full gap-8">
-          <div className="flex flex-col w-1/2">
-            <label className="light text-xs">system</label>
-            <input
-              type="text"
-              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            />
-          </div>
-          <div className="flex flex-col w-1/2">
-            <label className="light text-xs">code</label>
-            <input
-              type="text"
-              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            />
-          </div>
-        </div>
-      );
-    case "string":
-      return <input type="text" className="w-full" />;
-    default:
-      return (
-        <input
-          type="text"
-          id={removeDots(element.id)}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder=""
-          onChange={(e) => {
-            setInputData([
-              ...inputData,
-              { id: element.id, value: e.target.value },
-            ]);
-          }}
-        />
-      );
-  }
-};
 
 type ElementType = {
   id: string;
@@ -144,8 +38,6 @@ type ElementType = {
 };
 
 const index = () => {
-  const [selectedResource, setSelectedResource] =
-    React.useState<string>("Patient");
   const [profile, setProfile] = React.useState<StructureDefinition>();
   const [profileElements, setProfileElements] = React.useState<Elements>();
   const [checkedIds, setCheckedIds] = React.useState<string[]>([]);
@@ -156,7 +48,6 @@ const index = () => {
   >([]);
 
   const handleSelectResourceType = (value: string) => {
-    setSelectedResource(value);
     let elements: Elements;
     import(`../data/profiles/${value}_profile.json`).then(
       (profile: StructureDefinition) => {
@@ -187,6 +78,8 @@ const index = () => {
     );
   };
 
+  console.log("input data: ", inputData);
+
   return (
     <div className="w-screen h-screen overflow-hidden">
       <Header />
@@ -197,18 +90,19 @@ const index = () => {
         <div className="grow p-4">
           <div className="flex flex-row w-full justify-between items-center">
             <Select
-              className="w-1/2"
+              className="w-3/4"
               options={resourceOptions}
               onChange={(e) => {
-                handleSelectResourceType(e.value);
+                handleSelectResourceType(e!.value);
               }}
             ></Select>
             <div className="flex flex-row gap-4">
-              <button className="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded">
-                Upload Profile
+              <button className="bg-blue-500 max-h-8 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded">
+                <input type="file" hidden />
+                Load Profile
               </button>
-              <button className="bg-green-600 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded">
-                Submit
+              <button className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded">
+                Add Resource
               </button>
             </div>
           </div>
@@ -246,7 +140,7 @@ const index = () => {
                           className="flex flex-col gap-0.5 py-4"
                         >
                           <div className="flex flex-row justify-between items-center">
-                            <div className="flex flex-row gap-4 items-center">
+                            <div className="flex flex-row gap-2 items-center">
                               <label
                                 htmlFor="element-value"
                                 className={`block w-48 text-sm font-medium text-gray-900 dark:text-white ${
@@ -258,8 +152,9 @@ const index = () => {
                                 {element.id}
                               </label>
                               <select
-                                id="countries"
-                                className="bg-gray-50 py-1 px-4 border w-56 border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                id="element-type"
+                                placeholder="Type"
+                                className="bg-white py-0.5 px-4 border w-40 border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 onChange={(e) => {
                                   setElementTypes(
                                     elementTypes.map((type) => {
@@ -311,14 +206,16 @@ const index = () => {
                               />
                             </div>
                           </div>
-                          {inputFromType(
-                            element,
-                            inputData,
-                            setInputData,
-                            elementTypes.filter((el) => {
-                              return el.id == element.id;
-                            })[0].type
-                          )}
+                          <InputFromType
+                            element={element}
+                            inputData={inputData}
+                            setInputData={setInputData}
+                            type={
+                              elementTypes.filter((el) => {
+                                return el.id == element.id;
+                              })[0].type
+                            }
+                          />
                         </div>
                       ))}
                   </div>

@@ -11,13 +11,13 @@ interface ProfileCheckboxesProps {
 
 export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
   return (
-    <div>
-      <div className="flex flex-row gap-8 items-center">
+    <div className="p-2">
+      <div className="flex flex-row gap-8 items-center justify-center w-full">
         <button
-          className="text-blue-800 font-bold"
+          className="text-blue-600 font-bold"
           onClick={(e) => {
             if (
-              props.profileElements?.element.length > props.checkedIds.length
+              props.profileElements?.element.length > props.checkedIds?.length
             ) {
               console.log("checked ids: ", props.checkedIds);
               props.setCheckedIds(
@@ -28,13 +28,13 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
             }
           }}
         >
-          toggle all
+          toggle
         </button>
         <button
-          className="text-gray-800 font-bold"
+          className="text-gray-500 font-bold"
           onClick={(e) =>
             props.setCheckedIds(
-              props.profileElements.element
+              props.profileElements?.element
                 .map((element) => element.id)
                 .filter((id) => idIsImportant(id))
             )
@@ -80,22 +80,22 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
 const RightSidebar = (props: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   return (
-    <div>
+    <div className="relative bg-gray-50 h-full overflow-scroll">
       {isOpen ? (
-        <div className="relative p-2 w-72 bg-gray-50 h-full overflow-scroll">
+        <div className="w-72 bg-inherit">
           <button
             onClick={(e) => setIsOpen(!isOpen)}
-            className="flex flex-row items-center sticky top-0 w-full bg-inherit h-8"
+            className="flex p-2 flex-row bg-inherit items-center sticky top-2 w-full h-8"
           >
             <RxHamburgerMenu />
           </button>
           {props.children}
         </div>
       ) : (
-        <div className="relative w-12 bg-gray-50 h-full overflow-scroll">
+        <div className="w-12 bg-inherit">
           <button
             onClick={(e) => setIsOpen(!isOpen)}
-            className="fixed top-14 right-4"
+            className="fixed top-12 right-4"
           >
             <RxHamburgerMenu />
           </button>
