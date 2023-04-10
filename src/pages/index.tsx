@@ -16,11 +16,12 @@ import {
   removeDots,
   idIsImportant,
   createJsonFromPathArray,
+  getUid,
 } from "./utils";
 import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
-import LeftSidebar from "@/components/LeftSidebar";
+import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
 import InputFromType from "@/components/InputFromType";
-import { CodeableConcept, Age, Period, Range } from "fhir/r4";
+import useFhirResources from "@/hooks/useFhirResources";
 
 const tooltipSytles = {
   backgroundColor: "black",
@@ -47,6 +48,8 @@ const index = () => {
     { path: string; value: string }[]
   >([]);
 
+  const { addResources } = useFhirResources();
+
   const handleSelectResourceType = (value: string) => {
     let elements: Elements;
     import(`../data/profiles/${value}_profile.json`).then(
@@ -69,6 +72,17 @@ const index = () => {
           })
         );
         setProfileElements(elements);
+        setInputData([
+          ...inputData,
+          {
+            path: "resourceType",
+            value: profile.type as string,
+          },
+          {
+            path: "id",
+            value: (profile.type as string) + "/" + getUid(),
+          },
+        ]);
         setCheckedIds(
           elements.element
             .map((element) => element.id)
@@ -85,7 +99,7 @@ const index = () => {
       <Header />
       <main className="flex flex-row pt-8 h-full w-full">
         <LeftSidebar>
-          <></>
+          <ResourceIdList />
         </LeftSidebar>
         <div className="grow p-4">
           <div className="flex flex-row w-full justify-between items-center">
@@ -104,10 +118,9 @@ const index = () => {
               <button
                 className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded"
                 onClick={() => {
-                  console.log(
-                    "add resource: ",
-                    createJsonFromPathArray(inputData)
-                  );
+                  const resource = createJsonFromPathArray(inputData);
+                  console.log("resource: ", resource);
+                  addResources([resource]);
                 }}
               >
                 Add Resource
@@ -116,9 +129,11 @@ const index = () => {
           </div>
           <div className="h-full pb-10 overflow-scroll">
             {!profile ? null : (
-              <div>
+              <div className="">
                 <div className="flex flex-row gap-4 items-center">
-                  <h3 className="text-xl font-extralight">{profile.name}</h3>
+                  <h3 className="text-xl font-extralight p-4">
+                    {profile.name}
+                  </h3>
                   <div
                     id="description-anchor"
                     data-tooltip-id="description-tooltip"
@@ -135,7 +150,7 @@ const index = () => {
                   />
                 </div>
                 <IconContext.Provider value={{ color: "gray", size: "16px" }}>
-                  <div className="">
+                  <div className="flex flex-col gap-2">
                     {profileElements!.element
                       .filter(
                         (element) =>
@@ -151,7 +166,7 @@ const index = () => {
                       .map((element) => (
                         <div
                           key={element.id}
-                          className="flex flex-col gap-0.5 py-4"
+                          className="flex flex-col gap-0.5 p-4 rounded-md shadow-md bg-blue-100"
                         >
                           <div className="flex flex-row justify-between items-center">
                             <div className="flex flex-row gap-2 items-center">
@@ -165,6 +180,8 @@ const index = () => {
                               >
                                 {element.id}
                               </label>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center">
                               <select
                                 id="element-type"
                                 placeholder="Type"
@@ -194,13 +211,15 @@ const index = () => {
                                   <option value="string">string</option>
                                 )}
                               </select>
-                            </div>
-                            <div className="flex flex-row gap-4 items-center">
                               {parseMaxString(element.max) > 1 ? (
                                 <button>
                                   <GrFormAdd />
                                 </button>
-                              ) : null}
+                              ) : (
+                                <button disabled>
+                                  <GrFormAdd style={{ opacity: 0.2 }} />
+                                </button>
+                              )}
                               <div
                                 id={`${removeDots(element.id)}-anchor`}
                                 data-tooltip-id={`${removeDots(
@@ -225,6 +244,7 @@ const index = () => {
                             inputData={inputData}
                             setInputData={setInputData}
                             isArray={parseMaxString(element.max) > 1}
+                            resourceType={profile.type as string}
                             type={
                               elementTypes.filter((el) => {
                                 return el.id == element.id;

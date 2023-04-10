@@ -1,5 +1,4 @@
 export const notImportantIdSuffices = [
-  "id",
   "meta",
   "implicitRules",
   "language",

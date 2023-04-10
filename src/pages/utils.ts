@@ -37,6 +37,10 @@ export const idIsImportant = (id: string) => {
   return !notImportantIdSuffices.some((suffix) => id.endsWith(suffix));
 };
 
+export const getUid = function () {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+};
+
 export function createJsonFromPathList(pathList: string[], value: any): any {
   const result = {}; // Initialize the result object
 

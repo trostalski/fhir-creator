@@ -10,11 +10,19 @@ interface ProfileCheckboxesProps {
 }
 
 export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
+  const [searchInput, setSearchInput] = React.useState<string | null>(null);
   return (
-    <div className="p-2">
-      <div className="flex flex-row gap-8 items-center justify-center w-full">
+    <div className="flex flex-col gap-1 p-2">
+      <div className="p-2 flex flex-row gap-2 items-center w-full">
+        <input
+          placeholder="search"
+          className="h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          onChange={(e) => {
+            setSearchInput(e.target.value);
+          }}
+        />
         <button
-          className="text-blue-600 font-bold"
+          className="text-blue-600 font-bold text-xs"
           onClick={(e) => {
             if (
               props.profileElements?.element.length > props.checkedIds?.length
@@ -31,7 +39,7 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
           toggle
         </button>
         <button
-          className="text-gray-500 font-bold"
+          className="text-gray-500 font-bold text-xs"
           onClick={(e) =>
             props.setCheckedIds(
               props.profileElements?.element
@@ -47,8 +55,15 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
         ? null
         : props.profileElements.element
             .filter((element) => containsDot(element.id))
+            .filter((element) => {
+              if (searchInput) {
+                return element.id.includes(searchInput);
+              } else {
+                return true;
+              }
+            })
             .map((element) => (
-              <div className="flex items-center">
+              <div className="flex items-center" key={element.id}>
                 <input
                   id="default-checkbox"
                   type="checkbox"
@@ -67,7 +82,7 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
                 />
                 <label
                   htmlFor="default-checkbox"
-                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  className="ml-2 text-xs font-medium text-gray-900 dark:text-gray-300"
                 >
                   {element.id}
                 </label>
@@ -80,9 +95,9 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
 const RightSidebar = (props: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   return (
-    <div className="relative bg-gray-50 h-full overflow-scroll">
+    <div className="relative bg-gray-50 shadow-md h-full overflow-scroll">
       {isOpen ? (
-        <div className="w-72 bg-inherit">
+        <div className="w-52 bg-inherit">
           <button
             onClick={(e) => setIsOpen(!isOpen)}
             className="flex p-2 flex-row bg-inherit items-center sticky top-2 w-full h-8"

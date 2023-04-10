@@ -21,11 +21,15 @@ interface InputFromTypeProps {
     >
   >;
   isArray: boolean;
+  resourceType?: string;
   type?: string;
 }
 
-const formatIdForPath = (id: string, type: string) => {
+const formatIdForPath = (id: string, type?: string, resourceType?: string) => {
   let result = id;
+  if (id.startsWith(resourceType + ".")) {
+    result = id.replace(resourceType + ".", "");
+  }
   if (isMultiTypeString(id)) {
     result = removeMultiTypeString(result);
     result = result + type;
@@ -50,10 +54,20 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="number"
           id={removeDots(props.element.id)}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="bg-gray-50 h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder=""
+          value={
+            props.inputData.find(
+              (inputData) =>
+                inputData.path ===
+                formatIdForPath(props.element.id, undefined, props.resourceType)
+            )?.value
+          }
           onChange={(e) => {
-            handleChange(e, props.element.id);
+            handleChange(
+              e,
+              formatIdForPath(props.element.id, undefined, props.resourceType)
+            );
           }}
         />
       );
@@ -61,10 +75,20 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="datetime-local"
+          value={
+            props.inputData.find(
+              (inputData) =>
+                inputData.path ===
+                formatIdForPath(props.element.id, undefined, props.resourceType)
+            )?.value
+          }
           id={removeDots(props.element.id)}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="bg-gray-50 h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           onChange={(e) => {
-            handleChange(e, props.element.id);
+            handleChange(
+              e,
+              formatIdForPath(props.element.id, undefined, props.resourceType)
+            );
           }}
         />
       );
@@ -75,10 +99,28 @@ const InputFromType = (props: InputFromTypeProps) => {
             <label className="light text-xs">Start</label>
             <input
               type="datetime-local"
-              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={
+                props.inputData.find(
+                  (inputData) =>
+                    inputData.path ===
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    )
+                )?.value
+              }
+              className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="YYYY/MM/DD"
               onChange={(e) => {
-                handleChange(e, props.element.id + ".Start");
+                handleChange(
+                  e,
+                  formatIdForPath(
+                    props.element.id,
+                    undefined,
+                    props.resourceType
+                  ) + ".Start"
+                );
               }}
             />
           </div>
@@ -86,10 +128,28 @@ const InputFromType = (props: InputFromTypeProps) => {
             <label className="light text-xs">End</label>
             <input
               type="datetime-local"
-              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={
+                props.inputData.find(
+                  (inputData) =>
+                    inputData.path ===
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    )
+                )?.value
+              }
+              className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="YYYY/MM/DD"
               onChange={(e) => {
-                handleChange(e, props.element.id + ".End");
+                handleChange(
+                  e,
+                  formatIdForPath(
+                    props.element.id,
+                    undefined,
+                    props.resourceType
+                  ) + ".End"
+                );
               }}
             />
           </div>
@@ -103,26 +163,54 @@ const InputFromType = (props: InputFromTypeProps) => {
             <div className="flex flex-row gap-2">
               <input
                 type="number"
+                value={
+                  props.inputData.find(
+                    (inputData) =>
+                      inputData.path ===
+                      formatIdForPath(
+                        props.element.id,
+                        undefined,
+                        props.resourceType
+                      )
+                  )?.value
+                }
                 step={0.01}
-                className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="value"
                 onChange={(e) => {
                   handleChange(
                     e,
-                    formatIdForPath(props.element.id, props.type!) +
-                      ".low.value"
+                    formatIdForPath(
+                      props.element.id,
+                      props.type!,
+                      props.resourceType
+                    ) + ".low.value"
                   );
                 }}
               />
               <input
                 type="text"
-                className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={
+                  props.inputData.find(
+                    (inputData) =>
+                      inputData.path ===
+                      formatIdForPath(
+                        props.element.id,
+                        undefined,
+                        props.resourceType
+                      )
+                  )?.value
+                }
+                className="bg-gray-50 w-full h-8 p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="currency"
                 onChange={(e) => {
                   handleChange(
                     e,
-                    formatIdForPath(props.element.id, props.type!) +
-                      ".low.currency"
+                    formatIdForPath(
+                      props.element.id,
+                      props.type!,
+                      props.resourceType
+                    ) + ".low.currency"
                   );
                 }}
               />
@@ -134,25 +222,42 @@ const InputFromType = (props: InputFromTypeProps) => {
               <input
                 type="number"
                 step={0.01}
-                className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={
+                  props.inputData.find(
+                    (inputData) =>
+                      inputData.path ===
+                      formatIdForPath(
+                        props.element.id,
+                        undefined,
+                        props.resourceType
+                      )
+                  )?.value
+                }
+                className="bg-gray-50 w-full h-8 p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="value"
                 onChange={(e) => {
                   handleChange(
                     e,
-                    formatIdForPath(props.element.id, props.type!) +
-                      ".high.value"
+                    formatIdForPath(
+                      props.element.id,
+                      props.type!,
+                      props.resourceType
+                    ) + ".high.value"
                   );
                 }}
               />
               <input
                 type="text"
-                className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 w-full h-8 p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="currency"
                 onChange={(e) => {
                   handleChange(
                     e,
-                    formatIdForPath(props.element.id, props.type!) +
-                      ".high.currency"
+                    formatIdForPath(
+                      props.element.id,
+                      props.type!,
+                      props.resourceType
+                    ) + ".high.currency"
                   );
                 }}
               />
@@ -167,12 +272,37 @@ const InputFromType = (props: InputFromTypeProps) => {
             <label className="light text-xs">system</label>
             <input
               type="text"
-              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={
+                props.inputData.find(
+                  (inputData) =>
+                    inputData.path ===
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    )
+                )?.value
+              }
+              className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
                 if (props.isArray) {
-                  handleChange(e, props.element.id + "[0].coding[0].system");
+                  handleChange(
+                    e,
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    ) + "[0].coding[0].system"
+                  );
                 } else {
-                  handleChange(e, props.element.id + ".coding[0].system");
+                  handleChange(
+                    e,
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    ) + ".coding[0].system"
+                  );
                 }
               }}
             />
@@ -181,12 +311,37 @@ const InputFromType = (props: InputFromTypeProps) => {
             <label className="light text-xs">code</label>
             <input
               type="text"
-              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={
+                props.inputData.find(
+                  (inputData) =>
+                    inputData.path ===
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    )
+                )?.value
+              }
+              className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
                 if (props.isArray) {
-                  handleChange(e, props.element.id + "[0].coding[0].code");
+                  handleChange(
+                    e,
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    ) + "[0].coding[0].code"
+                  );
                 } else {
-                  handleChange(e, props.element.id + ".coding[0].code");
+                  handleChange(
+                    e,
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    ) + ".coding[0].code"
+                  );
                 }
               }}
             />
@@ -195,12 +350,37 @@ const InputFromType = (props: InputFromTypeProps) => {
             <label className="light text-xs">display</label>
             <input
               type="text"
-              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={
+                props.inputData.find(
+                  (inputData) =>
+                    inputData.path ===
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    )
+                )?.value
+              }
+              className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
                 if (props.isArray) {
-                  handleChange(e, props.element.id + "[0].coding[0].display");
+                  handleChange(
+                    e,
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    ) + "[0].coding[0].display"
+                  );
                 } else {
-                  handleChange(e, props.element.id + ".coding[0].display");
+                  handleChange(
+                    e,
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    ) + ".coding[0].display"
+                  );
                 }
               }}
             />
@@ -212,11 +392,30 @@ const InputFromType = (props: InputFromTypeProps) => {
         <div className="flex flex-row w-full gap-8">
           <div className="flex flex-col w-1/2">
             <label className="light text-xs">author</label>
+
             <input
               type="text"
-              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={
+                props.inputData.find(
+                  (inputData) =>
+                    inputData.path ===
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    )
+                )?.value
+              }
+              className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
-                handleChange(e, props.element.id + ".authorString");
+                handleChange(
+                  e,
+                  formatIdForPath(
+                    props.element.id,
+                    undefined,
+                    props.resourceType
+                  ) + ".authorString"
+                );
               }}
             />
           </div>
@@ -224,9 +423,27 @@ const InputFromType = (props: InputFromTypeProps) => {
             <label className="light text-xs">time</label>
             <input
               type="time"
-              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={
+                props.inputData.find(
+                  (inputData) =>
+                    inputData.path ===
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    )
+                )?.value
+              }
               onChange={(e) => {
-                handleChange(e, props.element.id + ".time");
+                handleChange(
+                  e,
+                  formatIdForPath(
+                    props.element.id,
+                    undefined,
+                    props.resourceType
+                  ) + ".time"
+                );
               }}
             />
           </div>
@@ -234,9 +451,27 @@ const InputFromType = (props: InputFromTypeProps) => {
             <label className="light text-xs">text</label>
             <input
               type="text"
-              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={
+                props.inputData.find(
+                  (inputData) =>
+                    inputData.path ===
+                    formatIdForPath(
+                      props.element.id,
+                      undefined,
+                      props.resourceType
+                    )
+                )?.value
+              }
+              className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
-                handleChange(e, props.element.id + ".text");
+                handleChange(
+                  e,
+                  formatIdForPath(
+                    props.element.id,
+                    undefined,
+                    props.resourceType
+                  ) + ".text"
+                );
               }}
             />
           </div>
@@ -249,10 +484,20 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="text"
           id={removeDots(props.element.id)}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="bg-gray-50 h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder=""
+          value={
+            props.inputData.find(
+              (inputData) =>
+                inputData.path ===
+                formatIdForPath(props.element.id, undefined, props.resourceType)
+            )?.value
+          }
           onChange={(e) => {
-            handleChange(e, props.element.id);
+            handleChange(
+              e,
+              formatIdForPath(props.element.id, undefined, props.resourceType)
+            );
           }}
         />
       );

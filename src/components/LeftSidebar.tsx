@@ -1,13 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdDoneAll } from "react-icons/io";
+import useFhirResources, { FhirResource } from "@/hooks/useFhirResources";
+
+export const ResourceIdList = () => {
+  const [resources, setResources] = useState<FhirResource[]>([]);
+  const { getResources } = useFhirResources();
+  let resourceIds: string[] = [];
+
+  useEffect(() => {
+    console.log("getting resources");
+    getResources((resources) => {
+      resourceIds = resources.map((resource) => resource.id);
+      setResources(resources);
+    });
+  }, []);
+
+  console.log("resourceIds: ", resourceIds);
+  console.log("resources: ", resources);
+  return (
+    <div className="flex flex-col h-full gap-2 p-2 overflow-scroll">
+      {!resources
+        ? null
+        : resources.map((resource) => (
+            <div className="flex flex-row text-xs gap-2 items-center">
+              <span>{resource.id}</span>
+            </div>
+          ))}
+    </div>
+  );
+};
 
 const LeftSidebar = (props: { children: React.ReactNode }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(true);
+
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-gray-50 shadow-md">
       {isOpen ? (
-        <div className="relative p-2 w-40">
+        <div className="relative h-full p-2 w-60">
           <button
             onClick={(e) => setIsOpen(!isOpen)}
             className="flex flex-row items-center sticky top-0 w-full bg-inherit h-8"
