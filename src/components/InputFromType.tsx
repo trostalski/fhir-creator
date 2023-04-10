@@ -1,72 +1,46 @@
-import { removeDots } from "@/pages/utils";
+import {
+  isMultiTypeString,
+  removeDots,
+  removeMultiTypeString,
+} from "@/pages/utils";
 import { Element } from "@/types";
 import { CodeableConcept, Age, Period, Range } from "fhir/r4";
 
 interface InputFromTypeProps {
   element: Element;
   inputData: {
-    id: string;
+    path: string;
     value: any; // TODO use the input type and the FHIR library to set the type for the value
   }[];
   setInputData: React.Dispatch<
     React.SetStateAction<
       {
-        id: string;
+        path: string;
         value: string;
       }[]
     >
   >;
+  isArray: boolean;
   type?: string;
 }
 
+const formatIdForPath = (id: string, type: string) => {
+  let result = id;
+  if (isMultiTypeString(id)) {
+    result = removeMultiTypeString(result);
+    result = result + type;
+  }
+  return result;
+};
+
 const InputFromType = (props: InputFromTypeProps) => {
-  const handleChangePrimitive = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.setInputData([
-      ...props.inputData.filter((input) => input.id !== props.element.id),
-      { id: props.element.id, value: e.target.value },
-    ]);
-  };
-
-  const handleChangeOneComplex = (
+  const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    key: string
+    path: string
   ) => {
-    let entry = props.inputData.find((input) => input.id === props.element.id);
-    if (entry) {
-      entry.value[key] = e.target.value;
-    } else {
-      entry = {
-        id: props.element.id,
-        value: { [key]: e.target.value },
-      };
-    }
     props.setInputData([
-      ...props.inputData.filter((input) => input.id !== props.element.id),
-      entry,
-    ]);
-  };
-
-  const handleChangeTwoComplex = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    key_1: string,
-    key_2: string
-  ) => {
-    let entry = props.inputData.find((input) => input.id === props.element.id);
-    if (entry) {
-      if (entry.value[key_1]) {
-        entry.value[key_1][key_2] = e.target.value;
-      } else {
-        entry.value[key_1] = { [key_2]: e.target.value };
-      }
-    } else {
-      entry = {
-        id: props.element.id,
-        value: { [key_1]: { [key_2]: e.target.value } },
-      };
-    }
-    props.setInputData([
-      ...props.inputData.filter((input) => input.id !== props.element.id),
-      entry,
+      ...props.inputData.filter((inputData) => inputData.path !== path),
+      { path: path, value: e.target.value },
     ]);
   };
 
@@ -79,7 +53,7 @@ const InputFromType = (props: InputFromTypeProps) => {
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder=""
           onChange={(e) => {
-            handleChangePrimitive(e);
+            handleChange(e, props.element.id);
           }}
         />
       );
@@ -90,7 +64,7 @@ const InputFromType = (props: InputFromTypeProps) => {
           id={removeDots(props.element.id)}
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           onChange={(e) => {
-            handleChangePrimitive(e);
+            handleChange(e, props.element.id);
           }}
         />
       );
@@ -104,7 +78,7 @@ const InputFromType = (props: InputFromTypeProps) => {
               className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="YYYY/MM/DD"
               onChange={(e) => {
-                handleChangeOneComplex(e, "Start");
+                handleChange(e, props.element.id + ".Start");
               }}
             />
           </div>
@@ -115,7 +89,7 @@ const InputFromType = (props: InputFromTypeProps) => {
               className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="YYYY/MM/DD"
               onChange={(e) => {
-                handleChangeOneComplex(e, "End");
+                handleChange(e, props.element.id + ".End");
               }}
             />
           </div>
@@ -133,7 +107,11 @@ const InputFromType = (props: InputFromTypeProps) => {
                 className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="value"
                 onChange={(e) => {
-                  handleChangeTwoComplex(e, "low", "value");
+                  handleChange(
+                    e,
+                    formatIdForPath(props.element.id, props.type!) +
+                      ".low.value"
+                  );
                 }}
               />
               <input
@@ -141,7 +119,11 @@ const InputFromType = (props: InputFromTypeProps) => {
                 className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="currency"
                 onChange={(e) => {
-                  handleChangeTwoComplex(e, "low", "currency");
+                  handleChange(
+                    e,
+                    formatIdForPath(props.element.id, props.type!) +
+                      ".low.currency"
+                  );
                 }}
               />
             </div>
@@ -155,7 +137,11 @@ const InputFromType = (props: InputFromTypeProps) => {
                 className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="value"
                 onChange={(e) => {
-                  handleChangeTwoComplex(e, "high", "value");
+                  handleChange(
+                    e,
+                    formatIdForPath(props.element.id, props.type!) +
+                      ".high.value"
+                  );
                 }}
               />
               <input
@@ -163,7 +149,11 @@ const InputFromType = (props: InputFromTypeProps) => {
                 className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="currency"
                 onChange={(e) => {
-                  handleChangeTwoComplex(e, "high", "currency");
+                  handleChange(
+                    e,
+                    formatIdForPath(props.element.id, props.type!) +
+                      ".high.currency"
+                  );
                 }}
               />
             </div>
@@ -179,7 +169,11 @@ const InputFromType = (props: InputFromTypeProps) => {
               type="text"
               className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
-                handleChangeOneComplex(e, "system");
+                if (props.isArray) {
+                  handleChange(e, props.element.id + "[0].coding[0].system");
+                } else {
+                  handleChange(e, props.element.id + ".coding[0].system");
+                }
               }}
             />
           </div>
@@ -189,7 +183,11 @@ const InputFromType = (props: InputFromTypeProps) => {
               type="text"
               className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
-                handleChangeOneComplex(e, "code");
+                if (props.isArray) {
+                  handleChange(e, props.element.id + "[0].coding[0].code");
+                } else {
+                  handleChange(e, props.element.id + ".coding[0].code");
+                }
               }}
             />
           </div>
@@ -199,7 +197,11 @@ const InputFromType = (props: InputFromTypeProps) => {
               type="text"
               className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
-                handleChangeOneComplex(e, "display");
+                if (props.isArray) {
+                  handleChange(e, props.element.id + "[0].coding[0].display");
+                } else {
+                  handleChange(e, props.element.id + ".coding[0].display");
+                }
               }}
             />
           </div>
@@ -208,39 +210,40 @@ const InputFromType = (props: InputFromTypeProps) => {
     case "Annotation":
       return (
         <div className="flex flex-row w-full gap-8">
-        <div className="flex flex-col w-1/2">
-          <label className="light text-xs">author</label>
-          <input
-            type="text"
-            className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            onChange={(e) => {
-              handleChangeOneComplex(e, "authorString");
-            }}
-          />
+          <div className="flex flex-col w-1/2">
+            <label className="light text-xs">author</label>
+            <input
+              type="text"
+              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              onChange={(e) => {
+                handleChange(e, props.element.id + ".authorString");
+              }}
+            />
+          </div>
+          <div className="flex flex-col w-1/2">
+            <label className="light text-xs">time</label>
+            <input
+              type="time"
+              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              onChange={(e) => {
+                handleChange(e, props.element.id + ".time");
+              }}
+            />
+          </div>
+          <div className="flex flex-col w-1/2">
+            <label className="light text-xs">text</label>
+            <input
+              type="text"
+              className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              onChange={(e) => {
+                handleChange(e, props.element.id + ".text");
+              }}
+            />
+          </div>
         </div>
-        <div className="flex flex-col w-1/2">
-          <label className="light text-xs">time</label>
-          <input
-            type="time"
-            className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            onChange={(e) => {
-              handleChangeOneComplex(e, "time");
-            }}
-          />
-        </div>
-        <div className="flex flex-col w-1/2">
-          <label className="light text-xs">text</label>
-          <input
-            type="text"
-            className="bg-gray-50 w-full p-1 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            onChange={(e) => {
-              handleChangeOneComplex(e, "text");
-            }}
-          />
-        </div>
-      </div>
-      )
-
+      );
+    case "BackboneElement":
+      return null;
     default:
       return (
         <input
@@ -249,7 +252,7 @@ const InputFromType = (props: InputFromTypeProps) => {
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder=""
           onChange={(e) => {
-            handleChangePrimitive(e);
+            handleChange(e, props.element.id);
           }}
         />
       );

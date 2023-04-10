@@ -15,6 +15,7 @@ import {
   parseMaxString,
   removeDots,
   idIsImportant,
+  createJsonFromPathArray,
 } from "./utils";
 import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar from "@/components/LeftSidebar";
@@ -31,7 +32,6 @@ const tooltipSytles = {
   width: "300px",
 };
 
-
 type ElementType = {
   id: string;
   type: string;
@@ -44,7 +44,7 @@ const index = () => {
   const [elementTypes, setElementTypes] = React.useState<ElementType[]>([]);
 
   const [inputData, setInputData] = React.useState<
-    { id: string; value: string }[]
+    { path: string; value: string }[]
   >([]);
 
   const handleSelectResourceType = (value: string) => {
@@ -101,7 +101,15 @@ const index = () => {
                 <input type="file" hidden />
                 Load Profile
               </button>
-              <button className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded">
+              <button
+                className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded"
+                onClick={() => {
+                  console.log(
+                    "add resource: ",
+                    createJsonFromPathArray(inputData)
+                  );
+                }}
+              >
                 Add Resource
               </button>
             </div>
@@ -133,6 +141,12 @@ const index = () => {
                         (element) =>
                           containsDot(element.id) &&
                           checkedIds.includes(element.id)
+                      )
+                      .filter(
+                        (element) =>
+                          !element.type
+                            ?.map((type) => type.code)
+                            .includes("BackboneElement")
                       )
                       .map((element) => (
                         <div
@@ -210,6 +224,7 @@ const index = () => {
                             element={element}
                             inputData={inputData}
                             setInputData={setInputData}
+                            isArray={parseMaxString(element.max) > 1}
                             type={
                               elementTypes.filter((el) => {
                                 return el.id == element.id;
