@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { resourceOptions } from "@/constants";
 import { Elements, StructureDefinition } from "@/types";
@@ -21,7 +21,7 @@ import {
 import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
 import InputFromType from "@/components/InputFromType";
-import useFhirResources from "@/hooks/useFhirResources";
+import { db, FhirResource } from "@/db";
 
 const tooltipSytles = {
   backgroundColor: "black",
@@ -39,16 +39,22 @@ type ElementType = {
 };
 
 const index = () => {
-  const [profile, setProfile] = React.useState<StructureDefinition>();
-  const [profileElements, setProfileElements] = React.useState<Elements>();
-  const [checkedIds, setCheckedIds] = React.useState<string[]>([]);
-  const [elementTypes, setElementTypes] = React.useState<ElementType[]>([]);
-
+  const [profile, setProfile] = useState<StructureDefinition>();
+  const [profileElements, setProfileElements] = useState<Elements>();
+  const [checkedIds, setCheckedIds] = useState<string[]>([]);
+  const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const [inputData, setInputData] = React.useState<
     { path: string; value: string }[]
   >([]);
 
-  const { addResources } = useFhirResources();
+  async function addResource(resource: FhirResource) {
+    try {
+      // Add the new friend!
+      const id = await db.resources.add(resource);
+    } catch (error) {
+      console.log(`Failed to add resource`);
+    }
+  }
 
   const handleSelectResourceType = (value: string) => {
     let elements: Elements;
@@ -120,7 +126,7 @@ const index = () => {
                 onClick={() => {
                   const resource = createJsonFromPathArray(inputData);
                   console.log("resource: ", resource);
-                  addResources([resource]);
+                  addResource(resource);
                 }}
               >
                 Add Resource

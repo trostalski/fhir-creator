@@ -1,32 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdDoneAll } from "react-icons/io";
-import useFhirResources, { FhirResource } from "@/hooks/useFhirResources";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/db";
 
 export const ResourceIdList = () => {
-  const [resources, setResources] = useState<FhirResource[]>([]);
-  const { getResources } = useFhirResources();
-  let resourceIds: string[] = [];
-
-  useEffect(() => {
-    console.log("getting resources");
-    getResources((resources) => {
-      resourceIds = resources.map((resource) => resource.id);
-      setResources(resources);
-    });
-  }, []);
-
-  console.log("resourceIds: ", resourceIds);
-  console.log("resources: ", resources);
+  const resources = useLiveQuery(() => db.resources.toArray());
   return (
     <div className="flex flex-col h-full gap-2 p-2 overflow-scroll">
-      {!resources
-        ? null
-        : resources.map((resource) => (
-            <div className="flex flex-row text-xs gap-2 items-center">
-              <span>{resource.id}</span>
-            </div>
-          ))}
+      {resources?.map((resource) => (
+        <div className="flex flex-row gap-2 items-center">
+          <span>{resource.id}</span>
+        </div>
+      ))}
     </div>
   );
 };
