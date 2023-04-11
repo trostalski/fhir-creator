@@ -61,7 +61,7 @@ const InputFromType = (props: InputFromTypeProps) => {
               (inputData) =>
                 inputData.path ===
                 formatIdForPath(props.element.id, undefined, props.resourceType)
-            )?.value
+            )?.value || ""
           }
           onChange={(e) => {
             handleChange(
@@ -80,7 +80,7 @@ const InputFromType = (props: InputFromTypeProps) => {
               (inputData) =>
                 inputData.path ===
                 formatIdForPath(props.element.id, undefined, props.resourceType)
-            )?.value
+            )?.value || ""
           }
           id={removeDots(props.element.id)}
           className="bg-gray-50 h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -107,8 +107,9 @@ const InputFromType = (props: InputFromTypeProps) => {
                       props.element.id,
                       undefined,
                       props.resourceType
-                    )
-                )?.value
+                    ) +
+                      ".Start"
+                )?.value || ""
               }
               className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="YYYY/MM/DD"
@@ -136,8 +137,9 @@ const InputFromType = (props: InputFromTypeProps) => {
                       props.element.id,
                       undefined,
                       props.resourceType
-                    )
-                )?.value
+                    ) +
+                      ".End"
+                )?.value || ""
               }
               className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="YYYY/MM/DD"
@@ -171,8 +173,9 @@ const InputFromType = (props: InputFromTypeProps) => {
                         props.element.id,
                         undefined,
                         props.resourceType
-                      )
-                  )?.value
+                      ) +
+                        ".low.value"
+                  )?.value || ""
                 }
                 step={0.01}
                 className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -198,8 +201,9 @@ const InputFromType = (props: InputFromTypeProps) => {
                         props.element.id,
                         undefined,
                         props.resourceType
-                      )
-                  )?.value
+                      ) +
+                        ".low.currency"
+                  )?.value || ""
                 }
                 className="bg-gray-50 w-full h-8 p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="currency"
@@ -230,8 +234,9 @@ const InputFromType = (props: InputFromTypeProps) => {
                         props.element.id,
                         undefined,
                         props.resourceType
-                      )
-                  )?.value
+                      ) +
+                        ".high.value"
+                  )?.value || ""
                 }
                 className="bg-gray-50 w-full h-8 p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="value"
@@ -280,30 +285,25 @@ const InputFromType = (props: InputFromTypeProps) => {
                       props.element.id,
                       undefined,
                       props.resourceType
-                    )
-                )?.value
+                    ) +
+                      (props.isArray
+                        ? "[0].coding[0].system"
+                        : ".coding[0].system")
+                )?.value || ""
               }
               className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
-                if (props.isArray) {
-                  handleChange(
-                    e,
-                    formatIdForPath(
-                      props.element.id,
-                      undefined,
-                      props.resourceType
-                    ) + "[0].coding[0].system"
-                  );
-                } else {
-                  handleChange(
-                    e,
-                    formatIdForPath(
-                      props.element.id,
-                      undefined,
-                      props.resourceType
-                    ) + ".coding[0].system"
-                  );
-                }
+                handleChange(
+                  e,
+                  formatIdForPath(
+                    props.element.id,
+                    undefined,
+                    props.resourceType
+                  ) +
+                    (props.isArray
+                      ? "[0].coding[0].system"
+                      : ".coding[0].system")
+                );
               }}
             />
           </div>
@@ -319,30 +319,20 @@ const InputFromType = (props: InputFromTypeProps) => {
                       props.element.id,
                       undefined,
                       props.resourceType
-                    )
-                )?.value
+                    ) +
+                      (props.isArray ? "[0].coding[0].code" : ".coding[0].code")
+                )?.value || ""
               }
               className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
-                if (props.isArray) {
-                  handleChange(
-                    e,
-                    formatIdForPath(
-                      props.element.id,
-                      undefined,
-                      props.resourceType
-                    ) + "[0].coding[0].code"
-                  );
-                } else {
-                  handleChange(
-                    e,
-                    formatIdForPath(
-                      props.element.id,
-                      undefined,
-                      props.resourceType
-                    ) + ".coding[0].code"
-                  );
-                }
+                handleChange(
+                  e,
+                  formatIdForPath(
+                    props.element.id,
+                    undefined,
+                    props.resourceType
+                  ) + (props.isArray ? "[0].coding[0].code" : ".coding[0].code")
+                );
               }}
             />
           </div>
@@ -358,30 +348,25 @@ const InputFromType = (props: InputFromTypeProps) => {
                       props.element.id,
                       undefined,
                       props.resourceType
-                    )
-                )?.value
+                    ) +
+                      (props.isArray
+                        ? "[0].coding[0].display"
+                        : ".coding[0].display")
+                )?.value || ""
               }
               className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
-                if (props.isArray) {
-                  handleChange(
-                    e,
-                    formatIdForPath(
-                      props.element.id,
-                      undefined,
-                      props.resourceType
-                    ) + "[0].coding[0].display"
-                  );
-                } else {
-                  handleChange(
-                    e,
-                    formatIdForPath(
-                      props.element.id,
-                      undefined,
-                      props.resourceType
-                    ) + ".coding[0].display"
-                  );
-                }
+                handleChange(
+                  e,
+                  formatIdForPath(
+                    props.element.id,
+                    undefined,
+                    props.resourceType
+                  ) +
+                    (props.isArray
+                      ? "[0].coding[0].display"
+                      : ".coding[0].display")
+                );
               }}
             />
           </div>
@@ -403,8 +388,9 @@ const InputFromType = (props: InputFromTypeProps) => {
                       props.element.id,
                       undefined,
                       props.resourceType
-                    )
-                )?.value
+                    ) +
+                      ".authorString"
+                )?.value || ""
               }
               className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
@@ -432,8 +418,9 @@ const InputFromType = (props: InputFromTypeProps) => {
                       props.element.id,
                       undefined,
                       props.resourceType
-                    )
-                )?.value
+                    ) +
+                      ".time"
+                )?.value || ""
               }
               onChange={(e) => {
                 handleChange(
@@ -459,8 +446,9 @@ const InputFromType = (props: InputFromTypeProps) => {
                       props.element.id,
                       undefined,
                       props.resourceType
-                    )
-                )?.value
+                    ) +
+                      ".text"
+                )?.value || ""
               }
               className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
@@ -491,7 +479,7 @@ const InputFromType = (props: InputFromTypeProps) => {
               (inputData) =>
                 inputData.path ===
                 formatIdForPath(props.element.id, undefined, props.resourceType)
-            )?.value
+            )?.value || ""
           }
           onChange={(e) => {
             handleChange(

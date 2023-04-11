@@ -3,14 +3,28 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdDoneAll } from "react-icons/io";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
+import { InputData } from "@/types";
 
-export const ResourceIdList = () => {
-  const resources = useLiveQuery(() => db.resources.toArray());
+interface ResourceIdListProps {
+  setMode: React.Dispatch<React.SetStateAction<"edit" | "create">>;
+  setInputData: React.Dispatch<React.SetStateAction<InputData[]>>;
+}
+
+export const ResourceIdList = (props: ResourceIdListProps) => {
+  const resources = useLiveQuery(() => db.resourcesPathRepr.toArray());
   return (
-    <div className="flex flex-col h-full gap-2 p-2 overflow-scroll">
+    <div className="flex flex-col grow gap-2 p-2 overflow-scroll">
       {resources?.map((resource) => (
-        <div className="flex flex-row gap-2 items-center">
-          <span>{resource.id}</span>
+        <div className="flex flex-row text-xs gap-2 items-center">
+          <button
+            className="hover:underline"
+            onClick={() => {
+              props.setMode("edit");
+              props.setInputData(resource.data);
+            }}
+          >
+            {resource.id}
+          </button>
         </div>
       ))}
     </div>
@@ -23,10 +37,10 @@ const LeftSidebar = (props: { children: React.ReactNode }) => {
   return (
     <div className="flex flex-col h-full bg-gray-50 shadow-md">
       {isOpen ? (
-        <div className="relative h-full p-2 w-60">
+        <div className="h-full p-2 w-60">
           <button
             onClick={(e) => setIsOpen(!isOpen)}
-            className="flex flex-row items-center sticky top-0 w-full bg-inherit h-8"
+            className="flex flex-row items-center w-full bg-inherit h-8"
           >
             <span className="grow" />
             <RxHamburgerMenu />

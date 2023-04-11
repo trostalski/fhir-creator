@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { resourceOptions } from "@/constants";
-import { Elements, StructureDefinition } from "@/types";
+import { Elements, StructureDefinition, InputData } from "@/types";
 import Header from "@/components/Header";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { GrFormAdd } from "react-icons/gr";
@@ -43,16 +43,30 @@ const index = () => {
   const [profileElements, setProfileElements] = useState<Elements>();
   const [checkedIds, setCheckedIds] = useState<string[]>([]);
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
-  const [inputData, setInputData] = React.useState<
-    { path: string; value: string }[]
-  >([]);
+  const [mode, setMode] = useState<"create" | "edit">("create");
+  const [inputData, setInputData] = React.useState<InputData[]>([]);
 
   async function addResource(resource: FhirResource) {
     try {
-      // Add the new friend!
-      const id = await db.resources.add(resource);
+      await db.resources.add(resource);
     } catch (error) {
       console.log(`Failed to add resource`);
+    }
+  }
+
+  async function addResourcPathRepr(inputData: InputData[]) {
+    try {
+      const id = inputData.find((data) => data.path === "id")?.value as string;
+      console.log("path repr: ", {
+        id: id,
+        data: inputData,
+      });
+      await db.resourcesPathRepr.add({
+        id: id,
+        data: inputData,
+      });
+    } catch (error) {
+      console.log(`Failed to add path representation of resource`);
     }
   }
 
@@ -105,7 +119,7 @@ const index = () => {
       <Header />
       <main className="flex flex-row pt-8 h-full w-full">
         <LeftSidebar>
-          <ResourceIdList />
+          <ResourceIdList setInputData={setInputData} setMode={setMode} />
         </LeftSidebar>
         <div className="grow p-4">
           <div className="flex flex-row w-full justify-between items-center">
@@ -121,16 +135,28 @@ const index = () => {
                 <input type="file" hidden />
                 Load Profile
               </button>
-              <button
-                className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded"
-                onClick={() => {
-                  const resource = createJsonFromPathArray(inputData);
-                  console.log("resource: ", resource);
-                  addResource(resource);
-                }}
-              >
-                Add Resource
-              </button>
+              {mode == "create" && (
+                <button
+                  className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded"
+                  onClick={() => {
+                    const resource = createJsonFromPathArray(inputData);
+                    addResource(resource);
+                    addResourcPathRepr(inputData);
+                  }}
+                >
+                  Add Resource
+                </button>
+              )}
+              {mode == "edit" && (
+                <button
+                  className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded"
+                  onClick={() => {
+                    const resource = createJsonFromPathArray(inputData);
+                  }}
+                >
+                  Save Changes
+                </button>
+              )}
             </div>
           </div>
           <div className="h-full pb-10 overflow-scroll">
