@@ -4,7 +4,6 @@ import {
   removeMultiTypeString,
 } from "@/pages/utils";
 import { Element } from "@/types";
-import { CodeableConcept, Age, Period, Range } from "fhir/r4";
 
 interface InputFromTypeProps {
   element: Element;

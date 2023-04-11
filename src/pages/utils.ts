@@ -1,4 +1,4 @@
-import { StructureDefinition } from "@/types";
+import { Element, StructureDefinition } from "@/types";
 import { notImportantIdSuffices } from "./constants";
 
 export const removeDots = (str: string) => {
@@ -34,11 +34,32 @@ export function isMultiTypeString(str: string): boolean {
 }
 
 export const idIsImportant = (id: string) => {
-  return !notImportantIdSuffices.some((suffix) => id.endsWith(suffix));
+  let result = true;
+  const idParts = id.split(".");
+  for (const part of idParts) {
+    if (notImportantIdSuffices.includes(part)) {
+      result = false;
+      break;
+    }
+  }
+  return result;
 };
 
 export const getUid = function () {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
+};
+
+export const elementContainsValidType = (element: Element) => {
+  const types = element.type;
+  if (types === undefined || types.length === 0) {
+    return false;
+  }
+  types?.forEach((type) => {
+    if (type.code.includes("BackboneElement")) {
+      return false;
+    }
+  });
+  return true;
 };
 
 export function createJsonFromPathList(pathList: string[], value: any): any {

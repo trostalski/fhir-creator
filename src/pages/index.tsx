@@ -17,6 +17,7 @@ import {
   idIsImportant,
   createJsonFromPathArray,
   getUid,
+  elementContainsValidType,
 } from "./utils";
 import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
@@ -24,6 +25,7 @@ import InputFromType from "@/components/InputFromType";
 import { db, FhirResource } from "@/db";
 
 const tooltipSytles = {
+  zIndex: 1000,
   backgroundColor: "black",
   opacity: 0.8,
   fontSize: "12px",
@@ -54,13 +56,17 @@ const index = () => {
     }
   }
 
+  async function addProfile(profile: StructureDefinition) {
+    try {
+      await db.profiles.add(profile);
+    } catch (error) {
+      console.log(`Failed to add profile`);
+    }
+  }
+
   async function addResourcPathRepr(inputData: InputData[]) {
     try {
       const id = inputData.find((data) => data.path === "id")?.value as string;
-      console.log("path repr: ", {
-        id: id,
-        data: inputData,
-      });
       await db.resourcesPathRepr.add({
         id: id,
         data: inputData,
@@ -70,56 +76,78 @@ const index = () => {
     }
   }
 
-  const handleSelectResourceType = (value: string) => {
+  const loadProfile = (profile: StructureDefinition) => {
     let elements: Elements;
-    import(`../data/profiles/${value}_profile.json`).then(
-      (profile: StructureDefinition) => {
-        setProfile(profile);
-        if (containsSnapshot(profile) && profile.snapshot) {
-          elements = profile.snapshot;
-        } else if (containsDifferential(profile) && profile.differential) {
-          elements = profile.differential;
+    setProfile(profile);
+    if (containsSnapshot(profile) && profile.snapshot) {
+      elements = profile.snapshot;
+    } else if (containsDifferential(profile) && profile.differential) {
+      elements = profile.differential;
+    } else {
+      elements = { element: [] };
+    }
+    setElementTypes(
+      elements.element.map((element) => {
+        if (element.type) {
+          return { id: element.id, type: element.type[0].code };
         } else {
-          elements = { element: [] };
+          return { id: element.id, type: "string" };
         }
-        setElementTypes(
-          elements.element.map((element) => {
-            if (element.type) {
-              return { id: element.id, type: element.type[0].code };
-            } else {
-              return { id: element.id, type: "string" };
-            }
-          })
-        );
-        setProfileElements(elements);
-        setInputData([
-          ...inputData,
-          {
-            path: "resourceType",
-            value: profile.type as string,
-          },
-          {
-            path: "id",
-            value: (profile.type as string) + "/" + getUid(),
-          },
-        ]);
-        setCheckedIds(
-          elements.element
-            .map((element) => element.id)
-            .filter((id) => idIsImportant(id))
-        );
-      }
+      })
+    );
+    setProfileElements(elements);
+    setInputData([
+      ...inputData,
+      { path: "meta.profile[0]", value: profile.url as string },
+      {
+        path: "resourceType",
+        value: profile.type as string,
+      },
+      {
+        path: "id",
+        value: (profile.type as string) + "/" + getUid(),
+      },
+    ]);
+    setCheckedIds(
+      elements.element
+        .map((element) => element.id)
+        .filter((id) => idIsImportant(id))
     );
   };
 
-  console.log("input data: ", inputData);
+  const handleSelectProfile = (value: string) => {
+    import(`../data/base-profiles/${value}_profile.json`).then(
+      (profile: StructureDefinition) => loadProfile(profile)
+    );
+  };
+
+  const handleProfileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target) {
+          const profile = JSON.parse(e.target.result as string);
+          loadProfile(profile);
+          addProfile(profile);
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  console.log("inputdata: ", inputData);
 
   return (
     <div className="w-screen h-screen overflow-hidden">
       <Header />
       <main className="flex flex-row pt-8 h-full w-full">
         <LeftSidebar>
-          <ResourceIdList setInputData={setInputData} setMode={setMode} />
+          <ResourceIdList
+            setInputData={setInputData}
+            setMode={setMode}
+            loadProfile={loadProfile}
+          />
         </LeftSidebar>
         <div className="grow p-4">
           <div className="flex flex-row w-full justify-between items-center">
@@ -127,18 +155,29 @@ const index = () => {
               className="w-3/4"
               options={resourceOptions}
               onChange={(e) => {
-                handleSelectResourceType(e!.value);
+                handleSelectProfile(e!.value);
               }}
             ></Select>
-            <div className="flex flex-row gap-4">
-              <button className="bg-blue-500 max-h-8 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded">
-                <input type="file" hidden />
+            <div className="flex flex-row gap-2">
+              <label
+                htmlFor="profile-upload"
+                className="bg-blue-500 max-h-8 hover:bg-blue-700 text-white text-xxs font-bold py-2 px-4 rounded hover:cursor-pointer"
+              >
+                <input
+                  id="profile-upload"
+                  type="file"
+                  hidden
+                  onChange={(e) => handleProfileUpload(e)}
+                />
                 Load Profile
-              </button>
+              </label>
               {mode == "create" && (
                 <button
-                  className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded"
+                  className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xxs font-bold py-2 px-4 rounded"
                   onClick={() => {
+                    if (inputData.length === 0) {
+                      return;
+                    }
                     const resource = createJsonFromPathArray(inputData);
                     addResource(resource);
                     addResourcPathRepr(inputData);
@@ -163,9 +202,7 @@ const index = () => {
             {!profile ? null : (
               <div className="">
                 <div className="flex flex-row gap-4 items-center">
-                  <h3 className="text-xl font-extralight p-4">
-                    {profile.name}
-                  </h3>
+                  <h3 className="font-extralight py-4">{profile.url}</h3>
                   <div
                     id="description-anchor"
                     data-tooltip-id="description-tooltip"
@@ -189,12 +226,7 @@ const index = () => {
                           containsDot(element.id) &&
                           checkedIds.includes(element.id)
                       )
-                      .filter(
-                        (element) =>
-                          !element.type
-                            ?.map((type) => type.code)
-                            .includes("BackboneElement")
-                      )
+                      .filter((element) => elementContainsValidType(element))
                       .map((element) => (
                         <div
                           key={element.id}
@@ -204,7 +236,7 @@ const index = () => {
                             <div className="flex flex-row gap-2 items-center">
                               <label
                                 htmlFor="element-value"
-                                className={`block w-48 text-sm font-medium text-gray-900 dark:text-white ${
+                                className={`block whitespace-nowrap w-48 text-sm font-medium text-gray-900 dark:text-white ${
                                   element.min > 0
                                     ? "after:text-red-600 after:content-['*']"
                                     : ""

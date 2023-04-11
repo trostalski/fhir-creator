@@ -1,4 +1,8 @@
-import { containsDot, idIsImportant } from "@/pages/utils";
+import {
+  containsDot,
+  elementContainsValidType,
+  idIsImportant,
+} from "@/pages/utils";
 import { Elements } from "@/types";
 import { RxHamburgerMenu } from "react-icons/rx";
 import React, { useState } from "react";
@@ -16,7 +20,7 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
       <div className="p-2 flex flex-row gap-2 items-center w-full">
         <input
           placeholder="search"
-          className="h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="h-8 w-full border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           onChange={(e) => {
             setSearchInput(e.target.value);
           }}
@@ -27,7 +31,6 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
             if (
               props.profileElements?.element.length > props.checkedIds?.length
             ) {
-              console.log("checked ids: ", props.checkedIds);
               props.setCheckedIds(
                 props.profileElements?.element.map((element) => element.id)
               );
@@ -55,9 +58,12 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
         ? null
         : props.profileElements.element
             .filter((element) => containsDot(element.id))
+            // .filter((element) => elementContainsValidType(element))
             .filter((element) => {
               if (searchInput) {
-                return element.id.includes(searchInput);
+                return element.id
+                  .toLowerCase()
+                  .includes(searchInput.toLowerCase());
               } else {
                 return true;
               }
@@ -78,11 +84,11 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
                     }
                   }}
                   value=""
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-max-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
                   htmlFor="default-checkbox"
-                  className="ml-2 text-xs font-medium text-gray-900 dark:text-gray-300"
+                  className="ml-2 whitespace-nowrap text-xs font-medium text-gray-900 dark:text-gray-300"
                 >
                   {element.id}
                 </label>
@@ -97,7 +103,7 @@ const RightSidebar = (props: { children: React.ReactNode }) => {
   return (
     <div className="relative bg-gray-50 shadow-md h-full overflow-scroll">
       {isOpen ? (
-        <div className="w-52 bg-inherit">
+        <div className="w-60 bg-inherit">
           <button
             onClick={(e) => setIsOpen(!isOpen)}
             className="flex p-2 flex-row bg-inherit items-center sticky top-2 w-full h-8"
