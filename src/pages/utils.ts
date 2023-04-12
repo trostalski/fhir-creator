@@ -72,6 +72,92 @@ export const elementContainsValidType = (element: Element) => {
   return result;
 };
 
+export const getBaseUrl = (profile: StructureDefinition) => {
+  return profile.baseDefinition;
+};
+
+export const formatIdForPath = (
+  id: string,
+  type?: string,
+  resourceType?: string
+) => {
+  let result = id;
+  if (id.startsWith(resourceType + ".")) {
+    result = id.replace(resourceType + ".", "");
+  }
+  if (isMultiTypeString(id)) {
+    result = removeMultiTypeString(result);
+    result = result + type;
+  }
+  return result;
+};
+
+export const updateBaseElementWithDifferentialElement = (
+  baseElement: Element,
+  differentialElement: Element
+) => {
+  const updatedElement = { ...baseElement, ...differentialElement };
+  return updatedElement;
+};
+
+const elmentsHaveSameIdStem = (element1: Element, element2: Element) => {
+  let result = false;
+  // remove first path element
+  const id1 = element1.id!.split(".").slice(1).join(".");
+  const id2 = element2.id!.split(".").slice(1).join(".");
+  if (id1.startsWith(id2 + ".") || id1.startsWith(id2 + ":")) {
+    result = true;
+  }
+  console.log("result: ", result);
+  return result;
+};
+
+export const mergeDifferentialWithSnapshot = (
+  baseProfile: StructureDefinition,
+  differentialProfile: StructureDefinition
+) => {
+  let elements: Element[] = [];
+  console.log("merging differential with snapshot");
+
+  // elements that exist in base profile
+  elements = baseProfile.snapshot!.element.map((baseElement) => {
+    const differentialElement = differentialProfile.differential!.element.find(
+      (element) => element.id === baseElement.id
+    );
+    if (differentialElement) {
+      // update base element with differential element
+      return updateBaseElementWithDifferentialElement(
+        baseElement,
+        differentialElement
+      );
+    }
+    return baseElement;
+  });
+
+  // new elements that dont exist in base profile
+  differentialProfile.differential!.element.forEach((differentialElement) => {
+    const elementExists = elements.find(
+      (element) => element.id === differentialElement.id
+    );
+    if (!elementExists) {
+      let foundElement = false;
+      elements.forEach((element, index) => {
+        // element: Condition.clinicalStatus.coding
+        // differential: Condition.clinicalStatus.coding:ReferenzDiagnose
+        if (elmentsHaveSameIdStem(differentialElement, element)) {
+          elements.splice(index + 1, 0, differentialElement);
+          foundElement = true;
+          return;
+        }
+      });
+      if (!foundElement) {
+        elements.push(differentialElement);
+      }
+    }
+  });
+  return elements;
+};
+
 export function createJsonFromPathList(pathList: string[], value: any): any {
   const result = {}; // Initialize the result object
 

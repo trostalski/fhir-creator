@@ -20,11 +20,19 @@ import {
   elementContainsValidType,
   isFhirBaseDefinition,
   getResourceTypeFromUrl,
+  getBaseUrl,
+  mergeDifferentialWithSnapshot,
 } from "./utils";
 import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
 import InputFromType from "@/components/InputFromType";
-import { db, FhirResource } from "@/db";
+import {
+  addProfile,
+  addResource,
+  addResourcPathRepr,
+  updateResource,
+  updateResourcePathRepr,
+} from "@/db/utils";
 
 const tooltipSytles = {
   zIndex: 1000,
@@ -47,101 +55,38 @@ const index = () => {
   const [profileElements, setProfileElements] = useState<Element[]>();
   const [checkedIds, setCheckedIds] = useState<string[]>([]);
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
-  const [mode, setMode] = useState<"create" | "edit">("create");
   const [inputData, setInputData] = React.useState<InputData[]>([]);
-
-  async function addResource(resource: FhirResource) {
-    try {
-      await db.resources.add(resource);
-    } catch (error) {
-      console.log(`Failed to add resource`);
-    }
-  }
-
-  async function addProfile(profile: StructureDefinition) {
-    try {
-      await db.profiles.add(profile);
-    } catch (error) {
-      console.log(`Failed to add profile`);
-    }
-  }
-
-  async function addResourcPathRepr(inputData: InputData[]) {
-    try {
-      const id = inputData.find((data) => data.path === "id")?.value as string;
-      await db.resourcesPathRepr.add({
-        id: id,
-        data: inputData,
-      });
-    } catch (error) {
-      console.log(`Failed to add path representation of resource`);
-    }
-  }
-
-  async function updateResource(resource: FhirResource) {
-    try {
-      await db.resources.update(resource.id!, resource);
-    } catch (error) {
-      console.log(`Failed to update resource`);
-    }
-  }
-
-  async function updateResourcePathRepr(inputData: InputData[]) {
-    try {
-      const id = inputData.find((data) => data.path === "id")?.value as string;
-      await db.resourcesPathRepr.update(id, {
-        id: id,
-        data: inputData,
-      });
-    } catch (error) {
-      console.log(`Failed to update path representation of resource`);
-    }
-  }
+  const [mode, setMode] = useState<"create" | "edit">("create");
 
   const loadProfile = (profile: StructureDefinition) => {
     let elements: Element[];
-    setProfile(profile);
+    setProfile(profile); // save input profile in state
     if (containsSnapshot(profile) && profile.snapshot) {
+      // all elements are present
       elements = profile.snapshot.element;
     } else if (containsDifferential(profile) && profile.differential) {
-      const baseUrl = profile.baseDefinition;
+      // only differential is present, needs to be merged with base profile
+      const baseUrl = getBaseUrl(profile);
       if (!baseUrl || !isFhirBaseDefinition(baseUrl)) {
         return [];
       } else {
         const baseResourceType = getResourceTypeFromUrl(baseUrl);
         const baseProfile: StructureDefinition = require(`../data/base-profiles/${baseResourceType}_profile.json`);
-        elements = baseProfile.snapshot!.element.map((baseElement) => {
-          const baseElementId = baseElement.id;
-          const differentialElement = profile.differential!.element.find(
-            (element) => element.id === baseElementId
-          );
-          if (differentialElement) {
-            return differentialElement;
-          }
-          return baseElement;
-        });
-        profile.differential!.element.forEach((differentialElement) => {
-          const differentialElementId = differentialElement.id;
-          const elementExists = elements.find(
-            (element) => element.id === differentialElementId
-          );
-          if (!elementExists) {
-            elements.push(differentialElement);
-          }
-        });
-        elements.sort((a, b) => {
-          if (a.id < b.id) {
-            return -1;
-          } else if (a.id > b.id) {
-            return 1;
-          } else {
-            return 0;
-          }
-        });
+        elements = mergeDifferentialWithSnapshot(baseProfile, profile);
       }
     } else {
-      elements = [];
+      // no snapshot or differential is present
+      alert("No snapshot or differential is present in the profile");
+      return [];
     }
+    setDefaultProfileStates(elements, profile);
+  };
+
+  const setDefaultProfileStates = (
+    elements: Element[],
+    profile: StructureDefinition
+  ) => {
+    setProfileElements(elements);
     setElementTypes(
       elements.map((element) => {
         if (element.type) {
@@ -151,7 +96,6 @@ const index = () => {
         }
       })
     );
-    setProfileElements(elements);
     setInputData([
       ...inputData,
       { path: "meta.profile[0]", value: profile.url as string },
@@ -188,8 +132,6 @@ const index = () => {
       reader.readAsText(file);
     }
   };
-
-  console.log("inputdata: ", inputData);
 
   return (
     <div className="w-screen h-screen overflow-hidden">

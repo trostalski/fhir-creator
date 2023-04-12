@@ -1,4 +1,5 @@
 import {
+  formatIdForPath,
   isMultiTypeString,
   removeDots,
   removeMultiTypeString,
@@ -23,18 +24,6 @@ interface InputFromTypeProps {
   resourceType?: string;
   type?: string;
 }
-
-const formatIdForPath = (id: string, type?: string, resourceType?: string) => {
-  let result = id;
-  if (id.startsWith(resourceType + ".")) {
-    result = id.replace(resourceType + ".", "");
-  }
-  if (isMultiTypeString(id)) {
-    result = removeMultiTypeString(result);
-    result = result + type;
-  }
-  return result;
-};
 
 const InputFromType = (props: InputFromTypeProps) => {
   const handleChange = (

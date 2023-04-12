@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdDoneAll } from "react-icons/io";
 import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/db";
+import { db } from "@/db/db";
 import { InputData, StructureDefinition } from "@/types";
 import { MdOutlineClear } from "react-icons/md";
 import { getResourceTypeFromUrl, isFhirBaseDefinition } from "@/pages/utils";

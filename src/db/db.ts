@@ -1,6 +1,6 @@
 // db.ts
 import Dexie, { Table } from "dexie";
-import { InputData, StructureDefinition } from "./types";
+import { InputData, StructureDefinition } from "../types";
 
 export interface FhirResource {
   id?: string;
