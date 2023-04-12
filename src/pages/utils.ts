@@ -108,8 +108,12 @@ const elmentsHaveSameIdStem = (element1: Element, element2: Element) => {
   if (id1.startsWith(id2 + ".") || id1.startsWith(id2 + ":")) {
     result = true;
   }
-  console.log("result: ", result);
   return result;
+};
+
+export const removeAfterColon = (str: string) => {
+  const colonIndex = str.indexOf(":");
+  return colonIndex >= 0 ? str.slice(0, colonIndex) : str;
 };
 
 export const mergeDifferentialWithSnapshot = (
@@ -117,12 +121,11 @@ export const mergeDifferentialWithSnapshot = (
   differentialProfile: StructureDefinition
 ) => {
   let elements: Element[] = [];
-  console.log("merging differential with snapshot");
 
   // elements that exist in base profile
   elements = baseProfile.snapshot!.element.map((baseElement) => {
     const differentialElement = differentialProfile.differential!.element.find(
-      (element) => element.id === baseElement.id
+      (diffElement) => diffElement.id === baseElement.id
     );
     if (differentialElement) {
       // update base element with differential element
@@ -135,26 +138,29 @@ export const mergeDifferentialWithSnapshot = (
   });
 
   // new elements that dont exist in base profile
-  differentialProfile.differential!.element.forEach((differentialElement) => {
-    const elementExists = elements.find(
+  for (const differentialElement of differentialProfile.differential!.element) {
+    const elementExists = elements.some(
       (element) => element.id === differentialElement.id
     );
+
     if (!elementExists) {
       let foundElement = false;
-      elements.forEach((element, index) => {
-        // element: Condition.clinicalStatus.coding
-        // differential: Condition.clinicalStatus.coding:ReferenzDiagnose
+
+      for (let index = 0; index < elements.length; index++) {
+        const element = elements[index];
+
         if (elmentsHaveSameIdStem(differentialElement, element)) {
           elements.splice(index + 1, 0, differentialElement);
           foundElement = true;
-          return;
+          break;
         }
-      });
+      }
+
       if (!foundElement) {
         elements.push(differentialElement);
       }
     }
-  });
+  }
   return elements;
 };
 

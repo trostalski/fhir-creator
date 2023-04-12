@@ -1,11 +1,37 @@
 import { InputData } from "@/types";
 import { StructureDefinition } from "../types";
 import { FhirResource, db } from "./db";
+import { toastError } from "@/toasts";
+
+interface FhirBundleEntry {
+  resource: FhirResource;
+}
+
+interface FhirBundle {
+  entry: FhirBundleEntry[];
+  resourceType: string;
+  type: string;
+  timestamp: string;
+  meta: {
+    lastUpdated: string;
+  };
+}
+
+export async function getResource(id: string) {
+  try {
+    const resource = await db.resources.get(id);
+    return resource;
+  } catch (error) {
+    toastError(`Failed to get resource with id ${id}`);
+    console.log(`Failed to get resource with id ${id}`);
+  }
+}
 
 export async function addResource(resource: FhirResource) {
   try {
     await db.resources.add(resource);
   } catch (error) {
+    toastError(`Failed to add resource`);
     console.log(`Failed to add resource`);
   }
 }
@@ -49,3 +75,50 @@ export async function updateResourcePathRepr(inputData: InputData[]) {
     console.log(`Failed to update path representation of resource`);
   }
 }
+
+function createBundle(resources: FhirResource[]): FhirBundle {
+  const bundle: FhirBundle = {
+    resourceType: "Bundle",
+    type: "collection",
+    timestamp: new Date().toISOString(),
+    meta: {
+      lastUpdated: new Date().toISOString(),
+    },
+    entry: [],
+  };
+  resources.forEach((resourceEle) => {
+    bundle.entry.push({
+      resource: resourceEle,
+    });
+  });
+  return bundle;
+}
+
+export async function getResources() {
+  const all_resources = await db.resources.toArray();
+  const bundle_created: FhirBundle = createBundle(all_resources);
+
+  const bundle_string = JSON.stringify(bundle_created, null, 2);
+  //convert to a blob
+  const blob = new Blob([bundle_string], { type: "application/json" });
+  //convert to a url
+  const url = URL.createObjectURL(blob);
+  //download the file
+  const filename = "export.json";
+  fetch(url)
+    .then((response) => response.blob())
+    .then((blob) => {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+}
+
+//toArray
+//FhirResource[]
+//[{2342343: {resouce}}]
+
+// { id: "2342343", resourceType: "Conditions", clinicalStatus: "active", code: { coding: [ { system: "http://snomed.info/sct", code: "123456", display: "Diabetes" } ], text: "Diabetes" }, subject: { reference: "Patient/123456" }, onsetDateTime: "2019-01-01", recordedDate: "2019-01-01", recorder: { reference: "Practitioner/123456" }, asserter: { reference: "Practitioner/123456" }, note: [ { text: "Patient has diabetes" } ]

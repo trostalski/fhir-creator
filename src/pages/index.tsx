@@ -226,9 +226,9 @@ const index = () => {
                           checkedIds.includes(element.id) &&
                           elementContainsValidType(element)
                       )
-                      .map((element) => (
+                      .map((element, index) => (
                         <div
-                          key={element.id}
+                          key={index}
                           className="flex flex-col gap-0.5 p-4 rounded-md shadow-md bg-blue-100"
                         >
                           <div className="flex flex-row justify-between items-center">
@@ -284,7 +284,7 @@ const index = () => {
                                 </button>
                               )}
                               <div
-                                id={`${removeDots(element.id)}-anchor`}
+                                id={`element-${index}`}
                                 data-tooltip-id={`${removeDots(
                                   element.id
                                 )}-tooltip)}`}
@@ -293,9 +293,7 @@ const index = () => {
                                 <AiOutlineQuestionCircle />
                               </div>
                               <Tooltip
-                                anchorSelect={`#${removeDots(
-                                  element.id
-                                )}-anchor`}
+                                anchorSelect={`#element-${index}`}
                                 id={`${removeDots(element.id)}-tooltip`}
                                 place="left"
                                 style={tooltipSytles}

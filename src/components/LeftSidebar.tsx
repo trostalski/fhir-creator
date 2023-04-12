@@ -6,6 +6,7 @@ import { db } from "@/db/db";
 import { InputData, StructureDefinition } from "@/types";
 import { MdOutlineClear } from "react-icons/md";
 import { getResourceTypeFromUrl, isFhirBaseDefinition } from "@/pages/utils";
+import { getResources } from "@/db/utils";
 
 interface ResourceIdListProps {
   setMode: React.Dispatch<React.SetStateAction<"edit" | "create">>;
@@ -123,7 +124,7 @@ const LeftSidebar = (props: { children: React.ReactNode }) => {
         </div>
       )}
       <div className="grow"></div>
-      <button className="w-full bg-blue-800 p-2">
+      <button className="w-full bg-blue-800 p-2" onClick={getResources}>
         <IoMdDoneAll
           size={40}
           className="mx-auto"
