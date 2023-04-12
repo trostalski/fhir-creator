@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Select from "react-select";
 import { resourceOptions } from "@/constants";
 import { Element, StructureDefinition, InputData } from "@/types";
@@ -75,6 +75,26 @@ const index = () => {
       });
     } catch (error) {
       console.log(`Failed to add path representation of resource`);
+    }
+  }
+
+  async function updateResource(resource: FhirResource) {
+    try {
+      await db.resources.update(resource.id!, resource);
+    } catch (error) {
+      console.log(`Failed to update resource`);
+    }
+  }
+
+  async function updateResourcePathRepr(inputData: InputData[]) {
+    try {
+      const id = inputData.find((data) => data.path === "id")?.value as string;
+      await db.resourcesPathRepr.update(id, {
+        id: id,
+        data: inputData,
+      });
+    } catch (error) {
+      console.log(`Failed to update path representation of resource`);
     }
   }
 
@@ -226,6 +246,8 @@ const index = () => {
                   className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded"
                   onClick={() => {
                     const resource = createJsonFromPathArray(inputData);
+                    updateResource(resource);
+                    updateResourcePathRepr(inputData);
                   }}
                 >
                   Save Changes
