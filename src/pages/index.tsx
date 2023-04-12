@@ -19,6 +19,7 @@ import {
   getUid,
   elementContainsValidType,
   isFhirBaseDefinition,
+  getResourceTypeFromUrl,
 } from "./utils";
 import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
@@ -87,7 +88,7 @@ const index = () => {
       if (!baseUrl || !isFhirBaseDefinition(baseUrl)) {
         return [];
       } else {
-        const baseResourceType = baseUrl.split("/").at(-1);
+        const baseResourceType = getResourceTypeFromUrl(baseUrl);
         const baseProfile: StructureDefinition = require(`../data/base-profiles/${baseResourceType}_profile.json`);
         elements = baseProfile.snapshot!.element.map((baseElement) => {
           const baseElementId = baseElement.id;
@@ -148,7 +149,7 @@ const index = () => {
     );
   };
 
-  const handleSelectProfile = (value: string) => {
+  const handleSelectBaseProfile = (value: string) => {
     const profile: StructureDefinition = require(`../data/base-profiles/${value}_profile.json`);
     loadProfile(profile);
   };
@@ -179,6 +180,7 @@ const index = () => {
             setInputData={setInputData}
             setMode={setMode}
             loadProfile={loadProfile}
+            handleSelectBaseProfile={handleSelectBaseProfile}
           />
         </LeftSidebar>
         <div className="grow p-4">
@@ -186,8 +188,9 @@ const index = () => {
             <Select
               className="w-3/4"
               options={resourceOptions}
+              placeholder="Select a profile"
               onChange={(e) => {
-                handleSelectProfile(e!.value);
+                handleSelectBaseProfile(e!.value);
               }}
             ></Select>
             <div className="flex flex-row gap-2">
@@ -256,9 +259,9 @@ const index = () => {
                       .filter(
                         (element) =>
                           containsDot(element.id) &&
-                          checkedIds.includes(element.id)
+                          checkedIds.includes(element.id) &&
+                          elementContainsValidType(element)
                       )
-                      .filter((element) => elementContainsValidType(element))
                       .map((element) => (
                         <div
                           key={element.id}

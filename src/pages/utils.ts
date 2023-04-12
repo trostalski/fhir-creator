@@ -53,17 +53,23 @@ export const getUid = function () {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
 
+export const getResourceTypeFromUrl = (url: string) => {
+  const urlParts = url.split("/");
+  return urlParts[urlParts.length - 1];
+};
+
 export const elementContainsValidType = (element: Element) => {
+  let result = true;
   const types = element.type;
   if (types === undefined || types.length === 0) {
-    return false;
+    result = false;
   }
   types?.forEach((type) => {
     if (type.code.includes("BackboneElement")) {
-      return false;
+      result = false;
     }
   });
-  return true;
+  return result;
 };
 
 export function createJsonFromPathList(pathList: string[], value: any): any {

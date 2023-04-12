@@ -5,15 +5,17 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
 import { InputData, StructureDefinition } from "@/types";
 import { MdOutlineClear } from "react-icons/md";
+import { getResourceTypeFromUrl, isFhirBaseDefinition } from "@/pages/utils";
 
 interface ResourceIdListProps {
   setMode: React.Dispatch<React.SetStateAction<"edit" | "create">>;
   setInputData: React.Dispatch<React.SetStateAction<InputData[]>>;
   loadProfile: (profile: StructureDefinition) => void;
+  handleSelectBaseProfile: (value: string) => void;
 }
 
 export const ResourceIdList = (props: ResourceIdListProps) => {
-  const resources = useLiveQuery(() => db.resourcesPathRepr.toArray());
+  const resourcesPathRepr = useLiveQuery(() => db.resourcesPathRepr.toArray());
   const profiles = useLiveQuery(() => db.profiles.toArray());
 
   const deleteResource = (id: string) => {
@@ -29,24 +31,36 @@ export const ResourceIdList = (props: ResourceIdListProps) => {
     <div className="h-full flex flex-col gap-4 overflow-scroll p-2">
       <div className="flex flex-col gap-2">
         <span>Resources</span>
-        {resources?.map((resource) => (
+        {resourcesPathRepr?.map((resourcePathRepr) => (
           <div
-            key={resource.id}
+            key={resourcePathRepr.id}
             className="flex flex-row pl-2 w-full items-center justify-between text-xs"
           >
             <button
               className="overflow-hidden hover:underline"
-              title={resource.id}
+              title={resourcePathRepr.id}
               onClick={() => {
+                const profileUrl = resourcePathRepr.data.find(
+                  (data) => data.path === "meta.profile[0]"
+                )?.value;
+                if (profileUrl && isFhirBaseDefinition(profileUrl)) {
+                  const resourceType = getResourceTypeFromUrl(profileUrl);
+                  props.handleSelectBaseProfile(resourceType);
+                } else if (profileUrl) {
+                  const profile = profiles?.find(
+                    (profile) => profile.url === profileUrl
+                  );
+                  props.loadProfile(profile!);
+                }
                 props.setMode("edit");
-                props.setInputData(resource.data);
+                props.setInputData(resourcePathRepr.data);
               }}
             >
-              <span className="text-xs">{resource.id}</span>
+              <span className="text-xs">{resourcePathRepr.id}</span>
             </button>
             <button
               className="hover:scale-105"
-              onClick={() => deleteResource(resource.id)}
+              onClick={() => deleteResource(resourcePathRepr.id)}
             >
               <MdOutlineClear size={20} className="ml-2" />
             </button>
