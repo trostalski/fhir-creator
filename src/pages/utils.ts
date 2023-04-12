@@ -45,6 +45,10 @@ export const idIsImportant = (id: string) => {
   return result;
 };
 
+export const isFhirBaseDefinition = (url: string) => {
+  return url.startsWith("http://hl7.org/fhir/StructureDefinition/");
+};
+
 export const getUid = function () {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };

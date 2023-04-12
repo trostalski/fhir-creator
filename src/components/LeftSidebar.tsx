@@ -26,7 +26,7 @@ export const ResourceIdList = (props: ResourceIdListProps) => {
   };
 
   return (
-    <div className="h-full flex flex-col gap-12 overflow-scroll p-2">
+    <div className="h-full flex flex-col gap-4 overflow-scroll p-2">
       <div className="flex flex-col gap-2">
         <span>Resources</span>
         {resources?.map((resource) => (

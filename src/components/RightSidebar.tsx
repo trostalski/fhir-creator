@@ -3,12 +3,12 @@ import {
   elementContainsValidType,
   idIsImportant,
 } from "@/pages/utils";
-import { Elements } from "@/types";
+import { Element } from "@/types";
 import { RxHamburgerMenu } from "react-icons/rx";
 import React, { useState } from "react";
 
 interface ProfileCheckboxesProps {
-  profileElements: Elements;
+  profileElements: Element[];
   setCheckedIds: React.Dispatch<React.SetStateAction<string[]>>;
   checkedIds: string[];
 }
@@ -28,11 +28,9 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
         <button
           className="text-blue-600 font-bold text-xs"
           onClick={(e) => {
-            if (
-              props.profileElements?.element.length > props.checkedIds?.length
-            ) {
+            if (props.profileElements.length > props.checkedIds?.length) {
               props.setCheckedIds(
-                props.profileElements?.element.map((element) => element.id)
+                props.profileElements.map((element) => element.id)
               );
             } else {
               props.setCheckedIds([]);
@@ -45,7 +43,7 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
           className="text-gray-500 font-bold text-xs"
           onClick={(e) =>
             props.setCheckedIds(
-              props.profileElements?.element
+              props.profileElements
                 .map((element) => element.id)
                 .filter((id) => idIsImportant(id))
             )
@@ -56,9 +54,9 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
       </div>
       {!props.profileElements
         ? null
-        : props.profileElements.element
+        : props.profileElements
             .filter((element) => containsDot(element.id))
-            // .filter((element) => elementContainsValidType(element))
+            .filter((element) => elementContainsValidType(element))
             .filter((element) => {
               if (searchInput) {
                 return element.id

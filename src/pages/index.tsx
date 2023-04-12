@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { resourceOptions } from "@/constants";
-import { Elements, StructureDefinition, InputData } from "@/types";
+import { Element, StructureDefinition, InputData } from "@/types";
 import Header from "@/components/Header";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { GrFormAdd } from "react-icons/gr";
@@ -18,6 +18,7 @@ import {
   createJsonFromPathArray,
   getUid,
   elementContainsValidType,
+  isFhirBaseDefinition,
 } from "./utils";
 import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
@@ -42,7 +43,7 @@ type ElementType = {
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
-  const [profileElements, setProfileElements] = useState<Elements>();
+  const [profileElements, setProfileElements] = useState<Element[]>();
   const [checkedIds, setCheckedIds] = useState<string[]>([]);
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const [mode, setMode] = useState<"create" | "edit">("create");
@@ -77,17 +78,51 @@ const index = () => {
   }
 
   const loadProfile = (profile: StructureDefinition) => {
-    let elements: Elements;
+    let elements: Element[];
     setProfile(profile);
     if (containsSnapshot(profile) && profile.snapshot) {
-      elements = profile.snapshot;
+      elements = profile.snapshot.element;
     } else if (containsDifferential(profile) && profile.differential) {
-      elements = profile.differential;
+      const baseUrl = profile.baseDefinition;
+      if (!baseUrl || !isFhirBaseDefinition(baseUrl)) {
+        return [];
+      } else {
+        const baseResourceType = baseUrl.split("/").at(-1);
+        const baseProfile: StructureDefinition = require(`../data/base-profiles/${baseResourceType}_profile.json`);
+        elements = baseProfile.snapshot!.element.map((baseElement) => {
+          const baseElementId = baseElement.id;
+          const differentialElement = profile.differential!.element.find(
+            (element) => element.id === baseElementId
+          );
+          if (differentialElement) {
+            return differentialElement;
+          }
+          return baseElement;
+        });
+        profile.differential!.element.forEach((differentialElement) => {
+          const differentialElementId = differentialElement.id;
+          const elementExists = elements.find(
+            (element) => element.id === differentialElementId
+          );
+          if (!elementExists) {
+            elements.push(differentialElement);
+          }
+        });
+        elements.sort((a, b) => {
+          if (a.id < b.id) {
+            return -1;
+          } else if (a.id > b.id) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+      }
     } else {
-      elements = { element: [] };
+      elements = [];
     }
     setElementTypes(
-      elements.element.map((element) => {
+      elements.map((element) => {
         if (element.type) {
           return { id: element.id, type: element.type[0].code };
         } else {
@@ -109,16 +144,13 @@ const index = () => {
       },
     ]);
     setCheckedIds(
-      elements.element
-        .map((element) => element.id)
-        .filter((id) => idIsImportant(id))
+      elements.map((element) => element.id).filter((id) => idIsImportant(id))
     );
   };
 
   const handleSelectProfile = (value: string) => {
-    import(`../data/base-profiles/${value}_profile.json`).then(
-      (profile: StructureDefinition) => loadProfile(profile)
-    );
+    const profile: StructureDefinition = require(`../data/base-profiles/${value}_profile.json`);
+    loadProfile(profile);
   };
 
   const handleProfileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -220,7 +252,7 @@ const index = () => {
                 </div>
                 <IconContext.Provider value={{ color: "gray", size: "16px" }}>
                   <div className="flex flex-col gap-2">
-                    {profileElements!.element
+                    {profileElements!
                       .filter(
                         (element) =>
                           containsDot(element.id) &&
