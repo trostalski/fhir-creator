@@ -9,3 +9,27 @@ export const notImportantIdSuffices = [
   "modifier",
   "identifier",
 ];
+
+export const primitiveTypes = [
+  "base64Binary",
+  "boolean",
+  "canonical",
+  "code",
+  "date",
+  "dateTime",
+  "decimal",
+  "Extension", // TODO: handle this
+  "id",
+  "instant",
+  "integer",
+  "integer64",
+  "markdown",
+  "oid",
+  "positiveInt",
+  "string",
+  "time",
+  "unsignedInt",
+  "uri",
+  "url",
+  "uuid",
+];

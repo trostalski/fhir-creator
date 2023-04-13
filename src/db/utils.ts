@@ -1,7 +1,7 @@
 import { InputData } from "@/types";
-import { StructureDefinition } from "../types";
 import { FhirResource, db } from "./db";
 import { toastError } from "@/toasts";
+import { StructureDefinition } from "fhir/r4";
 
 interface FhirBundleEntry {
   resource: FhirResource;

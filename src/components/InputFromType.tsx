@@ -1,13 +1,8 @@
-import {
-  formatIdForPath,
-  isMultiTypeString,
-  removeDots,
-  removeMultiTypeString,
-} from "@/pages/utils";
-import { Element } from "@/types";
+import { formatIdForPath, removeDots } from "@/pages/utils";
+import { ElementDefinition } from "fhir/r4";
 
 interface InputFromTypeProps {
-  element: Element;
+  element: ElementDefinition;
   inputData: {
     path: string;
     value: any; // TODO use the input type and the FHIR library to set the type for the value
@@ -41,20 +36,24 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="number"
-          id={removeDots(props.element.id)}
+          id={removeDots(props.element.id!)}
           className="bg-gray-50 h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder=""
           value={
             props.inputData.find(
               (inputData) =>
                 inputData.path ===
-                formatIdForPath(props.element.id, undefined, props.resourceType)
+                formatIdForPath(
+                  props.element.id!,
+                  undefined,
+                  props.resourceType
+                )
             )?.value || ""
           }
           onChange={(e) => {
             handleChange(
               e,
-              formatIdForPath(props.element.id, undefined, props.resourceType)
+              formatIdForPath(props.element.id!, undefined, props.resourceType)
             );
           }}
         />
@@ -67,15 +66,19 @@ const InputFromType = (props: InputFromTypeProps) => {
             props.inputData.find(
               (inputData) =>
                 inputData.path ===
-                formatIdForPath(props.element.id, undefined, props.resourceType)
+                formatIdForPath(
+                  props.element.id!,
+                  undefined,
+                  props.resourceType
+                )
             )?.value || ""
           }
-          id={removeDots(props.element.id)}
+          id={removeDots(props.element.id!)}
           className="bg-gray-50 h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           onChange={(e) => {
             handleChange(
               e,
-              formatIdForPath(props.element.id, undefined, props.resourceType)
+              formatIdForPath(props.element.id!, undefined, props.resourceType)
             );
           }}
         />
@@ -92,7 +95,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                   (inputData) =>
                     inputData.path ===
                     formatIdForPath(
-                      props.element.id,
+                      props.element.id!,
                       undefined,
                       props.resourceType
                     ) +
@@ -105,7 +108,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                 handleChange(
                   e,
                   formatIdForPath(
-                    props.element.id,
+                    props.element.id!,
                     undefined,
                     props.resourceType
                   ) + ".Start"
@@ -122,7 +125,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                   (inputData) =>
                     inputData.path ===
                     formatIdForPath(
-                      props.element.id,
+                      props.element.id!,
                       undefined,
                       props.resourceType
                     ) +
@@ -135,7 +138,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                 handleChange(
                   e,
                   formatIdForPath(
-                    props.element.id,
+                    props.element.id!,
                     undefined,
                     props.resourceType
                   ) + ".End"
@@ -158,7 +161,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                     (inputData) =>
                       inputData.path ===
                       formatIdForPath(
-                        props.element.id,
+                        props.element.id!,
                         undefined,
                         props.resourceType
                       ) +
@@ -172,7 +175,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                   handleChange(
                     e,
                     formatIdForPath(
-                      props.element.id,
+                      props.element.id!,
                       props.type!,
                       props.resourceType
                     ) + ".low.value"
@@ -186,7 +189,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                     (inputData) =>
                       inputData.path ===
                       formatIdForPath(
-                        props.element.id,
+                        props.element.id!,
                         undefined,
                         props.resourceType
                       ) +
@@ -199,7 +202,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                   handleChange(
                     e,
                     formatIdForPath(
-                      props.element.id,
+                      props.element.id!,
                       props.type!,
                       props.resourceType
                     ) + ".low.currency"
@@ -219,7 +222,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                     (inputData) =>
                       inputData.path ===
                       formatIdForPath(
-                        props.element.id,
+                        props.element.id!,
                         undefined,
                         props.resourceType
                       ) +
@@ -232,7 +235,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                   handleChange(
                     e,
                     formatIdForPath(
-                      props.element.id,
+                      props.element.id!,
                       props.type!,
                       props.resourceType
                     ) + ".high.value"
@@ -247,7 +250,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                   handleChange(
                     e,
                     formatIdForPath(
-                      props.element.id,
+                      props.element.id!,
                       props.type!,
                       props.resourceType
                     ) + ".high.currency"
@@ -270,7 +273,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                   (inputData) =>
                     inputData.path ===
                     formatIdForPath(
-                      props.element.id,
+                      props.element.id!,
                       undefined,
                       props.resourceType
                     ) +
@@ -284,7 +287,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                 handleChange(
                   e,
                   formatIdForPath(
-                    props.element.id,
+                    props.element.id!,
                     undefined,
                     props.resourceType
                   ) +
@@ -304,7 +307,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                   (inputData) =>
                     inputData.path ===
                     formatIdForPath(
-                      props.element.id,
+                      props.element.id!,
                       undefined,
                       props.resourceType
                     ) +
@@ -316,7 +319,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                 handleChange(
                   e,
                   formatIdForPath(
-                    props.element.id,
+                    props.element.id!,
                     undefined,
                     props.resourceType
                   ) + (props.isArray ? "[0].coding[0].code" : ".coding[0].code")
@@ -333,7 +336,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                   (inputData) =>
                     inputData.path ===
                     formatIdForPath(
-                      props.element.id,
+                      props.element.id!,
                       undefined,
                       props.resourceType
                     ) +
@@ -347,13 +350,105 @@ const InputFromType = (props: InputFromTypeProps) => {
                 handleChange(
                   e,
                   formatIdForPath(
-                    props.element.id,
+                    props.element.id!,
                     undefined,
                     props.resourceType
                   ) +
                     (props.isArray
                       ? "[0].coding[0].display"
                       : ".coding[0].display")
+                );
+              }}
+            />
+          </div>
+        </div>
+      );
+    case "Coding":
+      return (
+        <div className="flex flex-row w-full gap-8">
+          <div className="flex flex-col w-1/2">
+            <label className="light text-xs">system</label>
+            <input
+              type="text"
+              value={
+                props.inputData.find(
+                  (inputData) =>
+                    inputData.path ===
+                    formatIdForPath(
+                      props.element.id!,
+                      undefined,
+                      props.resourceType
+                    ) +
+                      "[0].system"
+                )?.value || ""
+              }
+              className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              onChange={(e) => {
+                handleChange(
+                  e,
+                  formatIdForPath(
+                    props.element.id!,
+                    undefined,
+                    props.resourceType
+                  ) + "[0].system"
+                );
+              }}
+            />
+          </div>
+          <div className="flex flex-col w-1/2">
+            <label className="light text-xs">code</label>
+            <input
+              type="text"
+              value={
+                props.inputData.find(
+                  (inputData) =>
+                    inputData.path ===
+                    formatIdForPath(
+                      props.element.id!,
+                      undefined,
+                      props.resourceType
+                    ) +
+                      "[0].code"
+                )?.value || ""
+              }
+              className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              onChange={(e) => {
+                handleChange(
+                  e,
+                  formatIdForPath(
+                    props.element.id!,
+                    undefined,
+                    props.resourceType
+                  ) + "[0].code"
+                );
+              }}
+            />
+          </div>
+          <div className="flex flex-col w-1/2">
+            <label className="light text-xs">display</label>
+            <input
+              type="text"
+              value={
+                props.inputData.find(
+                  (inputData) =>
+                    inputData.path ===
+                    formatIdForPath(
+                      props.element.id!,
+                      undefined,
+                      props.resourceType
+                    ) +
+                      "[0].display"
+                )?.value || ""
+              }
+              className="bg-gray-50 h-8 w-full p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              onChange={(e) => {
+                handleChange(
+                  e,
+                  formatIdForPath(
+                    props.element.id!,
+                    undefined,
+                    props.resourceType
+                  ) + "[0].display"
                 );
               }}
             />
@@ -373,7 +468,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                   (inputData) =>
                     inputData.path ===
                     formatIdForPath(
-                      props.element.id,
+                      props.element.id!,
                       undefined,
                       props.resourceType
                     ) +
@@ -385,7 +480,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                 handleChange(
                   e,
                   formatIdForPath(
-                    props.element.id,
+                    props.element.id!,
                     undefined,
                     props.resourceType
                   ) + ".authorString"
@@ -403,7 +498,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                   (inputData) =>
                     inputData.path ===
                     formatIdForPath(
-                      props.element.id,
+                      props.element.id!,
                       undefined,
                       props.resourceType
                     ) +
@@ -414,7 +509,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                 handleChange(
                   e,
                   formatIdForPath(
-                    props.element.id,
+                    props.element.id!,
                     undefined,
                     props.resourceType
                   ) + ".time"
@@ -431,7 +526,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                   (inputData) =>
                     inputData.path ===
                     formatIdForPath(
-                      props.element.id,
+                      props.element.id!,
                       undefined,
                       props.resourceType
                     ) +
@@ -443,7 +538,7 @@ const InputFromType = (props: InputFromTypeProps) => {
                 handleChange(
                   e,
                   formatIdForPath(
-                    props.element.id,
+                    props.element.id!,
                     undefined,
                     props.resourceType
                   ) + ".text"
@@ -459,20 +554,24 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="text"
-          id={removeDots(props.element.id)}
+          id={removeDots(props.element.id!)}
           className="bg-gray-50 h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder=""
           value={
             props.inputData.find(
               (inputData) =>
                 inputData.path ===
-                formatIdForPath(props.element.id, undefined, props.resourceType)
+                formatIdForPath(
+                  props.element.id!,
+                  undefined,
+                  props.resourceType
+                )
             )?.value || ""
           }
           onChange={(e) => {
             handleChange(
               e,
-              formatIdForPath(props.element.id, undefined, props.resourceType)
+              formatIdForPath(props.element.id!, undefined, props.resourceType)
             );
           }}
         />

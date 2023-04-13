@@ -1,6 +1,6 @@
 import json
 
-with open("./fhir-definitions/valuesets.json") as rf:
+with open("../data/fhir-definitions/valuesets.json") as rf:
     raw = json.load(rf)
     for entry in raw["entry"]:
         resource = entry["resource"]

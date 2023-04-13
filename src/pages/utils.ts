@@ -1,12 +1,10 @@
-import { Element, StructureDefinition } from "@/types";
+import { InputData } from "@/types";
 import { notImportantIdSuffices } from "./constants";
+import { StructureDefinition, ElementDefinition } from "fhir/r4";
+import { updateElementWithOther } from "./buildTree";
 
 export const removeDots = (str: string) => {
   return str.replace(/\./g, "");
-};
-
-export const containsDot = (str: string) => {
-  return str.includes(".");
 };
 
 export const containsSnapshot = (profile: StructureDefinition) => {
@@ -58,7 +56,7 @@ export const getResourceTypeFromUrl = (url: string) => {
   return urlParts[urlParts.length - 1];
 };
 
-export const elementContainsValidType = (element: Element) => {
+export const elementContainsValidType = (element: ElementDefinition) => {
   let result = true;
   const types = element.type;
   if (types === undefined || types.length === 0) {
@@ -92,15 +90,10 @@ export const formatIdForPath = (
   return result;
 };
 
-export const updateBaseElementWithDifferentialElement = (
-  baseElement: Element,
-  differentialElement: Element
+const elmentsHaveSameIdStem = (
+  element1: ElementDefinition,
+  element2: ElementDefinition
 ) => {
-  const updatedElement = { ...baseElement, ...differentialElement };
-  return updatedElement;
-};
-
-const elmentsHaveSameIdStem = (element1: Element, element2: Element) => {
   let result = false;
   // remove first path element
   const id1 = element1.id!.split(".").slice(1).join(".");
@@ -116,11 +109,62 @@ export const removeAfterColon = (str: string) => {
   return colonIndex >= 0 ? str.slice(0, colonIndex) : str;
 };
 
+export const isSliceElement = (element: ElementDefinition) => {
+  return element.id!.includes(":");
+};
+
+export const removeBetweenColonAndPeriod = (str: string): string => {
+  const regex = /:[^.]*(?=\.)/g;
+  return str.replace(regex, "").replace(":", "");
+};
+
+const removeSlicePathsFromInputData = (inputData: InputData[]) => {
+  const result = inputData.map((data) => {
+    const newData = { ...data };
+    newData.path = removeBetweenColonAndPeriod(data.path);
+    return newData;
+  });
+  return result;
+};
+
+export const formatInputDataForResource = (inputData: InputData[]) => {
+  let result;
+  result = removeSlicePathsFromInputData(inputData);
+  return result;
+};
+
+export const mergeSliceElement = (
+  sliceElement: ElementDefinition,
+  baseElements: ElementDefinition[],
+  differentialElements: ElementDefinition[]
+) => {
+  let updatedElement;
+
+  const diffElement = differentialElements.find(
+    (element) => element.path === sliceElement.path
+  );
+
+  if (diffElement) {
+    updatedElement = updateElementWithOther(diffElement, sliceElement);
+  }
+  const baseElement = baseElements.find(
+    (element) => element.path === sliceElement.path
+  );
+  if (baseElement) {
+    updatedElement = updateElementWithOther(baseElement, sliceElement);
+  }
+  if (updatedElement) {
+    return updatedElement;
+  } else {
+    return sliceElement;
+  }
+};
+
 export const mergeDifferentialWithSnapshot = (
   baseProfile: StructureDefinition,
   differentialProfile: StructureDefinition
 ) => {
-  let elements: Element[] = [];
+  let elements: ElementDefinition[] = [];
 
   // elements that exist in base profile
   elements = baseProfile.snapshot!.element.map((baseElement) => {
@@ -129,16 +173,21 @@ export const mergeDifferentialWithSnapshot = (
     );
     if (differentialElement) {
       // update base element with differential element
-      return updateBaseElementWithDifferentialElement(
-        baseElement,
-        differentialElement
-      );
+      return updateElementWithOther(baseElement, differentialElement);
     }
     return baseElement;
   });
 
   // new elements that dont exist in base profile
-  for (const differentialElement of differentialProfile.differential!.element) {
+  for (let differentialElement of differentialProfile.differential!.element) {
+    if (isSliceElement(differentialElement)) {
+      differentialElement = mergeSliceElement(
+        differentialElement,
+        elements,
+        differentialProfile.differential!.element
+      );
+    }
+
     const elementExists = elements.some(
       (element) => element.id === differentialElement.id
     );
@@ -147,7 +196,8 @@ export const mergeDifferentialWithSnapshot = (
       let foundElement = false;
 
       for (let index = 0; index < elements.length; index++) {
-        const element = elements[index];
+        // if slice element, merge with base element without slice paths in id
+        let element = elements[index];
 
         if (elmentsHaveSameIdStem(differentialElement, element)) {
           elements.splice(index + 1, 0, differentialElement);

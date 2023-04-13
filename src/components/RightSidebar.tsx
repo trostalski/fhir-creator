@@ -55,10 +55,7 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
       {!props.profileElements
         ? null
         : props.profileElements
-            .filter(
-              (element) =>
-                containsDot(element.id) && elementContainsValidType(element)
-            )
+            .filter((element) => containsDot(element.id))
             .filter((element) => {
               if (searchInput) {
                 return element.id

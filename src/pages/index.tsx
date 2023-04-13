@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import { resourceOptions } from "@/constants";
-import { Element, StructureDefinition, InputData } from "@/types";
+import { InputData } from "@/types";
 import Header from "@/components/Header";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { GrFormAdd } from "react-icons/gr";
@@ -11,17 +11,16 @@ import "react-tooltip/dist/react-tooltip.css";
 import {
   containsSnapshot,
   containsDifferential,
-  containsDot,
   parseMaxString,
   removeDots,
   idIsImportant,
   createJsonFromPathArray,
   getUid,
-  elementContainsValidType,
   isFhirBaseDefinition,
   getResourceTypeFromUrl,
   getBaseUrl,
   mergeDifferentialWithSnapshot,
+  formatInputDataForResource,
 } from "./utils";
 import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
@@ -33,6 +32,8 @@ import {
   updateResource,
   updateResourcePathRepr,
 } from "@/db/utils";
+import { StructureDefinition, ElementDefinition } from "fhir/r4";
+import { containsDot } from "./buildTree";
 
 const tooltipSytles = {
   zIndex: 1000,
@@ -52,14 +53,14 @@ type ElementType = {
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
-  const [profileElements, setProfileElements] = useState<Element[]>();
+  const [profileElements, setProfileElements] = useState<ElementDefinition[]>();
   const [checkedIds, setCheckedIds] = useState<string[]>([]);
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const [inputData, setInputData] = React.useState<InputData[]>([]);
   const [mode, setMode] = useState<"create" | "edit">("create");
 
   const loadProfile = (profile: StructureDefinition) => {
-    let elements: Element[];
+    let elements: ElementDefinition[];
     setProfile(profile); // save input profile in state
     if (containsSnapshot(profile) && profile.snapshot) {
       // all elements are present
@@ -83,16 +84,16 @@ const index = () => {
   };
 
   const setDefaultProfileStates = (
-    elements: Element[],
+    elements: ElementDefinition[],
     profile: StructureDefinition
   ) => {
     setProfileElements(elements);
     setElementTypes(
       elements.map((element) => {
         if (element.type) {
-          return { id: element.id, type: element.type[0].code };
+          return { id: element.id!, type: element.type[0].code as string };
         } else {
-          return { id: element.id, type: "string" };
+          return { id: element.id!, type: "string" as string };
         }
       })
     );
@@ -109,7 +110,7 @@ const index = () => {
       },
     ]);
     setCheckedIds(
-      elements.map((element) => element.id).filter((id) => idIsImportant(id))
+      elements.map((element) => element.id!).filter((id) => idIsImportant(id))
     );
   };
 
@@ -175,7 +176,10 @@ const index = () => {
                     if (inputData.length === 0) {
                       return;
                     }
-                    const resource = createJsonFromPathArray(inputData);
+                    const formattedInputData =
+                      formatInputDataForResource(inputData);
+                    const resource =
+                      createJsonFromPathArray(formattedInputData);
                     addResource(resource);
                     addResourcPathRepr(inputData);
                   }}
@@ -187,7 +191,10 @@ const index = () => {
                 <button
                   className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded"
                   onClick={() => {
-                    const resource = createJsonFromPathArray(inputData);
+                    const formattedInputData =
+                      formatInputDataForResource(inputData);
+                    const resource =
+                      createJsonFromPathArray(formattedInputData);
                     updateResource(resource);
                     updateResourcePathRepr(inputData);
                   }}
@@ -222,9 +229,8 @@ const index = () => {
                     {profileElements!
                       .filter(
                         (element) =>
-                          containsDot(element.id) &&
-                          checkedIds.includes(element.id) &&
-                          elementContainsValidType(element)
+                          containsDot(element.id!) &&
+                          checkedIds.includes(element.id!)
                       )
                       .map((element, index) => (
                         <div
@@ -236,7 +242,7 @@ const index = () => {
                               <label
                                 htmlFor="element-value"
                                 className={`block whitespace-nowrap w-48 text-sm font-medium text-gray-900 dark:text-white ${
-                                  element.min > 0
+                                  element.min! > 0
                                     ? "after:text-red-600 after:content-['*']"
                                     : ""
                                 }`}
@@ -274,7 +280,7 @@ const index = () => {
                                   <option value="string">string</option>
                                 )}
                               </select>
-                              {parseMaxString(element.max) > 1 ? (
+                              {parseMaxString(element.max!) > 1 ? (
                                 <button>
                                   <GrFormAdd />
                                 </button>
@@ -286,7 +292,7 @@ const index = () => {
                               <div
                                 id={`element-${index}`}
                                 data-tooltip-id={`${removeDots(
-                                  element.id
+                                  element.id!
                                 )}-tooltip)}`}
                                 data-tooltip-content={element.short}
                               >
@@ -294,7 +300,7 @@ const index = () => {
                               </div>
                               <Tooltip
                                 anchorSelect={`#element-${index}`}
-                                id={`${removeDots(element.id)}-tooltip`}
+                                id={`${removeDots(element.id!)}-tooltip`}
                                 place="left"
                                 style={tooltipSytles}
                               />
@@ -304,7 +310,7 @@ const index = () => {
                             element={element}
                             inputData={inputData}
                             setInputData={setInputData}
-                            isArray={parseMaxString(element.max) > 1}
+                            isArray={parseMaxString(element.max!) > 1}
                             resourceType={profile.type as string}
                             type={
                               elementTypes.filter((el) => {

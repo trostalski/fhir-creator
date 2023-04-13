@@ -1,7 +1,7 @@
 import json
 import os
 
-with open("./fhir-definitions/profiles-resources.json") as rf:
+with open("../data/fhir-definitions/profiles-resources.json") as rf:
     raw = json.load(rf)
     for entry in raw["entry"]:
         resource = entry["resource"]
