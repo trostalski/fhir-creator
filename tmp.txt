@@ -1,0 +1,157 @@
+id: Condition.code.coding:orphanet.code
+
+path: Condition.code.coding.code
+-> {code: {coding: {code: "hey"}}}
+
+path: Condition.code.coding[0].code
+-> {code: {coding: [{code: "hey"}]}}
+
+
+
+
+
+
+
+
+
+result = {id: ..., element: ..., ReactComponent: ...}
+
+parentElemnt: ReactComponet: <div max=1 min=0 >{props.children}</div>
+
+primitiveElement: ReactCompoment: <intput/> -> generateInputForType()
+
+
+path: parent1.parent1.2.parent1.2.3.primitive1
+path: parent1.parent1.2.parent3.primitive2
+path: parent1.parent2.parent4.primitive2
+path: parent2.parent2.parent4.primitive2
+path: parent3.parent2.parent4.primitive2
+path: parent4.parent2.parent4.primitive2
+path: parent4.parent2.parent4.primitive2
+
+<>
+    <parent1>
+        <parent1.2>
+            <
+        </parent1.2>
+    </parent1>
+    <parent2>
+    </parent2>
+    <parent3>
+    </parent3>
+    <parent4>
+    </parent4>
+</>
+
+[
+    parent1
+    parent1.parent1.2
+    parent1.parent1.2.child1
+    parent1.parent1.2.child2
+    parent2
+    parent2.parent2.1
+    parent
+]
+
+<div>
+    <parent1>
+        <parent1.2>
+            <parent1.2.child1>
+            </parent1.2.child1>
+            <parent1.2.child2>
+            </parent1.2.child2>
+        </parent1.2>
+    </parent1>
+    <parent2>
+        <parent2.1>
+        </parent2.1>
+    </parent2>
+
+<parent1>
+
+
+<parent1>
+    <parent2>
+        <parent3>
+            <primitive1>
+            </primitive1>
+            <primitive2>
+            <primitive2>
+        </parent3>
+        <parent4>
+            <primitive2>
+            </primitive2>
+        </parent4>
+    </parent2>
+</parent1>
+
+
+for e in elements:
+    if e.id in result:
+        merge(e, result[e.id])
+    else:
+        result[e.id] = e
+        add all children to result until primitve type
+
+
+path: parent.parent.parent.primitive1
+
+paths: []
+
+for id in ids:
+    isPrimitive = isPrimitive(id);
+    if isPrimitve:
+        generateInputField(id)
+
+
+
+function generateInputField (id) {
+    element = result.id
+    primitiveType = element.type
+    generateInputForType(primitiveType)
+}
+
+function generateInputForType (primitiveType) {
+    case String
+    ...
+    case DateTime
+    ...
+
+    return InputHTML
+}
+
+
+
+
+
+
+
+
+types:
+condition.bodysite
+
+
+type: [
+    code: CodeableConcept, // ./dataTypes/CodeableConcept.snapshot.element[] -> felder alle felder durchgehen gucken ob primitive type
+]
+
+
+parse_element(elements, path_array, isPrimitive)
+
+getTypeDefinition(type)
+    type_path_base = "data/types/"
+    type_path = type_path_base + type + ".json"
+    type_definition = read_json(type_path)
+    return type_definition
+
+isPrimitive(element)
+    type = element.type
+    type_definition = getTypeDefinition(type)
+    return type_definition.kind === "primitive-type"
+
+parse_profile(elements)
+    const path_array = []
+    parse_element(elements, path_array, isPrimitive)
+
+extractProfileTree(profileTree: ProfileTreeNode[]):
+    

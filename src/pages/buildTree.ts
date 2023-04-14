@@ -5,16 +5,18 @@ import {
 } from "fhir/r4";
 import { primitiveTypes } from "./constants";
 
-interface ProfileTreeNode {
+export interface ProfileTreeNode {
   element: ElementDefinition;
   component: string;
-  path?: string;
-  parentId: string | null;
+  path: string;
+  parentPath: string | null;
+  childPaths: string[];
+  isPrimitive: boolean;
 }
 
-type ProfileTree = ProfileTreeNode[];
+export type ProfileTree = ProfileTreeNode[];
 
-enum TreeComponents {
+export enum TreeComponents {
   PrimitveInput = "PrimitveInput",
   ParentWrapper = "ParentWrapper",
 }
@@ -59,14 +61,9 @@ function isPrimitiveElement(element: ElementDefinition) {
     const type_definition = getTypeDefinition(type);
     if (type_definition && isPrimitiveType(type_definition)) {
       result = true;
-    }
-    if (primitiveTypes.includes(type.code)) {
+    } else if (primitiveTypes.includes(type.code)) {
       result = true;
     }
-    if (primitiveTypes.includes(getIdSuffix(element.id!))) {
-      result = true;
-    }
-
     return result;
   }
 }
@@ -76,8 +73,6 @@ function isPrimitiveType(profile: StructureDefinition) {
   if (profile.kind === "primitive-type") {
     result = true;
   } else if (profile.id === "Reference") {
-    result = true;
-  } else if (profile.id === "Identifier") {
     result = true;
   }
   return result;
@@ -103,83 +98,122 @@ function getChildrenTypeDefinitions(element: ElementDefinition) {
   return childProfiles;
 }
 
+function getChildren(element: ElementDefinition, parentPath: string) {
+  const childElements = getChildElements(element);
+}
+function getChildElements(element: ElementDefinition) {
+  let childElements = [];
+  if (element.type) {
+    for (const type of element.type!) {
+      const childProfile = getTypeDefinition(type);
+      if (!childProfile) {
+        continue;
+      }
+      for (const childElement of childProfile.snapshot!.element!) {
+        childElements.push(childElement);
+      }
+    }
+  }
+
+  return childElements;
+}
+
 function getIdSuffix(id: string) {
   const idParts = id.split(".");
   return idParts[idParts.length - 1];
 }
 
-export function buildTreeFromElementsRecursive(
-  elements: ElementDefinition[],
-  profileTree: ProfileTree = [],
-  parentId: string = ""
-): ProfileTree {
-  let result = profileTree;
-  for (const element of elements) {
-    if (!containsDot(element.id!)) {
-      continue;
-    }
-
-    if (idExistsInTree(element.id!, profileTree)) {
-      // const existingNode = profileTree.find((node) => node.path === element.id);
-      // const updatedElement = updateElementWithOther(
-      //   existingNode?.element!,
-      //   element
-      // );
-      // // update node in tree
-      // existingNode!.element = updatedElement;
-    }
-
-    if (isPrimitiveElement(element)) {
-      // is a primitive type
-      profileTree.push({
-        element: element,
-        component: TreeComponents.PrimitveInput,
-        parentId: parentId,
-      });
-    } else {
-      // is a complex type
-      // add node to and add all type children
-      const childrenTypeDefinitions = getChildrenTypeDefinitions(element);
-      let childrenElements: ElementDefinition[] = [];
-      for (const childType of childrenTypeDefinitions) {
-        if (!childType) {
-          continue;
-        }
-        if (isPrimitiveType(childType)) {
-          profileTree.push({
-            element: childType.snapshot!.element![0],
-            component: TreeComponents.PrimitveInput,
-            parentId: element.id!,
-          });
-        } else {
-          childrenElements.push(...childType.snapshot!.element!);
-        }
-      }
-      result.push({
-        element: element,
-        component: TreeComponents.ParentWrapper,
-        parentId: element.id!,
-      });
-      profileTree.concat(
-        buildTreeFromElementsRecursive(
-          childrenElements!,
-          profileTree,
-          element.id!
-        )
-      );
-    }
-  }
-  return result;
+function removeIdPrefix(id: string) {
+  const idParts = id.split(".");
+  idParts.shift();
+  return idParts.join(".");
 }
 
-const test = () => {
+function getPathFromParentPathAndId(parentPath: string, id: string) {
+  if (!containsDot(id)) {
+    return parentPath;
+  }
+  return parentPath + "." + removeIdPrefix(id);
+}
+
+export function buildTreeFromElementsRecursive(
+  elements: ElementDefinition[],
+  parentPath = "root"
+): ProfileTree {
+  const profileTree: ProfileTree = [];
+
+  for (const element of elements) {
+    const { id } = element;
+    if (!id?.includes(".")) {
+      continue; // skip root element
+    }
+    const elementPath = getPathFromParentPathAndId(parentPath, id!);
+    if (isPrimitiveElement(element)) {
+      profileTree.push({
+        element,
+        component: TreeComponents.PrimitveInput,
+        parentPath,
+        isPrimitive: true,
+        path: elementPath,
+        childPaths: [],
+      });
+    } else {
+      const childNodes = getChildrenTypeDefinitions(element).flatMap(
+        (childType) => {
+          if (!childType) {
+            return [];
+          }
+          if (isPrimitiveType(childType)) {
+            const childId = childType.snapshot?.element?.[0].id;
+            if (!childId?.includes(".")) {
+              return []; // skip root element
+            }
+            const childPath = getPathFromParentPathAndId(elementPath, childId!);
+            return {
+              element: childType.snapshot!.element![0],
+              component: TreeComponents.PrimitveInput,
+              parentPath: elementPath,
+              isPrimitive: true,
+              path: childPath,
+              childPaths: [],
+            };
+          } else {
+            const grandchildNodes = buildTreeFromElementsRecursive(
+              childType.snapshot!.element!,
+              elementPath
+            );
+            return grandchildNodes;
+          }
+        }
+      );
+      const childPaths = Array.from(childNodes, ({ path }) => path);
+      const parentNode = {
+        element,
+        component: TreeComponents.ParentWrapper,
+        parentPath,
+        isPrimitive: false,
+        path: elementPath,
+        childPaths,
+      };
+      profileTree.push(parentNode, ...childNodes);
+    }
+  }
+  return profileTree;
+}
+
+function test() {
   const profile: StructureDefinition = require("../data/base-profiles/Condition_profile.json");
   const elements = profile.snapshot!.element!;
-  const tree = buildTreeFromElementsRecursive(elements, [], "");
-  console.log(tree.length);
-  tree.map((node) => {
-    console.log(node.element.id!);
+  const tree = buildTreeFromElementsRecursive(elements, "root");
+  const s = tree.sort((a, b) => a.path.localeCompare(b.path));
+  s.forEach((node) => {
+    // console.log("parent path: ", node.parentPath);
+    console.log("path: ", node.path);
+    console.log("primitive: ", node.isPrimitive);
+    // console.log("childPaths: ", node.childPaths);
+    // console.log("\n");
   });
-};
+  console.log(tree.length);
+}
 
 test();

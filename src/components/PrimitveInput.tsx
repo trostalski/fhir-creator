@@ -2,6 +2,7 @@ import { ElementDefinition, StructureDefinition } from "fhir/r4";
 import React from "react";
 
 interface PrimitveInputProps {
+  id: string;
   element: ElementDefinition;
 }
 
