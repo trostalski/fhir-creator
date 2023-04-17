@@ -95,6 +95,18 @@ function getPathFromParentPathAndId(parentPath: string, id: string) {
   return parentPath + "." + removeIdPrefix(id);
 }
 
+function extractDirectChildren(parentPath: string, childPaths: string[]) {
+  const directChildren: string[] = [];
+  for (const childPath of childPaths) {
+    const childPathParts = childPath.split(".");
+    const parentPathParts = parentPath.split(".");
+    if (childPathParts.length === parentPathParts.length + 1) {
+      directChildren.push(childPath);
+    }
+  }
+  return directChildren;
+}
+
 export async function buildTreeFromElementsRecursive(
   elements: ElementDefinition[],
   parentPath: string = "root"
@@ -126,27 +138,7 @@ export async function buildTreeFromElementsRecursive(
       const childrenTypeDefinitions = await getChildrenTypeDefinitions(element);
       const childNodes: ProfileTreeNode[] = [];
       for (const childType of childrenTypeDefinitions) {
-        if (!childType) {
-          continue;
-        }
-        if (isPrimitiveType(childType)) {
-          // child is a primitive type (e.g. string)
-          const childId = childType.snapshot?.element?.[0].id;
-          console.log(childId);
-          if (!childId?.includes(".")) {
-            console.log("skipping root element");
-            continue; // skip root element
-          }
-          const childPath = getPathFromParentPathAndId(elementPath, childId!);
-          const node: ProfileTreeNode = {
-            element: childType.snapshot!.element![0],
-            parentPath: elementPath,
-            isPrimitive: true,
-            path: childPath,
-            childPaths: [],
-          };
-          childNodes.push(node);
-        } else {
+        if (childType && !isPrimitiveType(childType)) {
           const grandchildNodes = await buildTreeFromElementsRecursive(
             childType.snapshot!.element!,
             elementPath
@@ -154,7 +146,11 @@ export async function buildTreeFromElementsRecursive(
           childNodes.push(...grandchildNodes);
         }
       }
-      const childPaths = childNodes.map((node) => node.path);
+      // child nodes also include grantchildren nodes, so we need to extract the direct children
+      const childPaths = extractDirectChildren(
+        elementPath,
+        childNodes.map((node) => node.path)
+      );
       const parentNode: ProfileTreeNode = {
         element,
         parentPath,

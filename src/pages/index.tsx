@@ -67,12 +67,10 @@ const index = () => {
 
   const loadProfile = async (profile: StructureDefinition) => {
     let elements: ElementDefinition[];
-    setProfile(profile); // save input profile in state
+    setProfile(profile);
     if (containsSnapshot(profile) && profile.snapshot) {
       // all elements are present
       elements = profile.snapshot.element;
-      const tree = await buildTreeFromElementsRecursive(elements);
-      setProfileTree(tree);
     } else if (containsDifferential(profile) && profile.differential) {
       // only differential is present, needs to be merged with base profile
       const baseUrl = getBaseUrl(profile);
@@ -90,6 +88,8 @@ const index = () => {
       alert("No snapshot or differential is present in the profile");
       return [];
     }
+    const tree = await buildTreeFromElementsRecursive(elements);
+    setProfileTree(tree);
     setDefaultProfileStates(elements, profile);
   };
 
