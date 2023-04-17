@@ -21,7 +21,7 @@ import {
   getBaseUrl,
   mergeDifferentialWithSnapshot,
   formatInputDataForResource,
-} from "./utils";
+} from "../utils/utils";
 import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
 import InputFromType from "@/components/InputFromType";
@@ -33,7 +33,12 @@ import {
   updateResourcePathRepr,
 } from "@/db/utils";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
-import { containsDot } from "./buildTree";
+import {
+  ProfileTree,
+  buildTreeFromElementsRecursive,
+  containsDot,
+} from "../utils/buildTree";
+import ProfileTreeComponent from "./hello/ProfileTreeComponent";
 
 const tooltipSytles = {
   zIndex: 1000,
@@ -54,17 +59,20 @@ type ElementType = {
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
   const [profileElements, setProfileElements] = useState<ElementDefinition[]>();
+  const [profileTree, setProfileTree] = useState<ProfileTree>([]);
   const [checkedIds, setCheckedIds] = useState<string[]>([]);
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const [inputData, setInputData] = React.useState<InputData[]>([]);
   const [mode, setMode] = useState<"create" | "edit">("create");
 
-  const loadProfile = (profile: StructureDefinition) => {
+  const loadProfile = async (profile: StructureDefinition) => {
     let elements: ElementDefinition[];
     setProfile(profile); // save input profile in state
     if (containsSnapshot(profile) && profile.snapshot) {
       // all elements are present
       elements = profile.snapshot.element;
+      const tree = await buildTreeFromElementsRecursive(elements);
+      setProfileTree(tree);
     } else if (containsDifferential(profile) && profile.differential) {
       // only differential is present, needs to be merged with base profile
       const baseUrl = getBaseUrl(profile);
@@ -72,7 +80,9 @@ const index = () => {
         return [];
       } else {
         const baseResourceType = getResourceTypeFromUrl(baseUrl);
-        const baseProfile: StructureDefinition = require(`../data/base-profiles/${baseResourceType}_profile.json`);
+        const baseProfile: StructureDefinition = await fetch(
+          `api/profiles?filename=${baseResourceType}`
+        ).then((res) => res.json());
         elements = mergeDifferentialWithSnapshot(baseProfile, profile);
       }
     } else {
@@ -114,8 +124,10 @@ const index = () => {
     );
   };
 
-  const handleSelectBaseProfile = (value: string) => {
-    const profile: StructureDefinition = require(`../data/base-profiles/${value}_profile.json`);
+  const handleSelectBaseProfile = async (value: string) => {
+    const profile: StructureDefinition = await fetch(
+      `api/profiles?filename=${value}`
+    ).then((res) => res.json());
     loadProfile(profile);
   };
 
@@ -226,7 +238,10 @@ const index = () => {
                 </div>
                 <IconContext.Provider value={{ color: "gray", size: "16px" }}>
                   <div className="flex flex-col gap-2">
-                    {profileElements!
+                    {!profileTree ? null : (
+                      <ProfileTreeComponent tree={profileTree} />
+                    )}
+                    {/* {profileElements!
                       .filter(
                         (element) =>
                           containsDot(element.id!) &&
@@ -319,7 +334,7 @@ const index = () => {
                             }
                           />
                         </div>
-                      ))}
+                      ))} */}
                   </div>
                 </IconContext.Provider>
               </div>

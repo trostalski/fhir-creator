@@ -1,22 +1,24 @@
 import React from "react";
-import { ProfileTree, ProfileTreeNode, TreeComponents } from "../buildTree";
+import { ProfileTree, ProfileTreeNode } from "../../utils/buildTree";
+import PrimitveInput from "@/components/PrimitveInput";
 
 interface ProfileTreeProps {
   tree: ProfileTree;
 }
 
 const ProfileTreeComponent: React.FC<ProfileTreeProps> = ({ tree }) => {
+  console.log("tree: ", tree);
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {
       return (
-        <>
-          <h1>primitve: {node.path}</h1>
-        </>
+        <div key={node.path} className="pl-8">
+          <PrimitveInput node={node} />
+        </div>
       );
     } else {
       return (
-        <div>
-          <h2>complex: {node.path}</h2>
+        <div className="pl-8">
+          <h2 className="">{node.path}</h2>
           {node.childPaths.map((childPath: string) => {
             const childNode = tree.find(
               (n: ProfileTreeNode) => n.path === childPath

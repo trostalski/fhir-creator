@@ -1,7 +1,6 @@
 import { InputData } from "@/types";
 import { notImportantIdSuffices } from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
-import { updateElementWithOther } from "./buildTree";
 
 export const removeDots = (str: string) => {
   return str.replace(/\./g, "");
@@ -14,6 +13,10 @@ export const containsSnapshot = (profile: StructureDefinition) => {
 export const containsDifferential = (profile: StructureDefinition) => {
   return "differential" in profile;
 };
+
+export function capitalizeFirstLetter(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 export const parseMaxString = (str: string) => {
   if (str === "*") {
@@ -102,6 +105,15 @@ const elmentsHaveSameIdStem = (
     result = true;
   }
   return result;
+};
+
+export const updateElementWithOther = (
+  element: ElementDefinition,
+  otherElement: ElementDefinition
+) => {
+  // merge element with otherElement, properties of otherElement overwrite properties of element
+  const updatedElement = { ...element, ...otherElement };
+  return updatedElement;
 };
 
 export const removeAfterColon = (str: string) => {

@@ -1,14 +1,11 @@
-import {
-  containsDot,
-  elementContainsValidType,
-  idIsImportant,
-} from "@/pages/utils";
-import { Element } from "@/types";
+import { idIsImportant } from "../utils/utils";
 import { RxHamburgerMenu } from "react-icons/rx";
 import React, { useState } from "react";
+import { containsDot } from "@/utils/buildTree";
+import { ElementDefinition } from "fhir/r4";
 
 interface ProfileCheckboxesProps {
-  profileElements: Element[];
+  profileElements: ElementDefinition[];
   setCheckedIds: React.Dispatch<React.SetStateAction<string[]>>;
   checkedIds: string[];
 }
@@ -30,7 +27,7 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
           onClick={(e) => {
             if (props.profileElements.length > props.checkedIds?.length) {
               props.setCheckedIds(
-                props.profileElements.map((element) => element.id)
+                props.profileElements.map((element) => element.id!)
               );
             } else {
               props.setCheckedIds([]);
@@ -44,7 +41,7 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
           onClick={(e) =>
             props.setCheckedIds(
               props.profileElements
-                .map((element) => element.id)
+                .map((element) => element.id!)
                 .filter((id) => idIsImportant(id))
             )
           }
@@ -55,11 +52,11 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
       {!props.profileElements
         ? null
         : props.profileElements
-            .filter((element) => containsDot(element.id))
+            .filter((element) => containsDot(element.id!))
             .filter((element) => {
               if (searchInput) {
-                return element.id
-                  .toLowerCase()
+                return element
+                  .id!.toLowerCase()
                   .includes(searchInput.toLowerCase());
               } else {
                 return true;
@@ -70,10 +67,10 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
                 <input
                   id="default-checkbox"
                   type="checkbox"
-                  checked={props.checkedIds.includes(element.id)}
+                  checked={props.checkedIds.includes(element.id!)}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      props.setCheckedIds((prev) => [...prev, element.id]);
+                      props.setCheckedIds((prev) => [...prev, element.id!]);
                     } else {
                       props.setCheckedIds((prev) =>
                         prev.filter((id) => id !== element.id)

@@ -1,19 +1,28 @@
-import { StructureDefinition } from "fhir/r4";
 import React, { useEffect } from "react";
-import { ProfileTree, buildTreeFromElementsRecursive } from "../buildTree";
+import {
+  ProfileTree,
+  buildTreeFromElementsRecursive,
+} from "../../utils/buildTree";
 import ProfileTreeComponent from "./ProfileTreeComponent";
 
 const index = () => {
-  const [tree, setTree] = React.useState<ProfileTree>([]);
+  const [tree, setTree] = React.useState<ProfileTree>();
+
   useEffect(() => {
-    const profile: StructureDefinition = require("../../data/base-profiles/Condition_profile.json");
-    const elements = profile.snapshot!.element!;
-    // console.log("elements: ",elements);
-    const t = buildTreeFromElementsRecursive(elements);
-    console.log(t.length);
-    setTree(t);
+    fetch("api/profiles?filename=Condition")
+      .then((res) => res.json())
+      .then((data) => {
+        const elements = data.snapshot!.element!;
+        const t = buildTreeFromElementsRecursive(elements, "root").then((t) =>
+          setTree(t)
+        );
+      });
   }, []);
 
+  if (!tree) {
+    return <div>Loading...</div>;
+  }
+  console.log("tree: ", tree);
   return (
     <div>
       <ProfileTreeComponent tree={tree} />

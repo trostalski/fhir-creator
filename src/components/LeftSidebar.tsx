@@ -3,10 +3,11 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdDoneAll } from "react-icons/io";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
-import { InputData, StructureDefinition } from "@/types";
+import { InputData } from "@/types";
 import { MdOutlineClear } from "react-icons/md";
-import { getResourceTypeFromUrl, isFhirBaseDefinition } from "@/pages/utils";
+import { getResourceTypeFromUrl, isFhirBaseDefinition } from "../utils/utils";
 import { getResources } from "@/db/utils";
+import { StructureDefinition } from "fhir/r4";
 
 interface ResourceIdListProps {
   setMode: React.Dispatch<React.SetStateAction<"edit" | "create">>;

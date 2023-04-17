@@ -1,4 +1,4 @@
-import { formatIdForPath, removeDots } from "@/pages/utils";
+import { formatIdForPath, removeDots } from "../utils/utils";
 import { ElementDefinition } from "fhir/r4";
 
 interface InputFromTypeProps {
