@@ -38,7 +38,7 @@ import {
   buildTreeFromElementsRecursive,
   containsDot,
 } from "../utils/buildTree";
-import ProfileTreeComponent from "./hello/ProfileTreeComponent";
+import ProfileTreeComponent from "../components/ProfileTreeComponent";
 
 const tooltipSytles = {
   zIndex: 1000,
@@ -89,6 +89,7 @@ const index = () => {
       return [];
     }
     const tree = await buildTreeFromElementsRecursive(elements);
+    console.log(tree)
     setProfileTree(tree);
     setDefaultProfileStates(elements, profile);
   };

@@ -9,7 +9,7 @@ import { capitalizeFirstLetter } from "./utils";
 export interface ProfileTreeNode {
   element: ElementDefinition;
   path: string;
-  parentPath: string | null;
+  parentPath: string;
   childPaths: string[];
   isPrimitive: boolean;
 }
