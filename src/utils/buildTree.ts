@@ -82,17 +82,19 @@ function removeIdPrefix(id: string) {
 }
 
 function getPathFromParentPathAndId(parentPath: string, id: string) {
+  let result = parentPath;
   if (!containsDot(id)) {
-    return parentPath;
-  }
-  if (parentPath.endsWith("[x]")) {
+    result = result;
+  } else if (parentPath.endsWith("[x]")) {
     const parsedParentPath = parentPath.replace(
       "[x]",
       capitalizeFirstLetter(id.split(".")[0])
     );
-    return parsedParentPath + "." + removeIdPrefix(id);
+    result = parsedParentPath + "." + removeIdPrefix(id);
+  } else {
+    result = parentPath + "." + removeIdPrefix(id);
   }
-  return parentPath + "." + removeIdPrefix(id);
+  return result;
 }
 
 function extractDirectChildren(parentPath: string, childPaths: string[]) {
@@ -107,6 +109,42 @@ function extractDirectChildren(parentPath: string, childPaths: string[]) {
   return directChildren;
 }
 
+function isValidElement(element: ElementDefinition) {
+  let result = true;
+  if (!element.id) {
+    result = false;
+  } else if (element.id === "root") {
+    result = false;
+  } else if (!element.id.includes(".")) {
+    result = false;
+  } else if (element.base?.path?.endsWith("id")) {
+    result = false;
+  } else if (element.id.endsWith(".extension")) {
+    result = false;
+  }
+  return result;
+}
+
+function replaceWrongParentPaths(profileTree: ProfileTree) {
+  for (const node of profileTree) {
+    const { path, parentPath } = node;
+    if (parentPath.split(".").length < path.split(".").length - 1) {
+      const childPathStem = path.split(".").slice(0, -1).join(".");
+      node.parentPath = childPathStem;
+    }
+  }
+}
+
+function addMissingChildren(profileTree: ProfileTree) {
+  for (const node of profileTree) {
+    const { parentPath } = node;
+    const parent = profileTree.find((node) => node.path === parentPath);
+    if (parent && !parent.childPaths.includes(node.path)) {
+      parent.childPaths.push(node.path);
+    }
+  }
+}
+
 export async function buildTreeFromElementsRecursive(
   elements: ElementDefinition[],
   parentPath: string = "root"
@@ -118,7 +156,7 @@ export async function buildTreeFromElementsRecursive(
   // if the element is a complex type, it is added to the tree and its children are added recursively
   for (const element of elements) {
     const { id } = element;
-    if (!id?.includes(".")) {
+    if (!isValidElement(element)) {
       continue; // skip root element
     }
 
@@ -132,7 +170,9 @@ export async function buildTreeFromElementsRecursive(
         path: elementPath,
         childPaths: [],
       };
-      profileTree.push(node);
+      if (!profileTree.find((node) => node.path === elementPath)) {
+        profileTree.push(node);
+      }
     } else {
       // element is a complex type, so we need to get its children
       const childrenTypeDefinitions = await getChildrenTypeDefinitions(element);
@@ -161,6 +201,9 @@ export async function buildTreeFromElementsRecursive(
       profileTree.push(parentNode, ...childNodes);
     }
   }
+
+  replaceWrongParentPaths(profileTree); // validate and fix parent paths
+  addMissingChildren(profileTree); // add missing children to parent nodes
 
   return profileTree;
 }

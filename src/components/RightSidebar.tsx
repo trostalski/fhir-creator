@@ -95,9 +95,13 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
 const RightSidebar = (props: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   return (
-    <div className="relative bg-gray-50 shadow-md h-full overflow-scroll">
+    <div
+      className={`relative bg-gray-50 shadow-md h-full overflow-scroll ${
+        isOpen ? "w-1/4" : "w-12"
+      }`}
+    >
       {isOpen ? (
-        <div className="w-60 bg-inherit">
+        <div className="bg-inherit">
           <button
             onClick={(e) => setIsOpen(!isOpen)}
             className="flex p-2 flex-row bg-inherit items-center sticky top-2 w-full h-8"

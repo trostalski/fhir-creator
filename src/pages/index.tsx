@@ -89,7 +89,7 @@ const index = () => {
       return [];
     }
     const tree = await buildTreeFromElementsRecursive(elements);
-    console.log(tree)
+    console.log(tree);
     setProfileTree(tree);
     setDefaultProfileStates(elements, profile);
   };
@@ -150,7 +150,7 @@ const index = () => {
   return (
     <div className="w-screen h-screen overflow-hidden">
       <Header />
-      <main className="flex flex-row pt-8 h-full w-full">
+      <main className="flex flex-row pt-8 h-full">
         <LeftSidebar>
           <ResourceIdList
             setInputData={setInputData}
@@ -159,7 +159,7 @@ const index = () => {
             handleSelectBaseProfile={handleSelectBaseProfile}
           />
         </LeftSidebar>
-        <div className="grow p-4">
+        <div className="w-full p-4">
           <div className="flex flex-row w-full justify-between items-center">
             <Select
               className="w-3/4"
