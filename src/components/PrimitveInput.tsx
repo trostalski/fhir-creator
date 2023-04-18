@@ -1,41 +1,54 @@
-import { ProfileTreeNode } from "@/utils/buildTree";
+import { ProfileTree, ProfileTreeNode } from "@/utils/buildTree";
 import { ElementDefinition, StructureDefinition } from "fhir/r4";
 import React from "react";
 
 interface PrimitveInputProps {
   node: ProfileTreeNode;
+  profileTreeNode: ProfileTreeNode;
+  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
 }
 
 interface InputFromTypeProps {
   type: string;
+  profileTreeNode: ProfileTreeNode;
+  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
 }
 
 const InputFromType = (props: InputFromTypeProps) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.setProfileTree((prevProfileTree) => {
+      const newProfileTree = [...prevProfileTree];
+      const nodeIndex = newProfileTree.findIndex(
+        (node) => node.path === props.profileTreeNode.path
+      );
+      newProfileTree[nodeIndex].value = e.target.value;
+      return newProfileTree;
+    });
+  };
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    props.setProfileTree((prevProfileTree) => {
+      const newProfileTree = [...prevProfileTree];
+      const nodeIndex = newProfileTree.findIndex(
+        (node) => node.path === props.profileTreeNode.path
+      );
+      newProfileTree[nodeIndex].value = e.target.value;
+      return newProfileTree;
+    });
+  };
+
   switch (props.type) {
     //for each primitve type return its own component
     case "boolean":
       return (
-        // boolean radio buttons with yes and no option
-        <div className="flex flex-row gap-2">
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              className="form-radio"
-              name="boolean"
-              value="true"
-            />
-            <span className="ml-2">Yes</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              className="form-radio"
-              name="boolean"
-              value="false"
-            />
-            <span className="ml-2">No</span>
-          </label>
-        </div>
+        // boolean select with yes and no options
+        <select
+          className="bg-gray-50 w-full h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          onChange={handleSelectChange}
+          value={props.profileTreeNode.value}
+        >
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
       );
     case "canonical":
     case "code":
@@ -50,6 +63,8 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="text"
+          value={props.profileTreeNode.value}
+          onChange={handleInputChange}
           className="bg-gray-50 w-full h-8 p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
       );
@@ -61,7 +76,9 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="number"
+          onChange={handleInputChange}
           className="bg-gray-50 w-full h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          value={props.profileTreeNode.value}
         />
       );
     case "dateTime":
@@ -70,6 +87,8 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="date"
           className="bg-gray-50 w-full h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          value={props.profileTreeNode.value}
+          onChange={handleInputChange}
         />
       );
     case "date":
@@ -77,6 +96,8 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="date"
           className="bg-gray-50 w-full h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          value={props.profileTreeNode.value}
+          onChange={handleInputChange}
         />
       );
     case "time":
@@ -84,6 +105,8 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="time"
           className="bg-gray-50 w-full h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          value={props.profileTreeNode.value}
+          onChange={handleInputChange}
         />
       );
     default:
@@ -91,6 +114,8 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="text"
           className="bg-gray-50 w-full h-8 p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          value={props.profileTreeNode.value}
+          onChange={handleInputChange}
         />
       );
   }
@@ -99,10 +124,20 @@ const InputFromType = (props: InputFromTypeProps) => {
 const PrimitveInput = (props: PrimitveInputProps) => {
   return (
     <div className="">
-      <label className="block w-full text-xs font-medium text-gray-700 dark:text-gray-200">
+      <label
+        className={`block w-full text-xs font-medium text-gray-700 dark:text-gray-200 ${
+          props.node.element.min! > 0
+            ? "after:text-red-600 after:content-['*']"
+            : ""
+        }`}
+      >
         {props.node.path.replace(props.node.parentPath + ".", "")}
       </label>
-      <InputFromType type={props.node.element.type![0].code} />
+      <InputFromType
+        type={props.node.element.type![0].code}
+        profileTreeNode={props.profileTreeNode}
+        setProfileTree={props.setProfileTree}
+      />
     </div>
   );
 };

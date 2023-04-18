@@ -3,15 +3,15 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdDoneAll } from "react-icons/io";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
-import { InputData } from "@/types";
 import { MdOutlineClear } from "react-icons/md";
 import { getResourceTypeFromUrl, isFhirBaseDefinition } from "../utils/utils";
 import { getResources } from "@/db/utils";
 import { StructureDefinition } from "fhir/r4";
+import { ProfileTree } from "@/utils/buildTree";
 
 interface ResourceIdListProps {
   setMode: React.Dispatch<React.SetStateAction<"edit" | "create">>;
-  setInputData: React.Dispatch<React.SetStateAction<InputData[]>>;
+  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   loadProfile: (profile: StructureDefinition) => void;
   handleSelectBaseProfile: (value: string) => void;
 }
@@ -55,7 +55,7 @@ export const ResourceIdList = (props: ResourceIdListProps) => {
                   props.loadProfile(profile!);
                 }
                 props.setMode("edit");
-                props.setInputData(resourcePathRepr.data);
+                // props.setProfileTree(resourcePathRepr.data);
               }}
             >
               <span className="text-xs">{resourcePathRepr.id}</span>

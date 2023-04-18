@@ -1,6 +1,7 @@
 import { InputData } from "@/types";
-import { notImportantIdSuffices } from "./constants";
+import { notImportantIdSuffices as notImportantIds } from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
+import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
 
 export const removeDots = (str: string) => {
   return str.replace(/\./g, "");
@@ -34,14 +35,23 @@ export function isMultiTypeString(str: string): boolean {
   return str.includes("[x]");
 }
 
+function removeNPathPartsFromStart(path: string, n: number) {
+  const pathParts = path.split(".");
+  const result = pathParts.slice(n).join(".");
+  return result;
+}
+
+function removeNPathPartsFromEnd(path: string, n: number) {
+  const pathParts = path.split(".");
+  const result = pathParts.slice(0, -n).join(".");
+  return result;
+}
+
 export const idIsImportant = (id: string) => {
   let result = true;
-  const idParts = id.split(".");
-  for (const part of idParts) {
-    if (notImportantIdSuffices.includes(part)) {
-      result = false;
-      break;
-    }
+  const tempId = removeNPathPartsFromStart(id, 1);
+  if (notImportantIds.includes(tempId)) {
+    result = false;
   }
   return result;
 };
@@ -172,6 +182,11 @@ export const mergeSliceElement = (
   }
 };
 
+export function shouldDisplayNode(
+  node: ProfileTreeNode,
+  checkedIds: string[]
+) {}
+
 export const mergeDifferentialWithSnapshot = (
   baseProfile: StructureDefinition,
   differentialProfile: StructureDefinition
@@ -226,6 +241,7 @@ export const mergeDifferentialWithSnapshot = (
   return elements;
 };
 
+// TODO: check if deprecated
 export function createJsonFromPathList(pathList: string[], value: any): any {
   const result = {}; // Initialize the result object
 
@@ -258,6 +274,7 @@ export function createJsonFromPathList(pathList: string[], value: any): any {
   return result;
 }
 
+// currently in use
 export function createJsonFromPathArray(
   pathArray: { path: string; value: any }[]
 ): any {
@@ -327,4 +344,49 @@ export function createJsonFromPathArray(
   }
 
   return convertNumericKeysToArrays(result);
+}
+
+function checkCardinality(
+  inputData: InputData[],
+  profileTreeNode: ProfileTreeNode
+): { minIsMet: boolean; maxIsMet: boolean } {
+  const min = profileTreeNode.element.min;
+  const max = profileTreeNode.element.max;
+  let maxIsMet = true;
+  let minIsMet = true;
+  const path = profileTreeNode.element.path;
+  // get input data corresponding to path
+  let existingInput: InputData[];
+  existingInput = inputData.filter((input) => input.path === path);
+  // check if min cardinality is met
+  if (min && existingInput.length < min) {
+    minIsMet = false;
+  }
+  // check if max cardinality is met
+  if (max && max !== "*" && existingInput.length > parseInt(max)) {
+    maxIsMet = false;
+  }
+  return { minIsMet, maxIsMet };
+}
+
+export interface NotMet {
+  path: string;
+  minIsMet: boolean;
+  maxIsMet: boolean;
+}
+
+export function checkCardinalities(
+  inputData: InputData[],
+  tree: ProfileTree
+): NotMet[] {
+  // go through all nodes in tree
+  let notMet: NotMet[] = [];
+  for (const node of tree) {
+    // check if cardinality of node is met
+    const areMet = checkCardinality(inputData, node);
+    if (!areMet.minIsMet || !areMet.maxIsMet) {
+      notMet.push({ path: node.element.path, ...areMet });
+    }
+  }
+  return notMet;
 }

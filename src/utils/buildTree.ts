@@ -4,14 +4,17 @@ import {
   StructureDefinition,
 } from "fhir/r4";
 import { primitiveTypes } from "./constants";
-import { capitalizeFirstLetter } from "./utils";
+import { capitalizeFirstLetter, parseMaxString } from "./utils";
 
 export interface ProfileTreeNode {
   element: ElementDefinition;
   path: string;
+  id: string;
   parentPath: string;
   childPaths: string[];
   isPrimitive: boolean;
+  type?: string;
+  value?: string;
 }
 
 export type ProfileTree = ProfileTreeNode[];
@@ -81,8 +84,9 @@ function removeIdPrefix(id: string) {
   return idParts.join(".");
 }
 
-function getPathFromParentPathAndId(parentPath: string, id: string) {
+function getPath(parentPath: string, element: ElementDefinition) {
   let result = parentPath;
+  const id = element.id!;
   if (!containsDot(id)) {
     result = result;
   } else if (parentPath.endsWith("[x]")) {
@@ -93,6 +97,10 @@ function getPathFromParentPathAndId(parentPath: string, id: string) {
     result = parsedParentPath + "." + removeIdPrefix(id);
   } else {
     result = parentPath + "." + removeIdPrefix(id);
+  }
+
+  if (element.max && parseMaxString(element.max) > 1) {
+    result = result + "[0]";
   }
   return result;
 }
@@ -160,12 +168,13 @@ export async function buildTreeFromElementsRecursive(
       continue; // skip root element
     }
 
-    const elementPath = getPathFromParentPathAndId(parentPath, id!);
+    const elementPath = getPath(parentPath, element);
 
     if (await isPrimitiveElement(element)) {
       const node: ProfileTreeNode = {
-        element,
-        parentPath,
+        element: element,
+        parentPath: parentPath,
+        id: id!,
         isPrimitive: true,
         path: elementPath,
         childPaths: [],
@@ -192,11 +201,12 @@ export async function buildTreeFromElementsRecursive(
         childNodes.map((node) => node.path)
       );
       const parentNode: ProfileTreeNode = {
-        element,
-        parentPath,
+        element: element,
+        parentPath: parentPath,
+        id: id!,
         isPrimitive: false,
         path: elementPath,
-        childPaths,
+        childPaths: childPaths,
       };
       profileTree.push(parentNode, ...childNodes);
     }
@@ -204,6 +214,5 @@ export async function buildTreeFromElementsRecursive(
 
   replaceWrongParentPaths(profileTree); // validate and fix parent paths
   addMissingChildren(profileTree); // add missing children to parent nodes
-
   return profileTree;
 }

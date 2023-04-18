@@ -21,6 +21,7 @@ import {
   getBaseUrl,
   mergeDifferentialWithSnapshot,
   formatInputDataForResource,
+  shouldDisplayNode,
 } from "../utils/utils";
 import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
@@ -39,6 +40,7 @@ import {
   containsDot,
 } from "../utils/buildTree";
 import ProfileTreeComponent from "../components/ProfileTreeComponent";
+import { checkCardinalities } from "../utils/utils";
 
 const tooltipSytles = {
   zIndex: 1000,
@@ -58,11 +60,9 @@ type ElementType = {
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
-  const [profileElements, setProfileElements] = useState<ElementDefinition[]>();
   const [profileTree, setProfileTree] = useState<ProfileTree>([]);
   const [checkedIds, setCheckedIds] = useState<string[]>([]);
-  const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
-  const [inputData, setInputData] = React.useState<InputData[]>([]);
+  const [ids, setIds] = useState<string[]>([]);
   const [mode, setMode] = useState<"create" | "edit">("create");
 
   const loadProfile = async (profile: StructureDefinition) => {
@@ -89,40 +89,10 @@ const index = () => {
       return [];
     }
     const tree = await buildTreeFromElementsRecursive(elements);
-    console.log(tree);
+    setIds(elements.map((e) => e.id!));
     setProfileTree(tree);
-    setDefaultProfileStates(elements, profile);
-  };
-
-  const setDefaultProfileStates = (
-    elements: ElementDefinition[],
-    profile: StructureDefinition
-  ) => {
-    setProfileElements(elements);
-    setElementTypes(
-      elements.map((element) => {
-        if (element.type) {
-          return { id: element.id!, type: element.type[0].code as string };
-        } else {
-          return { id: element.id!, type: "string" as string };
-        }
-      })
-    );
-    setInputData([
-      ...inputData,
-      { path: "meta.profile[0]", value: profile.url as string },
-      {
-        path: "resourceType",
-        value: profile.type as string,
-      },
-      {
-        path: "id",
-        value: (profile.type as string) + "/" + getUid(),
-      },
-    ]);
-    setCheckedIds(
-      elements.map((element) => element.id!).filter((id) => idIsImportant(id))
-    );
+    console.log("tree: ", tree);
+    setCheckedIds(elements.map((e) => e.id!).filter((e) => idIsImportant(e)));
   };
 
   const handleSelectBaseProfile = async (value: string) => {
@@ -153,7 +123,7 @@ const index = () => {
       <main className="flex flex-row pt-8 h-full">
         <LeftSidebar>
           <ResourceIdList
-            setInputData={setInputData}
+            setProfileTree={setProfileTree}
             setMode={setMode}
             loadProfile={loadProfile}
             handleSelectBaseProfile={handleSelectBaseProfile}
@@ -186,21 +156,31 @@ const index = () => {
                 <button
                   className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xxs font-bold py-2 px-4 rounded"
                   onClick={() => {
-                    if (inputData.length === 0) {
+                    if (profileTree.length === 0) {
                       return;
                     }
-                    const formattedInputData =
-                      formatInputDataForResource(inputData);
-                    const resource =
-                      createJsonFromPathArray(formattedInputData);
-                    addResource(resource);
-                    addResourcPathRepr(inputData);
+                    // const formattedInputData =
+                    //   formatInputDataForResource(inputData);
+                    // const notMet = checkCardinalities(
+                    //   formattedInputData,
+                    //   profileTree
+                    // );
+                    // if (notMet.length > 0) {
+                    //   alert(
+                    //     `The following elements do not meet the cardinalities of the profile: ${notMet.join()}`
+                    //   );
+                    //   return;
+                    // }
+                    // const resource =
+                    //   createJsonFromPathArray(formattedInputData);
+                    // addResource(resource);
+                    // addResourcPathRepr(inputData);
                   }}
                 >
                   Add Resource
                 </button>
               )}
-              {mode == "edit" && (
+              {/* {mode == "edit" && (
                 <button
                   className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded"
                   onClick={() => {
@@ -214,7 +194,7 @@ const index = () => {
                 >
                   Save Changes
                 </button>
-              )}
+              )} */}
             </div>
           </div>
           <div className="h-full pb-10 overflow-scroll">
@@ -240,102 +220,11 @@ const index = () => {
                 <IconContext.Provider value={{ color: "gray", size: "16px" }}>
                   <div className="flex flex-col gap-2">
                     {!profileTree ? null : (
-                      <ProfileTreeComponent tree={profileTree} />
+                      <ProfileTreeComponent
+                        setProfileTree={setProfileTree}
+                        profileTree={profileTree}
+                      />
                     )}
-                    {/* {profileElements!
-                      .filter(
-                        (element) =>
-                          containsDot(element.id!) &&
-                          checkedIds.includes(element.id!)
-                      )
-                      .map((element, index) => (
-                        <div
-                          key={index}
-                          className="flex flex-col gap-0.5 p-4 rounded-md shadow-md bg-blue-100"
-                        >
-                          <div className="flex flex-row justify-between items-center">
-                            <div className="flex flex-row gap-2 items-center">
-                              <label
-                                htmlFor="element-value"
-                                className={`block whitespace-nowrap w-48 text-sm font-medium text-gray-900 dark:text-white ${
-                                  element.min! > 0
-                                    ? "after:text-red-600 after:content-['*']"
-                                    : ""
-                                }`}
-                              >
-                                {element.id}
-                              </label>
-                            </div>
-                            <div className="flex flex-row gap-4 items-center">
-                              <select
-                                id="element-type"
-                                placeholder="Type"
-                                className="bg-white py-0.5 px-4 border w-40 border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                onChange={(e) => {
-                                  setElementTypes(
-                                    elementTypes.map((type) => {
-                                      if (type.id === element.id) {
-                                        return {
-                                          id: type.id,
-                                          type: e.target.value,
-                                        };
-                                      } else {
-                                        return type;
-                                      }
-                                    })
-                                  );
-                                }}
-                              >
-                                {element.type ? (
-                                  element.type.map((type) => (
-                                    <option value={type.code}>
-                                      {type.code}
-                                    </option>
-                                  ))
-                                ) : (
-                                  <option value="string">string</option>
-                                )}
-                              </select>
-                              {parseMaxString(element.max!) > 1 ? (
-                                <button>
-                                  <GrFormAdd />
-                                </button>
-                              ) : (
-                                <button disabled>
-                                  <GrFormAdd style={{ opacity: 0.2 }} />
-                                </button>
-                              )}
-                              <div
-                                id={`element-${index}`}
-                                data-tooltip-id={`${removeDots(
-                                  element.id!
-                                )}-tooltip)}`}
-                                data-tooltip-content={element.short}
-                              >
-                                <AiOutlineQuestionCircle />
-                              </div>
-                              <Tooltip
-                                anchorSelect={`#element-${index}`}
-                                id={`${removeDots(element.id!)}-tooltip`}
-                                place="left"
-                                style={tooltipSytles}
-                              />
-                            </div>
-                          </div>
-                          <InputFromType
-                            element={element}
-                            inputData={inputData}
-                            setInputData={setInputData}
-                            isArray={parseMaxString(element.max!) > 1}
-                            resourceType={profile.type as string}
-                            type={
-                              elementTypes.filter((el) => {
-                                return el.id == element.id;
-                              })[0].type
-                            }
-                          />
-                        </div>
-                      ))} */}
                   </div>
                 </IconContext.Provider>
               </div>
@@ -344,7 +233,7 @@ const index = () => {
         </div>
         <RightSidebar>
           <ProfileCheckboxes
-            profileElements={profileElements!}
+            ids={ids}
             setCheckedIds={setCheckedIds}
             checkedIds={checkedIds}
           />

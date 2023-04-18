@@ -5,8 +5,8 @@ import { containsDot } from "@/utils/buildTree";
 import { ElementDefinition } from "fhir/r4";
 
 interface ProfileCheckboxesProps {
-  profileElements: ElementDefinition[];
   setCheckedIds: React.Dispatch<React.SetStateAction<string[]>>;
+  ids: string[];
   checkedIds: string[];
 }
 
@@ -25,10 +25,8 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
         <button
           className="text-blue-600 font-bold text-xs"
           onClick={(e) => {
-            if (props.profileElements.length > props.checkedIds?.length) {
-              props.setCheckedIds(
-                props.profileElements.map((element) => element.id!)
-              );
+            if (props.ids.length > props.checkedIds?.length) {
+              props.setCheckedIds(props.ids);
             } else {
               props.setCheckedIds([]);
             }
@@ -39,41 +37,35 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
         <button
           className="text-gray-500 font-bold text-xs"
           onClick={(e) =>
-            props.setCheckedIds(
-              props.profileElements
-                .map((element) => element.id!)
-                .filter((id) => idIsImportant(id))
-            )
+            props.setCheckedIds(props.ids.filter((id) => idIsImportant(id)))
           }
         >
           reset
         </button>
       </div>
-      {!props.profileElements
+      {!props.ids
         ? null
-        : props.profileElements
-            .filter((element) => containsDot(element.id!))
-            .filter((element) => {
+        : props.ids
+            .filter((id) => containsDot(id))
+            .filter((id) => {
               if (searchInput) {
-                return element
-                  .id!.toLowerCase()
-                  .includes(searchInput.toLowerCase());
+                return id.toLowerCase().includes(searchInput.toLowerCase());
               } else {
                 return true;
               }
             })
-            .map((element) => (
-              <div className="flex items-center" key={element.id}>
+            .map((id) => (
+              <div className="flex items-center" key={id}>
                 <input
                   id="default-checkbox"
                   type="checkbox"
-                  checked={props.checkedIds.includes(element.id!)}
+                  checked={props.checkedIds.includes(id)}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      props.setCheckedIds((prev) => [...prev, element.id!]);
+                      props.setCheckedIds((prev) => [...prev, id]);
                     } else {
                       props.setCheckedIds((prev) =>
-                        prev.filter((id) => id !== element.id)
+                        prev.filter((id) => id !== id)
                       );
                     }
                   }}
@@ -84,7 +76,7 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
                   htmlFor="default-checkbox"
                   className="ml-2 whitespace-nowrap text-xs font-medium text-gray-900 dark:text-gray-300"
                 >
-                  {element.id}
+                  {id}
                 </label>
               </div>
             ))}
@@ -97,7 +89,7 @@ const RightSidebar = (props: { children: React.ReactNode }) => {
   return (
     <div
       className={`relative bg-gray-50 shadow-md h-full overflow-scroll ${
-        isOpen ? "w-1/4" : "w-12"
+        isOpen ? "w-96" : "w-12"
       }`}
     >
       {isOpen ? (
