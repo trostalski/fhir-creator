@@ -1,73 +1,56 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import { resourceOptions } from "@/constants";
-import { InputData } from "@/types";
+import { resourceOptions } from "../utils/constants";
 import Header from "@/components/Header";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
-import { GrFormAdd } from "react-icons/gr";
 import { Tooltip } from "react-tooltip";
 import { IconContext } from "react-icons/lib";
 import "react-tooltip/dist/react-tooltip.css";
 import {
   containsSnapshot,
   containsDifferential,
-  parseMaxString,
-  removeDots,
   idIsImportant,
-  createJsonFromPathArray,
-  getUid,
   isFhirBaseDefinition,
   getResourceTypeFromUrl,
   getBaseUrl,
   mergeDifferentialWithSnapshot,
-  formatInputDataForResource,
+  getBranchIds,
   shouldDisplayNode,
+  createJsonFromPathArray,
+  checkCardinalities,
+  formatInputDataForResource,
+  getResourceTypeFromProfile,
+  getUid,
 } from "../utils/utils";
-import RightSidebar, { ProfileCheckboxes } from "@/components/RightSidebar";
+import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
-import InputFromType from "@/components/InputFromType";
-import {
-  addProfile,
-  addResource,
-  addResourcPathRepr,
-  updateResource,
-  updateResourcePathRepr,
-} from "@/db/utils";
+import { addProfile, addResourcPathRepr, addResource } from "@/db/utils";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
 import {
   ProfileTree,
   buildTreeFromElementsRecursive,
-  containsDot,
 } from "../utils/buildTree";
 import ProfileTreeComponent from "../components/ProfileTreeComponent";
-import { checkCardinalities } from "../utils/utils";
-
-const tooltipSytles = {
-  zIndex: 1000,
-  backgroundColor: "black",
-  opacity: 0.8,
-  fontSize: "12px",
-  color: "white",
-  borderRadius: "5px",
-  padding: "5px",
-  width: "300px",
-};
-
-type ElementType = {
-  id: string;
-  type: string;
-};
+import { tooltipSytles } from "@/utils/styles";
+import { InputData } from "@/types";
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
   const [profileTree, setProfileTree] = useState<ProfileTree>([]);
-  const [checkedIds, setCheckedIds] = useState<string[]>([]);
-  const [ids, setIds] = useState<string[]>([]);
+  const [checkedBranchIds, setCheckedBranchIds] = useState<string[]>([]);
+  const [branchIds, setBranchIds] = useState<string[]>([]);
+  const [resourceType, setResourceType] = useState<string>();
   const [mode, setMode] = useState<"create" | "edit">("create");
 
   const loadProfile = async (profile: StructureDefinition) => {
     let elements: ElementDefinition[];
     setProfile(profile);
+    const resourceType = getResourceTypeFromProfile(profile);
+    if (!resourceType) {
+      alert("Could not determine resource type from profile");
+    } else {
+      setResourceType(resourceType);
+    }
     if (containsSnapshot(profile) && profile.snapshot) {
       // all elements are present
       elements = profile.snapshot.element;
@@ -89,10 +72,32 @@ const index = () => {
       return [];
     }
     const tree = await buildTreeFromElementsRecursive(elements);
-    setIds(elements.map((e) => e.id!));
+    const branchIds = getBranchIds(tree);
     setProfileTree(tree);
-    console.log("tree: ", tree);
-    setCheckedIds(elements.map((e) => e.id!).filter((e) => idIsImportant(e)));
+    setBranchIds(branchIds);
+    setCheckedBranchIds(branchIds.filter((id) => idIsImportant(id)));
+  };
+
+  const addMissingElements = (inputData: InputData[]) => {
+    if (!inputData.find((e) => e.path === "resourceType")) {
+      inputData.push({
+        path: "resourceType",
+        value: resourceType!,
+      });
+    }
+    if (!inputData.find((e) => e.path === "profile[0]")) {
+      inputData.push({
+        path: "profile[0]",
+        value: profile?.id!,
+      });
+    }
+    if (!inputData.find((e) => e.path === "id")) {
+      inputData.push({
+        path: "id",
+        value: getUid(),
+      });
+    }
+    return inputData;
   };
 
   const handleSelectBaseProfile = async (value: string) => {
@@ -159,22 +164,29 @@ const index = () => {
                     if (profileTree.length === 0) {
                       return;
                     }
-                    // const formattedInputData =
-                    //   formatInputDataForResource(inputData);
+                    let inputData = profileTree
+                      .filter((node) => node.value)
+                      .map((node) => ({
+                        path: node.path,
+                        value: node.value!,
+                      }));
+                    inputData = formatInputDataForResource(inputData);
+                    inputData = addMissingElements(inputData);
                     // const notMet = checkCardinalities(
                     //   formattedInputData,
                     //   profileTree
                     // );
                     // if (notMet.length > 0) {
                     //   alert(
-                    //     `The following elements do not meet the cardinalities of the profile: ${notMet.join()}`
+                    //     `The following elements do not meet the cardinalities of the profile: ${notMet.map(
+                    //       (e) => JSON.stringify(e)
+                    //     )}`
                     //   );
                     //   return;
                     // }
-                    // const resource =
-                    //   createJsonFromPathArray(formattedInputData);
-                    // addResource(resource);
-                    // addResourcPathRepr(inputData);
+                    const resource = createJsonFromPathArray(inputData);
+                    addResource(resource);
+                    addResourcPathRepr(inputData);
                   }}
                 >
                   Add Resource
@@ -222,7 +234,9 @@ const index = () => {
                     {!profileTree ? null : (
                       <ProfileTreeComponent
                         setProfileTree={setProfileTree}
-                        profileTree={profileTree}
+                        profileTree={profileTree.filter((node) =>
+                          shouldDisplayNode(node, checkedBranchIds)
+                        )}
                       />
                     )}
                   </div>
@@ -232,10 +246,10 @@ const index = () => {
           </div>
         </div>
         <RightSidebar>
-          <ProfileCheckboxes
-            ids={ids}
-            setCheckedIds={setCheckedIds}
-            checkedIds={checkedIds}
+          <BranchIdsCheckboxes
+            branchIds={branchIds}
+            setCheckedBranchIds={setCheckedBranchIds}
+            checkedBranchIds={checkedBranchIds}
           />
         </RightSidebar>
       </main>

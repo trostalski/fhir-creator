@@ -1,5 +1,8 @@
 import { InputData } from "@/types";
-import { notImportantIdSuffices as notImportantIds } from "./constants";
+import {
+  notImportantIdSuffices as notImportantIds,
+  rootName,
+} from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
 import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
 
@@ -47,10 +50,20 @@ function removeNPathPartsFromEnd(path: string, n: number) {
   return result;
 }
 
+export function getBranchId(id: string) {
+  return removeNPathPartsFromStart(id, 1);
+}
+
+export function getBranchIds(profileTree: ProfileTree) {
+  // Get all paths that have the rootName as parent without the root
+  const nodes = profileTree.filter((node) => node.parentPath === rootName);
+  const branchIds = nodes.map((node) => getBranchId(node.id));
+  return branchIds;
+}
+
 export const idIsImportant = (id: string) => {
   let result = true;
-  const tempId = removeNPathPartsFromStart(id, 1);
-  if (notImportantIds.includes(tempId)) {
+  if (notImportantIds.includes(id)) {
     result = false;
   }
   return result;
@@ -67,6 +80,16 @@ export const getUid = function () {
 export const getResourceTypeFromUrl = (url: string) => {
   const urlParts = url.split("/");
   return urlParts[urlParts.length - 1];
+};
+
+export const getResourceTypeFromProfile = (profile: StructureDefinition) => {
+  let result = null;
+  if (containsSnapshot(profile)) {
+    result = profile.snapshot!.element[0].id?.split(".")[0];
+  } else if (containsDifferential(profile)) {
+    result = profile.differential!.element[0].id?.split(".")[0];
+  }
+  return result;
 };
 
 export const elementContainsValidType = (element: ElementDefinition) => {
@@ -140,18 +163,15 @@ export const removeBetweenColonAndPeriod = (str: string): string => {
   return str.replace(regex, "").replace(":", "");
 };
 
-const removeSlicePathsFromInputData = (inputData: InputData[]) => {
-  const result = inputData.map((data) => {
-    const newData = { ...data };
-    newData.path = removeBetweenColonAndPeriod(data.path);
-    return newData;
-  });
-  return result;
-};
-
 export const formatInputDataForResource = (inputData: InputData[]) => {
   let result;
-  result = removeSlicePathsFromInputData(inputData);
+  result = inputData.map((data) => {
+    const newData = { ...data };
+    let newPath = removeAfterColon(data.path);
+    newPath = removeNPathPartsFromStart(newPath, 1); // remove root
+    newData.path = newPath;
+    return newData;
+  });
   return result;
 };
 
@@ -184,8 +204,14 @@ export const mergeSliceElement = (
 
 export function shouldDisplayNode(
   node: ProfileTreeNode,
-  checkedIds: string[]
-) {}
+  checkedBranchIds: string[]
+) {
+  let result = true;
+  if (node.parentPath === rootName) {
+    result = checkedBranchIds.includes(getBranchId(node.id));
+  }
+  return result;
+}
 
 export const mergeDifferentialWithSnapshot = (
   baseProfile: StructureDefinition,

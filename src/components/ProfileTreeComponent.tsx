@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
 import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { parseMaxString, shouldDisplayNode } from "@/utils/utils";
+import {
+  capitalizeFirstLetter,
+  parseMaxString,
+  shouldDisplayNode,
+} from "@/utils/utils";
 import { GrFormAdd } from "react-icons/gr";
 
 interface ProfileTreeComponentProps {
@@ -29,17 +33,14 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     return expandedNodes.includes(nodePath);
   };
 
-  const renderNode = (
-    node: ProfileTreeNode,
-    setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>
-  ) => {
+  const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {
       return (
         <div key={node.path} className="flex-grow p-2">
           <PrimitveInput
             node={node}
             profileTreeNode={node}
-            setProfileTree={setProfileTree}
+            setProfileTree={props.setProfileTree}
           />
         </div>
       );
@@ -73,7 +74,15 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                   id="element-type"
                   placeholder="Type"
                   className="bg-white py-0.5 px-4 border w-40 border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  onChange={(e) => {}}
+                  value={node.type}
+                  onChange={(e) => {
+                    const newProfileTree = [...props.profileTree];
+                    const nodeIndex = newProfileTree.findIndex(
+                      (n) => n.path === node.path
+                    );
+                    (newProfileTree[nodeIndex].type = e.target.value),
+                      props.setProfileTree(newProfileTree);
+                  }}
                 >
                   {node.element.type ? (
                     node.element.type.map((type) => (
@@ -98,10 +107,19 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
           {isExpanded && (
             <div className="flex flex-row flex-wrap gap-4 p-2">
               {node.childPaths.map((childPath: string) => {
-                const childNode = props.profileTree.find(
+                let childNode = props.profileTree.find(
                   (n: ProfileTreeNode) => n.path === childPath
                 );
-                return childNode && renderNode(childNode, props.setProfileTree);
+                if (node.type) {
+                  // multiype node with select input for type selection
+                  // the following code filters the child nodes to only show the ones that match the selected type
+                  childNode = childNode?.path
+                    .toLowerCase()
+                    .includes(node.type.toLowerCase())
+                    ? childNode
+                    : undefined;
+                }
+                return childNode && renderNode(childNode);
               })}
             </div>
           )}
@@ -114,7 +132,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     <div className="flex flex-col gap-4">
       {props.profileTree.map((node: ProfileTreeNode) => {
         if (node.parentPath === "root") {
-          return renderNode(node, props.setProfileTree);
+          return renderNode(node);
         }
         return null;
       })}

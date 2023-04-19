@@ -3,8 +3,12 @@ import {
   ElementDefinitionType,
   StructureDefinition,
 } from "fhir/r4";
-import { primitiveTypes } from "./constants";
-import { capitalizeFirstLetter, parseMaxString } from "./utils";
+import { primitiveTypes, rootName } from "./constants";
+import {
+  capitalizeFirstLetter,
+  isMultiTypeString,
+  parseMaxString,
+} from "./utils";
 
 export interface ProfileTreeNode {
   element: ElementDefinition;
@@ -87,18 +91,19 @@ function removeIdPrefix(id: string) {
 function getPath(parentPath: string, element: ElementDefinition) {
   let result = parentPath;
   const id = element.id!;
-  if (!containsDot(id)) {
-    result = result;
-  } else if (parentPath.endsWith("[x]")) {
+  if (parentPath.endsWith("[x]")) {
     const parsedParentPath = parentPath.replace(
       "[x]",
       capitalizeFirstLetter(id.split(".")[0])
     );
-    result = parsedParentPath + "." + removeIdPrefix(id);
+    if (removeIdPrefix(id).length > 0) {
+      result = parsedParentPath + "." + removeIdPrefix(id);
+    } else {
+      result = parsedParentPath;
+    }
   } else {
     result = parentPath + "." + removeIdPrefix(id);
   }
-
   if (element.max && parseMaxString(element.max) > 1) {
     result = result + "[0]";
   }
@@ -121,11 +126,11 @@ function isValidElement(element: ElementDefinition) {
   let result = true;
   if (!element.id) {
     result = false;
-  } else if (element.id === "root") {
+  } else if (element.id === rootName) {
     result = false;
   } else if (!element.id.includes(".")) {
     result = false;
-  } else if (element.base?.path?.endsWith("id")) {
+  } else if (element.base?.path === "Element.id") {
     result = false;
   } else if (element.id.endsWith(".extension")) {
     result = false;
@@ -155,7 +160,7 @@ function addMissingChildren(profileTree: ProfileTree) {
 
 export async function buildTreeFromElementsRecursive(
   elements: ElementDefinition[],
-  parentPath: string = "root"
+  parentPath: string = rootName
 ): Promise<ProfileTree> {
   const profileTree: ProfileTree = [];
 
@@ -187,6 +192,22 @@ export async function buildTreeFromElementsRecursive(
       const childrenTypeDefinitions = await getChildrenTypeDefinitions(element);
       const childNodes: ProfileTreeNode[] = [];
       for (const childType of childrenTypeDefinitions) {
+        if (childType && isPrimitiveType(childType)) {
+          const childElement = childType.snapshot!.element![0];
+          // we need to set element properties from type definitoin (e.g. for onsetDateTime necessary)
+          childElement.type = [{ code: childType.id }];
+          childElement.min = 0;
+          childElement.max = "1";
+          const childNode: ProfileTreeNode = {
+            element: childElement,
+            parentPath: elementPath,
+            id: id!,
+            isPrimitive: true,
+            path: getPath(elementPath, childElement),
+            childPaths: [],
+          };
+          childNodes.push(childNode);
+        }
         if (childType && !isPrimitiveType(childType)) {
           const grandchildNodes = await buildTreeFromElementsRecursive(
             childType.snapshot!.element!,
@@ -200,6 +221,10 @@ export async function buildTreeFromElementsRecursive(
         elementPath,
         childNodes.map((node) => node.path)
       );
+      let elementType = undefined;
+      if (element.type && element.type.length > 1) {
+        elementType = element.type[0].code;
+      }
       const parentNode: ProfileTreeNode = {
         element: element,
         parentPath: parentPath,
@@ -207,6 +232,7 @@ export async function buildTreeFromElementsRecursive(
         isPrimitive: false,
         path: elementPath,
         childPaths: childPaths,
+        type: elementType,
       };
       profileTree.push(parentNode, ...childNodes);
     }

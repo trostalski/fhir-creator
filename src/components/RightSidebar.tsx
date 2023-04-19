@@ -5,12 +5,12 @@ import { containsDot } from "@/utils/buildTree";
 import { ElementDefinition } from "fhir/r4";
 
 interface ProfileCheckboxesProps {
-  setCheckedIds: React.Dispatch<React.SetStateAction<string[]>>;
-  ids: string[];
-  checkedIds: string[];
+  setCheckedBranchIds: React.Dispatch<React.SetStateAction<string[]>>;
+  branchIds: string[];
+  checkedBranchIds: string[];
 }
 
-export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
+export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
   const [searchInput, setSearchInput] = React.useState<string | null>(null);
   return (
     <div className="flex flex-col gap-1 p-2">
@@ -25,10 +25,10 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
         <button
           className="text-blue-600 font-bold text-xs"
           onClick={(e) => {
-            if (props.ids.length > props.checkedIds?.length) {
-              props.setCheckedIds(props.ids);
+            if (props.branchIds.length > props.checkedBranchIds?.length) {
+              props.setCheckedBranchIds(props.branchIds);
             } else {
-              props.setCheckedIds([]);
+              props.setCheckedBranchIds([]);
             }
           }}
         >
@@ -37,16 +37,17 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
         <button
           className="text-gray-500 font-bold text-xs"
           onClick={(e) =>
-            props.setCheckedIds(props.ids.filter((id) => idIsImportant(id)))
+            props.setCheckedBranchIds(
+              props.branchIds.filter((id) => idIsImportant(id))
+            )
           }
         >
           reset
         </button>
       </div>
-      {!props.ids
+      {!props.branchIds
         ? null
-        : props.ids
-            .filter((id) => containsDot(id))
+        : props.branchIds
             .filter((id) => {
               if (searchInput) {
                 return id.toLowerCase().includes(searchInput.toLowerCase());
@@ -59,22 +60,25 @@ export const ProfileCheckboxes = (props: ProfileCheckboxesProps) => {
                 <input
                   id="default-checkbox"
                   type="checkbox"
-                  checked={props.checkedIds.includes(id)}
+                  checked={props.checkedBranchIds.includes(id)}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      props.setCheckedIds((prev) => [...prev, id]);
+                      props.setCheckedBranchIds((prev) => [...prev, id]);
                     } else {
-                      props.setCheckedIds((prev) =>
-                        prev.filter((id) => id !== id)
+                      props.setCheckedBranchIds(
+                        props.checkedBranchIds.filter((i) => i !== id)
                       );
                     }
                   }}
-                  value=""
                   className="w-max-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
                   htmlFor="default-checkbox"
                   className="ml-2 whitespace-nowrap text-xs font-medium text-gray-900 dark:text-gray-300"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
                 >
                   {id}
                 </label>
