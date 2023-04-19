@@ -292,36 +292,40 @@ function getCardinality(profileTreeNode: ProfileTreeNode): Cardinality {
 
 function getChildren(
   profileTree: ProfileTree,
-  profileTreeNode: ProfileTreeNode
+  path: string
 ): ProfileTreeNode[] {
   const children: ProfileTreeNode[] = [];
+  const profileTreeNode = profileTree.find((node) => node.dataPath === path)!;
   for (const child of profileTreeNode.childPaths) {
     const childNode: ProfileTreeNode = profileTree.find(
-      (node) => node.dataPath === child
-    )!;
+      (node) => (node.dataPath === child))!;
     children.push(childNode);
   }
   return children;
 }
 
+
 function existsInOutput(inputData: InputData[], path: string): boolean {
+  path = removeNPathPartsFromStart(path, 1); 
   const exists = inputData.some((data) => data.path.includes(path));
   return exists;
 }
 
 function hasValue(inputData: InputData[], path: string): boolean {
+  path = removeNPathPartsFromStart(path, 1);
   const exists = inputData.some((data) => data.path === path && data.value);
   return exists;
 }
 
 export function checkCardinality(
   profileTree: ProfileTree,
-  profileTreeNode: ProfileTreeNode,
-  inputData: InputData[]
+  path: string,
+  inputData: InputData[],
+  notMet: string[]
 ): boolean {
   let isMet = true;
+  const profileTreeNode = profileTree.find((node) => node.dataPath === path)!;
   const cardinality = getCardinality(profileTreeNode);
-  const path = profileTreeNode.baseId;
   const isPrimitive = profileTreeNode.isPrimitive;
   const hasChildren = profileTreeNode.childPaths.length > 0;
 
@@ -330,9 +334,11 @@ export function checkCardinality(
   }
 
   if (hasChildren) {
-    const children = getChildren(profileTree, profileTreeNode);
+
+    const children = getChildren(profileTree, path);
     for (const child of children) {
-      const childIsMet = checkCardinality(profileTree, child, inputData);
+      const childPath = child.dataPath;
+      const childIsMet = checkCardinality(profileTree, childPath, inputData, notMet);
       if (!childIsMet) {
         isMet = false;
       }
@@ -343,6 +349,10 @@ export function checkCardinality(
     isMet = false;
   }
 
+  if (!isMet) {
+    notMet.push(path);
+  }
+
   return isMet;
 }
 
@@ -351,7 +361,12 @@ export function checkCardinalities(
   inputData: InputData[]
 ): boolean {
   let isMet = true;
-  const root = profileTree.find((node) => node.dataPath === "root")!;
-  isMet = checkCardinality(profileTree, root, inputData);
+  const notMet: string[] = [];
+  const firstChilds = profileTree.filter((node) => node.parentDataPath === rootName);
+  for (const child of firstChilds) {
+    const path = child.dataPath;
+    isMet = checkCardinality(profileTree, path, inputData, notMet);
+  }
+
   return isMet;
 }
