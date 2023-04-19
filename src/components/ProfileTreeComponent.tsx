@@ -30,7 +30,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {
       return (
-        <div key={node.path} className="flex-grow pb-2">
+        <div key={node.dataPath} className="flex-grow pb-2">
           <PrimitveInput
             node={node}
             profileTreeNode={node}
@@ -39,17 +39,17 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         </div>
       );
     } else {
-      const isExpanded = isNodeExpanded(node.path);
+      const isExpanded = isNodeExpanded(node.dataPath);
       return (
         <div
           className={`w-full p-1 border-[1px] border-dotted rounded-sm border-gray-200 ${
             node.isSliceEntry ? "border-violet-400" : ""
           }`}
-          key={node.path}
+          key={node.dataPath}
         >
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-row items-center">
-              <button onClick={() => toggleNodeExpansion(node.path)}>
+              <button onClick={() => toggleNodeExpansion(node.dataPath)}>
                 {isExpanded ? (
                   <MdExpandLess size={24} />
                 ) : (
@@ -63,12 +63,12 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                     : ""
                 }`}
               >
-                {node.path
-                  .replace(node.parentPath + ".", "")
+                {node.dataPath
+                  .replace(node.parentDataPath + ".", "")
                   .replace(/\[.\]/g, "")}
               </h2>
               <span className="text-gray-400 text-sm">
-                {node.path.match(/\[.\]/g)?.join("")}
+                {node.dataPath.match(/\[.\]/g)?.join("")}
               </span>
             </div>
             <span className="flex-grow" />
@@ -83,7 +83,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                   onChange={(e) => {
                     const newProfileTree = [...props.profileTree];
                     const nodeIndex = newProfileTree.findIndex(
-                      (n) => n.path === node.path
+                      (n) => n.dataPath === node.dataPath
                     );
                     (newProfileTree[nodeIndex].type = e.target.value),
                       props.setProfileTree(newProfileTree);
@@ -113,12 +113,12 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
             <div className="flex flex-row flex-wrap gap-1 pl-8">
               {node.childPaths.map((childPath: string) => {
                 let childNode = props.profileTree.find(
-                  (n: ProfileTreeNode) => n.path === childPath
+                  (n: ProfileTreeNode) => n.dataPath === childPath
                 );
                 if (node.type) {
                   // multiype node with select input for type selection
                   // the following code filters the child nodes to only show the ones that match the selected type
-                  childNode = childNode?.path
+                  childNode = childNode?.dataPath
                     .toLowerCase()
                     .includes(node.type.toLowerCase())
                     ? childNode
@@ -140,7 +140,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         <button
           className="text-gray-500 hover:text-gray-70 text-xs rounded py-1 px-2"
           onClick={() =>
-            setClosedNodes(props.profileTree.map((node) => node.path))
+            setClosedNodes(props.profileTree.map((node) => node.dataPath))
           }
         >
           Collapse All
@@ -154,7 +154,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
       </div>
       <div className="flex flex-col gap-4">
         {props.profileTree.map((node: ProfileTreeNode) => {
-          if (node.parentPath === "root") {
+          if (node.parentDataPath === "root") {
             return renderNode(node);
           }
           return null;

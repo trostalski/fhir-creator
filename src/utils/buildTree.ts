@@ -13,15 +13,17 @@ import {
 
 export interface ProfileTreeNode {
   element: ElementDefinition;
-  path: string;
-  id: string;
-  parentPath: string;
+  dataPath: string;
+  baseId: string;
+  parentDataPath: string;
   childPaths: string[];
+  basePath: string; // used for differential merging
   isPrimitive: boolean;
+  isSliceEntry: boolean;
   type?: string;
   value?: string;
-  isSliceEntry: boolean;
   sliceName?: string;
+  cardinalityMet?: boolean;
 }
 
 export type ProfileTree = ProfileTreeNode[];
@@ -138,20 +140,20 @@ function isValidElement(element: ElementDefinition) {
 
 function replaceWrongParentPaths(profileTree: ProfileTree) {
   for (const node of profileTree) {
-    const { path, parentPath } = node;
+    const { dataPath: path, parentDataPath: parentPath } = node;
     if (parentPath.split(".").length < path.split(".").length - 1) {
       const childPathStem = path.split(".").slice(0, -1).join(".");
-      node.parentPath = childPathStem;
+      node.parentDataPath = childPathStem;
     }
   }
 }
 
 function addMissingChildren(profileTree: ProfileTree) {
   for (const node of profileTree) {
-    const { parentPath } = node;
-    const parent = profileTree.find((node) => node.path === parentPath);
-    if (parent && !parent.childPaths.includes(node.path)) {
-      parent.childPaths.push(node.path);
+    const { parentDataPath: parentPath } = node;
+    const parent = profileTree.find((node) => node.dataPath === parentPath);
+    if (parent && !parent.childPaths.includes(node.dataPath)) {
+      parent.childPaths.push(node.dataPath);
     }
   }
 }
@@ -192,7 +194,8 @@ function isSliceEntry(element: ElementDefinition) {
 
 export async function buildTreeFromElementsRecursive(
   elements: ElementDefinition[],
-  parentPath: string = rootName
+  parentPath: string = rootName,
+  parentBasePath: string = rootName
 ): Promise<ProfileTree> {
   const profileTree: ProfileTree = [];
 
@@ -206,6 +209,7 @@ export async function buildTreeFromElementsRecursive(
     }
 
     const elementPath = getPath(parentPath, element);
+    const elementBasePath = parentBasePath + "." + id?.split(".").at(-1)!;
     const elementIsSliceEntry = isSliceEntry(element);
     let sliceName = undefined;
 
@@ -216,15 +220,16 @@ export async function buildTreeFromElementsRecursive(
     if (await isPrimitiveElement(element)) {
       const node: ProfileTreeNode = {
         element: element,
-        parentPath: parentPath,
-        id: id!,
+        dataPath: elementPath,
+        parentDataPath: parentPath,
+        basePath: elementBasePath,
+        baseId: id!,
         isPrimitive: true,
-        path: elementPath,
         childPaths: [],
         isSliceEntry: elementIsSliceEntry,
         sliceName: sliceName,
       };
-      if (!profileTree.find((node) => node.path === elementPath)) {
+      if (!profileTree.find((node) => node.dataPath === elementPath)) {
         profileTree.push(node);
       }
     } else {
@@ -234,16 +239,19 @@ export async function buildTreeFromElementsRecursive(
       for (const childType of childrenTypeDefinitions) {
         if (childType && isPrimitiveType(childType)) {
           const childElement = childType.snapshot!.element![0];
+          const childBasePath =
+            elementBasePath + "." + childElement.id?.split(".").at(-1)!;
           // we need to set element properties from type definitoin (e.g. for onsetDateTime necessary)
           childElement.type = [{ code: childType.id }];
           childElement.min = 0;
           childElement.max = "1";
           const childNode: ProfileTreeNode = {
             element: childElement,
-            parentPath: elementPath,
-            id: id!,
+            dataPath: getPath(elementPath, childElement),
+            parentDataPath: elementPath,
+            basePath: childBasePath,
+            baseId: id!,
             isPrimitive: true,
-            path: getPath(elementPath, childElement),
             childPaths: [],
             isSliceEntry: elementIsSliceEntry,
             sliceName: sliceName,
@@ -253,7 +261,8 @@ export async function buildTreeFromElementsRecursive(
         if (childType && !isPrimitiveType(childType)) {
           const grandchildNodes = await buildTreeFromElementsRecursive(
             childType.snapshot!.element!,
-            elementPath
+            elementPath,
+            elementBasePath
           );
           childNodes.push(...grandchildNodes);
         }
@@ -261,7 +270,7 @@ export async function buildTreeFromElementsRecursive(
       // child nodes also include grantchildren nodes, so we need to extract the direct children
       const childPaths = extractDirectChildren(
         elementPath,
-        childNodes.map((node) => node.path)
+        childNodes.map((node) => node.dataPath)
       );
       let elementType = undefined;
       if (element.type && element.type.length > 1) {
@@ -269,10 +278,11 @@ export async function buildTreeFromElementsRecursive(
       }
       const parentNode: ProfileTreeNode = {
         element: element,
-        parentPath: parentPath,
-        id: id!,
+        dataPath: elementPath,
+        parentDataPath: parentPath,
+        basePath: elementBasePath,
+        baseId: id!,
         isPrimitive: false,
-        path: elementPath,
         childPaths: childPaths,
         type: elementType,
         isSliceEntry: elementIsSliceEntry,

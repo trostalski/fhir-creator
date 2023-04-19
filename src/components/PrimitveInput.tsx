@@ -20,7 +20,7 @@ const InputFromType = (props: InputFromTypeProps) => {
     props.setProfileTree((prevProfileTree) => {
       const newProfileTree = [...prevProfileTree];
       const nodeIndex = newProfileTree.findIndex(
-        (node) => node.path === props.profileTreeNode.path
+        (node) => node.dataPath === props.profileTreeNode.dataPath
       );
       newProfileTree[nodeIndex].value = e.target.value;
       return newProfileTree;
@@ -30,7 +30,7 @@ const InputFromType = (props: InputFromTypeProps) => {
     props.setProfileTree((prevProfileTree) => {
       const newProfileTree = [...prevProfileTree];
       const nodeIndex = newProfileTree.findIndex(
-        (node) => node.path === props.profileTreeNode.path
+        (node) => node.dataPath === props.profileTreeNode.dataPath
       );
       newProfileTree[nodeIndex].value = e.target.value;
       return newProfileTree;
@@ -133,7 +133,7 @@ const PrimitveInput = (props: PrimitveInputProps) => {
             : ""
         }`}
       >
-        {props.node.path.split(".").pop()}
+        {props.node.dataPath.split(".").pop()}
       </label>
       <InputFromType
         type={props.node.element.type![0].code}

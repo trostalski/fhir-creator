@@ -1,5 +1,6 @@
 import { ElementDefinition, StructureDefinition } from "fhir/r4";
 import { isSliceElement } from "./utils";
+import { ProfileTree } from "./buildTree";
 
 const updateElementWithOther = (
   element: ElementDefinition,
@@ -60,7 +61,7 @@ export const mergeDifferentialWithSnapshot = (
   // elements that exist in base profile
   elements = baseProfile.snapshot!.element.map((baseElement) => {
     const differentialElement = differentialProfile.differential!.element.find(
-      (diffElement) => diffElement.id === baseElement.id
+      (diffElement) => diffElement.path === baseElement.path
     );
     if (differentialElement) {
       // update base element with differential element

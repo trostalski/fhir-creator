@@ -31,7 +31,11 @@ import {
 import ProfileTreeComponent from "../components/ProfileTreeComponent";
 import { tooltipSytles } from "@/utils/styles";
 import { InputData } from "@/types";
-import { mergeDifferentialWithSnapshot } from "@/utils/mergeDifferential";
+import {
+  mergeDifferentialWithSnapshot,
+  mergeTreeWithDifferential,
+} from "@/utils/mergeDifferential";
+import { checkCardinalities } from "../utils/utils";
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
@@ -42,7 +46,7 @@ const index = () => {
   const [mode, setMode] = useState<"create" | "edit">("create");
 
   const loadProfile = async (profile: StructureDefinition) => {
-    let elements: ElementDefinition[];
+    let baseElements: ElementDefinition[];
     setProfile(profile);
     const resourceType = getResourceTypeFromProfile(profile);
     if (!resourceType) {
@@ -50,9 +54,11 @@ const index = () => {
     } else {
       setResourceType(resourceType);
     }
+    let profileTree;
     if (containsSnapshot(profile) && profile.snapshot) {
       // all elements are present
-      elements = profile.snapshot.element;
+      baseElements = profile.snapshot.element;
+      // profileTree = await buildTreeFromElementsRecursive(baseElements);
     } else if (containsDifferential(profile) && profile.differential) {
       // only differential is present, needs to be merged with base profile
       const baseUrl = getBaseUrl(profile);
@@ -64,16 +70,22 @@ const index = () => {
         const baseProfile: StructureDefinition = await fetch(
           `api/profiles?filename=${baseResourceType}`
         ).then((res) => res.json());
-        elements = mergeDifferentialWithSnapshot(baseProfile, profile);
+        baseElements = baseProfile.snapshot!.element;
+        // profileTree = await buildTreeFromElementsRecursive(baseElements);
+        // profileTree = await mergeTreeWithDifferential(
+        //   profileTree,
+        //   profile.differential.element
+        // );
+        // baseElements = mergeDifferentialWithSnapshot(baseProfile, profile);
       }
     } else {
       // no snapshot or differential is present
       alert("No snapshot or differential is present in the profile");
       return [];
     }
-    const tree = await buildTreeFromElementsRecursive(elements);
-    const branchIds = getBranchIds(tree);
-    setProfileTree(tree);
+    profileTree = await buildTreeFromElementsRecursive(baseElements);
+    const branchIds = getBranchIds(profileTree);
+    setProfileTree(profileTree);
     setBranchIds(branchIds);
     setCheckedBranchIds(branchIds.filter((id) => idIsImportant(id)));
   };
@@ -167,23 +179,16 @@ const index = () => {
                     let inputData = profileTree
                       .filter((node) => node.value)
                       .map((node) => ({
-                        path: node.path,
+                        path: node.dataPath,
                         value: node.value!,
                       }));
                     inputData = formatInputDataForResource(inputData);
                     inputData = addMissingElements(inputData);
-                    // const notMet = checkCardinalities(
-                    //   formattedInputData,
-                    //   profileTree
-                    // );
-                    // if (notMet.length > 0) {
-                    //   alert(
-                    //     `The following elements do not meet the cardinalities of the profile: ${notMet.map(
-                    //       (e) => JSON.stringify(e)
-                    //     )}`
-                    //   );
-                    //   return;
-                    // }
+                    const isMet = checkCardinalities(profileTree, inputData);
+                    if (!isMet) {
+                      alert("Cardinality not met");
+                      return;
+                    }
                     const resource = createJsonFromPathArray(inputData);
                     addResource(resource);
                     addResourcPathRepr(inputData);

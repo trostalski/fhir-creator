@@ -56,8 +56,8 @@ export function getBranchId(id: string) {
 
 export function getBranchIds(profileTree: ProfileTree) {
   // Get all paths that have the rootName as parent without the root
-  const nodes = profileTree.filter((node) => node.parentPath === rootName);
-  const branchIds = nodes.map((node) => getBranchId(node.id));
+  const nodes = profileTree.filter((node) => node.parentDataPath === rootName);
+  const branchIds = nodes.map((node) => getBranchId(node.baseId));
   return branchIds;
 }
 
@@ -157,8 +157,8 @@ export function shouldDisplayNode(
   checkedBranchIds: string[]
 ) {
   let result = true;
-  if (node.parentPath === rootName) {
-    result = checkedBranchIds.includes(getBranchId(node.id));
+  if (node.parentDataPath === rootName) {
+    result = checkedBranchIds.includes(getBranchId(node.baseId));
   }
   return result;
 }
@@ -268,47 +268,90 @@ export function createJsonFromPathArray(
   return convertNumericKeysToArrays(result);
 }
 
-function checkCardinality(
-  inputData: InputData[],
-  profileTreeNode: ProfileTreeNode
-): { minIsMet: boolean; maxIsMet: boolean } {
-  const min = profileTreeNode.element.min;
-  const max = profileTreeNode.element.max;
-  let maxIsMet = true;
-  let minIsMet = true;
-  const path = profileTreeNode.element.path;
-  // get input data corresponding to path
-  let existingInput: InputData[];
-  existingInput = inputData.filter((input) => input.path === path);
-  // check if min cardinality is met
-  if (min && existingInput.length < min) {
-    minIsMet = false;
-  }
-  // check if max cardinality is met
-  if (max && max !== "*" && existingInput.length > parseInt(max)) {
-    maxIsMet = false;
-  }
-  return { minIsMet, maxIsMet };
-}
-
 export interface NotMet {
   path: string;
   minIsMet: boolean;
   maxIsMet: boolean;
 }
 
-export function checkCardinalities(
-  inputData: InputData[],
-  tree: ProfileTree
-): NotMet[] {
-  // go through all nodes in tree
-  let notMet: NotMet[] = [];
-  for (const node of tree) {
-    // check if cardinality of node is met
-    const areMet = checkCardinality(inputData, node);
-    if (!areMet.minIsMet || !areMet.maxIsMet) {
-      notMet.push({ path: node.element.path, ...areMet });
+interface Cardinality {
+  min: number;
+  max: string;
+}
+
+function getCardinality(profileTreeNode: ProfileTreeNode): Cardinality {
+  let cardinality: Cardinality = { min: 0, max: "0" };
+  if (profileTreeNode.element.min) {
+    cardinality.min = profileTreeNode.element.min;
+  }
+  if (profileTreeNode.element.max) {
+    cardinality.max = profileTreeNode.element.max;
+  }
+  return cardinality;
+}
+
+function getChildren(
+  profileTree: ProfileTree,
+  profileTreeNode: ProfileTreeNode
+): ProfileTreeNode[] {
+  const children: ProfileTreeNode[] = [];
+  for (const child of profileTreeNode.childPaths) {
+    const childNode: ProfileTreeNode = profileTree.find(
+      (node) => node.dataPath === child
+    )!;
+    children.push(childNode);
+  }
+  return children;
+}
+
+function existsInOutput(inputData: InputData[], path: string): boolean {
+  const exists = inputData.some((data) => data.path.includes(path));
+  return exists;
+}
+
+function hasValue(inputData: InputData[], path: string): boolean {
+  const exists = inputData.some((data) => data.path === path && data.value);
+  return exists;
+}
+
+export function checkCardinality(
+  profileTree: ProfileTree,
+  profileTreeNode: ProfileTreeNode,
+  inputData: InputData[]
+): boolean {
+  let isMet = true;
+  const cardinality = getCardinality(profileTreeNode);
+  const path = profileTreeNode.baseId;
+  const isPrimitive = profileTreeNode.isPrimitive;
+  const hasChildren = profileTreeNode.childPaths.length > 0;
+
+  if (cardinality.min > 0 && !existsInOutput(inputData, path)) {
+    isMet = false;
+  }
+
+  if (hasChildren) {
+    const children = getChildren(profileTree, profileTreeNode);
+    for (const child of children) {
+      const childIsMet = checkCardinality(profileTree, child, inputData);
+      if (!childIsMet) {
+        isMet = false;
+      }
     }
   }
-  return notMet;
+
+  if (isPrimitive && cardinality.min > 0 && !hasValue(inputData, path)) {
+    isMet = false;
+  }
+
+  return isMet;
+}
+
+export function checkCardinalities(
+  profileTree: ProfileTree,
+  inputData: InputData[]
+): boolean {
+  let isMet = true;
+  const root = profileTree.find((node) => node.dataPath === "root")!;
+  isMet = checkCardinality(profileTree, root, inputData);
+  return isMet;
 }
