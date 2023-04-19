@@ -17,7 +17,6 @@ import {
   getBranchIds,
   shouldDisplayNode,
   createJsonFromPathArray,
-  checkCardinalities,
   formatInputDataForResource,
   getResourceTypeFromProfile,
   getUid,
@@ -229,18 +228,16 @@ const index = () => {
                     style={tooltipSytles}
                   />
                 </div>
-                <IconContext.Provider value={{ color: "gray", size: "16px" }}>
-                  <div className="flex flex-col gap-2">
-                    {!profileTree ? null : (
-                      <ProfileTreeComponent
-                        setProfileTree={setProfileTree}
-                        profileTree={profileTree.filter((node) =>
-                          shouldDisplayNode(node, checkedBranchIds)
-                        )}
-                      />
-                    )}
-                  </div>
-                </IconContext.Provider>
+                <div className="flex flex-col gap-2">
+                  {!profileTree ? null : (
+                    <ProfileTreeComponent
+                      setProfileTree={setProfileTree}
+                      profileTree={profileTree.filter((node) =>
+                        shouldDisplayNode(node, checkedBranchIds)
+                      )}
+                    />
+                  )}
+                </div>
               </div>
             )}
           </div>

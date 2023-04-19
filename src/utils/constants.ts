@@ -12,6 +12,8 @@ export const notImportantIdSuffices = [
   "modifierExtension",
   "modifier",
   "identifier",
+  "stage",
+  "evidence",
 ];
 
 export const primitiveTypes = [
