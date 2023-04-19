@@ -4,6 +4,7 @@ import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { parseMaxString } from "@/utils/utils";
 import { GrFormAdd } from "react-icons/gr";
+import { AiFillPieChart, AiOutlinePieChart } from "react-icons/ai";
 
 interface ProfileTreeComponentProps {
   profileTree: ProfileTree;
@@ -29,7 +30,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {
       return (
-        <div key={node.path} className="flex-grow p-2">
+        <div key={node.path} className="flex-grow pb-2">
           <PrimitveInput
             node={node}
             profileTreeNode={node}
@@ -41,10 +42,8 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
       const isExpanded = isNodeExpanded(node.path);
       return (
         <div
-          className={`w-full p-1  border-[1px] border-dotted rounded-sm border-gray-200 ${
-            node.element.min! > 0
-              ? "after:text-red-600 after:content-['*']"
-              : ""
+          className={`w-full p-1 border-[1px] border-dotted rounded-sm border-gray-200 ${
+            node.isSliceEntry ? "border-violet-400" : ""
           }`}
           key={node.path}
         >
@@ -57,7 +56,13 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                   <MdExpandMore size={24} />
                 )}
               </button>
-              <h2 className="font-light text-sm">
+              <h2
+                className={`font-light text-sm ${
+                  node.element.min! > 0
+                    ? "after:text-red-600 after:content-['*']"
+                    : ""
+                }`}
+              >
                 {node.path
                   .replace(node.parentPath + ".", "")
                   .replace(/\[.\]/g, "")}
@@ -66,12 +71,14 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                 {node.path.match(/\[.\]/g)?.join("")}
               </span>
             </div>
-            <div className="flex flex-row">
+            <span className="flex-grow" />
+            <div className="flex flex-row items-center gap-2">
+              {node.isSliceEntry && <AiOutlinePieChart style={{ color: "" }} />}
               {!node.element.type || node.element.type?.length <= 1 ? null : (
                 <select
                   id="element-type"
                   placeholder="Type"
-                  className="bg-white py-0.5 px-4 w-40 border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="bg-white py-0.5 px-4 w-40 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   value={node.type}
                   onChange={(e) => {
                     const newProfileTree = [...props.profileTree];

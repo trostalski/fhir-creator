@@ -13,7 +13,6 @@ import {
   isFhirBaseDefinition,
   getResourceTypeFromUrl,
   getBaseUrl,
-  mergeDifferentialWithSnapshot,
   getBranchIds,
   shouldDisplayNode,
   createJsonFromPathArray,
@@ -32,6 +31,7 @@ import {
 import ProfileTreeComponent from "../components/ProfileTreeComponent";
 import { tooltipSytles } from "@/utils/styles";
 import { InputData } from "@/types";
+import { mergeDifferentialWithSnapshot } from "@/utils/mergeDifferential";
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
@@ -57,6 +57,7 @@ const index = () => {
       // only differential is present, needs to be merged with base profile
       const baseUrl = getBaseUrl(profile);
       if (!baseUrl || !isFhirBaseDefinition(baseUrl)) {
+        alert("No base profile found");
         return [];
       } else {
         const baseResourceType = getResourceTypeFromUrl(baseUrl);

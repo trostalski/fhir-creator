@@ -1,4 +1,5 @@
 import { ProfileTree, ProfileTreeNode } from "@/utils/buildTree";
+import { removeMultiTypeString } from "@/utils/utils";
 import { ElementDefinition, StructureDefinition } from "fhir/r4";
 import React from "react";
 
@@ -46,8 +47,9 @@ const InputFromType = (props: InputFromTypeProps) => {
           onChange={handleSelectChange}
           value={props.profileTreeNode.value}
         >
-          <option value="true">Yes</option>
-          <option value="false">No</option>
+          <option value={undefined}>{}</option>
+          <option value="true">true</option>
+          <option value="false">false</option>
         </select>
       );
     case "canonical":
@@ -131,7 +133,7 @@ const PrimitveInput = (props: PrimitveInputProps) => {
             : ""
         }`}
       >
-        {props.node.path.replace(props.node.parentPath + ".", "")}
+        {props.node.path.split(".").pop()}
       </label>
       <InputFromType
         type={props.node.element.type![0].code}

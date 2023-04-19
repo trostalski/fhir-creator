@@ -6,8 +6,9 @@ import {
 import { primitiveTypes, rootName } from "./constants";
 import {
   capitalizeFirstLetter,
-  isMultiTypeString,
+  isSliceElement,
   parseMaxString,
+  removeNPathPartsFromStart,
 } from "./utils";
 
 export interface ProfileTreeNode {
@@ -19,6 +20,8 @@ export interface ProfileTreeNode {
   isPrimitive: boolean;
   type?: string;
   value?: string;
+  isSliceEntry: boolean;
+  sliceName?: string;
 }
 
 export type ProfileTree = ProfileTreeNode[];
@@ -82,27 +85,22 @@ async function getChildrenTypeDefinitions(element: ElementDefinition) {
   return childProfiles;
 }
 
-function removeIdPrefix(id: string) {
-  const idParts = id.split(".");
-  idParts.shift();
-  return idParts.join(".");
-}
-
 function getPath(parentPath: string, element: ElementDefinition) {
   let result = parentPath;
   const id = element.id!;
+
   if (parentPath.endsWith("[x]")) {
     const parsedParentPath = parentPath.replace(
       "[x]",
       capitalizeFirstLetter(id.split(".")[0])
     );
-    if (removeIdPrefix(id).length > 0) {
-      result = parsedParentPath + "." + removeIdPrefix(id);
+    if (removeNPathPartsFromStart(id, 1).length > 0) {
+      result = parsedParentPath + "." + removeNPathPartsFromStart(id, 1);
     } else {
       result = parsedParentPath;
     }
   } else {
-    result = parentPath + "." + removeIdPrefix(id);
+    result = parentPath + "." + removeNPathPartsFromStart(id, 1);
   }
   if (element.max && parseMaxString(element.max) > 1) {
     result = result + "[0]";
@@ -158,6 +156,40 @@ function addMissingChildren(profileTree: ProfileTree) {
   }
 }
 
+function getSliceNames(str: string): string[] {
+  const substrings: string[] = [];
+  let startIndex = 0;
+  while (startIndex !== -1) {
+    startIndex = str.indexOf(":", startIndex);
+    if (startIndex === -1) {
+      break;
+    }
+    const endIndex =
+      str.indexOf(".", startIndex) !== -1
+        ? str.indexOf(".", startIndex)
+        : str.indexOf(" ", startIndex);
+    if (endIndex === -1) {
+      break;
+    }
+    substrings.push(str.substring(startIndex + 1, endIndex));
+    startIndex = endIndex;
+  }
+  return substrings;
+}
+
+export function removeSliceNames(str: string): string {
+  let result = str;
+  const sliceNames = getSliceNames(str);
+  for (const sliceName of sliceNames) {
+    result = result.replace(`:${sliceName}`, "");
+  }
+  return result;
+}
+
+function isSliceEntry(element: ElementDefinition) {
+  return "slicing" in element;
+}
+
 export async function buildTreeFromElementsRecursive(
   elements: ElementDefinition[],
   parentPath: string = rootName
@@ -174,6 +206,12 @@ export async function buildTreeFromElementsRecursive(
     }
 
     const elementPath = getPath(parentPath, element);
+    const elementIsSliceEntry = isSliceEntry(element);
+    let sliceName = undefined;
+
+    if (isSliceElement(element)) {
+      sliceName = getSliceNames(element.id!)[0];
+    }
 
     if (await isPrimitiveElement(element)) {
       const node: ProfileTreeNode = {
@@ -183,6 +221,8 @@ export async function buildTreeFromElementsRecursive(
         isPrimitive: true,
         path: elementPath,
         childPaths: [],
+        isSliceEntry: elementIsSliceEntry,
+        sliceName: sliceName,
       };
       if (!profileTree.find((node) => node.path === elementPath)) {
         profileTree.push(node);
@@ -205,6 +245,8 @@ export async function buildTreeFromElementsRecursive(
             isPrimitive: true,
             path: getPath(elementPath, childElement),
             childPaths: [],
+            isSliceEntry: elementIsSliceEntry,
+            sliceName: sliceName,
           };
           childNodes.push(childNode);
         }
@@ -233,6 +275,8 @@ export async function buildTreeFromElementsRecursive(
         path: elementPath,
         childPaths: childPaths,
         type: elementType,
+        isSliceEntry: elementIsSliceEntry,
+        sliceName: sliceName,
       };
       profileTree.push(parentNode, ...childNodes);
     }
