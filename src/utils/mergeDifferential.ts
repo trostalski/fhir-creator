@@ -1,6 +1,6 @@
 import { ElementDefinition, StructureDefinition } from "fhir/r4";
-import { isSliceElement } from "./utils";
-import { ProfileTree } from "./buildTree";
+import { isSliceElement, removeNPathPartsFromStart } from "./utils";
+import { ProfileTree, ProfileTreeNode, getSliceNames } from "./buildTree";
 
 const updateElementWithOther = (
   element: ElementDefinition,
@@ -73,13 +73,13 @@ export const mergeDifferentialWithSnapshot = (
   // new elements that dont exist in base profile
   for (let differentialElement of differentialProfile.differential!.element) {
     // merge base element into slice element
-    if (isSliceElement(differentialElement)) {
-      differentialElement = mergeSliceElement(
-        differentialElement,
-        elements,
-        differentialProfile.differential!.element
-      );
-    }
+    // if (isSliceElement(differentialElement)) {
+    //   differentialElement = mergeSliceElement(
+    //     differentialElement,
+    //     elements,
+    //     differentialProfile.differential!.element
+    //   );
+    // }
 
     const elementExists = elements.some(
       (element) => element.id === differentialElement.id
@@ -106,3 +106,93 @@ export const mergeDifferentialWithSnapshot = (
   }
   return elements;
 };
+
+function substringFromColon(str: string) {
+  return str.substring(str.indexOf(":"));
+}
+
+function mergeDataPaths(baseDataPath: string, diffId: string) {
+  let newParts = [];
+  const baseParts = baseDataPath.split(".");
+  const diffParts = diffId.split(".");
+  const basePathLength = baseParts.length;
+  for (let i = 0; i < basePathLength; i++) {
+    if (diffParts[i].includes(":")) {
+      console.log("diffParts[i]: ", diffParts[i]);
+      newParts.push(baseParts[i] + substringFromColon(diffParts[i]));
+    } else {
+      newParts.push(baseParts[i]);
+    }
+  }
+  return newParts.join(".");
+}
+
+function getAllDescendants(node: ProfileTreeNode, profileTree: ProfileTree) {
+  const descendants = [];
+  let childPaths = node.childPaths;
+  while (childPaths.length > 0) {
+    const childPath = childPaths.shift();
+    const childNode = profileTree.find((node) => node.dataPath === childPath);
+    if (childNode) {
+      descendants.push(childNode);
+      childPaths = childPaths.concat(childNode.childPaths);
+    }
+  }
+  return descendants;
+}
+
+export function mergeTreeWithDifferential(
+  profileTree: ProfileTree,
+  differentialElements: ElementDefinition[]
+) {
+  for (let differentialElement of differentialElements) {
+    const node = profileTree.find(
+      (node) =>
+        removeNPathPartsFromStart(node.basePath, 1) ===
+        removeNPathPartsFromStart(differentialElement.path, 1)
+    );
+    if (node && differentialElement.path === differentialElement.id) {
+      node.element = updateElementWithOther(node.element, differentialElement);
+    } else if (node) {
+      const newDataPath = mergeDataPaths(
+        node.dataPath,
+        differentialElement.id!
+      );
+      if (profileTree.find((node) => node.dataPath === newDataPath)) {
+        node.element = updateElementWithOther(
+          node.element,
+          differentialElement
+        );
+      } else {
+        const newNode = {
+          ...node,
+          dataPath: newDataPath,
+          element: updateElementWithOther(node.element, differentialElement),
+        };
+        // update parent node in profile tree
+        const parentNode = profileTree.find(
+          (n) => n.dataPath === node.parentDataPath
+        );
+        if (parentNode) {
+          const parentIndex = profileTree.indexOf(parentNode!);
+          parentNode!.childPaths.push(newNode.dataPath);
+          console.log("parent node: ", parentNode);
+          profileTree.splice(parentIndex, 1, parentNode!);
+        }
+
+        profileTree.push(newNode);
+        const children = getAllDescendants(node, profileTree);
+        const newChildren = children.map((child) => {
+          const newChild = { ...child };
+          newChild.dataPath = newChild.dataPath.replace(
+            node.dataPath,
+            newDataPath
+          );
+          return newChild;
+        });
+        profileTree = profileTree.concat(newChildren);
+      }
+    }
+  }
+  return profileTree;
+}

@@ -58,7 +58,7 @@ const index = () => {
     if (containsSnapshot(profile) && profile.snapshot) {
       // all elements are present
       baseElements = profile.snapshot.element;
-      // profileTree = await buildTreeFromElementsRecursive(baseElements);
+      profileTree = await buildTreeFromElementsRecursive(baseElements);
     } else if (containsDifferential(profile) && profile.differential) {
       // only differential is present, needs to be merged with base profile
       const baseUrl = getBaseUrl(profile);
@@ -71,19 +71,19 @@ const index = () => {
           `api/profiles?filename=${baseResourceType}`
         ).then((res) => res.json());
         baseElements = baseProfile.snapshot!.element;
-        // profileTree = await buildTreeFromElementsRecursive(baseElements);
-        // profileTree = await mergeTreeWithDifferential(
-        //   profileTree,
-        //   profile.differential.element
-        // );
         // baseElements = mergeDifferentialWithSnapshot(baseProfile, profile);
+        profileTree = await buildTreeFromElementsRecursive(baseElements);
+        profileTree = await mergeTreeWithDifferential(
+          profileTree,
+          profile.differential.element
+        );
       }
     } else {
       // no snapshot or differential is present
       alert("No snapshot or differential is present in the profile");
       return [];
     }
-    profileTree = await buildTreeFromElementsRecursive(baseElements);
+    console.log(profileTree);
     const branchIds = getBranchIds(profileTree);
     setProfileTree(profileTree);
     setBranchIds(branchIds);
@@ -184,11 +184,6 @@ const index = () => {
                       }));
                     inputData = formatInputDataForResource(inputData);
                     inputData = addMissingElements(inputData);
-                    const isMet = checkCardinalities(profileTree, inputData);
-                    if (!isMet) {
-                      alert("Cardinality not met");
-                      return;
-                    }
                     const resource = createJsonFromPathArray(inputData);
                     addResource(resource);
                     addResourcPathRepr(inputData);

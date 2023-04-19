@@ -158,7 +158,7 @@ function addMissingChildren(profileTree: ProfileTree) {
   }
 }
 
-function getSliceNames(str: string): string[] {
+export function getSliceNames(str: string): string[] {
   const substrings: string[] = [];
   let startIndex = 0;
   while (startIndex !== -1) {

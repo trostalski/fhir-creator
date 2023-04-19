@@ -4,7 +4,7 @@ import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { parseMaxString } from "@/utils/utils";
 import { GrFormAdd } from "react-icons/gr";
-import { AiFillPieChart, AiOutlinePieChart } from "react-icons/ai";
+import { AiOutlinePieChart } from "react-icons/ai";
 
 interface ProfileTreeComponentProps {
   profileTree: ProfileTree;
