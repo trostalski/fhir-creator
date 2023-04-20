@@ -1,8 +1,6 @@
 import { idIsImportant } from "../utils/utils";
 import { RxHamburgerMenu } from "react-icons/rx";
 import React, { useState } from "react";
-import { containsDot } from "@/utils/buildTree";
-import { ElementDefinition } from "fhir/r4";
 
 interface ProfileCheckboxesProps {
   setCheckedBranchIds: React.Dispatch<React.SetStateAction<string[]>>;

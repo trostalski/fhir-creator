@@ -31,11 +31,8 @@ import {
 import ProfileTreeComponent from "../components/ProfileTreeComponent";
 import { tooltipSytles } from "@/utils/styles";
 import { InputData } from "@/types";
-import {
-  mergeDifferentialWithSnapshot,
-  mergeTreeWithDifferential,
-} from "@/utils/mergeDifferential";
-import { checkCardinalities } from "../utils/utils";
+import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
+import uniq from "lodash/uniq";
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
@@ -71,7 +68,6 @@ const index = () => {
           `api/profiles?filename=${baseResourceType}`
         ).then((res) => res.json());
         baseElements = baseProfile.snapshot!.element;
-        // baseElements = mergeDifferentialWithSnapshot(baseProfile, profile);
         profileTree = await buildTreeFromElementsRecursive(baseElements);
         profileTree = await mergeTreeWithDifferential(
           profileTree,
@@ -83,8 +79,8 @@ const index = () => {
       alert("No snapshot or differential is present in the profile");
       return [];
     }
-    console.log(profileTree);
-    const branchIds = getBranchIds(profileTree);
+    console.log("profile tree: ", profileTree);
+    const branchIds = uniq(getBranchIds(profileTree));
     setProfileTree(profileTree);
     setBranchIds(branchIds);
     setCheckedBranchIds(branchIds.filter((id) => idIsImportant(id)));

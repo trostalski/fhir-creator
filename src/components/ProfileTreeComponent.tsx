@@ -91,7 +91,9 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                 >
                   {node.element.type ? (
                     node.element.type.map((type) => (
-                      <option value={type.code}>{type.code}</option>
+                      <option value={type.code} key={type.code}>
+                        {type.code}
+                      </option>
                     ))
                   ) : (
                     <option value="string">string</option>

@@ -6,6 +6,7 @@ import {
 import { primitiveTypes, rootName } from "./constants";
 import {
   capitalizeFirstLetter,
+  getPathSuffix,
   isSliceElement,
   parseMaxString,
   removeNPathPartsFromStart,
@@ -51,7 +52,7 @@ async function getTypeDefinition(type: ElementDefinitionType) {
   return result;
 }
 
-async function isPrimitiveElement(element: ElementDefinition) {
+export async function isPrimitiveElement(element: ElementDefinition) {
   let result = false;
 
   if (element.type && element.type.length == 1) {
@@ -110,7 +111,10 @@ function getPath(parentPath: string, element: ElementDefinition) {
   return result;
 }
 
-function extractDirectChildren(parentPath: string, childPaths: string[]) {
+export function extractDirectChildren(
+  parentPath: string,
+  childPaths: string[]
+) {
   const directChildren: string[] = [];
   for (const childPath of childPaths) {
     const childPathParts = childPath.split(".");
@@ -158,23 +162,12 @@ function addMissingChildren(profileTree: ProfileTree) {
   }
 }
 
-export function getSliceNames(str: string): string[] {
+export function getSliceNames(input: string): string[] {
+  const regex = /:(.*?)(\.|$)/g;
+  let matches: RegExpExecArray | null;
   const substrings: string[] = [];
-  let startIndex = 0;
-  while (startIndex !== -1) {
-    startIndex = str.indexOf(":", startIndex);
-    if (startIndex === -1) {
-      break;
-    }
-    const endIndex =
-      str.indexOf(".", startIndex) !== -1
-        ? str.indexOf(".", startIndex)
-        : str.indexOf(" ", startIndex);
-    if (endIndex === -1) {
-      break;
-    }
-    substrings.push(str.substring(startIndex + 1, endIndex));
-    startIndex = endIndex;
+  while ((matches = regex.exec(input)) !== null) {
+    substrings.push(matches[1]);
   }
   return substrings;
 }
@@ -188,7 +181,7 @@ export function removeSliceNames(str: string): string {
   return result;
 }
 
-function isSliceEntry(element: ElementDefinition) {
+export function isSliceEntry(element: ElementDefinition) {
   return "slicing" in element;
 }
 
@@ -209,7 +202,7 @@ export async function buildTreeFromElementsRecursive(
     }
 
     const elementPath = getPath(parentPath, element);
-    const elementBasePath = parentBasePath + "." + id?.split(".").at(-1)!;
+    const elementBasePath = parentBasePath + "." + getPathSuffix(id!);
     const elementIsSliceEntry = isSliceEntry(element);
     let sliceName = undefined;
 
@@ -240,14 +233,16 @@ export async function buildTreeFromElementsRecursive(
         if (childType && isPrimitiveType(childType)) {
           const childElement = childType.snapshot!.element![0];
           const childBasePath =
-            elementBasePath + "." + childElement.id?.split(".").at(-1)!;
+            elementBasePath + "." + getPathSuffix(childElement.id);
           // we need to set element properties from type definitoin (e.g. for onsetDateTime necessary)
           childElement.type = [{ code: childType.id }];
           childElement.min = 0;
           childElement.max = "1";
+          const dataPath =
+            getPath(elementPath, childElement) + "." + childElement.type[0].code;
           const childNode: ProfileTreeNode = {
             element: childElement,
-            dataPath: getPath(elementPath, childElement),
+            dataPath: dataPath,
             parentDataPath: elementPath,
             basePath: childBasePath,
             baseId: id!,

@@ -1,6 +1,20 @@
 import { ElementDefinition, StructureDefinition } from "fhir/r4";
-import { isSliceElement, removeNPathPartsFromStart } from "./utils";
-import { ProfileTree, ProfileTreeNode, getSliceNames } from "./buildTree";
+import {
+  arraysEqual,
+  containsSnapshot,
+  getPathSuffix,
+  isMultiTypeElement,
+  isSliceElement,
+  logWithCopy,
+  removeNPathPartsFromStart,
+} from "./utils";
+import {
+  ProfileTree,
+  ProfileTreeNode,
+  extractDirectChildren,
+  getSliceNames,
+  isSliceEntry,
+} from "./buildTree";
 
 const updateElementWithOther = (
   element: ElementDefinition,
@@ -118,7 +132,6 @@ function mergeDataPaths(baseDataPath: string, diffId: string) {
   const basePathLength = baseParts.length;
   for (let i = 0; i < basePathLength; i++) {
     if (diffParts[i].includes(":")) {
-      console.log("diffParts[i]: ", diffParts[i]);
       newParts.push(baseParts[i] + substringFromColon(diffParts[i]));
     } else {
       newParts.push(baseParts[i]);
@@ -127,9 +140,23 @@ function mergeDataPaths(baseDataPath: string, diffId: string) {
   return newParts.join(".");
 }
 
-function getAllDescendants(node: ProfileTreeNode, profileTree: ProfileTree) {
+function getAllDescendants(
+  node: ProfileTreeNode,
+  profileTree: ProfileTree,
+  types?: string[]
+) {
   const descendants = [];
-  let childPaths = node.childPaths;
+  let childPaths = node.childPaths.slice(); // first level copy
+  if (types) {
+    childPaths = childPaths.filter((path) => {
+      for (const type of types) {
+        if (path.toLowerCase().includes(type.toLowerCase())) {
+          return true;
+        }
+      }
+      return false;
+    });
+  }
   while (childPaths.length > 0) {
     const childPath = childPaths.shift();
     const childNode = profileTree.find((node) => node.dataPath === childPath);
@@ -141,55 +168,87 @@ function getAllDescendants(node: ProfileTreeNode, profileTree: ProfileTree) {
   return descendants;
 }
 
+function getParentNode(
+  node: ProfileTreeNode,
+  profileTree: ProfileTree
+): ProfileTreeNode | undefined {
+  const parentPath = node.parentDataPath;
+  return profileTree.find((n) => n.dataPath === parentPath);
+}
+
 export function mergeTreeWithDifferential(
   profileTree: ProfileTree,
   differentialElements: ElementDefinition[]
-) {
-  for (let differentialElement of differentialElements) {
+): ProfileTree {
+  for (const differentialElement of differentialElements) {
+    const diffBasePath = removeNPathPartsFromStart(differentialElement.path, 1);
     const node = profileTree.find(
-      (node) =>
-        removeNPathPartsFromStart(node.basePath, 1) ===
-        removeNPathPartsFromStart(differentialElement.path, 1)
+      (n) =>
+        removeNPathPartsFromStart(n.basePath, 1) === diffBasePath &&
+        arraysEqual(
+          getSliceNames(n.dataPath),
+          getSliceNames(differentialElement.id!)
+        )
     );
-    if (node && differentialElement.path === differentialElement.id) {
+    if (node) {
       node.element = updateElementWithOther(node.element, differentialElement);
-    } else if (node) {
-      const newDataPath = mergeDataPaths(
-        node.dataPath,
-        differentialElement.id!
+    } else {
+      // is mutltitype and type exist -> get node by path insert type and and id without indeces??
+      let node = profileTree.find(
+        (n) =>
+          removeNPathPartsFromStart(n.basePath, 1) === diffBasePath &&
+          arraysEqual(
+            getSliceNames(n.parentDataPath),
+            getSliceNames(differentialElement.id!)
+          )
       );
-      if (profileTree.find((node) => node.dataPath === newDataPath)) {
-        node.element = updateElementWithOther(
-          node.element,
-          differentialElement
+      if (!node) {
+        node = profileTree.find(
+          (n) => removeNPathPartsFromStart(n.basePath, 1) === diffBasePath
         );
-      } else {
-        const newNode = {
+      }
+      if (node) {
+        const newDataPath = mergeDataPaths(
+          node.dataPath,
+          differentialElement.id!
+        );
+        const newParentPath = newDataPath.split(".").slice(0, -1).join(".");
+        const newNode: ProfileTreeNode = {
           ...node,
+          isSliceEntry: isSliceEntry(differentialElement),
           dataPath: newDataPath,
           element: updateElementWithOther(node.element, differentialElement),
         };
-        // update parent node in profile tree
-        const parentNode = profileTree.find(
-          (n) => n.dataPath === node.parentDataPath
-        );
-        if (parentNode) {
-          const parentIndex = profileTree.indexOf(parentNode!);
-          parentNode!.childPaths.push(newNode.dataPath);
-          console.log("parent node: ", parentNode);
-          profileTree.splice(parentIndex, 1, parentNode!);
-        }
-
-        profileTree.push(newNode);
-        const children = getAllDescendants(node, profileTree);
-        const newChildren = children.map((child) => {
-          const newChild = { ...child };
-          newChild.dataPath = newChild.dataPath.replace(
-            node.dataPath,
-            newDataPath
+        let parentNode;
+        parentNode = profileTree.find((n) => n.dataPath === newParentPath);
+        if (!parentNode) {
+          parentNode = profileTree.find(
+            (n) => n.dataPath === newNode.parentDataPath
           );
-          return newChild;
-        });
+        }
+        if (parentNode) {
+          parentNode.childPaths.push(newNode.dataPath);
+        }
+        let children;
+        if (isMultiTypeElement(differentialElement)) {
+          const diffTypes = differentialElement.type?.map((t) => t.code);
+          newNode.type = diffTypes![0];
+          children = getAllDescendants(node, profileTree, diffTypes!);
+        } else {
+          children = getAllDescendants(node, profileTree);
+        }
+        const newChildren = children.map((child) => ({
+          ...child,
+          parentDataPath: newDataPath,
+          dataPath: child.dataPath.replace(node!.dataPath, newDataPath),
+        }));
+        console.log("new c: ",newChildren);
+        newNode.childPaths = extractDirectChildren(
+          newNode.dataPath,
+          newChildren.map((n) => n.dataPath)
+        );
+        console.log("new c: ",newNode.childPaths);
+        profileTree.push(newNode);
         profileTree = profileTree.concat(newChildren);
       }
     }

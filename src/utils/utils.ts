@@ -6,6 +6,17 @@ import {
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
 import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
 
+export function logWithCopy(...args: any[]) {
+  for (let i = 0; i < args.length; i++) {
+    if (typeof args[i] === "object") {
+      const c = structuredClone(args[i]);
+      console.log(c);
+    } else {
+      console.log(arguments[i]);
+    }
+  }
+}
+
 export const removeDots = (str: string) => {
   return str.replace(/\./g, "");
 };
@@ -34,8 +45,12 @@ export function removeMultiTypeString(str: string): string {
   return str.replace(/\[x\]/g, "");
 }
 
-export function isMultiTypeString(str: string): boolean {
-  return str.includes("[x]");
+export function isMultiTypeElement(element: ElementDefinition): boolean {
+  let result = false;
+  if (element.type && element.type.length > 0 && element.path.includes("[x]")) {
+    result = true;
+  }
+  return result;
 }
 
 export function removeNPathPartsFromStart(path: string, n: number) {
@@ -44,10 +59,33 @@ export function removeNPathPartsFromStart(path: string, n: number) {
   return result;
 }
 
+export function getPathSuffix(path: string) {
+  const pathParts = path.split(".");
+  const result = pathParts[pathParts.length - 1];
+  return result;
+}
+
 function removeNPathPartsFromEnd(path: string, n: number) {
   const pathParts = path.split(".");
   const result = pathParts.slice(0, -n).join(".");
   return result;
+}
+
+export function arraysEqual(a: any[], b: any[]) {
+  // from https://stackoverflow.com/questions/3115982/how-to-check-if-two-arrays-are-equal-with-javascript
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  if (a.length !== b.length) return false;
+
+  // If you don't care about the order of the elements inside
+  // the array, you should sort both arrays here.
+  // Please note that calling sort on an array will modify that array.
+  // you might want to clone your array first.
+
+  for (var i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
 }
 
 export function getBranchId(id: string) {
@@ -108,22 +146,6 @@ export const elementContainsValidType = (element: ElementDefinition) => {
 
 export const getBaseUrl = (profile: StructureDefinition) => {
   return profile.baseDefinition;
-};
-
-export const formatIdForPath = (
-  id: string,
-  type?: string,
-  resourceType?: string
-) => {
-  let result = id;
-  if (id.startsWith(resourceType + ".")) {
-    result = id.replace(resourceType + ".", "");
-  }
-  if (isMultiTypeString(id)) {
-    result = removeMultiTypeString(result);
-    result = result + type;
-  }
-  return result;
 };
 
 export const removeAfterColon = (str: string) => {
@@ -298,15 +320,15 @@ function getChildren(
   const profileTreeNode = profileTree.find((node) => node.dataPath === path)!;
   for (const child of profileTreeNode.childPaths) {
     const childNode: ProfileTreeNode = profileTree.find(
-      (node) => (node.dataPath === child))!;
+      (node) => node.dataPath === child
+    )!;
     children.push(childNode);
   }
   return children;
 }
 
-
 function existsInOutput(inputData: InputData[], path: string): boolean {
-  path = removeNPathPartsFromStart(path, 1); 
+  path = removeNPathPartsFromStart(path, 1);
   const exists = inputData.some((data) => data.path.includes(path));
   return exists;
 }
@@ -334,11 +356,15 @@ export function checkCardinality(
   }
 
   if (hasChildren) {
-
     const children = getChildren(profileTree, path);
     for (const child of children) {
       const childPath = child.dataPath;
-      const childIsMet = checkCardinality(profileTree, childPath, inputData, notMet);
+      const childIsMet = checkCardinality(
+        profileTree,
+        childPath,
+        inputData,
+        notMet
+      );
       if (!childIsMet) {
         isMet = false;
       }
@@ -362,7 +388,9 @@ export function checkCardinalities(
 ): boolean {
   let isMet = true;
   const notMet: string[] = [];
-  const firstChilds = profileTree.filter((node) => node.parentDataPath === rootName);
+  const firstChilds = profileTree.filter(
+    (node) => node.parentDataPath === rootName
+  );
   for (const child of firstChilds) {
     const path = child.dataPath;
     isMet = checkCardinality(profileTree, path, inputData, notMet);
