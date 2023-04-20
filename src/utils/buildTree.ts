@@ -239,7 +239,9 @@ export async function buildTreeFromElementsRecursive(
           childElement.min = 0;
           childElement.max = "1";
           const dataPath =
-            getPath(elementPath, childElement) + "." + childElement.type[0].code;
+            getPath(elementPath, childElement) +
+            "." +
+            childElement.type[0].code;
           const childNode: ProfileTreeNode = {
             element: childElement,
             dataPath: dataPath,

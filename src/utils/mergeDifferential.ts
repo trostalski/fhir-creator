@@ -234,22 +234,35 @@ export function mergeTreeWithDifferential(
           const diffTypes = differentialElement.type?.map((t) => t.code);
           newNode.type = diffTypes![0];
           children = getAllDescendants(node, profileTree, diffTypes!);
+          children = children.map((child) => {
+            let oldPathParts = node!.dataPath.replace(
+              "[x]",
+              child.baseId.split(".")[0]
+            );
+            let newPathParts = newDataPath.replace(
+              "[x]",
+              child.baseId.split(".")[0]
+            );
+            return {
+              ...child,
+              parentDataPath: newDataPath,
+              dataPath: child.dataPath.replace(oldPathParts, newPathParts),
+            };
+          });
         } else {
           children = getAllDescendants(node, profileTree);
+          children = children.map((child) => ({
+            ...child,
+            parentDataPath: newDataPath,
+            dataPath: child.dataPath.replace(node!.dataPath, newDataPath),
+          }));
         }
-        const newChildren = children.map((child) => ({
-          ...child,
-          parentDataPath: newDataPath,
-          dataPath: child.dataPath.replace(node!.dataPath, newDataPath),
-        }));
-        console.log("new c: ",newChildren);
         newNode.childPaths = extractDirectChildren(
           newNode.dataPath,
-          newChildren.map((n) => n.dataPath)
+          children.map((n) => n.dataPath)
         );
-        console.log("new c: ",newNode.childPaths);
         profileTree.push(newNode);
-        profileTree = profileTree.concat(newChildren);
+        profileTree = profileTree.concat(children);
       }
     }
   }
