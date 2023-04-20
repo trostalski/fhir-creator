@@ -145,6 +145,7 @@ const index = () => {
         <div className="w-full p-4">
           <div className="flex flex-row w-full justify-between items-center">
             <Select
+              instanceId={"baseprofile-select"}
               className="w-3/4"
               options={resourceOptions}
               placeholder="Select a profile"
