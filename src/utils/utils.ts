@@ -1,12 +1,14 @@
 import { Cardinality, InputData } from "@/types";
 import {
+  multiTypeString,
   notImportantIdSuffices as notImportantIds,
+  pathDelimiter,
   rootName,
 } from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
 import {
   ProfileTree,
-  ProfileTreeNode,
+  IProfileTreeNode,
   getSliceNames,
 } from "../utils/buildTree";
 
@@ -45,9 +47,21 @@ export function removeMultiTypeString(str: string): string {
   return str.replace(/\[x\]/g, "");
 }
 
+export function getNthPartOfPath(path: string, n: number) {
+  const pathParts = path.split(pathDelimiter);
+  if (n === -1) {
+    n = pathParts.length - 1;
+  }
+  return pathParts[n];
+}
+
 export function isMultiTypeElement(element: ElementDefinition): boolean {
   let result = false;
-  if (element.type && element.type.length > 0 && element.path.includes("[x]")) {
+  if (
+    element.type &&
+    element.type.length > 0 &&
+    element.path.includes(multiTypeString)
+  ) {
     result = true;
   }
   return result;
@@ -60,9 +74,7 @@ export function removeNPathPartsFromStart(path: string, n: number) {
 }
 
 export function getPathSuffix(path: string) {
-  const pathParts = path.split(".");
-  const result = pathParts[pathParts.length - 1];
-  return result;
+  return getNthPartOfPath(path, -1);
 }
 
 export function arraysEqual(a: any[], b: any[]) {
@@ -239,7 +251,7 @@ export const formatInputDataForResource = (inputData: InputData[]) => {
 };
 
 export function shouldDisplayNode(
-  node: ProfileTreeNode,
+  node: IProfileTreeNode,
   checkedBranchIds: string[]
 ) {
   let result = true;
@@ -364,7 +376,7 @@ export function createJsonFromPathArray(
   return convertNumericKeysToArrays(result);
 }
 
-function getCardinality(profileTreeNode: ProfileTreeNode): Cardinality {
+function getCardinality(profileTreeNode: IProfileTreeNode): Cardinality {
   let cardinality: Cardinality = { min: 0, max: "0" };
   if (profileTreeNode.element.min) {
     cardinality.min = profileTreeNode.element.min;
@@ -378,11 +390,11 @@ function getCardinality(profileTreeNode: ProfileTreeNode): Cardinality {
 function getChildren(
   profileTree: ProfileTree,
   path: string
-): ProfileTreeNode[] {
-  const children: ProfileTreeNode[] = [];
+): IProfileTreeNode[] {
+  const children: IProfileTreeNode[] = [];
   const profileTreeNode = profileTree.find((node) => node.dataPath === path)!;
   for (const child of profileTreeNode.childPaths) {
-    const childNode: ProfileTreeNode = profileTree.find(
+    const childNode: IProfileTreeNode = profileTree.find(
       (node) => node.dataPath === child
     )!;
     children.push(childNode);

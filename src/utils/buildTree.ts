@@ -3,7 +3,12 @@ import {
   ElementDefinitionType,
   StructureDefinition,
 } from "fhir/r4";
-import { primitiveTypes, rootName } from "./constants";
+import {
+  multiTypeString,
+  pathDelimiter,
+  primitiveTypes,
+  rootName,
+} from "./constants";
 import {
   capitalizeFirstLetter,
   getPathSuffix,
@@ -12,8 +17,9 @@ import {
   removeNPathPartsFromStart,
 } from "./utils";
 import { validFhirTypes } from "./fhirTypes";
+import { ProfileTreeNode } from "./profileTree";
 
-export interface ProfileTreeNode {
+export interface IProfileTreeNode {
   element: ElementDefinition;
   dataPath: string;
   baseId: string;
@@ -30,7 +36,7 @@ export interface ProfileTreeNode {
   cardinalityMet?: boolean;
 }
 
-export type ProfileTree = ProfileTreeNode[];
+export type ProfileTree = IProfileTreeNode[];
 
 export const containsDot = (str: string) => {
   return str.includes(".");
@@ -76,7 +82,7 @@ export async function isPrimitiveElement(element: ElementDefinition) {
   return result;
 }
 
-function isPrimitiveType(profile: StructureDefinition) {
+export function isPrimitiveType(profile: StructureDefinition) {
   let result = false;
   if (profile.kind === "primitive-type") {
     result = true;
@@ -86,7 +92,18 @@ function isPrimitiveType(profile: StructureDefinition) {
   return result;
 }
 
-async function getChildrenTypeDefinitions(element: ElementDefinition) {
+export function replaceMultiTypePath(
+  path: string, // path with [x] in it
+  type: string
+) {
+  return path.replace(multiTypeString, capitalizeFirstLetter(type));
+}
+
+export function isMultiTypeString(string: string) {
+  return string.includes(multiTypeString);
+}
+
+export async function getChildrenTypeDefinitions(element: ElementDefinition) {
   let childProfiles = [];
   if (element.type) {
     for (const type of element.type!) {
@@ -95,6 +112,26 @@ async function getChildrenTypeDefinitions(element: ElementDefinition) {
     }
   }
   return childProfiles;
+}
+
+export function mergePaths(...paths: string[]) {
+  return paths.join(pathDelimiter);
+}
+
+export function getPathLength(path: string) {
+  return path.split(pathDelimiter).length;
+}
+
+export function elementExpectsArray(element: ElementDefinition) {
+  let result = false;
+  if (element.max && parseMaxString(element.max) > 1) {
+    result = true;
+  }
+  return result;
+}
+
+export function getIndexString(index: number) {
+  return `[${index}]`;
 }
 
 function getPath(parentPath: string, element: ElementDefinition) {
@@ -130,6 +167,19 @@ export function extractDirectChildren(
     const parentPathParts = parentPath.split(".");
     if (childPathParts.length === parentPathParts.length + 1) {
       directChildren.push(childPath);
+    }
+  }
+  return directChildren;
+}
+
+export function extractDirectChildNodes(
+  parentNode: ProfileTreeNode,
+  childNodes: ProfileTreeNode[]
+) {
+  const directChildren: ProfileTreeNode[] = [];
+  for (const childNode of childNodes) {
+    if (childNode.depth === parentNode.depth + 1) {
+      directChildren.push(childNode);
     }
   }
   return directChildren;
@@ -220,7 +270,7 @@ export async function buildTreeFromElementsRecursive(
     }
 
     if (await isPrimitiveElement(element)) {
-      const node: ProfileTreeNode = {
+      const node: IProfileTreeNode = {
         element: element,
         dataPath: elementPath,
         parentDataPath: parentPath,
@@ -240,7 +290,7 @@ export async function buildTreeFromElementsRecursive(
     } else {
       // element is a complex type, so we need to get its children
       const childrenTypeDefinitions = await getChildrenTypeDefinitions(element);
-      const childNodes: ProfileTreeNode[] = [];
+      const childNodes: IProfileTreeNode[] = [];
       for (const childType of childrenTypeDefinitions) {
         if (childType && isPrimitiveType(childType)) {
           const childElement = childType.snapshot!.element![0];
@@ -254,7 +304,7 @@ export async function buildTreeFromElementsRecursive(
             getPath(elementPath, childElement) +
             "." +
             childElement.type[0].code;
-          const childNode: ProfileTreeNode = {
+          const childNode: IProfileTreeNode = {
             element: childElement,
             dataPath: dataPath,
             parentDataPath: elementPath,
@@ -287,7 +337,7 @@ export async function buildTreeFromElementsRecursive(
       if (element.type && element.type.length > 1) {
         elementType = element.type[0].code;
       }
-      const parentNode: ProfileTreeNode = {
+      const parentNode: IProfileTreeNode = {
         element: element,
         dataPath: elementPath,
         parentDataPath: parentPath,

@@ -2,6 +2,10 @@ import { OptionType } from "../types";
 
 export const rootName = "root";
 
+export const pathDelimiter = ".";
+
+export const multiTypeString = "[x]";
+
 export const notImportantIdSuffices = [
   "meta",
   "implicitRules",

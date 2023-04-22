@@ -1,17 +1,17 @@
-import { ProfileTree, ProfileTreeNode } from "@/utils/buildTree";
+import { ProfileTree, IProfileTreeNode } from "@/utils/buildTree";
 import { removeMultiTypeString } from "@/utils/utils";
 import { ElementDefinition, StructureDefinition } from "fhir/r4";
 import React from "react";
 
 interface PrimitveInputProps {
-  node: ProfileTreeNode;
-  profileTreeNode: ProfileTreeNode;
+  node: IProfileTreeNode;
+  profileTreeNode: IProfileTreeNode;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
 }
 
 interface InputFromTypeProps {
   type: string;
-  profileTreeNode: ProfileTreeNode;
+  profileTreeNode: IProfileTreeNode;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
 }
 

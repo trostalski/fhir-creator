@@ -7,7 +7,7 @@ import {
 } from "./utils";
 import {
   ProfileTree,
-  ProfileTreeNode,
+  IProfileTreeNode,
   extractDirectChildren,
   getSliceNames,
   isSliceEntry,
@@ -43,7 +43,7 @@ function mergeDataPaths(baseDataPath: string, diffId: string) {
 }
 
 function getAllDescendants(
-  node: ProfileTreeNode,
+  node: IProfileTreeNode,
   profileTree: ProfileTree,
   types?: string[]
 ) {
@@ -112,7 +112,7 @@ export function mergeTreeWithDifferential(
           differentialElement.id!
         );
         const newParentPath = newDataPath.split(".").slice(0, -1).join(".");
-        const newNode: ProfileTreeNode = {
+        const newNode: IProfileTreeNode = {
           ...node,
           isSliceEntry: isSliceEntry(differentialElement),
           dataPath: newDataPath,

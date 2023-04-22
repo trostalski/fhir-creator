@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
+import { ProfileTree, IProfileTreeNode } from "../utils/buildTree";
 import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { incrementDataPath, parseMaxString } from "@/utils/utils";
@@ -27,7 +27,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     }
   };
 
-  const renderNode = (node: ProfileTreeNode) => {
+  const renderNode = (node: IProfileTreeNode) => {
     const isExpanded = isNodeExpanded(node.dataPath);
     if (node.isPrimitive) {
       if (node.isRootPrimitive) {
@@ -165,7 +165,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
             <div className="flex flex-row flex-wrap gap-1 pl-8">
               {node.childPaths.map((childPath: string) => {
                 let childNode = props.profileTree.find(
-                  (n: ProfileTreeNode) => n.dataPath === childPath
+                  (n: IProfileTreeNode) => n.dataPath === childPath
                 );
                 if (node.type) {
                   // multiype node with select input for type selection
@@ -205,7 +205,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         </button>
       </div>
       <div className="flex flex-col gap-4">
-        {props.profileTree.map((node: ProfileTreeNode) => {
+        {props.profileTree.map((node: IProfileTreeNode) => {
           if (node.parentDataPath === "root") {
             return renderNode(node);
           }
