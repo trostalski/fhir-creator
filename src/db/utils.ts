@@ -116,9 +116,3 @@ export async function getResources() {
       document.body.removeChild(link);
     });
 }
-
-//toArray
-//FhirResource[]
-//[{2342343: {resouce}}]
-
-// { id: "2342343", resourceType: "Conditions", clinicalStatus: "active", code: { coding: [ { system: "http://snomed.info/sct", code: "123456", display: "Diabetes" } ], text: "Diabetes" }, subject: { reference: "Patient/123456" }, onsetDateTime: "2019-01-01", recordedDate: "2019-01-01", recorder: { reference: "Practitioner/123456" }, asserter: { reference: "Practitioner/123456" }, note: [ { text: "Patient has diabetes" } ]

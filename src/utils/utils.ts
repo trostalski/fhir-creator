@@ -1,10 +1,14 @@
-import { InputData } from "@/types";
+import { Cardinality, InputData } from "@/types";
 import {
   notImportantIdSuffices as notImportantIds,
   rootName,
 } from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
-import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
+import {
+  ProfileTree,
+  ProfileTreeNode,
+  getSliceNames,
+} from "../utils/buildTree";
 
 export function logWithCopy(...args: any[]) {
   for (let i = 0; i < args.length; i++) {
@@ -16,10 +20,6 @@ export function logWithCopy(...args: any[]) {
     }
   }
 }
-
-export const removeDots = (str: string) => {
-  return str.replace(/\./g, "");
-};
 
 export const containsSnapshot = (profile: StructureDefinition) => {
   return "snapshot" in profile;
@@ -62,12 +62,6 @@ export function removeNPathPartsFromStart(path: string, n: number) {
 export function getPathSuffix(path: string) {
   const pathParts = path.split(".");
   const result = pathParts[pathParts.length - 1];
-  return result;
-}
-
-function removeNPathPartsFromEnd(path: string, n: number) {
-  const pathParts = path.split(".");
-  const result = pathParts.slice(0, -n).join(".");
   return result;
 }
 
@@ -162,11 +156,81 @@ export const removeBetweenColonAndPeriod = (str: string): string => {
   return str.replace(regex, "").replace(":", "");
 };
 
+function getCharsBeforeVar(str: string, variable: string, n: number) {
+  const index = str.indexOf(variable);
+  if (index < 0) {
+    return "";
+  } else if (index <= n) {
+    return str.substring(0, index);
+  } else {
+    return str.substring(index - n, index);
+  }
+}
+
+function getCharsAfterVar(str: string, variable: string, n: number) {
+  const index = str.indexOf(variable);
+  if (index < 0) {
+    return "";
+  } else if (index + variable.length + n > str.length) {
+    return str.substring(index + variable.length);
+  } else {
+    return str.substring(index + variable.length, index + variable.length + n);
+  }
+}
+
 export const formatInputDataForResource = (inputData: InputData[]) => {
+  // TODO this is a mess
+  inputData = inputData.sort((a, b) => {
+    if (a.path < b.path) {
+      return -1;
+    } else if (a.path > b.path) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
   let result;
   result = inputData.map((data) => {
+    const { path } = data;
+    if (path.includes(":")) {
+      const indexRegex = /\[(\d+)\]/;
+      const sliceNames = getSliceNames(path);
+      for (const sliceName of sliceNames) {
+        const slicePart = path
+          .split(".")
+          .filter((part) => part.includes(sliceName))[0];
+        const startPart = path.substring(0, path.indexOf(sliceName) - 4);
+        if (indexRegex.test(slicePart)) {
+          let t = inputData.filter((data) => {
+            return data.path.startsWith(startPart);
+          });
+          let prevIndeces = inputData
+            .filter((data) => data.path.startsWith(startPart))
+            .map((d) => {
+              const indexPart = getCharsAfterVar(d.path, startPart, 4);
+              const match = indexRegex.exec(indexPart);
+              return match ? parseInt(match[1]) : -1;
+            });
+          const maxPrevIndex = Math.max(...prevIndeces);
+          if (maxPrevIndex < prevIndeces.length) {
+            const currentStart = path.substring(
+              0,
+              path.indexOf(sliceName) + sliceName.length
+            );
+            const newStartPart = startPart + "[" + (maxPrevIndex + 1) + "]";
+            inputData = inputData.map((data) => {
+              if (data.path.startsWith(currentStart)) {
+                data.path = data.path.replace(currentStart, newStartPart);
+              }
+              return data;
+            });
+          }
+        }
+      }
+    }
     const newData = { ...data };
-    let newPath = removeAfterColon(data.path);
+    let newPath = removeBetweenColonAndPeriod(data.path);
+    console.log("new path: ", newPath);
     newPath = removeNPathPartsFromStart(newPath, 1); // remove root
     newData.path = newPath;
     return newData;
@@ -183,6 +247,16 @@ export function shouldDisplayNode(
     result = checkedBranchIds.includes(getBranchId(node.baseId));
   }
   return result;
+}
+
+export function extractInputDataFromProfileTree(profileTree: ProfileTree) {
+  const inputData = profileTree
+    .filter((node) => node.value)
+    .map((node) => ({
+      path: node.dataPath,
+      value: node.value!,
+    }));
+  return inputData;
 }
 
 // TODO: check if deprecated
@@ -290,17 +364,6 @@ export function createJsonFromPathArray(
   return convertNumericKeysToArrays(result);
 }
 
-export interface NotMet {
-  path: string;
-  minIsMet: boolean;
-  maxIsMet: boolean;
-}
-
-interface Cardinality {
-  min: number;
-  max: string;
-}
-
 function getCardinality(profileTreeNode: ProfileTreeNode): Cardinality {
   let cardinality: Cardinality = { min: 0, max: "0" };
   if (profileTreeNode.element.min) {
@@ -337,6 +400,22 @@ function hasValue(inputData: InputData[], path: string): boolean {
   path = removeNPathPartsFromStart(path, 1);
   const exists = inputData.some((data) => data.path === path && data.value);
   return exists;
+}
+
+function extractLastIndex(str: string): number {
+  const match = str.match(/\[(\d+)\]$/);
+  if (match) {
+    return parseInt(match[1]);
+  }
+  return -1; // or throw an error, if there is no index found
+}
+
+export function incrementDataPath(path: string): string {
+  const lastIndex = extractLastIndex(path);
+  if (lastIndex >= 0) {
+    return path.replace(/\[\d+\]$/, `[${lastIndex + 1}]`);
+  }
+  return path;
 }
 
 export function checkCardinality(

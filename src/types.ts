@@ -8,3 +8,13 @@ export interface OptionType {
   value: string;
 }
 
+export interface NotMet {
+  path: string;
+  minIsMet: boolean;
+  maxIsMet: boolean;
+}
+
+export interface Cardinality {
+  min: number;
+  max: string;
+}

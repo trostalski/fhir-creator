@@ -11,6 +11,7 @@ import {
   parseMaxString,
   removeNPathPartsFromStart,
 } from "./utils";
+import { validFhirTypes } from "./fhirTypes";
 
 export interface ProfileTreeNode {
   element: ElementDefinition;
@@ -21,8 +22,10 @@ export interface ProfileTreeNode {
   basePath: string; // used for differential merging
   isPrimitive: boolean;
   isSliceEntry: boolean;
+  isRootPrimitive?: boolean;
+  isArray: boolean;
   type?: string;
-  value?: string;
+  value: string;
   sliceName?: string;
   cardinalityMet?: boolean;
 }
@@ -44,8 +47,14 @@ function parseCode(code: string) {
 async function getTypeDefinition(type: ElementDefinitionType) {
   let result = null;
   const code = parseCode(type.code);
+  if (!validFhirTypes.includes(code)) {
+    return null;
+  }
   try {
     const res = await fetch(`/api/types?filename=${code}`);
+    if (!res.ok) {
+      return null;
+    }
     const type_definition = await res.json();
     result = type_definition;
   } catch (error) {}
@@ -218,9 +227,12 @@ export async function buildTreeFromElementsRecursive(
         basePath: elementBasePath,
         baseId: id!,
         isPrimitive: true,
+        isRootPrimitive: parentPath === rootName,
         childPaths: [],
+        isArray: element.max ? parseMaxString(element.max) > 1 : false,
         isSliceEntry: elementIsSliceEntry,
         sliceName: sliceName,
+        value: "",
       };
       if (!profileTree.find((node) => node.dataPath === elementPath)) {
         profileTree.push(node);
@@ -250,8 +262,10 @@ export async function buildTreeFromElementsRecursive(
             baseId: id!,
             isPrimitive: true,
             childPaths: [],
+            isArray: element.max ? parseMaxString(element.max) > 1 : false,
             isSliceEntry: elementIsSliceEntry,
             sliceName: sliceName,
+            value: "",
           };
           childNodes.push(childNode);
         }
@@ -281,9 +295,11 @@ export async function buildTreeFromElementsRecursive(
         baseId: id!,
         isPrimitive: false,
         childPaths: childPaths,
+        isArray: element.max ? parseMaxString(element.max) > 1 : false,
         type: elementType,
         isSliceEntry: elementIsSliceEntry,
         sliceName: sliceName,
+        value: "",
       };
       profileTree.push(parentNode, ...childNodes);
     }

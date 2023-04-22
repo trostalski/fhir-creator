@@ -19,6 +19,8 @@ import {
   formatInputDataForResource,
   getResourceTypeFromProfile,
   getUid,
+  checkCardinalities,
+  extractInputDataFromProfileTree,
 } from "../utils/utils";
 import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
@@ -96,7 +98,7 @@ const index = () => {
     if (!inputData.find((e) => e.path === "profile[0]")) {
       inputData.push({
         path: "profile[0]",
-        value: profile?.id!,
+        value: profile?.url!,
       });
     }
     if (!inputData.find((e) => e.path === "id")) {
@@ -116,17 +118,24 @@ const index = () => {
   };
 
   const handleProfileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target) {
-          const profile = JSON.parse(e.target.result as string);
-          loadProfile(profile);
-          addProfile(profile);
+    const numFiles = e.target.files?.length;
+    if (e.target.files && numFiles) {
+      for (let i = 0; i < numFiles; i++) {
+        const file = e.target.files[i];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (e.target) {
+            const profile = JSON.parse(e.target.result as string);
+            if (numFiles == 1) {
+              loadProfile(profile);
+            }
+            addProfile(profile);
+          }
+        };
+        if (file) {
+          reader.readAsText(file);
         }
-      };
-      reader.readAsText(file);
+      }
     }
   };
 
@@ -162,6 +171,7 @@ const index = () => {
                   id="profile-upload"
                   type="file"
                   hidden
+                  multiple
                   onChange={(e) => handleProfileUpload(e)}
                 />
                 Load Profile
@@ -173,14 +183,15 @@ const index = () => {
                     if (profileTree.length === 0) {
                       return;
                     }
-                    let inputData = profileTree
-                      .filter((node) => node.value)
-                      .map((node) => ({
-                        path: node.dataPath,
-                        value: node.value!,
-                      }));
+                    let inputData =
+                      extractInputDataFromProfileTree(profileTree);
                     inputData = formatInputDataForResource(inputData);
                     inputData = addMissingElements(inputData);
+                    // const isMet = checkCardinalities(profileTree, inputData);
+                    // if (!isMet) {
+                    //   alert("Cardinality not met");
+                    //   return;
+                    // }
                     const resource = createJsonFromPathArray(inputData);
                     addResource(resource);
                     addResourcPathRepr(inputData);
@@ -226,7 +237,7 @@ const index = () => {
                     style={tooltipSytles}
                   />
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 px-8">
                   {!profileTree ? null : (
                     <ProfileTreeComponent
                       setProfileTree={setProfileTree}

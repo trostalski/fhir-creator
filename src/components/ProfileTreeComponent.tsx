@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
 import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { parseMaxString } from "@/utils/utils";
+import { incrementDataPath, parseMaxString } from "@/utils/utils";
 import { GrFormAdd } from "react-icons/gr";
 import { AiOutlinePieChart } from "react-icons/ai";
 
@@ -28,7 +28,52 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   };
 
   const renderNode = (node: ProfileTreeNode) => {
+    const isExpanded = isNodeExpanded(node.dataPath);
     if (node.isPrimitive) {
+      if (node.isRootPrimitive) {
+        return (
+          // TODO: replicate from below
+          <div
+            className={`w-full p-1 border-[1px] border-dotted rounded-sm border-gray-200 ${
+              node.element.sliceName ? "border-violet-400" : ""
+            }`}
+            key={node.dataPath}
+          >
+            <div className="flex flex-row items-center">
+              <button
+                className="flex flex-row items-center"
+                onClick={() => toggleNodeExpansion(node.dataPath)}
+              >
+                {isExpanded ? (
+                  <MdExpandLess size={24} />
+                ) : (
+                  <MdExpandMore size={24} />
+                )}
+                <h2
+                  className={`font-light text-sm ${
+                    node.element.min! > 0
+                      ? "after:text-red-600 after:content-['*']"
+                      : ""
+                  }`}
+                >
+                  {node.dataPath
+                    .replace(node.parentDataPath + ".", "")
+                    .replace(/\[.\]/g, "")}
+                </h2>
+              </button>
+            </div>
+            {isExpanded && (
+              <div key={node.dataPath} className="flex-grow pb-2">
+                <PrimitveInput
+                  node={node}
+                  profileTreeNode={node}
+                  setProfileTree={props.setProfileTree}
+                />
+              </div>
+            )}
+          </div>
+        );
+      }
       return (
         <div key={node.dataPath} className="flex-grow pb-2">
           <PrimitveInput
@@ -39,41 +84,42 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         </div>
       );
     } else {
-      const isExpanded = isNodeExpanded(node.dataPath);
       return (
         <div
           className={`w-full p-1 border-[1px] border-dotted rounded-sm border-gray-200 ${
-            node.isSliceEntry ? "border-violet-400" : ""
+            node.element.sliceName ? "border-violet-400" : ""
           }`}
           key={node.dataPath}
         >
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-row items-center">
-              <button onClick={() => toggleNodeExpansion(node.dataPath)}>
+              <button
+                className="flex flex-row items-center"
+                onClick={() => toggleNodeExpansion(node.dataPath)}
+              >
                 {isExpanded ? (
                   <MdExpandLess size={24} />
                 ) : (
                   <MdExpandMore size={24} />
                 )}
+                <h2
+                  className={`font-light text-sm ${
+                    node.element.min! > 0
+                      ? "after:text-red-600 after:content-['*']"
+                      : ""
+                  }`}
+                >
+                  {node.dataPath
+                    .replace(node.parentDataPath + ".", "")
+                    .replace(/\[.\]/g, "")}
+                </h2>
               </button>
-              <h2
-                className={`font-light text-sm ${
-                  node.element.min! > 0
-                    ? "after:text-red-600 after:content-['*']"
-                    : ""
-                }`}
-              >
-                {node.dataPath
-                  .replace(node.parentDataPath + ".", "")
-                  .replace(/\[.\]/g, "")}
-              </h2>
-              <span className="text-gray-400 text-sm">
-                {node.dataPath.match(/\[.\]/g)?.join("")}
-              </span>
             </div>
             <span className="flex-grow" />
             <div className="flex flex-row items-center gap-2">
-              {node.isSliceEntry && <AiOutlinePieChart style={{ color: "" }} />}
+              {node.element.sliceName && (
+                <AiOutlinePieChart style={{ color: "" }} />
+              )}
               {!node.element.type || node.element.type?.length <= 1 ? null : (
                 <select
                   id="element-type"
@@ -101,14 +147,18 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                 </select>
               )}
               {parseMaxString(node.element.max!) > 1 ? (
-                <button>
-                  <GrFormAdd />
+                <button
+                  onClick={() => {
+                    // TODO
+                    props.setProfileTree([
+                      ...props.profileTree,
+                      { ...node, dataPath: incrementDataPath(node.dataPath) },
+                    ]);
+                  }}
+                >
+                  <GrFormAdd size={20} />
                 </button>
-              ) : (
-                <button disabled>
-                  <GrFormAdd style={{ opacity: 0.2 }} />
-                </button>
-              )}
+              ) : null}
             </div>
           </div>
           {isExpanded && (
