@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ProfileTree, IProfileTreeNode } from "../utils/buildTree";
+import { IProfileTree, IProfileTreeNode } from "../utils/buildTree";
 import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { incrementDataPath, parseMaxString } from "@/utils/utils";
@@ -7,8 +7,8 @@ import { GrFormAdd } from "react-icons/gr";
 import { AiOutlinePieChart } from "react-icons/ai";
 
 interface ProfileTreeComponentProps {
-  profileTree: ProfileTree;
-  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
+  profileTree: IProfileTree;
+  setProfileTree: React.Dispatch<React.SetStateAction<IProfileTree>>;
 }
 
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (

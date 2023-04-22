@@ -7,11 +7,11 @@ import { MdOutlineClear } from "react-icons/md";
 import { getResourceTypeFromUrl, isFhirBaseDefinition } from "../utils/utils";
 import { getResources } from "@/db/utils";
 import { StructureDefinition } from "fhir/r4";
-import { ProfileTree } from "@/utils/buildTree";
+import { IProfileTree } from "@/utils/buildTree";
 
 interface ResourceIdListProps {
   setMode: React.Dispatch<React.SetStateAction<"edit" | "create">>;
-  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
+  setProfileTree: React.Dispatch<React.SetStateAction<IProfileTree>>;
   loadProfile: (profile: StructureDefinition) => void;
   handleSelectBaseProfile: (value: string) => void;
 }

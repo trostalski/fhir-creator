@@ -7,7 +7,7 @@ import {
 } from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
 import {
-  ProfileTree,
+  IProfileTree,
   IProfileTreeNode,
   getSliceNames,
 } from "../utils/buildTree";
@@ -98,7 +98,7 @@ export function getBranchId(id: string) {
   return removeNPathPartsFromStart(id, 1);
 }
 
-export function getBranchIds(profileTree: ProfileTree) {
+export function getBranchIds(profileTree: IProfileTree) {
   // Get all paths that have the rootName as parent without the root
   const nodes = profileTree.filter((node) => node.parentDataPath === rootName);
   const branchIds = nodes.map((node) => getBranchId(node.baseId));
@@ -261,7 +261,7 @@ export function shouldDisplayNode(
   return result;
 }
 
-export function extractInputDataFromProfileTree(profileTree: ProfileTree) {
+export function extractInputDataFromProfileTree(profileTree: IProfileTree) {
   const inputData = profileTree
     .filter((node) => node.value)
     .map((node) => ({
@@ -388,7 +388,7 @@ function getCardinality(profileTreeNode: IProfileTreeNode): Cardinality {
 }
 
 function getChildren(
-  profileTree: ProfileTree,
+  profileTree: IProfileTree,
   path: string
 ): IProfileTreeNode[] {
   const children: IProfileTreeNode[] = [];
@@ -431,7 +431,7 @@ export function incrementDataPath(path: string): string {
 }
 
 export function checkCardinality(
-  profileTree: ProfileTree,
+  profileTree: IProfileTree,
   path: string,
   inputData: InputData[],
   notMet: string[]
@@ -474,7 +474,7 @@ export function checkCardinality(
 }
 
 export function checkCardinalities(
-  profileTree: ProfileTree,
+  profileTree: IProfileTree,
   inputData: InputData[]
 ): boolean {
   let isMet = true;

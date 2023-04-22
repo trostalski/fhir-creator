@@ -36,7 +36,7 @@ export interface IProfileTreeNode {
   cardinalityMet?: boolean;
 }
 
-export type ProfileTree = IProfileTreeNode[];
+export type IProfileTree = IProfileTreeNode[];
 
 export const containsDot = (str: string) => {
   return str.includes(".");
@@ -115,6 +115,7 @@ export async function getChildrenTypeDefinitions(element: ElementDefinition) {
 }
 
 export function mergePaths(...paths: string[]) {
+  paths = paths.filter((path) => path && path.length > 0);
   return paths.join(pathDelimiter);
 }
 
@@ -124,7 +125,11 @@ export function getPathLength(path: string) {
 
 export function elementExpectsArray(element: ElementDefinition) {
   let result = false;
-  if (element.max && parseMaxString(element.max) > 1) {
+  if (
+    element.max &&
+    parseMaxString(element.max) > 1 &&
+    containsDot(element.id!)
+  ) {
     result = true;
   }
   return result;
@@ -185,13 +190,11 @@ export function extractDirectChildNodes(
   return directChildren;
 }
 
-function isValidElement(element: ElementDefinition) {
+export function isValidElement(element: ElementDefinition, rootPath?: string) {
   let result = true;
   if (!element.id) {
     result = false;
-  } else if (element.id === rootName) {
-    result = false;
-  } else if (!element.id.includes(".")) {
+  } else if (!containsDot(element.id)) {
     result = false;
   } else if (element.base?.path === "Element.id") {
     result = false;
@@ -201,7 +204,7 @@ function isValidElement(element: ElementDefinition) {
   return result;
 }
 
-function replaceWrongParentPaths(profileTree: ProfileTree) {
+function replaceWrongParentPaths(profileTree: IProfileTree) {
   for (const node of profileTree) {
     const { dataPath: path, parentDataPath: parentPath } = node;
     if (parentPath.split(".").length < path.split(".").length - 1) {
@@ -211,7 +214,7 @@ function replaceWrongParentPaths(profileTree: ProfileTree) {
   }
 }
 
-function addMissingChildren(profileTree: ProfileTree) {
+function addMissingChildren(profileTree: IProfileTree) {
   for (const node of profileTree) {
     const { parentDataPath: parentPath } = node;
     const parent = profileTree.find((node) => node.dataPath === parentPath);
@@ -248,8 +251,8 @@ export async function buildTreeFromElementsRecursive(
   elements: ElementDefinition[],
   parentPath: string = rootName,
   parentBasePath: string = rootName
-): Promise<ProfileTree> {
-  const profileTree: ProfileTree = [];
+): Promise<IProfileTree> {
+  const profileTree: IProfileTree = [];
 
   // this loop iterates over all elements of a structure definition
   // if the element is a primitive type, it is added to the tree

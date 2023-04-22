@@ -8,7 +8,7 @@ import {
   isMultiTypeString,
   isPrimitiveElement,
   isPrimitiveType,
-  isSliceEntry,
+  isValidElement,
   mergePaths,
   replaceMultiTypePath,
 } from "./buildTree";
@@ -16,9 +16,7 @@ import {
   capitalizeFirstLetter,
   getNthPartOfPath,
   getPathSuffix,
-  isMultiTypeElement,
 } from "./utils";
-import { isValidElement } from "react";
 
 export class ProfileTreeNode {
   dataPath: string;
@@ -48,6 +46,10 @@ export class ProfileTreeNode {
     return getPathLength(this.dataPath);
   }
 
+  get isRoot() {
+    return this.depth === 0;
+  }
+
   insertBefore(newNode: ProfileTreeNode, referenceNode: ProfileTreeNode) {}
   insertAfter(newNode: ProfileTreeNode, referenceNode: ProfileTreeNode) {}
   replaceChild(newNode: ProfileTreeNode, oldNode: ProfileTreeNode) {}
@@ -57,33 +59,38 @@ export class ProfileTreeNode {
 
 export class ProfileTree {
   profile: StructureDefinition;
+  elements: ElementDefinition[];
   root: ProfileTreeNode;
   nodes: ProfileTreeNode[];
 
   constructor(profile: StructureDefinition) {
-    if (!profile.snapshot) {
-      throw new Error(
-        "Could not initialize ProfileTree. Profile must have a snapshot."
-      );
-    }
-    let elements = profile.snapshot.element;
+    const elements = profile.snapshot!.element;
     const rootElement = elements[0];
-    elements = elements.filter((e) => isValidElement(e));
     const { id: rootId } = rootElement;
+    this.elements = elements;
     this.profile = profile;
     this.root = new ProfileTreeNode(rootElement, rootId!, null, rootId!);
     this.nodes = [this.root];
-    this.buildTreeRecursive(elements, this.root);
+  }
+
+  async initialize() {
+    this.nodes = await this.buildTreeRecursive(
+      this.profile.snapshot!.element,
+      this.root
+    );
   }
 
   private async buildTreeRecursive(
     elements: ElementDefinition[],
     parentNode: ProfileTreeNode
   ) {
-    const nodes = [];
+    const nodes: ProfileTreeNode[] = [];
     const parentDataPath = parentNode.dataPath;
 
     for (const element of elements) {
+      if (element.path! !== this.root.dataPath && !isValidElement(element)) {
+        continue;
+      }
       const elementId = element.id!;
       const elementDataPath = this.getDataPath(parentDataPath, element);
       const elementBasePath = mergePaths(
@@ -147,10 +154,9 @@ export class ProfileTree {
           childNodes
         );
         elementNode.childNodes = directChildNodes;
-        nodes.push(elementNode, ...directChildNodes);
+        nodes.push(elementNode, ...childNodes);
       }
     }
-
     return nodes;
   }
 
@@ -171,13 +177,16 @@ export class ProfileTree {
     const { id } = element;
     const idPrefix = getNthPartOfPath(id!, 0);
     const idPartAfterRoot = getNthPartOfPath(id!, 1);
-
     if (isMultiTypeString(parentPath)) {
       const parsedParentPath = replaceMultiTypePath(
         parentPath,
         capitalizeFirstLetter(idPrefix)
       );
-      result = mergePaths(parsedParentPath, idPartAfterRoot);
+      if (getPathLength(parsedParentPath) <= 1) {
+        result = parsedParentPath;
+      } else {
+        result = mergePaths(parsedParentPath, idPartAfterRoot);
+      }
     } else {
       result = mergePaths(parentPath, idPartAfterRoot);
     }

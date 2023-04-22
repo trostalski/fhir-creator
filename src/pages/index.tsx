@@ -27,7 +27,7 @@ import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
 import { addProfile, addResourcPathRepr, addResource } from "@/db/utils";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
 import {
-  ProfileTree,
+  IProfileTree,
   buildTreeFromElementsRecursive,
 } from "../utils/buildTree";
 import ProfileTreeComponent from "../components/ProfileTreeComponent";
@@ -35,10 +35,11 @@ import { tooltipSytles } from "@/utils/styles";
 import { InputData } from "@/types";
 import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
 import uniq from "lodash/uniq";
+import { ProfileTree } from "@/utils/profileTree";
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
-  const [profileTree, setProfileTree] = useState<ProfileTree>([]);
+  const [profileTree, setProfileTree] = useState<IProfileTree>([]);
   const [checkedBranchIds, setCheckedBranchIds] = useState<string[]>([]);
   const [branchIds, setBranchIds] = useState<string[]>([]);
   const [resourceType, setResourceType] = useState<string>();
@@ -57,7 +58,9 @@ const index = () => {
     if (containsSnapshot(profile) && profile.snapshot) {
       // all elements are present
       baseElements = profile.snapshot.element;
-      profileTree = await buildTreeFromElementsRecursive(baseElements);
+      profileTree = await new ProfileTree(profile);
+      profileTree.initialize();
+      console.log("tree: ", profileTree.nodes);
     } else if (containsDifferential(profile) && profile.differential) {
       // only differential is present, needs to be merged with base profile
       const baseUrl = getBaseUrl(profile);
@@ -82,8 +85,8 @@ const index = () => {
       return [];
     }
     console.log("profile tree: ", profileTree);
-    const branchIds = uniq(getBranchIds(profileTree));
-    setProfileTree(profileTree);
+    // const branchIds = uniq(getBranchIds(profileTree));
+    // setProfileTree(profileTree);
     setBranchIds(branchIds);
     setCheckedBranchIds(branchIds.filter((id) => idIsImportant(id)));
   };
