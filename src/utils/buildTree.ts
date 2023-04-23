@@ -80,7 +80,8 @@ function isPrimitiveType(profile: StructureDefinition) {
   let result = false;
   if (profile.kind === "primitive-type") {
     result = true;
-  } else if (profile.id === "Reference") {
+  } 
+  else if (profile.id === "Reference") {
     result = true;
   }
   return result;

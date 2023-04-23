@@ -4,7 +4,6 @@ import { resourceOptions } from "../utils/constants";
 import Header from "@/components/Header";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { Tooltip } from "react-tooltip";
-import { IconContext } from "react-icons/lib";
 import "react-tooltip/dist/react-tooltip.css";
 import {
   containsSnapshot,
@@ -19,7 +18,6 @@ import {
   formatInputDataForResource,
   getResourceTypeFromProfile,
   getUid,
-  checkCardinalities,
   extractInputDataFromProfileTree,
 } from "../utils/utils";
 import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
@@ -90,21 +88,21 @@ const index = () => {
 
   const addMissingElements = (inputData: InputData[]) => {
     if (!inputData.find((e) => e.path === "resourceType")) {
-      inputData.push({
+      inputData.unshift({
         path: "resourceType",
         value: resourceType!,
       });
     }
-    if (!inputData.find((e) => e.path === "profile[0]")) {
-      inputData.push({
-        path: "profile[0]",
-        value: profile?.url!,
-      });
-    }
     if (!inputData.find((e) => e.path === "id")) {
-      inputData.push({
+      inputData.unshift({
         path: "id",
         value: getUid(),
+      });
+    }
+    if (!inputData.find((e) => e.path === "profile[0]")) {
+      inputData.unshift({
+        path: "meta.profile[0]",
+        value: profile?.url!,
       });
     }
     return inputData;
