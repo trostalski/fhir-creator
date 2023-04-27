@@ -6,11 +6,9 @@ import {
   rootName,
 } from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
-import {
-  IProfileTree,
-  IProfileTreeNode,
-  getSliceNames,
-} from "../utils/buildTree";
+import { getSliceNames } from "../utils/buildTree";
+import { ProfileTree } from "./profileTree";
+import { ProfileTreeNode } from "./profileTreeNode";
 
 export function logWithCopy(...args: any[]) {
   for (let i = 0; i < args.length; i++) {
@@ -73,6 +71,12 @@ export function removeNPathPartsFromStart(path: string, n: number) {
   return result;
 }
 
+export function removeNPathPartsFromEnd(path: string, n: number) {
+  const pathParts = path.split(".");
+  const result = pathParts.slice(0, pathParts.length - n).join(".");
+  return result;
+}
+
 export function getPathSuffix(path: string) {
   return getNthPartOfPath(path, -1);
 }
@@ -82,11 +86,6 @@ export function arraysEqual(a: any[], b: any[]) {
   if (a === b) return true;
   if (a == null || b == null) return false;
   if (a.length !== b.length) return false;
-
-  // If you don't care about the order of the elements inside
-  // the array, you should sort both arrays here.
-  // Please note that calling sort on an array will modify that array.
-  // you might want to clone your array first.
 
   for (var i = 0; i < a.length; ++i) {
     if (a[i] !== b[i]) return false;
@@ -98,10 +97,10 @@ export function getBranchId(id: string) {
   return removeNPathPartsFromStart(id, 1);
 }
 
-export function getBranchIds(profileTree: IProfileTree) {
+export function getBranchIds(profileTree: ProfileTree) {
   // Get all paths that have the rootName as parent without the root
-  const nodes = profileTree.filter((node) => node.parentDataPath === rootName);
-  const branchIds = nodes.map((node) => getBranchId(node.baseId));
+  const nodes = profileTree.nodes.filter((node) => node.parentNode?.isRoot);
+  const branchIds = nodes.map((node) => getBranchId(node.element.id!));
   return branchIds;
 }
 
@@ -167,17 +166,6 @@ export const removeBetweenColonAndPeriod = (str: string): string => {
   const regex = /:[^.]*(?=\.)/g;
   return str.replace(regex, "").replace(":", "");
 };
-
-function getCharsBeforeVar(str: string, variable: string, n: number) {
-  const index = str.indexOf(variable);
-  if (index < 0) {
-    return "";
-  } else if (index <= n) {
-    return str.substring(0, index);
-  } else {
-    return str.substring(index - n, index);
-  }
-}
 
 function getCharsAfterVar(str: string, variable: string, n: number) {
   const index = str.indexOf(variable);
@@ -249,27 +237,6 @@ export const formatInputDataForResource = (inputData: InputData[]) => {
   });
   return result;
 };
-
-export function shouldDisplayNode(
-  node: IProfileTreeNode,
-  checkedBranchIds: string[]
-) {
-  let result = true;
-  if (node.parentDataPath === rootName) {
-    result = checkedBranchIds.includes(getBranchId(node.baseId));
-  }
-  return result;
-}
-
-export function extractInputDataFromProfileTree(profileTree: IProfileTree) {
-  const inputData = profileTree
-    .filter((node) => node.value)
-    .map((node) => ({
-      path: node.dataPath,
-      value: node.value!,
-    }));
-  return inputData;
-}
 
 // TODO: check if deprecated
 export function createJsonFromPathList(pathList: string[], value: any): any {
@@ -376,7 +343,7 @@ export function createJsonFromPathArray(
   return convertNumericKeysToArrays(result);
 }
 
-function getCardinality(profileTreeNode: IProfileTreeNode): Cardinality {
+function getCardinality(profileTreeNode: ProfileTreeNode): Cardinality {
   let cardinality: Cardinality = { min: 0, max: "0" };
   if (profileTreeNode.element.min) {
     cardinality.min = profileTreeNode.element.min;
@@ -385,21 +352,6 @@ function getCardinality(profileTreeNode: IProfileTreeNode): Cardinality {
     cardinality.max = profileTreeNode.element.max;
   }
   return cardinality;
-}
-
-function getChildren(
-  profileTree: IProfileTree,
-  path: string
-): IProfileTreeNode[] {
-  const children: IProfileTreeNode[] = [];
-  const profileTreeNode = profileTree.find((node) => node.dataPath === path)!;
-  for (const child of profileTreeNode.childPaths) {
-    const childNode: IProfileTreeNode = profileTree.find(
-      (node) => node.dataPath === child
-    )!;
-    children.push(childNode);
-  }
-  return children;
 }
 
 function existsInOutput(inputData: InputData[], path: string): boolean {
@@ -431,36 +383,38 @@ export function incrementDataPath(path: string): string {
 }
 
 export function checkCardinality(
-  profileTree: IProfileTree,
+  profileTree: ProfileTree,
   path: string,
   inputData: InputData[],
   notMet: string[]
 ): boolean {
   let isMet = true;
-  const profileTreeNode = profileTree.find((node) => node.dataPath === path)!;
+  const profileTreeNode = profileTree.nodes.find(
+    (node) => node.dataPath === path
+  )!;
   const cardinality = getCardinality(profileTreeNode);
   const isPrimitive = profileTreeNode.isPrimitive;
-  const hasChildren = profileTreeNode.childPaths.length > 0;
+  const hasChildren = profileTreeNode.childNodes.length > 0;
 
   if (cardinality.min > 0 && !existsInOutput(inputData, path)) {
     isMet = false;
   }
 
-  if (hasChildren) {
-    const children = getChildren(profileTree, path);
-    for (const child of children) {
-      const childPath = child.dataPath;
-      const childIsMet = checkCardinality(
-        profileTree,
-        childPath,
-        inputData,
-        notMet
-      );
-      if (!childIsMet) {
-        isMet = false;
-      }
-    }
-  }
+  // if (hasChildren) {
+  //   const children = getChildren(profileTree, path);
+  //   for (const child of children) {
+  //     const childPath = child.dataPath;
+  //     const childIsMet = checkCardinality(
+  //       profileTree,
+  //       childPath,
+  //       inputData,
+  //       notMet
+  //     );
+  //     if (!childIsMet) {
+  //       isMet = false;
+  //     }
+  //   }
+  // }
 
   if (isPrimitive && cardinality.min > 0 && !hasValue(inputData, path)) {
     isMet = false;
@@ -473,19 +427,19 @@ export function checkCardinality(
   return isMet;
 }
 
-export function checkCardinalities(
-  profileTree: IProfileTree,
-  inputData: InputData[]
-): boolean {
-  let isMet = true;
-  const notMet: string[] = [];
-  const firstChilds = profileTree.filter(
-    (node) => node.parentDataPath === rootName
-  );
-  for (const child of firstChilds) {
-    const path = child.dataPath;
-    isMet = checkCardinality(profileTree, path, inputData, notMet);
-  }
+// export function checkCardinalities(
+//   profileTree: ProfileTree,
+//   inputData: InputData[]
+// ): boolean {
+//   let isMet = true;
+//   const notMet: string[] = [];
+//   const firstChilds = profileTree.filter(
+//     (node) => node.parentDataPath === rootName
+//   );
+//   for (const child of firstChilds) {
+//     const path = child.dataPath;
+//     isMet = checkCardinality(profileTree, path, inputData, notMet);
+//   }
 
-  return isMet;
-}
+//   return isMet;
+// }

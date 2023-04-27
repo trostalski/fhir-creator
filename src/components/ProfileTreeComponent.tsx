@@ -1,21 +1,21 @@
 import React, { useState } from "react";
-import { IProfileTree, IProfileTreeNode } from "../utils/buildTree";
 import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { incrementDataPath, parseMaxString } from "@/utils/utils";
+import { parseMaxString } from "@/utils/utils";
 import { GrFormAdd } from "react-icons/gr";
 import { AiOutlinePieChart } from "react-icons/ai";
+import { ProfileTree } from "@/utils/profileTree";
+import { ProfileTreeNode } from "@/utils/profileTreeNode";
 
 interface ProfileTreeComponentProps {
-  profileTree: IProfileTree;
-  setProfileTree: React.Dispatch<React.SetStateAction<IProfileTree>>;
+  profileTree: ProfileTree;
+  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree | undefined>>;
 }
 
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   props: ProfileTreeComponentProps
 ) => {
   const [closedNodes, setClosedNodes] = useState<string[]>([]);
-
   const isNodeExpanded = (nodePath: string) => {
     return !closedNodes.includes(nodePath);
   };
@@ -27,7 +27,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     }
   };
 
-  const renderNode = (node: IProfileTreeNode) => {
+  const renderNode = (node: ProfileTreeNode) => {
     const isExpanded = isNodeExpanded(node.dataPath);
     if (node.isPrimitive) {
       if (node.isRootPrimitive) {
@@ -56,9 +56,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                       : ""
                   }`}
                 >
-                  {node.dataPath
-                    .replace(node.parentDataPath + ".", "")
-                    .replace(/\[.\]/g, "")}
+                  {node.displayPath}
                 </h2>
               </button>
             </div>
@@ -109,9 +107,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                       : ""
                   }`}
                 >
-                  {node.dataPath
-                    .replace(node.parentDataPath + ".", "")
-                    .replace(/\[.\]/g, "")}
+                  {node.displayPath}
                 </h2>
               </button>
             </div>
@@ -127,12 +123,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                   className="bg-white py-0.5 px-4 w-40 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   value={node.type}
                   onChange={(e) => {
-                    const newProfileTree = [...props.profileTree];
-                    const nodeIndex = newProfileTree.findIndex(
-                      (n) => n.dataPath === node.dataPath
-                    );
-                    (newProfileTree[nodeIndex].type = e.target.value),
-                      props.setProfileTree(newProfileTree);
+                    node.type = e.target.value;
                   }}
                 >
                   {node.element.type ? (
@@ -150,10 +141,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                 <button
                   onClick={() => {
                     // TODO
-                    props.setProfileTree([
-                      ...props.profileTree,
-                      { ...node, dataPath: incrementDataPath(node.dataPath) },
-                    ]);
                   }}
                 >
                   <GrFormAdd size={20} />
@@ -163,10 +150,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
           </div>
           {isExpanded && (
             <div className="flex flex-row flex-wrap gap-1 pl-8">
-              {node.childPaths.map((childPath: string) => {
-                let childNode = props.profileTree.find(
-                  (n: IProfileTreeNode) => n.dataPath === childPath
-                );
+              {node.childNodes.map((childNode: ProfileTreeNode | undefined) => {
                 if (node.type) {
                   // multiype node with select input for type selection
                   // the following code filters the child nodes to only show the ones that match the selected type
@@ -192,7 +176,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         <button
           className="text-gray-500 hover:text-gray-70 text-xs rounded py-1 px-2"
           onClick={() =>
-            setClosedNodes(props.profileTree.map((node) => node.dataPath))
+            setClosedNodes(props.profileTree.nodes.map((node) => node.dataPath))
           }
         >
           Collapse All
@@ -205,11 +189,10 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         </button>
       </div>
       <div className="flex flex-col gap-4">
-        {props.profileTree.map((node: IProfileTreeNode) => {
-          if (node.parentDataPath === "root") {
+        {props.profileTree.nodes.map((node: ProfileTreeNode) => {
+          if (node.parentNode?.isRoot) {
             return renderNode(node);
           }
-          return null;
         })}
       </div>
     </div>

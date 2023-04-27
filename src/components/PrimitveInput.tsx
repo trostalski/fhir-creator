@@ -1,40 +1,26 @@
-import { IProfileTree, IProfileTreeNode } from "@/utils/buildTree";
-import { removeMultiTypeString } from "@/utils/utils";
-import { ElementDefinition, StructureDefinition } from "fhir/r4";
+import { pathDelimiter } from "@/utils/constants";
+import { ProfileTree } from "@/utils/profileTree";
+import { ProfileTreeNode } from "@/utils/profileTreeNode";
 import React from "react";
 
 interface PrimitveInputProps {
-  node: IProfileTreeNode;
-  profileTreeNode: IProfileTreeNode;
-  setProfileTree: React.Dispatch<React.SetStateAction<IProfileTree>>;
+  node: ProfileTreeNode;
+  profileTreeNode: ProfileTreeNode;
+  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree | undefined>>;
 }
 
 interface InputFromTypeProps {
   type: string;
-  profileTreeNode: IProfileTreeNode;
-  setProfileTree: React.Dispatch<React.SetStateAction<IProfileTree>>;
+  profileTreeNode: ProfileTreeNode;
+  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree | undefined>>;
 }
 
 const InputFromType = (props: InputFromTypeProps) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.setProfileTree((prevProfileTree) => {
-      const newProfileTree = [...prevProfileTree];
-      const nodeIndex = newProfileTree.findIndex(
-        (node) => node.dataPath === props.profileTreeNode.dataPath
-      );
-      newProfileTree[nodeIndex].value = e.target.value;
-      return newProfileTree;
-    });
+    props.profileTreeNode.value = e.target.value;
   };
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    props.setProfileTree((prevProfileTree) => {
-      const newProfileTree = [...prevProfileTree];
-      const nodeIndex = newProfileTree.findIndex(
-        (node) => node.dataPath === props.profileTreeNode.dataPath
-      );
-      newProfileTree[nodeIndex].value = e.target.value;
-      return newProfileTree;
-    });
+    props.profileTreeNode.value = e.target.value;
   };
 
   switch (props.type) {
@@ -133,7 +119,7 @@ const PrimitveInput = (props: PrimitveInputProps) => {
             : ""
         }`}
       >
-        {props.node.dataPath.split(".").pop()}
+        {props.node.displayPath.split(pathDelimiter).pop()}
       </label>
       <InputFromType
         type={props.node.element.type![0].code}

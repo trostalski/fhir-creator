@@ -13,33 +13,24 @@ import {
   isFhirBaseDefinition,
   getResourceTypeFromUrl,
   getBaseUrl,
-  getBranchIds,
-  shouldDisplayNode,
   createJsonFromPathArray,
   formatInputDataForResource,
   getResourceTypeFromProfile,
   getUid,
-  checkCardinalities,
-  extractInputDataFromProfileTree,
 } from "../utils/utils";
 import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
 import { addProfile, addResourcPathRepr, addResource } from "@/db/utils";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
-import {
-  IProfileTree,
-  buildTreeFromElementsRecursive,
-} from "../utils/buildTree";
 import ProfileTreeComponent from "../components/ProfileTreeComponent";
 import { tooltipSytles } from "@/utils/styles";
 import { InputData } from "@/types";
-import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
 import uniq from "lodash/uniq";
 import { ProfileTree } from "@/utils/profileTree";
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
-  const [profileTree, setProfileTree] = useState<IProfileTree>([]);
+  const [profileTree, setProfileTree] = useState<ProfileTree | undefined>();
   const [checkedBranchIds, setCheckedBranchIds] = useState<string[]>([]);
   const [branchIds, setBranchIds] = useState<string[]>([]);
   const [resourceType, setResourceType] = useState<string>();
@@ -57,10 +48,9 @@ const index = () => {
     let profileTree;
     if (containsSnapshot(profile) && profile.snapshot) {
       // all elements are present
-      baseElements = profile.snapshot.element;
+      baseElements = profile.snapshot!.element;
       profileTree = await new ProfileTree(profile);
-      profileTree.initialize();
-      console.log("tree: ", profileTree.nodes);
+      await profileTree.initialize();
     } else if (containsDifferential(profile) && profile.differential) {
       // only differential is present, needs to be merged with base profile
       const baseUrl = getBaseUrl(profile);
@@ -72,12 +62,9 @@ const index = () => {
         const baseProfile: StructureDefinition = await fetch(
           `api/profiles?filename=${baseResourceType}`
         ).then((res) => res.json());
-        baseElements = baseProfile.snapshot!.element;
-        profileTree = await buildTreeFromElementsRecursive(baseElements);
-        profileTree = await mergeTreeWithDifferential(
-          profileTree,
-          profile.differential.element
-        );
+        profileTree = await new ProfileTree(baseProfile);
+        await profileTree.initialize();
+        profileTree.mergeDifferential(profile);
       }
     } else {
       // no snapshot or differential is present
@@ -85,8 +72,8 @@ const index = () => {
       return [];
     }
     console.log("profile tree: ", profileTree);
-    // const branchIds = uniq(getBranchIds(profileTree));
-    // setProfileTree(profileTree);
+    const branchIds = uniq(profileTree.branchIds);
+    setProfileTree(profileTree);
     setBranchIds(branchIds);
     setCheckedBranchIds(branchIds.filter((id) => idIsImportant(id)));
   };
@@ -183,11 +170,10 @@ const index = () => {
                 <button
                   className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xxs font-bold py-2 px-4 rounded"
                   onClick={() => {
-                    if (profileTree.length === 0) {
+                    if (!profileTree) {
                       return;
                     }
-                    let inputData =
-                      extractInputDataFromProfileTree(profileTree);
+                    let inputData = profileTree.inputData;
                     inputData = formatInputDataForResource(inputData);
                     inputData = addMissingElements(inputData);
                     // const isMet = checkCardinalities(profileTree, inputData);
@@ -244,9 +230,7 @@ const index = () => {
                   {!profileTree ? null : (
                     <ProfileTreeComponent
                       setProfileTree={setProfileTree}
-                      profileTree={profileTree.filter((node) =>
-                        shouldDisplayNode(node, checkedBranchIds)
-                      )}
+                      profileTree={profileTree}
                     />
                   )}
                 </div>

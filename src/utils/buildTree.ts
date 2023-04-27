@@ -17,26 +17,7 @@ import {
   removeNPathPartsFromStart,
 } from "./utils";
 import { validFhirTypes } from "./fhirTypes";
-import { ProfileTreeNode } from "./profileTree";
-
-export interface IProfileTreeNode {
-  element: ElementDefinition;
-  dataPath: string;
-  baseId: string;
-  parentDataPath: string;
-  childPaths: string[];
-  basePath: string; // used for differential merging
-  isPrimitive: boolean;
-  isSliceEntry: boolean;
-  isRootPrimitive?: boolean;
-  isArray: boolean;
-  type?: string;
-  value: string;
-  sliceName?: string;
-  cardinalityMet?: boolean;
-}
-
-export type IProfileTree = IProfileTreeNode[];
+import { ProfileTreeNode } from "./profileTreeNode";
 
 export const containsDot = (str: string) => {
   return str.includes(".");
@@ -87,6 +68,8 @@ export function isPrimitiveType(profile: StructureDefinition) {
   if (profile.kind === "primitive-type") {
     result = true;
   } else if (profile.id === "Reference") {
+    result = true;
+  } else if (profile.id === "BackboneElement") {
     result = true;
   }
   return result;
@@ -139,44 +122,6 @@ export function getIndexString(index: number) {
   return `[${index}]`;
 }
 
-function getPath(parentPath: string, element: ElementDefinition) {
-  let result = parentPath;
-  const id = element.id!;
-
-  if (parentPath.endsWith("[x]")) {
-    const parsedParentPath = parentPath.replace(
-      "[x]",
-      capitalizeFirstLetter(id.split(".")[0])
-    );
-    if (removeNPathPartsFromStart(id, 1).length > 0) {
-      result = parsedParentPath + "." + removeNPathPartsFromStart(id, 1);
-    } else {
-      result = parsedParentPath;
-    }
-  } else {
-    result = parentPath + "." + removeNPathPartsFromStart(id, 1);
-  }
-  if (element.max && parseMaxString(element.max) > 1) {
-    result = result + "[0]";
-  }
-  return result;
-}
-
-export function extractDirectChildren(
-  parentPath: string,
-  childPaths: string[]
-) {
-  const directChildren: string[] = [];
-  for (const childPath of childPaths) {
-    const childPathParts = childPath.split(".");
-    const parentPathParts = parentPath.split(".");
-    if (childPathParts.length === parentPathParts.length + 1) {
-      directChildren.push(childPath);
-    }
-  }
-  return directChildren;
-}
-
 export function extractDirectChildNodes(
   parentNode: ProfileTreeNode,
   childNodes: ProfileTreeNode[]
@@ -204,26 +149,6 @@ export function isValidElement(element: ElementDefinition, rootPath?: string) {
   return result;
 }
 
-function replaceWrongParentPaths(profileTree: IProfileTree) {
-  for (const node of profileTree) {
-    const { dataPath: path, parentDataPath: parentPath } = node;
-    if (parentPath.split(".").length < path.split(".").length - 1) {
-      const childPathStem = path.split(".").slice(0, -1).join(".");
-      node.parentDataPath = childPathStem;
-    }
-  }
-}
-
-function addMissingChildren(profileTree: IProfileTree) {
-  for (const node of profileTree) {
-    const { parentDataPath: parentPath } = node;
-    const parent = profileTree.find((node) => node.dataPath === parentPath);
-    if (parent && !parent.childPaths.includes(node.dataPath)) {
-      parent.childPaths.push(node.dataPath);
-    }
-  }
-}
-
 export function getSliceNames(input: string): string[] {
   const regex = /:(.*?)(\.|$)/g;
   let matches: RegExpExecArray | null;
@@ -245,120 +170,4 @@ export function removeSliceNames(str: string): string {
 
 export function isSliceEntry(element: ElementDefinition) {
   return "slicing" in element;
-}
-
-export async function buildTreeFromElementsRecursive(
-  elements: ElementDefinition[],
-  parentPath: string = rootName,
-  parentBasePath: string = rootName
-): Promise<IProfileTree> {
-  const profileTree: IProfileTree = [];
-
-  // this loop iterates over all elements of a structure definition
-  // if the element is a primitive type, it is added to the tree
-  // if the element is a complex type, it is added to the tree and its children are added recursively
-  for (const element of elements) {
-    const { id } = element;
-    if (!isValidElement(element)) {
-      continue; // skip root element
-    }
-
-    const elementPath = getPath(parentPath, element);
-    const elementBasePath = parentBasePath + "." + getPathSuffix(id!);
-    const elementIsSliceEntry = isSliceEntry(element);
-    let sliceName = undefined;
-
-    if (isSliceElement(element)) {
-      sliceName = getSliceNames(element.id!)[0];
-    }
-
-    if (await isPrimitiveElement(element)) {
-      const node: IProfileTreeNode = {
-        element: element,
-        dataPath: elementPath,
-        parentDataPath: parentPath,
-        basePath: elementBasePath,
-        baseId: id!,
-        isPrimitive: true,
-        isRootPrimitive: parentPath === rootName,
-        childPaths: [],
-        isArray: element.max ? parseMaxString(element.max) > 1 : false,
-        isSliceEntry: elementIsSliceEntry,
-        sliceName: sliceName,
-        value: "",
-      };
-      if (!profileTree.find((node) => node.dataPath === elementPath)) {
-        profileTree.push(node);
-      }
-    } else {
-      // element is a complex type, so we need to get its children
-      const childrenTypeDefinitions = await getChildrenTypeDefinitions(element);
-      const childNodes: IProfileTreeNode[] = [];
-      for (const childType of childrenTypeDefinitions) {
-        if (childType && isPrimitiveType(childType)) {
-          const childElement = childType.snapshot!.element![0];
-          const childBasePath =
-            elementBasePath + "." + getPathSuffix(childElement.id);
-          // we need to set element properties from type definitoin (e.g. for onsetDateTime necessary)
-          childElement.type = [{ code: childType.id }];
-          childElement.min = 0;
-          childElement.max = "1";
-          const dataPath =
-            getPath(elementPath, childElement) +
-            "." +
-            childElement.type[0].code;
-          const childNode: IProfileTreeNode = {
-            element: childElement,
-            dataPath: dataPath,
-            parentDataPath: elementPath,
-            basePath: childBasePath,
-            baseId: id!,
-            isPrimitive: true,
-            childPaths: [],
-            isArray: element.max ? parseMaxString(element.max) > 1 : false,
-            isSliceEntry: elementIsSliceEntry,
-            sliceName: sliceName,
-            value: "",
-          };
-          childNodes.push(childNode);
-        }
-        if (childType && !isPrimitiveType(childType)) {
-          const grandchildNodes = await buildTreeFromElementsRecursive(
-            childType.snapshot!.element!,
-            elementPath,
-            elementBasePath
-          );
-          childNodes.push(...grandchildNodes);
-        }
-      }
-      // child nodes also include grantchildren nodes, so we need to extract the direct children
-      const childPaths = extractDirectChildren(
-        elementPath,
-        childNodes.map((node) => node.dataPath)
-      );
-      let elementType = undefined;
-      if (element.type && element.type.length > 1) {
-        elementType = element.type[0].code;
-      }
-      const parentNode: IProfileTreeNode = {
-        element: element,
-        dataPath: elementPath,
-        parentDataPath: parentPath,
-        basePath: elementBasePath,
-        baseId: id!,
-        isPrimitive: false,
-        childPaths: childPaths,
-        isArray: element.max ? parseMaxString(element.max) > 1 : false,
-        type: elementType,
-        isSliceEntry: elementIsSliceEntry,
-        sliceName: sliceName,
-        value: "",
-      };
-      profileTree.push(parentNode, ...childNodes);
-    }
-  }
-
-  replaceWrongParentPaths(profileTree); // validate and fix parent paths
-  addMissingChildren(profileTree); // add missing children to parent nodes
-  return profileTree;
 }

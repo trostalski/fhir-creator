@@ -16,46 +16,20 @@ import {
   capitalizeFirstLetter,
   getNthPartOfPath,
   getPathSuffix,
+  isMultiTypeElement,
+  removeNPathPartsFromEnd,
+  removeNPathPartsFromStart,
 } from "./utils";
-
-export class ProfileTreeNode {
-  dataPath: string;
-  value: string;
-  parentNode: ProfileTreeNode | null;
-  childNodes: ProfileTreeNode[];
-  element: ElementDefinition;
-  previousSibling: ProfileTreeNode;
-  nextSibling: ProfileTreeNode;
-  basePath: string;
-  type?: string;
-
-  constructor(
-    element: ElementDefinition,
-    dataPath: string,
-    parentNode: ProfileTreeNode | null,
-    basePath: string
-  ) {
-    this.childNodes = [];
-    this.element = element;
-    this.dataPath = dataPath;
-    this.parentNode = parentNode;
-    this.basePath = basePath;
-  }
-
-  get depth() {
-    return getPathLength(this.dataPath);
-  }
-
-  get isRoot() {
-    return this.depth === 0;
-  }
-
-  insertBefore(newNode: ProfileTreeNode, referenceNode: ProfileTreeNode) {}
-  insertAfter(newNode: ProfileTreeNode, referenceNode: ProfileTreeNode) {}
-  replaceChild(newNode: ProfileTreeNode, oldNode: ProfileTreeNode) {}
-  removeChild(oldNode: ProfileTreeNode) {}
-  appendChild(child: ProfileTreeNode) {}
-}
+import {
+  baseAndParentSlicesEqual,
+  baseAndSlicesEqual,
+  baseEqual,
+  getElementTypes,
+  getNewDataPath,
+  updateElementWithOther,
+} from "./mergeDifferential";
+import { primitiveTypes } from "./constants";
+import { ProfileTreeNode } from "./profileTreeNode";
 
 export class ProfileTree {
   profile: StructureDefinition;
@@ -69,7 +43,7 @@ export class ProfileTree {
     const { id: rootId } = rootElement;
     this.elements = elements;
     this.profile = profile;
-    this.root = new ProfileTreeNode(rootElement, rootId!, null, rootId!);
+    this.root = new ProfileTreeNode(rootElement, rootId!, null, rootId!, false);
     this.nodes = [this.root];
   }
 
@@ -78,6 +52,22 @@ export class ProfileTree {
       this.profile.snapshot!.element,
       this.root
     );
+    this.updateParents();
+  }
+
+  get branchIds() {
+    return this.nodes
+      .filter((node) => node.parentNode?.isRoot)
+      .map((node) => node.displayPath);
+  }
+
+  get inputData() {
+    return this.nodes
+      .filter((node) => node.value)
+      .map((node) => ({
+        path: node.dataPath,
+        value: node.value,
+      }));
   }
 
   private async buildTreeRecursive(
@@ -95,18 +85,20 @@ export class ProfileTree {
       const elementDataPath = this.getDataPath(parentDataPath, element);
       const elementBasePath = mergePaths(
         parentNode.basePath,
-        getPathSuffix(elementId)
+        removeNPathPartsFromStart(elementId, 1)
       );
       const elementNode = new ProfileTreeNode(
         element,
         elementDataPath,
         parentNode,
-        elementBasePath
+        elementBasePath,
+        false
       );
       if (this.hasNode(elementDataPath)) {
         this.removeNode(elementDataPath);
       }
       if (await isPrimitiveElement(element)) {
+        elementNode.isPrimitive = true;
         nodes.push(elementNode);
       } else {
         // element is a complex type, so we need to get its children
@@ -135,7 +127,8 @@ export class ProfileTree {
               childElement,
               dataPath,
               elementNode,
-              childBasePath
+              childBasePath,
+              true
             );
 
             childNodes.push(childNode);
@@ -160,8 +153,95 @@ export class ProfileTree {
     return nodes;
   }
 
+  mergeDifferential(differential: StructureDefinition) {
+    const diffElements = differential.differential!.element;
+    for (const diffElement of diffElements) {
+      const diffBasePath = removeNPathPartsFromStart(diffElement.path, 1);
+      let node = this.nodes.find((n) => baseAndSlicesEqual(n, diffElement));
+      if (node) {
+        node.element = updateElementWithOther(node.element, diffElement);
+      } else {
+        node = this.nodes.find((n) => baseAndParentSlicesEqual(n, diffElement));
+        if (!node) {
+          node = this.nodes.find((n) => baseEqual(n, diffElement));
+        }
+        if (node) {
+          const newDataPath = getNewDataPath(node.dataPath, diffElement.id!);
+          const newParentPath = removeNPathPartsFromEnd(newDataPath, 1);
+          const parentNode = this.getNode(newParentPath) || node.parentNode;
+          const newNode = new ProfileTreeNode(
+            updateElementWithOther(node.element, diffElement),
+            newDataPath,
+            parentNode,
+            node.basePath,
+            node.isPrimitive,
+            node.childNodes
+          );
+          parentNode?.addChildNode(newNode);
+          let childNodes: ProfileTreeNode[];
+          if (isMultiTypeElement(diffElement)) {
+            const diffTypes = getElementTypes(diffElement);
+            node.type = diffTypes![0];
+            childNodes = node.descendants.filter((n) => {
+              for (const type of diffTypes!) {
+                if (n.dataPath.toLowerCase().includes(type.toLowerCase())) {
+                  return true;
+                }
+              }
+              return false;
+            });
+            childNodes = childNodes.map((childNode) => {
+              let childType;
+              if (
+                childNode.element.type &&
+                primitiveTypes.includes(childNode.element.type[0].code)
+              ) {
+                childType = capitalizeFirstLetter(
+                  childNode.element.type[0].code
+                );
+              } else {
+                childType = childNode.element.type![0].code;
+              }
+              let oldPathParts = replaceMultiTypePath(
+                node!.dataPath,
+                childType
+              );
+              let newPathParts = replaceMultiTypePath(newDataPath, childType);
+              childNode.parentNode = newNode;
+              childNode.dataPath = childNode.dataPath.replace(
+                oldPathParts,
+                newPathParts
+              );
+              return childNode;
+            });
+          } else {
+            childNodes = node.descendants;
+            childNodes = childNodes.map((childNode) => {
+              childNode.parentNode = newNode;
+              childNode.dataPath = childNode.dataPath.replace(
+                node!.dataPath,
+                newDataPath
+              );
+              return childNode;
+            });
+          }
+          newNode.childNodes = extractDirectChildNodes(newNode, childNodes);
+          this.addNode(newNode);
+        }
+      }
+    }
+  }
+
   hasNode(path: string) {
     return this.nodes.some((node) => node.dataPath === path);
+  }
+
+  getNode(path: string) {
+    return this.nodes.find((node) => node.dataPath === path);
+  }
+
+  addNode(node: ProfileTreeNode) {
+    this.nodes.push(node);
   }
 
   removeNode(path: string) {
@@ -176,7 +256,7 @@ export class ProfileTree {
     let result;
     const { id } = element;
     const idPrefix = getNthPartOfPath(id!, 0);
-    const idPartAfterRoot = getNthPartOfPath(id!, 1);
+    const idPartAfterRoot = removeNPathPartsFromStart(id!, 1);
     if (isMultiTypeString(parentPath)) {
       const parsedParentPath = replaceMultiTypePath(
         parentPath,
@@ -195,5 +275,28 @@ export class ProfileTree {
       result += getIndexString(0);
     }
     return result;
+  }
+
+  private updateParents() {
+    // e.g. when backbonelements in profile (Condition.evidence.detail)
+    for (const node of this.nodes) {
+      if (
+        getPathLength(node.dataPath) >
+        getPathLength(node.parentNode?.dataPath!) + 1
+      ) {
+        const newParent = this.nodes.find(
+          (n) => n.basePath === removeNPathPartsFromEnd(node.basePath, 1)
+        );
+        if (newParent) {
+          node.parentNode = newParent;
+          newParent.addChildNode(node);
+          const newDataPath = mergePaths(
+            newParent.dataPath,
+            getPathSuffix(node.dataPath)
+          );
+          node.updateDataPath(newDataPath);
+        }
+      }
+    }
   }
 }
