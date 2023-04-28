@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { parseMaxString } from "@/utils/utils";
+import { parseMaxString, shouldDisplayNode } from "@/utils/utils";
 import { GrFormAdd } from "react-icons/gr";
 import { AiOutlinePieChart } from "react-icons/ai";
 import { ProfileTree } from "@/utils/profileTree";
@@ -10,6 +10,7 @@ import { ProfileTreeNode } from "@/utils/profileTreeNode";
 interface ProfileTreeComponentProps {
   profileTree: ProfileTree;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree | undefined>>;
+  checkedBranchIds: string[];
 }
 
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (

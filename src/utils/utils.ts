@@ -93,14 +93,12 @@ export function arraysEqual(a: any[], b: any[]) {
   return true;
 }
 
-export function getBranchId(id: string) {
-  return removeNPathPartsFromStart(id, 1);
-}
-
 export function getBranchIds(profileTree: ProfileTree) {
   // Get all paths that have the rootName as parent without the root
   const nodes = profileTree.nodes.filter((node) => node.parentNode?.isRoot);
-  const branchIds = nodes.map((node) => getBranchId(node.element.id!));
+  const branchIds = nodes.map((node) =>
+    removeNPathPartsFromStart(node.element.id!, 1)
+  );
   return branchIds;
 }
 
@@ -124,6 +122,19 @@ export const getResourceTypeFromUrl = (url: string) => {
   const urlParts = url.split("/");
   return urlParts[urlParts.length - 1];
 };
+
+export function shouldDisplayNode(
+  node: ProfileTreeNode,
+  checkedBranchIds: string[]
+) {
+  let result = true;
+  if (node.parentNode?.isRoot) {
+    result = checkedBranchIds.includes(
+      removeNPathPartsFromStart(node.element.id!, 1)
+    );
+  }
+  return result;
+}
 
 export const getResourceTypeFromProfile = (profile: StructureDefinition) => {
   let result = null;

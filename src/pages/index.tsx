@@ -30,7 +30,7 @@ import { ProfileTree } from "@/utils/profileTree";
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
-  const [profileTree, setProfileTree] = useState<ProfileTree | undefined>();
+  const [profileTreeNodes, setProfileTreeNodes] = useState<ProfileTree | undefined>();
   const [checkedBranchIds, setCheckedBranchIds] = useState<string[]>([]);
   const [branchIds, setBranchIds] = useState<string[]>([]);
   const [resourceType, setResourceType] = useState<string>();
@@ -73,7 +73,7 @@ const index = () => {
     }
     console.log("profile tree: ", profileTree);
     const branchIds = uniq(profileTree.branchIds);
-    setProfileTree(profileTree);
+    setProfileTreeNodes(profileTree);
     setBranchIds(branchIds);
     setCheckedBranchIds(branchIds.filter((id) => idIsImportant(id)));
   };
@@ -135,7 +135,7 @@ const index = () => {
       <main className="flex flex-row pt-8 h-full">
         <LeftSidebar>
           <ResourceIdList
-            setProfileTree={setProfileTree}
+            setProfileTree={setProfileTreeNodes}
             setMode={setMode}
             loadProfile={loadProfile}
             handleSelectBaseProfile={handleSelectBaseProfile}
@@ -170,10 +170,10 @@ const index = () => {
                 <button
                   className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xxs font-bold py-2 px-4 rounded"
                   onClick={() => {
-                    if (!profileTree) {
+                    if (!profileTreeNodes) {
                       return;
                     }
-                    let inputData = profileTree.inputData;
+                    let inputData = profileTreeNodes.inputData;
                     inputData = formatInputDataForResource(inputData);
                     inputData = addMissingElements(inputData);
                     // const isMet = checkCardinalities(profileTree, inputData);
@@ -227,10 +227,11 @@ const index = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-2 px-8">
-                  {!profileTree ? null : (
+                  {!profileTreeNodes ? null : (
                     <ProfileTreeComponent
-                      setProfileTree={setProfileTree}
-                      profileTree={profileTree}
+                      setProfileTree={setProfileTreeNodes}
+                      profileTree={profileTreeNodes}
+                      checkedBranchIds={checkedBranchIds}
                     />
                   )}
                 </div>

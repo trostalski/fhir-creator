@@ -17,6 +17,7 @@ import {
   getNthPartOfPath,
   getPathSuffix,
   isMultiTypeElement,
+  logWithCopy,
   removeNPathPartsFromEnd,
   removeNPathPartsFromStart,
 } from "./utils";
@@ -87,16 +88,19 @@ export class ProfileTree {
         parentNode.basePath,
         removeNPathPartsFromStart(elementId, 1)
       );
+      let elementType;
+      if (isMultiTypeElement(element)) {
+        elementType = getElementTypes(element)![0];
+      }
       const elementNode = new ProfileTreeNode(
         element,
         elementDataPath,
         parentNode,
         elementBasePath,
-        false
+        false,
+        [],
+        elementType
       );
-      if (this.hasNode(elementDataPath)) {
-        this.removeNode(elementDataPath);
-      }
       if (await isPrimitiveElement(element)) {
         elementNode.isPrimitive = true;
         nodes.push(elementNode);
@@ -168,7 +172,8 @@ export class ProfileTree {
         if (node) {
           const newDataPath = getNewDataPath(node.dataPath, diffElement.id!);
           const newParentPath = removeNPathPartsFromEnd(newDataPath, 1);
-          const parentNode = this.getNode(newParentPath) || node.parentNode;
+          const parentNode =
+            this.getNodeByDataPath(newParentPath) || node.parentNode;
           const newNode = new ProfileTreeNode(
             updateElementWithOther(node.element, diffElement),
             newDataPath,
@@ -232,11 +237,7 @@ export class ProfileTree {
     }
   }
 
-  hasNode(path: string) {
-    return this.nodes.some((node) => node.dataPath === path);
-  }
-
-  getNode(path: string) {
+  getNodeByDataPath(path: string) {
     return this.nodes.find((node) => node.dataPath === path);
   }
 
@@ -244,12 +245,9 @@ export class ProfileTree {
     this.nodes.push(node);
   }
 
-  removeNode(path: string) {
-    const nodeIndex = this.nodes.findIndex((node) => node.dataPath === path);
-    if (nodeIndex === -1) {
-      return;
-    }
-    this.nodes.splice(nodeIndex, 1);
+  updateNode(dataPath: string, node: ProfileTreeNode) {
+    const index = this.nodes.findIndex((n) => n.dataPath === dataPath);
+    this.nodes[index] = node;
   }
 
   private getDataPath(parentPath: string, element: ElementDefinition) {

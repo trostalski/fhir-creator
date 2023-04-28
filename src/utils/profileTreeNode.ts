@@ -17,7 +17,8 @@ export class ProfileTreeNode {
     parentNode: ProfileTreeNode | null,
     basePath: string,
     isPrimitive: boolean,
-    childNodes?: ProfileTreeNode[]
+    childNodes?: ProfileTreeNode[],
+    type?: string
   ) {
     this.element = element;
     this.dataPath = dataPath;
@@ -25,6 +26,7 @@ export class ProfileTreeNode {
     this.basePath = basePath;
     this.isPrimitive = isPrimitive;
     this.childNodes = childNodes || [];
+    this.type = type;
   }
 
   get depth() {
@@ -32,7 +34,7 @@ export class ProfileTreeNode {
   }
 
   get isRoot() {
-    return this.depth == 1;
+    return this.parentNode === null;
   }
 
   get isRootPrimitive() {
@@ -83,7 +85,7 @@ export class ProfileTreeNode {
 
   private getDescendants() {
     const descendants = [];
-    const stack = this.childNodes;
+    const stack = this.childNodes.slice(); // first level copy
     while (stack.length) {
       const node = stack.shift()!;
       descendants.push(node);
@@ -91,10 +93,4 @@ export class ProfileTreeNode {
     }
     return descendants;
   }
-
-  insertBefore(newNode: ProfileTreeNode, referenceNode: ProfileTreeNode) {}
-  insertAfter(newNode: ProfileTreeNode, referenceNode: ProfileTreeNode) {}
-  replaceChild(newNode: ProfileTreeNode, oldNode: ProfileTreeNode) {}
-  removeChild(oldNode: ProfileTreeNode) {}
-  appendChild(child: ProfileTreeNode) {}
 }

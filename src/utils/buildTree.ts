@@ -69,8 +69,6 @@ export function isPrimitiveType(profile: StructureDefinition) {
     result = true;
   } else if (profile.id === "Reference") {
     result = true;
-  } else if (profile.id === "BackboneElement") {
-    result = true;
   }
   return result;
 }
@@ -144,6 +142,8 @@ export function isValidElement(element: ElementDefinition, rootPath?: string) {
   } else if (element.base?.path === "Element.id") {
     result = false;
   } else if (element.id.endsWith(".extension")) {
+    result = false;
+  } else if (element.id.endsWith(".modifierExtension")) {
     result = false;
   }
   return result;
