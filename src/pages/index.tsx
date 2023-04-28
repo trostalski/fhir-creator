@@ -12,13 +12,13 @@ import {
   isFhirBaseDefinition,
   getResourceTypeFromUrl,
   getBaseUrl,
-  getBranchIds,
   shouldDisplayNode,
   createJsonFromPathArray,
   formatInputDataForResource,
   getResourceTypeFromProfile,
   getUid,
   extractInputDataFromProfileTree,
+  logWithCopy,
 } from "../utils/utils";
 import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
@@ -33,6 +33,7 @@ import { tooltipSytles } from "@/utils/styles";
 import { InputData } from "@/types";
 import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
 import uniq from "lodash/uniq";
+import { getBranchIds } from "@/utils/tree_utils";
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
@@ -69,6 +70,7 @@ const index = () => {
         ).then((res) => res.json());
         baseElements = baseProfile.snapshot!.element;
         profileTree = await buildTreeFromElementsRecursive(baseElements);
+        logWithCopy("baseElements", profileTree);
         profileTree = await mergeTreeWithDifferential(
           profileTree,
           profile.differential.element

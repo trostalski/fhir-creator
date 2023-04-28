@@ -3,15 +3,27 @@ import {
   ElementDefinitionType,
   StructureDefinition,
 } from "fhir/r4";
-import { primitiveTypes, rootName } from "./constants";
+import { pathDelimiter, primitiveTypes, rootName } from "./constants";
 import {
   capitalizeFirstLetter,
-  getPathSuffix,
-  isSliceElement,
-  parseMaxString,
-  removeNPathPartsFromStart,
+  elementExpectsArray,
+  getElementTypes,
+  getIndexString,
+  isMultiTypeElement,
+  isMultiTypeString,
 } from "./utils";
 import { validFhirTypes } from "./fhirTypes";
+import {
+  getNthPartOfPath,
+  getPathLength,
+  getPathSuffix,
+  getSliceNames,
+  mergePaths,
+  removeNPathPartsFromEnd,
+  removeNPathPartsFromStart,
+  replaceMultiTypePath,
+} from "./path_utils";
+import { extractDirectChildren } from "./tree_utils";
 
 export interface ProfileTreeNode {
   element: ElementDefinition;
@@ -23,7 +35,6 @@ export interface ProfileTreeNode {
   isPrimitive: boolean;
   isSliceEntry: boolean;
   isRootPrimitive?: boolean;
-  isArray: boolean;
   type?: string;
   value: string;
   sliceName?: string;
@@ -32,11 +43,7 @@ export interface ProfileTreeNode {
 
 export type ProfileTree = ProfileTreeNode[];
 
-export const containsDot = (str: string) => {
-  return str.includes(".");
-};
-
-function parseCode(code: string) {
+function parseTypeCode(code: string) {
   let result = code;
   if (code === "http://hl7.org/fhirpath/System.String") {
     result = "string";
@@ -46,7 +53,7 @@ function parseCode(code: string) {
 
 async function getTypeDefinition(type: ElementDefinitionType) {
   let result = null;
-  const code = parseCode(type.code);
+  const code = parseTypeCode(type.code);
   if (!validFhirTypes.includes(code)) {
     return null;
   }
@@ -97,42 +104,29 @@ async function getChildrenTypeDefinitions(element: ElementDefinition) {
   return childProfiles;
 }
 
-function getPath(parentPath: string, element: ElementDefinition) {
-  let result = parentPath;
-  const id = element.id!;
-
-  if (parentPath.endsWith("[x]")) {
-    const parsedParentPath = parentPath.replace(
-      "[x]",
-      capitalizeFirstLetter(id.split(".")[0])
+function getDataPath(parentPath: string, element: ElementDefinition) {
+  let result;
+  const { id } = element;
+  const idPrefix = getNthPartOfPath(id!, 0);
+  const idPartAfterRoot = removeNPathPartsFromStart(id!, 1);
+  if (isMultiTypeString(parentPath)) {
+    const parsedParentPath = replaceMultiTypePath(
+      parentPath,
+      capitalizeFirstLetter(idPrefix)
     );
-    if (removeNPathPartsFromStart(id, 1).length > 0) {
-      result = parsedParentPath + "." + removeNPathPartsFromStart(id, 1);
-    } else {
+    if (getPathLength(parsedParentPath) <= 1) {
       result = parsedParentPath;
+    } else {
+      result = mergePaths(parsedParentPath, idPartAfterRoot);
     }
   } else {
-    result = parentPath + "." + removeNPathPartsFromStart(id, 1);
+    result = mergePaths(parentPath, idPartAfterRoot);
   }
-  if (element.max && parseMaxString(element.max) > 1) {
-    result = result + "[0]";
+
+  if (elementExpectsArray(element)) {
+    result += getIndexString(0);
   }
   return result;
-}
-
-export function extractDirectChildren(
-  parentPath: string,
-  childPaths: string[]
-) {
-  const directChildren: string[] = [];
-  for (const childPath of childPaths) {
-    const childPathParts = childPath.split(".");
-    const parentPathParts = parentPath.split(".");
-    if (childPathParts.length === parentPathParts.length + 1) {
-      directChildren.push(childPath);
-    }
-  }
-  return directChildren;
 }
 
 function isValidElement(element: ElementDefinition) {
@@ -141,7 +135,7 @@ function isValidElement(element: ElementDefinition) {
     result = false;
   } else if (element.id === rootName) {
     result = false;
-  } else if (!element.id.includes(".")) {
+  } else if (!element.id.includes(pathDelimiter)) {
     result = false;
   } else if (element.base?.path === "Element.id") {
     result = false;
@@ -154,8 +148,8 @@ function isValidElement(element: ElementDefinition) {
 function replaceWrongParentPaths(profileTree: ProfileTree) {
   for (const node of profileTree) {
     const { dataPath: path, parentDataPath: parentPath } = node;
-    if (parentPath.split(".").length < path.split(".").length - 1) {
-      const childPathStem = path.split(".").slice(0, -1).join(".");
+    if (getPathLength(parentPath) < getPathLength(path) - 1) {
+      const childPathStem = removeNPathPartsFromEnd(path, 1);
       node.parentDataPath = childPathStem;
     }
   }
@@ -169,16 +163,6 @@ function addMissingChildren(profileTree: ProfileTree) {
       parent.childPaths.push(node.dataPath);
     }
   }
-}
-
-export function getSliceNames(input: string): string[] {
-  const regex = /:(.*?)(\.|$)/g;
-  let matches: RegExpExecArray | null;
-  const substrings: string[] = [];
-  while ((matches = regex.exec(input)) !== null) {
-    substrings.push(matches[1]);
-  }
-  return substrings;
 }
 
 export function removeSliceNames(str: string): string {
@@ -210,32 +194,31 @@ export async function buildTreeFromElementsRecursive(
       continue; // skip root element
     }
 
-    const elementPath = getPath(parentPath, element);
-    const elementBasePath = parentBasePath + "." + getPathSuffix(id!);
+    const elementDataPath = getDataPath(parentPath, element);
+    const elementBasePath = mergePaths(parentBasePath, getPathSuffix(id!));
     const elementIsSliceEntry = isSliceEntry(element);
-    let sliceName = undefined;
-
-    if (isSliceElement(element)) {
-      sliceName = getSliceNames(element.id!)[0];
+    let elementType;
+    if (isMultiTypeElement(element)) {
+      elementType = getElementTypes(element)![0];
     }
 
+    const elementNode: ProfileTreeNode = {
+      element: element,
+      dataPath: elementDataPath,
+      parentDataPath: parentPath,
+      basePath: elementBasePath,
+      baseId: id!,
+      isPrimitive: false,
+      isRootPrimitive: parentPath === rootName,
+      childPaths: [],
+      isSliceEntry: elementIsSliceEntry,
+      value: "",
+    };
+
     if (await isPrimitiveElement(element)) {
-      const node: ProfileTreeNode = {
-        element: element,
-        dataPath: elementPath,
-        parentDataPath: parentPath,
-        basePath: elementBasePath,
-        baseId: id!,
-        isPrimitive: true,
-        isRootPrimitive: parentPath === rootName,
-        childPaths: [],
-        isArray: element.max ? parseMaxString(element.max) > 1 : false,
-        isSliceEntry: elementIsSliceEntry,
-        sliceName: sliceName,
-        value: "",
-      };
-      if (!profileTree.find((node) => node.dataPath === elementPath)) {
-        profileTree.push(node);
+      if (!profileTree.find((node) => node.dataPath === elementDataPath)) {
+        elementNode.isPrimitive = true;
+        profileTree.push(elementNode);
       }
     } else {
       // element is a complex type, so we need to get its children
@@ -244,27 +227,27 @@ export async function buildTreeFromElementsRecursive(
       for (const childType of childrenTypeDefinitions) {
         if (childType && isPrimitiveType(childType)) {
           const childElement = childType.snapshot!.element![0];
-          const childBasePath =
-            elementBasePath + "." + getPathSuffix(childElement.id);
-          // we need to set element properties from type definitoin (e.g. for onsetDateTime necessary)
-          childElement.type = [{ code: childType.id }];
+          const childBasePath = mergePaths(
+            elementBasePath,
+            getPathSuffix(childElement.id)
+          );
+          const type = childType.id;
+          childElement.type = [{ code: type }];
           childElement.min = 0;
           childElement.max = "1";
-          const dataPath =
-            getPath(elementPath, childElement) +
-            "." +
-            childElement.type[0].code;
+          const dataPath = mergePaths(
+            getDataPath(elementDataPath, childElement),
+            type
+          );
           const childNode: ProfileTreeNode = {
             element: childElement,
             dataPath: dataPath,
-            parentDataPath: elementPath,
+            parentDataPath: elementDataPath,
             basePath: childBasePath,
             baseId: id!,
             isPrimitive: true,
             childPaths: [],
-            isArray: element.max ? parseMaxString(element.max) > 1 : false,
             isSliceEntry: elementIsSliceEntry,
-            sliceName: sliceName,
             value: "",
           };
           childNodes.push(childNode);
@@ -272,7 +255,7 @@ export async function buildTreeFromElementsRecursive(
         if (childType && !isPrimitiveType(childType)) {
           const grandchildNodes = await buildTreeFromElementsRecursive(
             childType.snapshot!.element!,
-            elementPath,
+            elementDataPath,
             elementBasePath
           );
           childNodes.push(...grandchildNodes);
@@ -280,25 +263,19 @@ export async function buildTreeFromElementsRecursive(
       }
       // child nodes also include grantchildren nodes, so we need to extract the direct children
       const childPaths = extractDirectChildren(
-        elementPath,
+        elementDataPath,
         childNodes.map((node) => node.dataPath)
       );
-      let elementType = undefined;
-      if (element.type && element.type.length > 1) {
-        elementType = element.type[0].code;
-      }
       const parentNode: ProfileTreeNode = {
         element: element,
-        dataPath: elementPath,
+        dataPath: elementDataPath,
         parentDataPath: parentPath,
         basePath: elementBasePath,
         baseId: id!,
         isPrimitive: false,
         childPaths: childPaths,
-        isArray: element.max ? parseMaxString(element.max) > 1 : false,
         type: elementType,
         isSliceEntry: elementIsSliceEntry,
-        sliceName: sliceName,
         value: "",
       };
       profileTree.push(parentNode, ...childNodes);

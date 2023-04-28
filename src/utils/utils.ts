@@ -1,14 +1,17 @@
 import { Cardinality, InputData } from "@/types";
 import {
+  multiTypeString,
   notImportantIdSuffices as notImportantIds,
+  pathDelimiter,
   rootName,
 } from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
-import {
-  ProfileTree,
-  ProfileTreeNode,
-  getSliceNames,
-} from "../utils/buildTree";
+import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
+import { getSliceNames, removeNPathPartsFromStart } from "./path_utils";
+
+export const containsDot = (str: string) => {
+  return str.includes(".");
+};
 
 export function logWithCopy(...args: any[]) {
   for (let i = 0; i < args.length; i++) {
@@ -41,6 +44,30 @@ export const parseMaxString = (str: string) => {
   }
 };
 
+export function getIndexString(index: number) {
+  return `[${index}]`;
+}
+
+export function getElementTypes(element: ElementDefinition) {
+  return element.type?.map((type) => type.code);
+}
+
+export function elementExpectsArray(element: ElementDefinition) {
+  let result = false;
+  if (
+    element.max &&
+    parseMaxString(element.max) > 1 &&
+    containsDot(element.id!)
+  ) {
+    result = true;
+  }
+  return result;
+}
+
+export function isMultiTypeString(string: string) {
+  return string.includes(multiTypeString);
+}
+
 export function removeMultiTypeString(str: string): string {
   return str.replace(/\[x\]/g, "");
 }
@@ -53,29 +80,11 @@ export function isMultiTypeElement(element: ElementDefinition): boolean {
   return result;
 }
 
-export function removeNPathPartsFromStart(path: string, n: number) {
-  const pathParts = path.split(".");
-  const result = pathParts.slice(n).join(".");
-  return result;
-}
-
-export function getPathSuffix(path: string) {
-  const pathParts = path.split(".");
-  const result = pathParts[pathParts.length - 1];
-  return result;
-}
-
 export function arraysEqual(a: any[], b: any[]) {
   // from https://stackoverflow.com/questions/3115982/how-to-check-if-two-arrays-are-equal-with-javascript
   if (a === b) return true;
   if (a == null || b == null) return false;
   if (a.length !== b.length) return false;
-
-  // If you don't care about the order of the elements inside
-  // the array, you should sort both arrays here.
-  // Please note that calling sort on an array will modify that array.
-  // you might want to clone your array first.
-
   for (var i = 0; i < a.length; ++i) {
     if (a[i] !== b[i]) return false;
   }
@@ -84,13 +93,6 @@ export function arraysEqual(a: any[], b: any[]) {
 
 export function getBranchId(id: string) {
   return removeNPathPartsFromStart(id, 1);
-}
-
-export function getBranchIds(profileTree: ProfileTree) {
-  // Get all paths that have the rootName as parent without the root
-  const nodes = profileTree.filter((node) => node.parentDataPath === rootName);
-  const branchIds = nodes.map((node) => getBranchId(node.baseId));
-  return branchIds;
 }
 
 export const idIsImportant = (id: string) => {
@@ -155,17 +157,6 @@ export const removeBetweenColonAndPeriod = (str: string): string => {
   const regex = /:[^.]*(?=\.)/g;
   return str.replace(regex, "").replace(":", "");
 };
-
-function getCharsBeforeVar(str: string, variable: string, n: number) {
-  const index = str.indexOf(variable);
-  if (index < 0) {
-    return "";
-  } else if (index <= n) {
-    return str.substring(0, index);
-  } else {
-    return str.substring(index - n, index);
-  }
-}
 
 function getCharsAfterVar(str: string, variable: string, n: number) {
   const index = str.indexOf(variable);

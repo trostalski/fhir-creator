@@ -2,17 +2,22 @@ import { ElementDefinition } from "fhir/r4";
 import {
   arraysEqual,
   capitalizeFirstLetter,
+  getElementTypes,
   isMultiTypeElement,
-  removeNPathPartsFromStart,
 } from "./utils";
+import { ProfileTree, ProfileTreeNode, isSliceEntry } from "./buildTree";
+import { pathDelimiter, primitiveTypes, sliceDelimiter } from "./constants";
 import {
-  ProfileTree,
-  ProfileTreeNode,
-  extractDirectChildren,
   getSliceNames,
-  isSliceEntry,
-} from "./buildTree";
-import { primitiveTypes } from "./constants";
+  removeNPathPartsFromEnd,
+  removeNPathPartsFromStart,
+  replaceMultiTypePath,
+} from "./path_utils";
+import {
+  copyAllDescendants,
+  extractDirectChildren,
+  getNodeByDataPath,
+} from "./tree_utils";
 
 const updateElementWithOther = (
   element: ElementDefinition,
@@ -27,51 +32,55 @@ function substringFromColon(str: string) {
   return str.substring(str.indexOf(":"));
 }
 
-function mergeDataPaths(baseDataPath: string, diffId: string) {
-  let newParts = [];
-  const baseParts = baseDataPath.split(".");
-  const diffParts = diffId.split(".");
+function getNewDataPath(baseDataPath: string, diffId: string) {
+  let newParts: string[] = [];
+  const baseParts = baseDataPath.split(pathDelimiter);
+  const diffParts = diffId.split(pathDelimiter);
   const basePathLength = baseParts.length;
   for (let i = 0; i < basePathLength; i++) {
-    if (diffParts[i].includes(":")) {
+    if (diffParts[i].includes(sliceDelimiter)) {
       newParts.push(baseParts[i] + substringFromColon(diffParts[i]));
     } else {
       newParts.push(baseParts[i]);
     }
   }
-  return newParts.join(".");
-}
-
-function getAllDescendants(
-  node: ProfileTreeNode,
-  profileTree: ProfileTree,
-  types?: string[]
-) {
-  const descendants = [];
-  let childPaths = node.childPaths.slice(); // first level copy
-  if (types) {
-    childPaths = childPaths.filter((path) => {
-      for (const type of types) {
-        if (path.toLowerCase().includes(type.toLowerCase())) {
-          return true;
-        }
-      }
-      return false;
-    });
-  }
-  while (childPaths.length > 0) {
-    const childPath = childPaths.shift();
-    const childNode = profileTree.find((node) => node.dataPath === childPath);
-    if (childNode) {
-      descendants.push(childNode);
-      childPaths = childPaths.concat(childNode.childPaths);
-    }
-  }
-  return descendants;
+  return newParts.join(pathDelimiter);
 }
 
 function isClosedSlice(element: ElementDefinition) {
   return element.slicing?.rules === "closed";
+}
+
+export function baseEqual(
+  node: ProfileTreeNode,
+  diffElement: ElementDefinition
+) {
+  const diffBasePath = removeNPathPartsFromStart(diffElement.path, 1);
+  return removeNPathPartsFromStart(node.basePath, 1) === diffBasePath;
+}
+export function baseAndSlicesEqual(
+  node: ProfileTreeNode,
+  diffElement: ElementDefinition
+) {
+  const diffBasePath = removeNPathPartsFromStart(diffElement.path, 1);
+  return (
+    removeNPathPartsFromStart(node.basePath, 1) === diffBasePath &&
+    arraysEqual(getSliceNames(node.dataPath), getSliceNames(diffElement.id!))
+  );
+}
+
+export function baseAndParentSlicesEqual(
+  node: ProfileTreeNode,
+  diffElement: ElementDefinition
+) {
+  const diffBasePath = removeNPathPartsFromStart(diffElement.path, 1);
+  return (
+    removeNPathPartsFromStart(node.basePath, 1) === diffBasePath &&
+    arraysEqual(
+      getSliceNames(node.parentDataPath),
+      getSliceNames(diffElement.id!)
+    )
+  );
 }
 
 export function mergeTreeWithDifferential(
@@ -79,39 +88,25 @@ export function mergeTreeWithDifferential(
   differentialElements: ElementDefinition[]
 ): ProfileTree {
   for (const differentialElement of differentialElements) {
-    const diffBasePath = removeNPathPartsFromStart(differentialElement.path, 1);
-    const node = profileTree.find(
-      (n) =>
-        removeNPathPartsFromStart(n.basePath, 1) === diffBasePath &&
-        arraysEqual(
-          getSliceNames(n.dataPath),
-          getSliceNames(differentialElement.id!)
-        )
+    const node = profileTree.find((n) =>
+      baseAndSlicesEqual(n, differentialElement)
     );
     if (node) {
       node.element = updateElementWithOther(node.element, differentialElement);
       node.isSliceEntry = isSliceEntry(differentialElement);
     } else {
-      // is mutltitype and type exist -> get node by path insert type and and id without indeces??
-      let node = profileTree.find(
-        (n) =>
-          removeNPathPartsFromStart(n.basePath, 1) === diffBasePath &&
-          arraysEqual(
-            getSliceNames(n.parentDataPath),
-            getSliceNames(differentialElement.id!)
-          )
+      let node = profileTree.find((n) =>
+        baseAndParentSlicesEqual(n, differentialElement)
       );
       if (!node) {
-        node = profileTree.find(
-          (n) => removeNPathPartsFromStart(n.basePath, 1) === diffBasePath
-        );
+        node = profileTree.find((n) => baseEqual(n, differentialElement));
       }
       if (node) {
-        const newDataPath = mergeDataPaths(
+        const newDataPath = getNewDataPath(
           node.dataPath,
           differentialElement.id!
         );
-        const newParentPath = newDataPath.split(".").slice(0, -1).join(".");
+        const newParentPath = removeNPathPartsFromEnd(newDataPath, 1);
         const newNode: ProfileTreeNode = {
           ...node,
           isSliceEntry: isSliceEntry(differentialElement),
@@ -119,22 +114,19 @@ export function mergeTreeWithDifferential(
           element: updateElementWithOther(node.element, differentialElement),
         };
         let parentNode;
-        parentNode = profileTree.find((n) => n.dataPath === newParentPath);
-        if (!parentNode) {
-          parentNode = profileTree.find(
-            (n) => n.dataPath === newNode.parentDataPath
-          );
-        }
+        parentNode =
+          getNodeByDataPath(profileTree, newParentPath) ||
+          getNodeByDataPath(profileTree, node.parentDataPath);
         if (parentNode) {
           parentNode.childPaths.push(newNode.dataPath);
         }
         let children;
         if (isMultiTypeElement(differentialElement)) {
-          const diffTypes = differentialElement.type?.map((t) => t.code);
+          const diffTypes = getElementTypes(differentialElement);
           newNode.type = diffTypes![0];
-          children = getAllDescendants(node, profileTree, diffTypes!);
-          console.log("children: ", children);
+          children = copyAllDescendants(node, profileTree, diffTypes!);
           children = children.map((child) => {
+            console.log("child: ",child);
             let childType;
             if (
               child.element.type &&
@@ -144,8 +136,9 @@ export function mergeTreeWithDifferential(
             } else {
               childType = child.element.type![0].code;
             }
-            let oldPathParts = node!.dataPath.replace("[x]", childType);
-            let newPathParts = newDataPath.replace("[x]", childType);
+            console.log("childtype: ", childType);
+            let oldPathParts = replaceMultiTypePath(node!.dataPath, childType);
+            let newPathParts = replaceMultiTypePath(newDataPath, childType);
             return {
               ...child,
               parentDataPath: newDataPath,
@@ -153,7 +146,7 @@ export function mergeTreeWithDifferential(
             };
           });
         } else {
-          children = getAllDescendants(node, profileTree);
+          children = copyAllDescendants(node, profileTree);
           children = children.map((child) => ({
             ...child,
             parentDataPath: newDataPath,
@@ -173,7 +166,7 @@ export function mergeTreeWithDifferential(
   for (const node of profileTree) {
     if (node.isSliceEntry && isClosedSlice(node.element)) {
       // remove node and all children from profileTree
-      const descendants = getAllDescendants(node, profileTree);
+      const descendants = copyAllDescendants(node, profileTree);
       const descendantDataPaths = descendants.map((n) => n.dataPath);
       profileTree = profileTree.filter(
         (n) =>

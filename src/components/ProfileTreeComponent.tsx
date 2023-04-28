@@ -170,6 +170,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                 if (node.type) {
                   // multiype node with select input for type selection
                   // the following code filters the child nodes to only show the ones that match the selected type
+                  console.log(node);
                   childNode = childNode?.dataPath
                     .toLowerCase()
                     .includes(node.type.toLowerCase())
