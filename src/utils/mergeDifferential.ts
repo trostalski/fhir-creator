@@ -126,7 +126,6 @@ export function mergeTreeWithDifferential(
           newNode.type = diffTypes![0];
           children = copyAllDescendants(node, profileTree, diffTypes!);
           children = children.map((child) => {
-            console.log("child: ",child);
             let childType;
             if (
               child.element.type &&
@@ -136,7 +135,6 @@ export function mergeTreeWithDifferential(
             } else {
               childType = child.element.type![0].code;
             }
-            console.log("childtype: ", childType);
             let oldPathParts = replaceMultiTypePath(node!.dataPath, childType);
             let newPathParts = replaceMultiTypePath(newDataPath, childType);
             return {

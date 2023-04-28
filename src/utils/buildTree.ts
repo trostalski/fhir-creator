@@ -62,7 +62,15 @@ async function getTypeDefinition(type: ElementDefinitionType) {
     if (!res.ok) {
       return null;
     }
-    const type_definition = await res.json();
+    let type_definition = await res.json();
+    if (code == "Reference") {
+      // TODO: hack because Reference.identifier results in loop
+      type_definition.snapshot.element =
+        type_definition.snapshot.element.filter(
+          (el: ElementDefinition) => el.id !== "Reference.identifier"
+        );
+      console.log(type_definition);
+    }
     result = type_definition;
   } catch (error) {}
   return result;
@@ -86,8 +94,6 @@ export async function isPrimitiveElement(element: ElementDefinition) {
 function isPrimitiveType(profile: StructureDefinition) {
   let result = false;
   if (profile.kind === "primitive-type") {
-    result = true;
-  } else if (profile.id === "Reference") {
     result = true;
   }
   return result;
@@ -253,6 +259,7 @@ export async function buildTreeFromElementsRecursive(
           childNodes.push(childNode);
         }
         if (childType && !isPrimitiveType(childType)) {
+          console.log("childType", childType);
           const grandchildNodes = await buildTreeFromElementsRecursive(
             childType.snapshot!.element!,
             elementDataPath,
