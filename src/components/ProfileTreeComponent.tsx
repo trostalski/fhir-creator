@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
 import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { incrementDataPath, parseMaxString } from "@/utils/utils";
+import { logWithCopy, parseMaxString } from "@/utils/utils";
 import { GrFormAdd } from "react-icons/gr";
 import { AiOutlinePieChart } from "react-icons/ai";
+import { getDisplayPath, incrementDataPath } from "@/utils/path_utils";
+import { duplicateBranch } from "@/utils/tree_utils";
 
 interface ProfileTreeComponentProps {
   profileTree: ProfileTree;
@@ -56,9 +58,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                       : ""
                   }`}
                 >
-                  {node.dataPath
-                    .replace(node.parentDataPath + ".", "")
-                    .replace(/\[.\]/g, "")}
+                  {getDisplayPath(node)}
                 </h2>
               </button>
             </div>
@@ -109,9 +109,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                       : ""
                   }`}
                 >
-                  {node.dataPath
-                    .replace(node.parentDataPath + ".", "")
-                    .replace(/\[.\]/g, "")}
+                  {getDisplayPath(node)}
                 </h2>
               </button>
             </div>
@@ -150,10 +148,19 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                 <button
                   onClick={() => {
                     // TODO
-                    props.setProfileTree([
-                      ...props.profileTree,
-                      { ...node, dataPath: incrementDataPath(node.dataPath) },
-                    ]);
+                    const newNode = structuredClone(node);
+                    newNode.dataPath = incrementDataPath(node.dataPath);
+                    const newProfileTree = duplicateBranch(
+                      props.profileTree,
+                      newNode
+                    );
+                    logWithCopy(
+                      "newProfileTree",
+                      newProfileTree,
+                      props.profileTree
+                    );
+                    props.setProfileTree(newProfileTree);
+
                   }}
                 >
                   <GrFormAdd size={20} />
@@ -170,7 +177,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                 if (node.type) {
                   // multiype node with select input for type selection
                   // the following code filters the child nodes to only show the ones that match the selected type
-                  console.log(node);
                   childNode = childNode?.dataPath
                     .toLowerCase()
                     .includes(node.type.toLowerCase())

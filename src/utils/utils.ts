@@ -393,22 +393,6 @@ function hasValue(inputData: InputData[], path: string): boolean {
   return exists;
 }
 
-function extractLastIndex(str: string): number {
-  const match = str.match(/\[(\d+)\]$/);
-  if (match) {
-    return parseInt(match[1]);
-  }
-  return -1; // or throw an error, if there is no index found
-}
-
-export function incrementDataPath(path: string): string {
-  const lastIndex = extractLastIndex(path);
-  if (lastIndex >= 0) {
-    return path.replace(/\[\d+\]$/, `[${lastIndex + 1}]`);
-  }
-  return path;
-}
-
 export function checkCardinality(
   profileTree: ProfileTree,
   path: string,

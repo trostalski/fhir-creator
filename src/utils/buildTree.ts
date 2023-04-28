@@ -23,7 +23,7 @@ import {
   removeNPathPartsFromStart,
   replaceMultiTypePath,
 } from "./path_utils";
-import { extractDirectChildren } from "./tree_utils";
+import { extractDirectChildrenPaths } from "./tree_utils";
 
 export interface ProfileTreeNode {
   element: ElementDefinition;
@@ -69,7 +69,6 @@ async function getTypeDefinition(type: ElementDefinitionType) {
         type_definition.snapshot.element.filter(
           (el: ElementDefinition) => el.id !== "Reference.identifier"
         );
-      console.log(type_definition);
     }
     result = type_definition;
   } catch (error) {}
@@ -259,7 +258,6 @@ export async function buildTreeFromElementsRecursive(
           childNodes.push(childNode);
         }
         if (childType && !isPrimitiveType(childType)) {
-          console.log("childType", childType);
           const grandchildNodes = await buildTreeFromElementsRecursive(
             childType.snapshot!.element!,
             elementDataPath,
@@ -269,7 +267,7 @@ export async function buildTreeFromElementsRecursive(
         }
       }
       // child nodes also include grantchildren nodes, so we need to extract the direct children
-      const childPaths = extractDirectChildren(
+      const childPaths = extractDirectChildrenPaths(
         elementDataPath,
         childNodes.map((node) => node.dataPath)
       );

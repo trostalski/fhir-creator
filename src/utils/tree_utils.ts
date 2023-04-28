@@ -1,9 +1,9 @@
 import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { rootName } from "./constants";
 import { getPathLength } from "./path_utils";
-import { getBranchId } from "./utils";
+import { getBranchId, logWithCopy } from "./utils";
 
-export function extractDirectChildren(
+export function extractDirectChildrenPaths(
   parentPath: string,
   childPaths: string[]
 ) {
@@ -11,6 +11,22 @@ export function extractDirectChildren(
   for (const childPath of childPaths) {
     if (getPathLength(childPath) === getPathLength(parentPath) + 1) {
       directChildren.push(childPath);
+    }
+  }
+  return directChildren;
+}
+
+export function extractDirectChildren(
+  parentNode: ProfileTreeNode,
+  childNodes: ProfileTreeNode[]
+) {
+  const directChildren: ProfileTreeNode[] = [];
+  for (const childNode of childNodes) {
+    if (
+      getPathLength(childNode.dataPath) ===
+      getPathLength(parentNode.dataPath) + 1
+    ) {
+      directChildren.push(childNode);
     }
   }
   return directChildren;
@@ -35,10 +51,13 @@ export function copyAllDescendants(
   }
   while (childPaths.length > 0) {
     const childPath = childPaths.shift();
-    const childNode = profileTree.find((node) => node.dataPath === childPath);
-    if (childNode) {
-      descendants.push(childNode);
-      childPaths = childPaths.concat(childNode.childPaths);
+    const existingChildNode = profileTree.find(
+      (node) => node.dataPath === childPath
+    );
+    const childNodeCopy = structuredClone(existingChildNode);
+    if (childNodeCopy) {
+      descendants.push(childNodeCopy);
+      childPaths = childPaths.concat(childNodeCopy.childPaths);
     }
   }
   return descendants;
@@ -64,4 +83,29 @@ export function getChildNodes(profileTree: ProfileTree, node: ProfileTreeNode) {
     }
   }
   return childNodes;
+}
+
+export function duplicateBranch(
+  profileTree: ProfileTree,
+  node: ProfileTreeNode
+) {
+  const parentNode = getNodeByDataPath(profileTree, node.parentDataPath);
+  const descendants = copyAllDescendants(parentNode!, profileTree);
+  const directChildren = extractDirectChildren(node, descendants);
+
+  parentNode!.childPaths.push(node.dataPath);
+  if (descendants) {
+    const oldDataPath = directChildren![0].parentDataPath;
+    for (const directChild of directChildren) {
+      directChild.parentDataPath = node.dataPath;
+    }
+    for (const descendant of descendants) {
+      descendant.dataPath = descendant.dataPath.replace(
+        oldDataPath,
+        node.dataPath
+      );
+    }
+  }
+  profileTree = profileTree.concat(descendants);
+  return profileTree;
 }

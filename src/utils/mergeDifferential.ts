@@ -15,7 +15,7 @@ import {
 } from "./path_utils";
 import {
   copyAllDescendants,
-  extractDirectChildren,
+  extractDirectChildrenPaths,
   getNodeByDataPath,
 } from "./tree_utils";
 
@@ -151,7 +151,7 @@ export function mergeTreeWithDifferential(
             dataPath: child.dataPath.replace(node!.dataPath, newDataPath),
           }));
         }
-        newNode.childPaths = extractDirectChildren(
+        newNode.childPaths = extractDirectChildrenPaths(
           newNode.dataPath,
           children.map((n) => n.dataPath)
         );
