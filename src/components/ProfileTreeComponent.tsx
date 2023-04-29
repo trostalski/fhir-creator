@@ -2,15 +2,28 @@ import React, { useState } from "react";
 import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
 import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { logWithCopy, parseMaxString } from "@/utils/utils";
+import { logWithCopy, parseMaxString, shouldDisplayNode } from "@/utils/utils";
 import { GrFormAdd } from "react-icons/gr";
 import { AiOutlinePieChart } from "react-icons/ai";
-import { getDisplayPath, incrementDataPath } from "@/utils/path_utils";
-import { duplicateBranch } from "@/utils/tree_utils";
+import { AiOutlineMinus } from "react-icons/ai";
+import {
+  extractIndex,
+  getDisplayPath,
+  getPathSuffix,
+  incrementDataPath,
+} from "@/utils/path_utils";
+import {
+  deleteBranch,
+  duplicateBranch,
+  getAllDescendants,
+  getLastDescendant,
+  insertAfterNode,
+} from "@/utils/tree_utils";
 
 interface ProfileTreeComponentProps {
   profileTree: ProfileTree;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
+  checkedBranchIds: string[];
 }
 
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
@@ -144,23 +157,39 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                   )}
                 </select>
               )}
+              {extractIndex(getPathSuffix(node.dataPath)) > 0 ? (
+                <button
+                  onClick={() => {
+                    let newProfileTree = [...props.profileTree];
+                    newProfileTree = deleteBranch(newProfileTree, node);
+                    props.setProfileTree(newProfileTree);
+                  }}
+                >
+                  <AiOutlineMinus size={20} />
+                </button>
+              ) : null}
               {parseMaxString(node.element.max!) > 1 ? (
                 <button
                   onClick={() => {
                     // TODO
                     const newNode = structuredClone(node);
-                    newNode.dataPath = incrementDataPath(node.dataPath);
-                    const newProfileTree = duplicateBranch(
+                    newNode.value = "";
+                    newNode.dataPath = incrementDataPath(
                       props.profileTree,
+                      node
+                    );
+                    const lastDescendant = getLastDescendant(
+                      props.profileTree,
+                      node
+                    );
+                    let newProfileTree = [...props.profileTree];
+                    newProfileTree = insertAfterNode(
+                      newProfileTree,
+                      lastDescendant,
                       newNode
                     );
-                    logWithCopy(
-                      "newProfileTree",
-                      newProfileTree,
-                      props.profileTree
-                    );
+                    newProfileTree = duplicateBranch(newProfileTree, newNode);
                     props.setProfileTree(newProfileTree);
-
                   }}
                 >
                   <GrFormAdd size={20} />
@@ -192,6 +221,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     }
   };
 
+  logWithCopy("Tree before rendering", props.profileTree);
   return (
     <div>
       <div className="flex flex-row">
@@ -212,12 +242,14 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         </button>
       </div>
       <div className="flex flex-col gap-4">
-        {props.profileTree.map((node: ProfileTreeNode) => {
-          if (node.parentDataPath === "root") {
-            return renderNode(node);
-          }
-          return null;
-        })}
+        {props.profileTree
+          .filter((node) => shouldDisplayNode(node, props.checkedBranchIds))
+          .map((node: ProfileTreeNode) => {
+            if (node.parentDataPath === "root") {
+              return renderNode(node);
+            }
+            return null;
+          })}
       </div>
     </div>
   );

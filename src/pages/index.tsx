@@ -241,9 +241,8 @@ const index = () => {
                   {!profileTree ? null : (
                     <ProfileTreeComponent
                       setProfileTree={setProfileTree}
-                      profileTree={profileTree.filter((node) =>
-                        shouldDisplayNode(node, checkedBranchIds)
-                      )}
+                      profileTree={profileTree}
+                      checkedBranchIds={checkedBranchIds}
                     />
                   )}
                 </div>

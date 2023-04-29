@@ -51,9 +51,7 @@ export function copyAllDescendants(
   }
   while (childPaths.length > 0) {
     const childPath = childPaths.shift();
-    const existingChildNode = profileTree.find(
-      (node) => node.dataPath === childPath
-    );
+    const existingChildNode = getNodeByDataPath(profileTree, childPath!);
     const childNodeCopy = structuredClone(existingChildNode);
     if (childNodeCopy) {
       descendants.push(childNodeCopy);
@@ -61,6 +59,46 @@ export function copyAllDescendants(
     }
   }
   return descendants;
+}
+
+export function getAllDescendants(
+  profileTree: ProfileTree,
+  node: ProfileTreeNode,
+  types?: string[]
+) {
+  const descendants = [];
+  let childPaths = node.childPaths.slice(); // first level copy
+  if (types) {
+    childPaths = childPaths.filter((path) => {
+      for (const type of types) {
+        if (path.toLowerCase().includes(type.toLowerCase())) {
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+  while (childPaths.length > 0) {
+    const childPath = childPaths.shift();
+    const childNode = profileTree.find((node) => node.dataPath === childPath);
+    if (childNode) {
+      descendants.push(childNode);
+      childPaths = childPaths.concat(childNode.childPaths);
+    }
+  }
+  return descendants;
+}
+
+export function getLastDescendant(
+  profileTree: ProfileTree,
+  node: ProfileTreeNode
+) {
+  // returns the last descendant or the node itself if it has no descendants
+  const descendants = getAllDescendants(profileTree, node);
+  if (descendants.length > 0) {
+    return descendants[descendants.length - 1];
+  }
+  return node;
 }
 
 export function getNodeByDataPath(nodes: ProfileTreeNode[], dataPath: string) {
@@ -85,27 +123,70 @@ export function getChildNodes(profileTree: ProfileTree, node: ProfileTreeNode) {
   return childNodes;
 }
 
+export function insertAfterNode(
+  profileTree: ProfileTree,
+  afterNode: ProfileTreeNode,
+  nodeIn: ProfileTreeNode
+) {
+  const afterNodeIndex = profileTree.indexOf(afterNode);
+  profileTree.splice(afterNodeIndex + 1, 0, nodeIn);
+  return profileTree;
+}
+
+export function updateNode(profileTree: ProfileTree, newNode: ProfileTreeNode) {
+  const node = getNodeByDataPath(profileTree, newNode.dataPath);
+  if (node) {
+    Object.assign(node, newNode);
+    console.log("updated node", node);
+  }
+  return profileTree;
+}
+
 export function duplicateBranch(
   profileTree: ProfileTree,
   node: ProfileTreeNode
 ) {
   const parentNode = getNodeByDataPath(profileTree, node.parentDataPath);
-  const descendants = copyAllDescendants(parentNode!, profileTree);
+  const descendants = copyAllDescendants(node, profileTree);
   const directChildren = extractDirectChildren(node, descendants);
 
   parentNode!.childPaths.push(node.dataPath);
   if (descendants) {
+    let prevChild = node;
     const oldDataPath = directChildren![0].parentDataPath;
-    for (const directChild of directChildren) {
-      directChild.parentDataPath = node.dataPath;
-    }
     for (const descendant of descendants) {
       descendant.dataPath = descendant.dataPath.replace(
         oldDataPath,
         node.dataPath
       );
+      descendant.value = "";
+      insertAfterNode(profileTree, prevChild, descendant);
+      prevChild = descendant;
     }
+    const newChildPaths = [];
+    for (const directChild of directChildren) {
+      directChild.parentDataPath = node.dataPath;
+      newChildPaths.push(directChild.dataPath);
+    }
+    node.childPaths = newChildPaths;
+    updateNode(profileTree, node);
   }
-  profileTree = profileTree.concat(descendants);
+  return profileTree;
+}
+
+export function copyNode() {}
+
+export function deleteBranch(profileTree: ProfileTree, node: ProfileTreeNode) {
+  const parentNode = getNodeByDataPath(profileTree, node.parentDataPath);
+  const descendants = getAllDescendants(profileTree, node);
+  parentNode!.childPaths = parentNode!.childPaths.filter(
+    (childPath) => childPath !== node.dataPath
+  );
+  for (const descendant of descendants) {
+    const index = profileTree.indexOf(descendant);
+    profileTree.splice(index, 1);
+  }
+  const index = profileTree.indexOf(node);
+  profileTree.splice(index, 1);
   return profileTree;
 }

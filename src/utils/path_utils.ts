@@ -1,5 +1,6 @@
-import { ProfileTreeNode } from "./buildTree";
+import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { multiTypeString, pathDelimiter } from "./constants";
+import { getAllDescendants } from "./tree_utils";
 import { capitalizeFirstLetter } from "./utils";
 
 export function getSliceNames(input: string): string[] {
@@ -61,18 +62,36 @@ export function getDisplayPath(node: ProfileTreeNode) {
   return result;
 }
 
-function extractLastIndex(str: string): number {
-  const match = str.match(/\[(\d+)\]$/);
+export function extractIndex(str: string): number {
+  const match = str.match(/\[(\d+)\]/);
   if (match) {
     return parseInt(match[1]);
   }
   return -1; // or throw an error, if there is no index found
 }
 
-export function incrementDataPath(path: string): string {
-  const lastIndex = extractLastIndex(path);
-  if (lastIndex >= 0) {
-    return path.replace(/\[\d+\]$/, `[${lastIndex + 1}]`);
+export function incrementDataPath(
+  profileTree: ProfileTree,
+  node: ProfileTreeNode
+): string {
+  const newDataPath = node.dataPath.slice();
+  const currSuffix = getPathSuffix(newDataPath);
+  const currIndex = extractIndex(currSuffix);
+  const currSuffixWithoutIndex = currSuffix.replace(/\[\d+\]$/, "");
+  const dataPathWithoutLastIndex = newDataPath.replace(
+    currSuffix,
+    currSuffixWithoutIndex
+  );
+  const nodesWithSamePath = profileTree.filter(
+    (n) =>
+      n.parentDataPath === node.parentDataPath &&
+      n.dataPath.startsWith(dataPathWithoutLastIndex)
+  );
+  const indices = nodesWithSamePath.map((n) => extractIndex(n.dataPath));
+  const highestIndex = Math.max(...indices, currIndex);
+
+  if (highestIndex >= 0) {
+    return newDataPath.replace(/\[\d+\]$/, `[${highestIndex + 1}]`);
   }
-  return path;
+  return newDataPath;
 }
