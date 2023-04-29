@@ -17,6 +17,13 @@ interface FhirBundle {
   };
 }
 
+export const getBaseProfile = async (resourceType: string) => {
+  const profile = await fetch(`api/profiles?filename=${resourceType}`).then(
+    (res) => res.json()
+  );
+  return profile;
+};
+
 export async function getResource(id: string) {
   try {
     const resource = await db.resources.get(id);

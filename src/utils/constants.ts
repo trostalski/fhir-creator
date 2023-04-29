@@ -5,6 +5,11 @@ export const pathDelimiter = ".";
 export const multiTypeString = "[x]";
 export const sliceDelimiter = ":";
 
+export enum Modes {
+  EDIT = "edit",
+  CREATE = "create",
+}
+
 export const notImportantIdSuffices = [
   "meta",
   "implicitRules",

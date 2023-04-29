@@ -4,15 +4,21 @@ import { IoMdDoneAll } from "react-icons/io";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
 import { MdOutlineClear } from "react-icons/md";
-import { getResourceTypeFromUrl, isFhirBaseDefinition } from "../utils/utils";
-import { getResources } from "@/db/utils";
+import {
+  getBaseUrl,
+  getResourceTypeFromUrl,
+  isFhirBaseDefinition,
+} from "../utils/utils";
+import { getBaseProfile, getResources } from "@/db/utils";
 import { StructureDefinition } from "fhir/r4";
 import { ProfileTree } from "@/utils/buildTree";
+import { Modes } from "@/utils/constants";
+import { InputData } from "@/types";
 
 interface ResourceIdListProps {
   setMode: React.Dispatch<React.SetStateAction<"edit" | "create">>;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
-  loadProfile: (profile: StructureDefinition) => void;
+  loadProfile: (profile: StructureDefinition, inputData?: InputData[]) => void;
   handleSelectBaseProfile: (value: string) => void;
 }
 
@@ -41,21 +47,21 @@ export const ResourceIdList = (props: ResourceIdListProps) => {
             <button
               className="overflow-hidden hover:underline"
               title={resourcePathRepr.id}
-              onClick={() => {
+              onClick={async () => {
+                let profile: StructureDefinition | undefined;
                 const profileUrl = resourcePathRepr.data.find(
                   (data) => data.path === "meta.profile[0]"
                 )?.value;
                 if (profileUrl && isFhirBaseDefinition(profileUrl)) {
                   const resourceType = getResourceTypeFromUrl(profileUrl);
-                  props.handleSelectBaseProfile(resourceType);
+                  profile = await getBaseProfile(resourceType);
                 } else if (profileUrl) {
-                  const profile = profiles?.find(
+                  profile = profiles?.find(
                     (profile) => profile.url === profileUrl
                   );
-                  props.loadProfile(profile!);
                 }
-                props.setMode("edit");
-                // props.setProfileTree(resourcePathRepr.data);
+                props.loadProfile(profile!, resourcePathRepr.data);
+                props.setMode(Modes.EDIT);
               }}
             >
               <span className="text-xs">{resourcePathRepr.id}</span>
@@ -80,6 +86,7 @@ export const ResourceIdList = (props: ResourceIdListProps) => {
               className="overflow-hidden hover:underline"
               title={profile.url}
               onClick={() => {
+                props.setMode(Modes.CREATE);
                 props.loadProfile(profile);
               }}
             >

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import { resourceOptions } from "../utils/constants";
+import { Modes, resourceOptions } from "../utils/constants";
 import Header from "@/components/Header";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { Tooltip } from "react-tooltip";
@@ -22,7 +22,14 @@ import {
 } from "../utils/utils";
 import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
-import { addProfile, addResourcPathRepr, addResource } from "@/db/utils";
+import {
+  addProfile,
+  addResourcPathRepr,
+  addResource,
+  getBaseProfile,
+  updateResource,
+  updateResourcePathRepr,
+} from "@/db/utils";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
 import {
   ProfileTree,
@@ -34,6 +41,7 @@ import { InputData } from "@/types";
 import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
 import uniq from "lodash/uniq";
 import { getBranchIds } from "@/utils/tree_utils";
+import { removeNPathPartsFromStart } from "@/utils/path_utils";
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
@@ -43,7 +51,10 @@ const index = () => {
   const [resourceType, setResourceType] = useState<string>();
   const [mode, setMode] = useState<"create" | "edit">("create");
 
-  const loadProfile = async (profile: StructureDefinition) => {
+  const loadProfile = async (
+    profile: StructureDefinition,
+    inputData?: InputData[]
+  ) => {
     let baseElements: ElementDefinition[];
     setProfile(profile);
     const resourceType = getResourceTypeFromProfile(profile);
@@ -70,7 +81,6 @@ const index = () => {
         ).then((res) => res.json());
         baseElements = baseProfile.snapshot!.element;
         profileTree = await buildTreeFromElementsRecursive(baseElements);
-        logWithCopy("baseElements", profileTree);
         profileTree = await mergeTreeWithDifferential(
           profileTree,
           profile.differential.element
@@ -81,7 +91,17 @@ const index = () => {
       alert("No snapshot or differential is present in the profile");
       return [];
     }
-    console.log("profile tree: ", profileTree);
+    if (inputData) {
+      profileTree = profileTree.map((n) => {
+        const valueDataForNode = inputData.find(
+          (e) => e.path === removeNPathPartsFromStart(n.dataPath, 1)
+        ) as InputData;
+        if (valueDataForNode) {
+          n.value = valueDataForNode.value;
+        }
+        return n;
+      });
+    }
     const branchIds = uniq(getBranchIds(profileTree));
     setProfileTree(profileTree);
     setBranchIds(branchIds);
@@ -111,9 +131,7 @@ const index = () => {
   };
 
   const handleSelectBaseProfile = async (value: string) => {
-    const profile: StructureDefinition = await fetch(
-      `api/profiles?filename=${value}`
-    ).then((res) => res.json());
+    const profile = await getBaseProfile(value);
     loadProfile(profile);
   };
 
@@ -159,6 +177,7 @@ const index = () => {
               options={resourceOptions}
               placeholder="Select a profile"
               onChange={(e) => {
+                setMode(Modes.CREATE);
                 handleSelectBaseProfile(e!.value);
               }}
             ></Select>
@@ -200,21 +219,21 @@ const index = () => {
                   Add Resource
                 </button>
               )}
-              {/* {mode == "edit" && (
+              {mode == "edit" && (
                 <button
                   className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded"
                   onClick={() => {
-                    const formattedInputData =
-                      formatInputDataForResource(inputData);
-                    const resource =
-                      createJsonFromPathArray(formattedInputData);
+                    let inputData =
+                      extractInputDataFromProfileTree(profileTree);
+                    inputData = formatInputDataForResource(inputData);
+                    const resource = createJsonFromPathArray(inputData);
                     updateResource(resource);
                     updateResourcePathRepr(inputData);
                   }}
                 >
                   Save Changes
                 </button>
-              )} */}
+              )}
             </div>
           </div>
           <div className="h-full pb-10 overflow-scroll">

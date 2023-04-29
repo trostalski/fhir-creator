@@ -221,7 +221,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     }
   };
 
-  logWithCopy("Tree before rendering", props.profileTree);
   return (
     <div>
       <div className="flex flex-row">
