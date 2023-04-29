@@ -1,7 +1,11 @@
 import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { multiTypeString, pathDelimiter } from "./constants";
 import { getAllDescendants } from "./tree_utils";
-import { capitalizeFirstLetter } from "./utils";
+import {
+  capitalizeFirstLetter,
+  isSliceString,
+  removeAfterColon,
+} from "./utils";
 
 export function getSliceNames(input: string): string[] {
   const regex = /:(.*?)(\.|$)/g;
@@ -74,7 +78,12 @@ export function incrementDataPath(
   profileTree: ProfileTree,
   node: ProfileTreeNode
 ): string {
-  const newDataPath = node.dataPath.slice();
+  let newDataPath = node.dataPath.slice();
+  let sliceNames;
+  if (isSliceString(newDataPath)) {
+    sliceNames = getSliceNames(newDataPath);
+    newDataPath = removeAfterColon(newDataPath);
+  }
   const currSuffix = getPathSuffix(newDataPath);
   const currIndex = extractIndex(currSuffix);
   const currSuffixWithoutIndex = currSuffix.replace(/\[\d+\]$/, "");
@@ -91,7 +100,11 @@ export function incrementDataPath(
   const highestIndex = Math.max(...indices, currIndex);
 
   if (highestIndex >= 0) {
-    return newDataPath.replace(/\[\d+\]$/, `[${highestIndex + 1}]`);
+    newDataPath = newDataPath.replace(/\[\d+\]$/, `[${highestIndex + 1}]`);
+    if (sliceNames) {
+      newDataPath = newDataPath + ":" + sliceNames[sliceNames.length - 1];
+    }
+    return newDataPath;
   }
-  return newDataPath;
+  return node.dataPath.slice();
 }

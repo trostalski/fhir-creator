@@ -4,6 +4,7 @@ import {
   notImportantIdSuffices as notImportantIds,
   pathDelimiter,
   rootName,
+  sliceDelimiter,
 } from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
 import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
@@ -150,7 +151,11 @@ export const removeAfterColon = (str: string) => {
 };
 
 export const isSliceElement = (element: ElementDefinition) => {
-  return element.id!.includes(":");
+  return element.id!.includes(sliceDelimiter);
+};
+
+export const isSliceString = (str: string) => {
+  return str.includes(sliceDelimiter);
 };
 
 export const removeBetweenColonAndPeriod = (str: string): string => {
