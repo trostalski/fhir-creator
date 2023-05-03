@@ -18,3 +18,8 @@ export interface Cardinality {
   min: number;
   max: string;
 }
+
+export interface CheckCardinalitiesResult {
+  isValid: boolean;
+  pathsWithInvalidCardinality: string[];
+}

@@ -7,6 +7,7 @@ interface PrimitveInputProps {
   node: ProfileTreeNode;
   profileTreeNode: ProfileTreeNode;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
+  pathsWithInvalidCardinality: string[];
 }
 
 interface InputFromTypeProps {
@@ -125,7 +126,15 @@ const InputFromType = (props: InputFromTypeProps) => {
 
 const PrimitveInput = (props: PrimitveInputProps) => {
   return (
-    <div className="">
+    <div
+      className={`
+    ${
+      props.pathsWithInvalidCardinality.includes(props.profileTreeNode.dataPath)
+        ? "border-dashed border-red-600 border"
+        : ""
+    }
+    `}
+    >
       <label
         className={`block w-full text-xs font-medium text-gray-700 dark:text-gray-200 ${
           props.node.element.min! > 0

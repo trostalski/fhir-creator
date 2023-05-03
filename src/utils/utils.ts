@@ -1,14 +1,15 @@
-import { Cardinality, InputData } from "@/types";
+import { Cardinality, CheckCardinalitiesResult, InputData } from "@/types";
 import {
   multiTypeString,
   notImportantIdSuffices as notImportantIds,
-  pathDelimiter,
   rootName,
   sliceDelimiter,
 } from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
 import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
 import { getSliceNames, removeNPathPartsFromStart } from "./path_utils";
+import { getNodeByDataPath } from "./tree_utils";
+import uniq from "lodash/uniq";
 
 export const containsDot = (str: string) => {
   return str.includes(".");
@@ -371,12 +372,11 @@ function getCardinality(profileTreeNode: ProfileTreeNode): Cardinality {
   return cardinality;
 }
 
-function getChildren(
+function getChildrenForNode(
   profileTree: ProfileTree,
-  path: string
+  profileTreeNode: ProfileTreeNode
 ): ProfileTreeNode[] {
   const children: ProfileTreeNode[] = [];
-  const profileTreeNode = profileTree.find((node) => node.dataPath === path)!;
   for (const child of profileTreeNode.childPaths) {
     const childNode: ProfileTreeNode = profileTree.find(
       (node) => node.dataPath === child
@@ -386,74 +386,76 @@ function getChildren(
   return children;
 }
 
-function existsInOutput(inputData: InputData[], path: string): boolean {
+function existsInInputData(inputData: InputData[], path: string): boolean {
   path = removeNPathPartsFromStart(path, 1);
-  const exists = inputData.some((data) => data.path.includes(path));
+  console.log("path", path);
+  console.log("input data: ", inputData);
+  const exists = inputData.some((data) => data.path.startsWith(path));
   return exists;
 }
 
 function hasValue(inputData: InputData[], path: string): boolean {
-  path = removeNPathPartsFromStart(path, 1);
   const exists = inputData.some((data) => data.path === path && data.value);
   return exists;
 }
 
-export function checkCardinality(
+export function getPathsWithInvalidCardinality(
   profileTree: ProfileTree,
-  path: string,
+  dataPath: string,
   inputData: InputData[],
-  notMet: string[]
-): boolean {
-  let isMet = true;
-  const profileTreeNode = profileTree.find((node) => node.dataPath === path)!;
+  notMetPaths: string[]
+): void {
+  const profileTreeNode = getNodeByDataPath(profileTree, dataPath)!;
   const cardinality = getCardinality(profileTreeNode);
   const isPrimitive = profileTreeNode.isPrimitive;
   const hasChildren = profileTreeNode.childPaths.length > 0;
 
-  if (cardinality.min > 0 && !existsInOutput(inputData, path)) {
-    isMet = false;
+  if (cardinality.min > 0 && !existsInInputData(inputData, dataPath)) {
+    notMetPaths.push(dataPath);
   }
 
-  if (hasChildren) {
-    const children = getChildren(profileTree, path);
+  if (hasChildren && existsInInputData(inputData, dataPath)) {
+    const children = getChildrenForNode(profileTree, profileTreeNode);
     for (const child of children) {
       const childPath = child.dataPath;
-      const childIsMet = checkCardinality(
+      getPathsWithInvalidCardinality(
         profileTree,
         childPath,
         inputData,
-        notMet
+        notMetPaths
       );
-      if (!childIsMet) {
-        isMet = false;
-      }
     }
   }
 
-  if (isPrimitive && cardinality.min > 0 && !hasValue(inputData, path)) {
-    isMet = false;
+  if (isPrimitive && cardinality.min > 0 && !hasValue(inputData, dataPath)) {
+    notMetPaths.push(dataPath);
   }
-
-  if (!isMet) {
-    notMet.push(path);
-  }
-
-  return isMet;
 }
 
 export function checkCardinalities(
   profileTree: ProfileTree,
   inputData: InputData[]
-): boolean {
-  let isMet = true;
-  const notMet: string[] = [];
-  const firstChilds = profileTree.filter(
+): CheckCardinalitiesResult {
+  let isValid = true;
+  const pathsWithInvalidCardinality: string[] = [];
+  const branchChilds = profileTree.filter(
     (node) => node.parentDataPath === rootName
   );
-  for (const child of firstChilds) {
-    const path = child.dataPath;
-    isMet = checkCardinality(profileTree, path, inputData, notMet);
+  for (const child of branchChilds) {
+    const dataPath = child.dataPath;
+    getPathsWithInvalidCardinality(
+      profileTree,
+      dataPath,
+      inputData,
+      pathsWithInvalidCardinality
+    );
+    if (pathsWithInvalidCardinality.length > 0) {
+      isValid = false;
+    }
   }
 
-  return isMet;
+  return {
+    isValid: isValid,
+    pathsWithInvalidCardinality: uniq(pathsWithInvalidCardinality),
+  };
 }

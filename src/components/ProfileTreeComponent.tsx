@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
 import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { logWithCopy, parseMaxString, shouldDisplayNode } from "@/utils/utils";
+import { parseMaxString, shouldDisplayNode } from "@/utils/utils";
 import { GrFormAdd } from "react-icons/gr";
 import { AiOutlinePieChart } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
@@ -15,7 +15,6 @@ import {
 import {
   deleteBranch,
   duplicateBranch,
-  getAllDescendants,
   getLastDescendant,
   insertAfterNode,
 } from "@/utils/tree_utils";
@@ -24,6 +23,7 @@ interface ProfileTreeComponentProps {
   profileTree: ProfileTree;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   checkedBranchIds: string[];
+  pathsWithInvalidCardinality: string[];
 }
 
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
@@ -51,6 +51,10 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
           <div
             className={`w-full p-1 border-[1px] border-dotted rounded-sm border-gray-200 ${
               node.element.sliceName ? "border-violet-400" : ""
+            } ${
+              props.pathsWithInvalidCardinality.includes(node.dataPath)
+                ? "border-red-600 border-1"
+                : ""
             }`}
             key={node.dataPath}
           >
@@ -69,7 +73,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                     node.element.min! > 0
                       ? "after:text-red-600 after:content-['*']"
                       : ""
-                  }`}
+                  } `}
                 >
                   {getDisplayPath(node)}
                 </h2>
@@ -81,6 +85,9 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                   node={node}
                   profileTreeNode={node}
                   setProfileTree={props.setProfileTree}
+                  pathsWithInvalidCardinality={
+                    props.pathsWithInvalidCardinality
+                  }
                 />
               </div>
             )}
@@ -93,6 +100,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
             node={node}
             profileTreeNode={node}
             setProfileTree={props.setProfileTree}
+            pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
           />
         </div>
       );
@@ -101,7 +109,12 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         <div
           className={`w-full p-1 border-[1px] border-dotted rounded-sm border-gray-200 ${
             node.element.sliceName ? "border-violet-400" : ""
-          }`}
+          } ${
+            props.pathsWithInvalidCardinality.includes(node.dataPath)
+              ? "border-red-600 border-1"
+              : ""
+          }
+          `}
           key={node.dataPath}
         >
           <div className="flex flex-row items-center justify-between">

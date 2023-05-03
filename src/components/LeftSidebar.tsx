@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdDoneAll } from "react-icons/io";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
 import { MdOutlineClear } from "react-icons/md";
-import {
-  getBaseUrl,
-  getResourceTypeFromUrl,
-  isFhirBaseDefinition,
-} from "../utils/utils";
+import { getResourceTypeFromUrl, isFhirBaseDefinition } from "../utils/utils";
 import { getBaseProfile, getResources } from "@/db/utils";
 import { StructureDefinition } from "fhir/r4";
 import { ProfileTree } from "@/utils/buildTree";
@@ -16,7 +12,7 @@ import { Modes } from "@/utils/constants";
 import { InputData } from "@/types";
 
 interface ResourceIdListProps {
-  setMode: React.Dispatch<React.SetStateAction<"edit" | "create">>;
+  setMode: React.Dispatch<React.SetStateAction<Modes>>;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   loadProfile: (profile: StructureDefinition, inputData?: InputData[]) => void;
   handleSelectBaseProfile: (value: string) => void;

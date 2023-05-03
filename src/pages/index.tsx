@@ -12,13 +12,12 @@ import {
   isFhirBaseDefinition,
   getResourceTypeFromUrl,
   getBaseUrl,
-  shouldDisplayNode,
   createJsonFromPathArray,
   formatInputDataForResource,
   getResourceTypeFromProfile,
   getUid,
   extractInputDataFromProfileTree,
-  logWithCopy,
+  checkCardinalities,
 } from "../utils/utils";
 import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
@@ -42,6 +41,7 @@ import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
 import uniq from "lodash/uniq";
 import { getBranchIds } from "@/utils/tree_utils";
 import { removeNPathPartsFromStart } from "@/utils/path_utils";
+import { toastError } from "@/toasts";
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
@@ -49,7 +49,9 @@ const index = () => {
   const [checkedBranchIds, setCheckedBranchIds] = useState<string[]>([]);
   const [branchIds, setBranchIds] = useState<string[]>([]);
   const [resourceType, setResourceType] = useState<string>();
-  const [mode, setMode] = useState<"create" | "edit">("create");
+  const [pathsWithInvalidCardinality, setPathsWithInvalidCardinality] =
+    useState<string[]>([]);
+  const [mode, setMode] = useState<Modes>(Modes.CREATE);
 
   const loadProfile = async (
     profile: StructureDefinition,
@@ -101,33 +103,23 @@ const index = () => {
         }
         return n;
       });
+    } else {
+      profileTree = profileTree = profileTree.map((node) => {
+        const path = removeNPathPartsFromStart(node.dataPath, 1);
+        if (path === "resourceType") {
+          node.value = resourceType!;
+        } else if (path === "id") {
+          node.value = getUid();
+        } else if (path === "meta.profile[0]") {
+          node.value = profile?.url!;
+        }
+        return node;
+      });
     }
     const branchIds = uniq(getBranchIds(profileTree));
     setProfileTree(profileTree);
     setBranchIds(branchIds);
     setCheckedBranchIds(branchIds.filter((id) => idIsImportant(id)));
-  };
-
-  const addMissingElements = (inputData: InputData[]) => {
-    if (!inputData.find((e) => e.path === "resourceType")) {
-      inputData.unshift({
-        path: "resourceType",
-        value: resourceType!,
-      });
-    }
-    if (!inputData.find((e) => e.path === "id")) {
-      inputData.unshift({
-        path: "id",
-        value: getUid(),
-      });
-    }
-    if (!inputData.find((e) => e.path === "profile[0]")) {
-      inputData.unshift({
-        path: "meta.profile[0]",
-        value: profile?.url!,
-      });
-    }
-    return inputData;
   };
 
   const handleSelectBaseProfile = async (value: string) => {
@@ -195,31 +187,43 @@ const index = () => {
                 />
                 Load Profile
               </label>
-              {mode == "create" && (
+              {mode == Modes.CREATE && (
                 <button
                   className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xxs font-bold py-2 px-4 rounded"
                   onClick={() => {
                     if (profileTree.length === 0) {
                       return;
                     }
-                    let inputData =
+                    setPathsWithInvalidCardinality([]);
+                    const inputData =
                       extractInputDataFromProfileTree(profileTree);
-                    inputData = formatInputDataForResource(inputData);
-                    inputData = addMissingElements(inputData);
-                    // const isMet = checkCardinalities(profileTree, inputData);
-                    // if (!isMet) {
-                    //   alert("Cardinality not met");
-                    //   return;
-                    // }
-                    const resource = createJsonFromPathArray(inputData);
+                    const checkCardinalityResponse = checkCardinalities(
+                      profileTree,
+                      inputData
+                    );
+                    if (!checkCardinalityResponse.isValid) {
+                      toastError(
+                        `Cardinalities error: ${checkCardinalityResponse.pathsWithInvalidCardinality
+                          .map((p) => removeNPathPartsFromStart(p, 1))
+                          .join(", ")}`
+                      );
+                      setPathsWithInvalidCardinality(
+                        checkCardinalityResponse.pathsWithInvalidCardinality
+                      );
+                      return;
+                    }
+                    const formattedInputData =
+                      formatInputDataForResource(inputData);
+                    const resource =
+                      createJsonFromPathArray(formattedInputData);
                     addResource(resource);
-                    addResourcPathRepr(inputData);
+                    addResourcPathRepr(formattedInputData);
                   }}
                 >
                   Add Resource
                 </button>
               )}
-              {mode == "edit" && (
+              {mode == Modes.EDIT && (
                 <button
                   className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded"
                   onClick={() => {
@@ -262,6 +266,7 @@ const index = () => {
                       setProfileTree={setProfileTree}
                       profileTree={profileTree}
                       checkedBranchIds={checkedBranchIds}
+                      pathsWithInvalidCardinality={pathsWithInvalidCardinality}
                     />
                   )}
                 </div>
