@@ -231,7 +231,6 @@ export const formatInputDataForResource = (inputData: InputData[]) => {
     }
     const newData = { ...data };
     let newPath = removeBetweenColonAndPeriod(data.path);
-    console.log("new path: ", newPath);
     newPath = removeNPathPartsFromStart(newPath, 1); // remove root
     newData.path = newPath;
     return newData;
@@ -260,37 +259,24 @@ export function extractInputDataFromProfileTree(profileTree: ProfileTree) {
   return inputData;
 }
 
-// TODO: check if deprecated
-export function createJsonFromPathList(pathList: string[], value: any): any {
-  const result = {}; // Initialize the result object
-
-  for (const pathString of pathList) {
-    let current: any = result; // Initialize the current object to the result object
-    const pathArray = pathString.split("."); // Split the path string into an array of property names
-
-    for (let i = 0; i < pathArray.length; i++) {
-      const prop = pathArray[i];
-      const isArray = /\[\d+\]$/.test(prop); // Check if the property is an array index
-
-      if (isArray) {
-        const arrayProp = prop.substring(0, prop.indexOf("["));
-        const index = parseInt(
-          prop.substring(prop.indexOf("[") + 1, prop.indexOf("]"))
-        );
-        current[arrayProp] = current[arrayProp] || [];
-        current = current[arrayProp];
-        current[index] = current[index] || {};
-        current = current[index];
-      } else {
-        current[prop] = current[prop] || {};
-        current = current[prop];
-      }
-    }
-
-    current = value; // Set the value at the final property
+export function removeNullValues(obj: any): any {
+  // remoces null values from json
+  if (typeof obj !== "object" || obj === null) {
+    return obj;
   }
 
-  return result;
+  if (Array.isArray(obj)) {
+    return obj.map(removeNullValues).filter((val) => val !== null);
+  }
+
+  return Object.entries(obj)
+    .map(([key, value]) => [key, removeNullValues(value)])
+    .reduce((acc: any, [key, value]) => {
+      if (value !== null) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
 }
 
 // currently in use
@@ -362,7 +348,7 @@ export function createJsonFromPathArray(
     return result;
   }
 
-  return convertNumericKeysToArrays(result);
+  return removeNullValues(convertNumericKeysToArrays(result));
 }
 
 function getCardinality(profileTreeNode: ProfileTreeNode): Cardinality {

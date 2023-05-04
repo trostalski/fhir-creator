@@ -150,7 +150,9 @@ export function duplicateBranch(
   const descendants = copyAllDescendants(node, profileTree);
   const directChildren = extractDirectChildren(node, descendants);
 
-  parentNode!.childPaths.push(node.dataPath);
+  if (parentNode) {
+    parentNode.childPaths.push(node.dataPath);
+  }
   if (descendants) {
     let prevChild = node;
     const oldDataPath = directChildren![0].parentDataPath;
@@ -158,6 +160,9 @@ export function duplicateBranch(
       descendant.dataPath = descendant.dataPath.replace(
         oldDataPath,
         node.dataPath
+      );
+      descendant.childPaths = descendant.childPaths.map((childPath) =>
+        childPath.replace(oldDataPath, node.dataPath)
       );
       descendant.value = "";
       insertAfterNode(profileTree, prevChild, descendant);
@@ -179,9 +184,12 @@ export function copyNode() {}
 export function deleteBranch(profileTree: ProfileTree, node: ProfileTreeNode) {
   const parentNode = getNodeByDataPath(profileTree, node.parentDataPath);
   const descendants = getAllDescendants(profileTree, node);
-  parentNode!.childPaths = parentNode!.childPaths.filter(
-    (childPath) => childPath !== node.dataPath
-  );
+  if (parentNode) {
+    parentNode!.childPaths = parentNode!.childPaths.filter(
+      (childPath) => childPath !== node.dataPath
+    );
+  }
+  console.log("descendants", descendants);
   for (const descendant of descendants) {
     const index = profileTree.indexOf(descendant);
     profileTree.splice(index, 1);

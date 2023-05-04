@@ -60,10 +60,11 @@ export function getNthPartOfPath(path: string, n: number) {
 }
 
 export function getDisplayPath(node: ProfileTreeNode) {
-  const result = node.dataPath
-    .replace(node.parentDataPath + ".", "")
+  let display = getPathSuffix(node.dataPath);
+  display = display
+    .replace(display + ".", "")
     .replace(/\[.\]/g, "");
-  return result;
+  return display;
 }
 
 export function extractIndex(str: string): number {

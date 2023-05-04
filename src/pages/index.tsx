@@ -156,6 +156,7 @@ const index = () => {
     }
   };
 
+  console.log("profile: ", profileTree);
   return (
     <div className="w-screen h-screen overflow-hidden">
       <Header />
