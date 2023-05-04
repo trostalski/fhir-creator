@@ -43,12 +43,18 @@ import { getBranchIds } from "@/utils/tree_utils";
 import { removeNPathPartsFromStart } from "@/utils/path_utils";
 import { toastError } from "@/toasts";
 
+interface PathCounter {
+  path: string;
+  count: number;
+}
+
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
   const [profileTree, setProfileTree] = useState<ProfileTree>([]);
   const [checkedBranchIds, setCheckedBranchIds] = useState<string[]>([]);
   const [branchIds, setBranchIds] = useState<string[]>([]);
   const [resourceType, setResourceType] = useState<string>();
+  const [pathCounter, setPathCounter] = useState<PathCounter[]>();
   const [pathsWithInvalidCardinality, setPathsWithInvalidCardinality] =
     useState<string[]>([]);
   const [mode, setMode] = useState<Modes>(Modes.CREATE);

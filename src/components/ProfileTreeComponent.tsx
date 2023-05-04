@@ -184,7 +184,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
               {parseMaxString(node.element.max!) > 1 ? (
                 <button
                   onClick={() => {
-                    // TODO
                     const newNode = structuredClone(node);
                     newNode.value = "";
                     newNode.dataPath = incrementDataPath(
@@ -196,6 +195,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                       node
                     );
                     let newProfileTree = [...props.profileTree];
+                    // TODO does not work yet in the UI
                     newProfileTree = insertAfterNode(
                       newProfileTree,
                       lastDescendant,
