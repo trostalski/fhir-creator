@@ -186,8 +186,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                   <AiOutlineMinus size={20} />
                 </button>
               ) : null}
-              {
-              evaluateRenderAddButton(node.element, props.pathCounter, node.dataPath) ? (
+              {evaluateRenderAddButton(node.element, props.pathCounter, node.dataPath) ? (
                 <button
                   onClick={() => {
                     const newNode = structuredClone(node);
