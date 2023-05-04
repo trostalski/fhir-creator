@@ -1,4 +1,4 @@
-import { Cardinality, CheckCardinalitiesResult, InputData } from "@/types";
+import { Cardinality, CheckCardinalitiesResult, InputData, PathCounter } from "@/types";
 import {
   multiTypeString,
   notImportantIdSuffices as notImportantIds,
@@ -465,4 +465,81 @@ export function checkCardinalities(
     isValid: isValid,
     pathsWithInvalidCardinality: uniq(pathsWithInvalidCardinality),
   };
+}
+
+export function evaluatePathCounter(pathCounter: PathCounter[], path: string, maxCardinality: number){
+  //DEBUG
+  console.log('------------')
+  console.log("evaluatePathCounter")
+  console.log(pathCounter)
+  //DEBUG
+
+  let result = true;
+  // get respective path counter
+  const pathCounterObj = pathCounter.find((obj) => obj.path === path);
+  // compare path counter with max cardinality
+  if (pathCounterObj && pathCounterObj.count >= maxCardinality) {
+    result = false;
+  }
+  return result;
+}
+
+export function evaluateRenderAddButton(element: ElementDefinition, pathCounter: PathCounter[], path:string){
+  path = pathWithoutIndex(path);
+  let result = true;
+  // check the elements max cardinality
+  const max = parseMaxString(element.max!)
+  // evaluate path counter
+  const counterEvaluation = evaluatePathCounter(pathCounter, path, max);
+  if (max <= 1 || !counterEvaluation) {
+    result = false;
+  }
+  return result;
+}
+
+export function incrementPathCounter(pathCounter: PathCounter[], path: string, setPathCounter: React.Dispatch<React.SetStateAction<PathCounter[]>>){
+  path = pathWithoutIndex(path);
+  // get respective path counter
+  const pathCounterObj = pathCounter.find((obj) => obj.path === path);
+  // increment path counter
+  if (pathCounterObj) {
+    pathCounterObj.count++;
+  } else {
+    const pathWoIndex =  pathWithoutIndex(path);
+    pathCounter.push({ path: pathWoIndex, count: 2 });
+  }
+  // update path counter
+  setPathCounter(pathCounter);
+}
+
+function pathWithoutIndex(path: string){
+  let pathWithoutIndex = path;
+  // get last element of path
+  const pathArray = path.split(".");
+  const lastElement = pathArray[pathArray.length - 1];
+  //find out if last element of path has index
+  const hasIndex = lastElement.includes("[");
+  if (hasIndex) { 
+      // remove index from last element
+      const lastElementWithoutIndex = lastElement.split("[")[0];
+      // update path with last element without index
+      pathWithoutIndex = path.replace(lastElement, lastElementWithoutIndex);
+  }
+  return pathWithoutIndex;
+}
+
+export function decrementPathCounter(pathCounter: PathCounter[], path: string, setPathCounter: React.Dispatch<React.SetStateAction<PathCounter[]>>){
+  // get respective path counter
+  path = pathWithoutIndex(path);
+  const pathCounterObj = pathCounter.find((obj) => obj.path === path);
+  // decrement path counter
+  if (pathCounterObj) {
+    pathCounterObj.count--;
+  }
+  // remove path counter if count is 0
+  if (pathCounterObj && pathCounterObj.count === 0) {
+    pathCounter.splice(pathCounter.indexOf(pathCounterObj), 1);
+  };
+  // update path counter
+  setPathCounter(pathCounter);
 }

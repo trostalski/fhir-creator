@@ -23,3 +23,8 @@ export interface CheckCardinalitiesResult {
   isValid: boolean;
   pathsWithInvalidCardinality: string[];
 }
+
+export interface PathCounter {
+  path: string;
+  count: number;
+}
