@@ -33,7 +33,6 @@ export interface ProfileTreeNode {
   childPaths: string[];
   basePath: string; // used for differential merging
   isPrimitive: boolean;
-  isSliceEntry: boolean;
   isRootPrimitive?: boolean;
   type?: string;
   value: string;
@@ -201,7 +200,6 @@ export async function buildTreeFromElementsRecursive(
 
     const elementDataPath = getDataPath(parentPath, element);
     const elementBasePath = mergePaths(parentBasePath, getPathSuffix(id!));
-    const elementIsSliceEntry = isSliceEntry(element);
     let elementType;
     if (isMultiTypeElement(element)) {
       elementType = getElementTypes(element)![0];
@@ -216,7 +214,6 @@ export async function buildTreeFromElementsRecursive(
       isPrimitive: false,
       isRootPrimitive: parentPath === rootName,
       childPaths: [],
-      isSliceEntry: elementIsSliceEntry,
       value: "",
     };
 
@@ -252,7 +249,6 @@ export async function buildTreeFromElementsRecursive(
             baseId: id!,
             isPrimitive: true,
             childPaths: [],
-            isSliceEntry: elementIsSliceEntry,
             value: "",
           };
           childNodes.push(childNode);
@@ -280,7 +276,6 @@ export async function buildTreeFromElementsRecursive(
         isPrimitive: false,
         childPaths: childPaths,
         type: elementType,
-        isSliceEntry: elementIsSliceEntry,
         value: "",
       };
       profileTree.push(parentNode, ...childNodes);

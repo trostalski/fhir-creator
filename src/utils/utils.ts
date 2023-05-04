@@ -7,7 +7,11 @@ import {
 } from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
 import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
-import { getSliceNames, removeNPathPartsFromStart } from "./path_utils";
+import {
+  getSliceNames,
+  removeLastIndex,
+  removeNPathPartsFromStart,
+} from "./path_utils";
 import { getNodeByDataPath } from "./tree_utils";
 import uniq from "lodash/uniq";
 
@@ -387,9 +391,6 @@ function getChildrenForNode(
 }
 
 function existsInInputData(inputData: InputData[], path: string): boolean {
-  path = removeNPathPartsFromStart(path, 1);
-  console.log("path", path);
-  console.log("input data: ", inputData);
   const exists = inputData.some((data) => data.path.startsWith(path));
   return exists;
 }
@@ -397,6 +398,14 @@ function existsInInputData(inputData: InputData[], path: string): boolean {
 function hasValue(inputData: InputData[], path: string): boolean {
   const exists = inputData.some((data) => data.path === path && data.value);
   return exists;
+}
+
+function countReplicates(profileTree: ProfileTree, dataPath: string) {
+  const pathWithoutLastIndex = removeLastIndex(dataPath);
+  const replicateCount = profileTree.filter(
+    (node) => removeLastIndex(node.dataPath) === pathWithoutLastIndex
+  ).length;
+  return replicateCount;
 }
 
 export function getPathsWithInvalidCardinality(
@@ -412,6 +421,13 @@ export function getPathsWithInvalidCardinality(
 
   if (cardinality.min > 0 && !existsInInputData(inputData, dataPath)) {
     notMetPaths.push(dataPath);
+  }
+
+  if (cardinality.max !== "*" && existsInInputData(inputData, dataPath)) {
+    const replicates = countReplicates(profileTree, dataPath);
+    if (replicates > parseInt(cardinality.max)) {
+      notMetPaths.push(dataPath);
+    }
   }
 
   if (hasChildren && existsInInputData(inputData, dataPath)) {

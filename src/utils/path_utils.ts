@@ -74,6 +74,16 @@ export function extractIndex(str: string): number {
   return -1; // or throw an error, if there is no index found
 }
 
+export function removeLastIndex(dataPath: string) {
+  const currSuffix = getPathSuffix(dataPath);
+  const currSuffixWithoutIndex = currSuffix.replace(/\[\d+\]$/, "");
+  const dataPathWithoutLastIndex = dataPath.replace(
+    currSuffix,
+    currSuffixWithoutIndex
+  );
+  return dataPathWithoutLastIndex;
+}
+
 export function incrementDataPath(
   profileTree: ProfileTree,
   node: ProfileTreeNode
@@ -86,11 +96,7 @@ export function incrementDataPath(
   }
   const currSuffix = getPathSuffix(newDataPath);
   const currIndex = extractIndex(currSuffix);
-  const currSuffixWithoutIndex = currSuffix.replace(/\[\d+\]$/, "");
-  const dataPathWithoutLastIndex = newDataPath.replace(
-    currSuffix,
-    currSuffixWithoutIndex
-  );
+  const dataPathWithoutLastIndex = removeLastIndex(newDataPath);
   const nodesWithSamePath = profileTree.filter(
     (n) =>
       n.parentDataPath === node.parentDataPath &&

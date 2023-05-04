@@ -118,6 +118,7 @@ const index = () => {
     }
     const branchIds = uniq(getBranchIds(profileTree));
     setProfileTree(profileTree);
+    console.log("profile tree: ", profileTree);
     setBranchIds(branchIds);
     setCheckedBranchIds(branchIds.filter((id) => idIsImportant(id)));
   };
