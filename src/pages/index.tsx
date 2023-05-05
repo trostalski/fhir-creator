@@ -36,17 +36,14 @@ import {
 } from "../utils/buildTree";
 import ProfileTreeComponent from "../components/ProfileTreeComponent";
 import { tooltipSytles } from "@/utils/styles";
-import { InputData } from "@/types";
+import { InputData, PathCounter } from "@/types";
 import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
 import uniq from "lodash/uniq";
 import { getBranchIds } from "@/utils/tree_utils";
 import { removeNPathPartsFromStart } from "@/utils/path_utils";
 import { toastError } from "@/toasts";
 
-interface PathCounter {
-  path: string;
-  count: number;
-}
+
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
@@ -54,7 +51,7 @@ const index = () => {
   const [checkedBranchIds, setCheckedBranchIds] = useState<string[]>([]);
   const [branchIds, setBranchIds] = useState<string[]>([]);
   const [resourceType, setResourceType] = useState<string>();
-  const [pathCounter, setPathCounter] = useState<PathCounter[]>();
+  const [pathCounter, setPathCounter] = useState<PathCounter[]>([]);
   const [pathsWithInvalidCardinality, setPathsWithInvalidCardinality] =
     useState<string[]>([]);
   const [mode, setMode] = useState<Modes>(Modes.CREATE);
@@ -275,6 +272,8 @@ const index = () => {
                       profileTree={profileTree}
                       checkedBranchIds={checkedBranchIds}
                       pathsWithInvalidCardinality={pathsWithInvalidCardinality}
+                      pathCounter={pathCounter}
+                      setPathCounter={setPathCounter}
                     />
                   )}
                 </div>

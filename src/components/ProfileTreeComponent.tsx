@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
 import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { parseMaxString, shouldDisplayNode } from "@/utils/utils";
+import { decrementPathCounter, evaluatePathCounter, evaluateRenderAddButton, incrementPathCounter, parseMaxString, shouldDisplayNode } from "@/utils/utils";
 import { GrFormAdd } from "react-icons/gr";
 import { AiOutlinePieChart } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
@@ -18,12 +18,15 @@ import {
   getLastDescendant,
   insertAfterNode,
 } from "@/utils/tree_utils";
+import { PathCounter } from "@/types";
 
 interface ProfileTreeComponentProps {
   profileTree: ProfileTree;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   checkedBranchIds: string[];
   pathsWithInvalidCardinality: string[];
+  pathCounter : PathCounter[];
+  setPathCounter: React.Dispatch<React.SetStateAction<PathCounter[]>>
 }
 
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
@@ -176,12 +179,14 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                     let newProfileTree = [...props.profileTree];
                     newProfileTree = deleteBranch(newProfileTree, node);
                     props.setProfileTree(newProfileTree);
+                    // decrement pathCounter
+                    decrementPathCounter(props.pathCounter, node.dataPath, props.setPathCounter);
                   }}
                 >
                   <AiOutlineMinus size={20} />
                 </button>
               ) : null}
-              {parseMaxString(node.element.max!) > 1 ? (
+              {evaluateRenderAddButton(node.element, props.pathCounter, node.dataPath) ? (
                 <button
                   onClick={() => {
                     const newNode = structuredClone(node);
@@ -203,6 +208,8 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                     );
                     newProfileTree = duplicateBranch(newProfileTree, newNode);
                     props.setProfileTree(newProfileTree);
+                    // increment pathCounter
+                    incrementPathCounter(props.pathCounter, node.dataPath, props.setPathCounter);
                   }}
                 >
                   <GrFormAdd size={20} />
