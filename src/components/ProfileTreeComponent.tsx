@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
 import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { decrementPathCounter, evaluatePathCounter, evaluateRenderAddButton, incrementPathCounter, parseMaxString, shouldDisplayNode } from "@/utils/utils";
+import { shouldDisplayNode } from "@/utils/utils";
 import { GrFormAdd } from "react-icons/gr";
 import { AiOutlinePieChart } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
@@ -18,21 +18,25 @@ import {
   getLastDescendant,
   insertAfterNode,
 } from "@/utils/tree_utils";
-import { PathCounter } from "@/types";
+import { usePathCounter } from "@/hooks/usePathCounter";
 
 interface ProfileTreeComponentProps {
   profileTree: ProfileTree;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   checkedBranchIds: string[];
   pathsWithInvalidCardinality: string[];
-  pathCounter : PathCounter[];
-  setPathCounter: React.Dispatch<React.SetStateAction<PathCounter[]>>
 }
 
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   props: ProfileTreeComponentProps
 ) => {
   const [closedNodes, setClosedNodes] = useState<string[]>([]);
+  const {
+    decrementPathCounter,
+    incrementPathCounter,
+    evaluatePathCounter,
+    evaluateRenderAddButton,
+  } = usePathCounter();
 
   const isNodeExpanded = (nodePath: string) => {
     return !closedNodes.includes(nodePath);
@@ -54,10 +58,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
           <div
             className={`w-full p-1 border-[1px] border-dotted rounded-sm border-gray-200 ${
               node.element.sliceName ? "border-violet-400" : ""
-            } ${
-              props.pathsWithInvalidCardinality.includes(node.dataPath)
-                ? "border-red-600 border-1"
-                : ""
             }`}
             key={node.dataPath}
           >
@@ -180,13 +180,13 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                     newProfileTree = deleteBranch(newProfileTree, node);
                     props.setProfileTree(newProfileTree);
                     // decrement pathCounter
-                    decrementPathCounter(props.pathCounter, node.dataPath, props.setPathCounter);
+                    decrementPathCounter(node.dataPath);
                   }}
                 >
                   <AiOutlineMinus size={20} />
                 </button>
               ) : null}
-              {evaluateRenderAddButton(node.element, props.pathCounter, node.dataPath) ? (
+              {evaluateRenderAddButton(node.element, node.dataPath) ? (
                 <button
                   onClick={() => {
                     const newNode = structuredClone(node);
@@ -209,7 +209,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                     newProfileTree = duplicateBranch(newProfileTree, newNode);
                     props.setProfileTree(newProfileTree);
                     // increment pathCounter
-                    incrementPathCounter(props.pathCounter, node.dataPath, props.setPathCounter);
+                    incrementPathCounter(node.dataPath);
                   }}
                 >
                   <GrFormAdd size={20} />

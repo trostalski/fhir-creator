@@ -61,9 +61,7 @@ export function getNthPartOfPath(path: string, n: number) {
 
 export function getDisplayPath(node: ProfileTreeNode) {
   let display = getPathSuffix(node.dataPath);
-  display = display
-    .replace(display + ".", "")
-    .replace(/\[.\]/g, "");
+  display = display.replace(display + ".", "").replace(/\[.\]/g, "");
   return display;
 }
 
@@ -103,7 +101,9 @@ export function incrementDataPath(
       n.parentDataPath === node.parentDataPath &&
       n.dataPath.startsWith(dataPathWithoutLastIndex)
   );
-  const indices = nodesWithSamePath.map((n) => extractIndex(n.dataPath));
+  const indices = nodesWithSamePath.map((n) =>
+    extractIndex(getPathSuffix(n.dataPath))
+  );
   const highestIndex = Math.max(...indices, currIndex);
 
   if (highestIndex >= 0) {
@@ -113,5 +113,6 @@ export function incrementDataPath(
     }
     return newDataPath;
   }
+  console.log("newDataPath", newDataPath);
   return node.dataPath.slice();
 }
