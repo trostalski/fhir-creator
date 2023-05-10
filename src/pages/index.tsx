@@ -35,23 +35,35 @@ import {
   buildTreeFromElementsRecursive,
 } from "../utils/buildTree";
 import ProfileTreeComponent from "../components/ProfileTreeComponent";
-import { tooltipSytles } from "@/utils/styles";
+import { tooltipStyles } from "@/utils/styles";
 import { InputData } from "@/types";
 import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
 import uniq from "lodash/uniq";
 import { getBranchIds } from "@/utils/tree_utils";
 import { removeNPathPartsFromStart } from "@/utils/path_utils";
-import { toastError } from "@/toasts";
+import { toastError, toastSuccess } from "@/toasts";
+import CheckoutModal from "@/components/CheckoutModal";
 
 const index = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
   const [profileTree, setProfileTree] = useState<ProfileTree>([]);
   const [checkedBranchIds, setCheckedBranchIds] = useState<string[]>([]);
+  const [checkoutModalOpen, setCheckoutModalOpen] = useState<boolean>(false);
   const [branchIds, setBranchIds] = useState<string[]>([]);
   const [resourceType, setResourceType] = useState<string>();
   const [pathsWithInvalidCardinality, setPathsWithInvalidCardinality] =
     useState<string[]>([]);
   const [mode, setMode] = useState<Modes>(Modes.CREATE);
+
+  const addResourceTypeToInputData = (inputData: InputData[]) => {
+    return [
+      ...inputData,
+      {
+        path: "resourceType",
+        value: resourceType!,
+      },
+    ];
+  };
 
   const loadProfile = async (
     profile: StructureDefinition,
@@ -106,12 +118,12 @@ const index = () => {
     } else {
       profileTree = profileTree = profileTree.map((node) => {
         const path = removeNPathPartsFromStart(node.dataPath, 1);
-        if (path === "resourceType") {
-          node.value = resourceType!;
-        } else if (path === "id") {
+        if (path === "id") {
           node.value = getUid();
         } else if (path === "meta.profile[0]") {
           node.value = profile?.url!;
+        } else if (path === "meta.lastUpdated") {
+          node.value = new Date().toISOString();
         }
         return node;
       });
@@ -149,12 +161,11 @@ const index = () => {
     }
   };
 
-  console.log("profile: ", profileTree);
   return (
     <div className="w-screen h-screen overflow-hidden">
       <Header />
       <main className="flex flex-row pt-8 h-full">
-        <LeftSidebar>
+        <LeftSidebar setCheckoutModalOpen={setCheckoutModalOpen}>
           <ResourceIdList
             setProfileTree={setProfileTree}
             setMode={setMode}
@@ -213,12 +224,15 @@ const index = () => {
                       );
                       return;
                     }
-                    const formattedInputData =
+                    let formattedInputData =
                       formatInputDataForResource(inputData);
+                    formattedInputData =
+                      addResourceTypeToInputData(formattedInputData);
                     const resource =
                       createJsonFromPathArray(formattedInputData);
                     addResource(resource);
                     addResourcPathRepr(formattedInputData);
+                    toastSuccess("Resource added");
                   }}
                 >
                   Add Resource
@@ -234,6 +248,7 @@ const index = () => {
                     const resource = createJsonFromPathArray(inputData);
                     updateResource(resource);
                     updateResourcePathRepr(inputData);
+                    toastSuccess("Resource updated");
                   }}
                 >
                   Save Changes
@@ -258,7 +273,7 @@ const index = () => {
                     anchorSelect="#description-anchor"
                     id="description-tooltip"
                     place="right"
-                    style={tooltipSytles}
+                    style={tooltipStyles}
                   />
                 </div>
                 <div className="flex flex-col gap-2 px-8">
@@ -284,6 +299,12 @@ const index = () => {
         </RightSidebar>
       </main>
       <footer></footer>
+      {checkoutModalOpen && (
+        <CheckoutModal
+          isOpen={checkoutModalOpen}
+          setIsOpen={setCheckoutModalOpen}
+        />
+      )}
     </div>
   );
 };

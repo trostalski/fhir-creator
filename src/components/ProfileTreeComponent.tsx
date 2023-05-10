@@ -4,7 +4,7 @@ import PrimitveInput from "@/components/PrimitveInput";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { shouldDisplayNode } from "@/utils/utils";
 import { GrFormAdd } from "react-icons/gr";
-import { AiOutlinePieChart } from "react-icons/ai";
+import { AiOutlinePieChart, AiOutlineQuestionCircle } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
 import {
   extractIndex,
@@ -19,6 +19,9 @@ import {
   insertAfterNode,
 } from "@/utils/tree_utils";
 import { usePathCounter } from "@/hooks/usePathCounter";
+import { Tooltip } from "react-tooltip";
+import { tooltipStyles } from "../utils/styles";
+import "react-tooltip/dist/react-tooltip.css";
 
 interface ProfileTreeComponentProps {
   profileTree: ProfileTree;
@@ -34,7 +37,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   const {
     decrementPathCounter,
     incrementPathCounter,
-    evaluatePathCounter,
     evaluateRenderAddButton,
   } = usePathCounter();
 
@@ -173,6 +175,24 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
                   )}
                 </select>
               )}
+              {
+                // help tooltip that displays the description of the element
+                node.element.short && (
+                  <>
+                    <div
+                      data-tooltip-id={node.dataPath}
+                      data-tooltip-content={node.element.short}
+                    >
+                      <AiOutlineQuestionCircle />
+                    </div>
+                    <Tooltip
+                      id={node.dataPath}
+                      place="right"
+                      style={tooltipStyles}
+                    />
+                  </>
+                )
+              }
               {extractIndex(getPathSuffix(node.dataPath)) > 0 ? (
                 <button
                   onClick={() => {

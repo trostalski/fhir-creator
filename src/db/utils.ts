@@ -1,10 +1,10 @@
 import { InputData } from "@/types";
-import { FhirResource, db } from "./db";
 import { toastError } from "@/toasts";
-import { StructureDefinition } from "fhir/r4";
+import { Resource, StructureDefinition } from "fhir/r4";
+import { db } from "./db";
 
 interface FhirBundleEntry {
-  resource: FhirResource;
+  resource: Resource;
 }
 
 interface FhirBundle {
@@ -34,7 +34,7 @@ export async function getResource(id: string) {
   }
 }
 
-export async function addResource(resource: FhirResource) {
+export async function addResource(resource: Resource) {
   try {
     await db.resources.add(resource);
   } catch (error) {
@@ -63,7 +63,7 @@ export async function addResourcPathRepr(inputData: InputData[]) {
   }
 }
 
-export async function updateResource(resource: FhirResource) {
+export async function updateResource(resource: Resource) {
   try {
     await db.resources.update(resource.id!, resource);
   } catch (error) {
@@ -83,7 +83,7 @@ export async function updateResourcePathRepr(inputData: InputData[]) {
   }
 }
 
-function createBundle(resources: FhirResource[]): FhirBundle {
+function createBundle(resources: Resource[]): FhirBundle {
   const bundle: FhirBundle = {
     resourceType: "Bundle",
     type: "collection",
@@ -101,9 +101,8 @@ function createBundle(resources: FhirResource[]): FhirBundle {
   return bundle;
 }
 
-export async function getResources() {
-  const all_resources = await db.resources.toArray();
-  const bundle_created: FhirBundle = createBundle(all_resources);
+export async function checkoutBundle(resources: Resource[]) {
+  const bundle_created: FhirBundle = createBundle(resources);
 
   const bundle_string = JSON.stringify(bundle_created, null, 2);
   //convert to a blob

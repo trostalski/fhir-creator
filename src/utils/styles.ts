@@ -1,4 +1,4 @@
-export const tooltipSytles = {
+export const tooltipStyles = {
   zIndex: 1000,
   backgroundColor: "black",
   opacity: 0.8,

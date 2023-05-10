@@ -5,7 +5,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
 import { MdOutlineClear } from "react-icons/md";
 import { getResourceTypeFromUrl, isFhirBaseDefinition } from "../utils/utils";
-import { getBaseProfile, getResources } from "@/db/utils";
+import { getBaseProfile } from "@/db/utils";
 import { StructureDefinition } from "fhir/r4";
 import { ProfileTree } from "@/utils/buildTree";
 import { Modes } from "@/utils/constants";
@@ -101,7 +101,12 @@ export const ResourceIdList = (props: ResourceIdListProps) => {
   );
 };
 
-const LeftSidebar = (props: { children: React.ReactNode }) => {
+interface LeftSidebarProps {
+  children: React.ReactNode;
+  setCheckoutModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const LeftSidebar = (props: LeftSidebarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
   return (
@@ -128,16 +133,22 @@ const LeftSidebar = (props: { children: React.ReactNode }) => {
         </div>
       )}
       <div className="grow"></div>
-      <button className="w-full bg-blue-800 p-2" onClick={getResources}>
-        <IoMdDoneAll
-          size={40}
-          className="mx-auto"
-          style={{
-            color: "white",
-            borderRadius: "15%",
-            padding: "5px",
-          }}
-        />
+      <button
+        className="w-full bg-blue-800 p-2"
+        onClick={() => {
+          props.setCheckoutModalOpen(true);
+        }}
+      >
+        <div className="flex flex-row justify-center items-center gap-2">
+          <span className="text-white">Checkout</span>
+          <IoMdDoneAll
+            size={40}
+            style={{
+              color: "white",
+              borderRadius: "15%",
+            }}
+          />
+        </div>
       </button>
     </div>
   );
