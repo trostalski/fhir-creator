@@ -44,7 +44,7 @@ import { removeNPathPartsFromStart } from "@/utils/path_utils";
 import { toastError, toastSuccess } from "@/toasts";
 import CheckoutModal from "@/components/CheckoutModal";
 
-const index = () => {
+const Home = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
   const [profileTree, setProfileTree] = useState<ProfileTree>([]);
   const [checkedBranchIds, setCheckedBranchIds] = useState<string[]>([]);
@@ -309,4 +309,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Home;

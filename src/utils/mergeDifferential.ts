@@ -93,7 +93,6 @@ export function mergeTreeWithDifferential(
     );
     if (node) {
       node.element = updateElementWithOther(node.element, differentialElement);
-      node.isSliceEntry = isSliceEntry(differentialElement);
     } else {
       let node = profileTree.find((n) =>
         baseAndParentSlicesEqual(n, differentialElement)
@@ -109,7 +108,6 @@ export function mergeTreeWithDifferential(
         const newParentPath = removeNPathPartsFromEnd(newDataPath, 1);
         const newNode: ProfileTreeNode = {
           ...node,
-          isSliceEntry: isSliceEntry(differentialElement),
           dataPath: newDataPath,
           element: updateElementWithOther(node.element, differentialElement),
         };
@@ -162,7 +160,7 @@ export function mergeTreeWithDifferential(
   }
   // remove nodes that are not part of closed slice
   for (const node of profileTree) {
-    if (node.isSliceEntry && isClosedSlice(node.element)) {
+    if (isSliceEntry(node.element) && isClosedSlice(node.element)) {
       // remove node and all children from profileTree
       const descendants = copyAllDescendants(node, profileTree);
       const descendantDataPaths = descendants.map((n) => n.dataPath);
