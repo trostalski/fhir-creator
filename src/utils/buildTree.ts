@@ -57,8 +57,8 @@ async function getTypeDefinition(type: ElementDefinitionType) {
     return null;
   }
   try {
-    const module = await import(`../fhir/types/${code}.ts`);
-    let type_definition = module.default as StructureDefinition;
+    const typeModule = await import(`../fhir/types/${code}.ts`);
+    let type_definition = typeModule.default as StructureDefinition;
     if (code == "Reference") {
       // TODO: hack because Reference.identifier results in loop
       type_definition.snapshot!.element =
