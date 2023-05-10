@@ -57,15 +57,12 @@ async function getTypeDefinition(type: ElementDefinitionType) {
     return null;
   }
   try {
-    const res = await fetch(`/api/types?filename=${code}`);
-    if (!res.ok) {
-      return null;
-    }
-    let type_definition = await res.json();
+    const module = await import(`../fhir/types/${code}.ts`);
+    let type_definition = module.default as StructureDefinition;
     if (code == "Reference") {
       // TODO: hack because Reference.identifier results in loop
-      type_definition.snapshot.element =
-        type_definition.snapshot.element.filter(
+      type_definition.snapshot!.element =
+        type_definition.snapshot!.element.filter(
           (el: ElementDefinition) => el.id !== "Reference.identifier"
         );
     }
@@ -231,15 +228,15 @@ export async function buildTreeFromElementsRecursive(
           const childElement = childType.snapshot!.element![0];
           const childBasePath = mergePaths(
             elementBasePath,
-            getPathSuffix(childElement.id)
+            getPathSuffix(childElement.id!)
           );
           const type = childType.id;
-          childElement.type = [{ code: type }];
+          childElement.type = [{ code: type! }];
           childElement.min = 0;
           childElement.max = "1";
           const dataPath = mergePaths(
             getDataPath(elementDataPath, childElement),
-            type
+            type!
           );
           const childNode: ProfileTreeNode = {
             element: childElement,
