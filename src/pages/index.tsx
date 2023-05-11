@@ -77,11 +77,19 @@ const Home = () => {
     } else {
       setResourceType(resourceType);
     }
-    let profileTree;
+    let profileTree: ProfileTree = [];
     if (containsSnapshot(profile) && profile.snapshot) {
       // all elements are present
       baseElements = profile.snapshot.element;
-      profileTree = await buildTreeFromElementsRecursive(baseElements);
+      if (isFhirBaseDefinition(profile.url)) {
+        const profileTreeModule = await import(
+          `../fhir/profiletrees/${getResourceTypeFromUrl(profile.url)}`
+        );
+        profileTree = profileTreeModule.default;
+        console.log(profileTree);
+      } else {
+        profileTree = await buildTreeFromElementsRecursive(baseElements);
+      }
     } else if (containsDifferential(profile) && profile.differential) {
       // only differential is present, needs to be merged with base profile
       const baseUrl = getBaseUrl(profile);

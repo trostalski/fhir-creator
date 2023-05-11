@@ -1,9 +1,4 @@
-import {
-  Cardinality,
-  CheckCardinalitiesResult,
-  InputData,
-  PathCounter,
-} from "@/types";
+import { Cardinality, CheckCardinalitiesResult, InputData } from "../types";
 import {
   multiTypeString,
   notImportantIdSuffices as notImportantIds,
@@ -11,12 +6,8 @@ import {
   sliceDelimiter,
 } from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
-import { ProfileTree, ProfileTreeNode, isSliceEntry } from "../utils/buildTree";
-import {
-  getSliceNames,
-  removeLastIndex,
-  removeNPathPartsFromStart,
-} from "./path_utils";
+import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
+import { getSliceNames, removeNPathPartsFromStart } from "./path_utils";
 import { getNodeByDataPath } from "./tree_utils";
 import uniq from "lodash/uniq";
 

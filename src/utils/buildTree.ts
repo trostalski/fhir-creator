@@ -3,7 +3,12 @@ import {
   ElementDefinitionType,
   StructureDefinition,
 } from "fhir/r4";
-import { pathDelimiter, primitiveTypes, rootName } from "./constants";
+import {
+  pathDelimiter,
+  primitiveTypes,
+  rootName,
+  validFhirTypes,
+} from "./constants";
 import {
   capitalizeFirstLetter,
   elementExpectsArray,
@@ -12,7 +17,6 @@ import {
   isMultiTypeElement,
   isMultiTypeString,
 } from "./utils";
-import { validFhirTypes } from "./fhirTypes";
 import {
   getNthPartOfPath,
   getPathLength,
@@ -57,7 +61,7 @@ async function getTypeDefinition(type: ElementDefinitionType) {
     return null;
   }
   try {
-    const typeModule = await import(`../fhir/types/${code}.ts`);
+    const typeModule = await import(`../fhir/types/${code}`);
     let type_definition = typeModule.default as StructureDefinition;
     if (code == "Reference") {
       // TODO: hack because Reference.identifier results in loop
@@ -67,7 +71,9 @@ async function getTypeDefinition(type: ElementDefinitionType) {
         );
     }
     result = type_definition;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
   return result;
 }
 
