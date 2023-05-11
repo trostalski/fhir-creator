@@ -34,7 +34,7 @@ import {
   ProfileTree,
   buildTreeFromElementsRecursive,
 } from "../utils/buildTree";
-import ProfileTreeComponent from "../components/ProfileTreeComponent";
+import ProfileTreeComponent from "../components/profile_tree_input/ProfileTreeComponent";
 import { tooltipStyles } from "@/utils/styles";
 import { InputData } from "@/types";
 import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";

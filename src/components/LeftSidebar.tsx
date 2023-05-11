@@ -110,9 +110,9 @@ const LeftSidebar = (props: LeftSidebarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 shadow-md">
+    <div className="flex flex-col h-full shadow-md">
       {isOpen ? (
-        <div className="h-full p-2 w-60">
+        <div className="h-full p-2 w-48">
           <button
             onClick={(e) => setIsOpen(!isOpen)}
             className="flex flex-row items-center w-full bg-inherit h-8"
@@ -133,7 +133,7 @@ const LeftSidebar = (props: LeftSidebarProps) => {
         </div>
       )}
       <div className="grow"></div>
-      <button
+      {/* <button
         className="w-full bg-blue-800 p-2"
         onClick={() => {
           props.setCheckoutModalOpen(true);
@@ -149,7 +149,7 @@ const LeftSidebar = (props: LeftSidebarProps) => {
             }}
           />
         </div>
-      </button>
+      </button> */}
     </div>
   );
 };

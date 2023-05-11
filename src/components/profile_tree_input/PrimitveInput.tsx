@@ -69,7 +69,7 @@ const InputFromType = (props: InputFromTypeProps) => {
           type="text"
           value={props.profileTreeNode.value}
           onChange={handleInputChange}
-          className="bg-gray-50 w-full h-8 p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
       );
     case "decimal":
@@ -137,7 +137,7 @@ const PrimitveInput = (props: PrimitveInputProps) => {
     `}
     >
       <label
-        className={`block w-full text-xs font-medium text-gray-700 dark:text-gray-200 ${
+        className={`block w-full text-xs font-medium text-gray-400 dark:text-gray-200 ${
           props.node.element.min! > 0
             ? "after:text-red-600 after:content-['*']"
             : ""
