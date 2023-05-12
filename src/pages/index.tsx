@@ -47,6 +47,7 @@ const Home = () => {
   ) => {
     let baseElements: ElementDefinition[];
     setProfile(profile);
+    setPathsWithInvalidCardinality([]);
     const resourceType = getResourceTypeFromProfile(profile);
     if (!resourceType) {
       alert("Could not determine resource type from profile");

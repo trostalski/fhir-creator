@@ -14,17 +14,14 @@ interface RootPrimitiveProps {
 
 const RootPrimitive = (props: RootPrimitiveProps) => {
   return (
-    <div
-      className={`w-full rounded-md border-gray-200 ${
-        props.node.element.sliceName ? "border-violet-400" : ""
-      } 
-    `}
-    >
+    <div className="w-full rounded-md border-gray-200">
       <div className="flex flex-row">
         <div
           className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${
             props.pathsWithInvalidCardinality.includes(props.node.dataPath)
               ? "bg-red-400"
+              : props.node.element.sliceName
+              ? "bg-violet-300"
               : "bg-blue-300 "
           }`}
         >

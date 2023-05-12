@@ -77,10 +77,7 @@ const RootParent = (props: RootParentProps) => {
   );
   return (
     <div
-      className={`w-full rounded-md border-gray-200 ${
-        props.node.element.sliceName ? "border-violet-400" : ""
-      } 
-    `}
+      className="w-full rounded-md border-gray-200"
       key={props.node.dataPath}
     >
       <div className="flex flex-row">
@@ -88,6 +85,8 @@ const RootParent = (props: RootParentProps) => {
           className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${
             props.pathsWithInvalidCardinality.includes(props.node.dataPath)
               ? "bg-red-400"
+              : props.node.element.sliceName
+              ? "bg-violet-300"
               : "bg-blue-300 "
           }`}
         >
