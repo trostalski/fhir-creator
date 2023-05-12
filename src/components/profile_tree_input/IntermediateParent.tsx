@@ -72,16 +72,17 @@ const IntermediateParent = (props: IntermediateParentProps) => {
     <div
       className={`w-full rounded-md border-gray-200 ${
         props.node.element.sliceName ? "border-violet-400" : ""
-      } ${
-        props.pathsWithInvalidCardinality.includes(props.node.dataPath)
-          ? "border-red-600 border-1"
-          : ""
-      }
-  `}
+      }`}
       key={props.node.dataPath}
     >
       <div className="flex flex-row">
-        <div className="flex bg-blue-300 text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer">
+        <div
+          className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${
+            props.pathsWithInvalidCardinality.includes(props.node.dataPath)
+              ? "bg-red-400"
+              : "bg-blue-300 "
+          }`}
+        >
           <button
             className="flex flex-row items-center h-full"
             onClick={() => props.toggleNodeExpansion(props.node.dataPath)}

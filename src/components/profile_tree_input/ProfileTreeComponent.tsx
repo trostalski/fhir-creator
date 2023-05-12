@@ -1,36 +1,25 @@
 import React, { useState } from "react";
 import { ProfileTree, ProfileTreeNode } from "../../utils/buildTree";
-import PrimitveInput from "@/components/profile_tree_input/PrimitveInput";
-import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { shouldDisplayNode } from "@/utils/utils";
-import { GrFormAdd } from "react-icons/gr";
-import { AiOutlinePieChart, AiOutlineQuestionCircle } from "react-icons/ai";
-import { AiOutlineMinus } from "react-icons/ai";
-import {
-  extractIndex,
-  getDisplayPath,
-  getPathSuffix,
-  incrementDataPath,
-} from "@/utils/path_utils";
-import {
-  deleteBranch,
-  duplicateBranch,
-  getLastDescendant,
-  insertAfterNode,
-} from "@/utils/tree_utils";
-import { usePathCounter } from "@/hooks/usePathCounter";
-import { Tooltip } from "react-tooltip";
-import { tooltipStyles } from "../../utils/styles";
+import { getDisplayPath } from "@/utils/path_utils";
 import "react-tooltip/dist/react-tooltip.css";
 import RootPrimitive from "./RootPrimitive";
-import IntermediateParent from "./IntermediateParent";
 import RootParent from "./RootParent";
+import { StructureDefinition } from "fhir/r4";
+import AddResourceButton from "../buttons/AddResourceButton";
+import { Modes } from "@/utils/constants";
 
 interface ProfileTreeComponentProps {
   profileTree: ProfileTree;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   checkedBranchIds: string[];
   pathsWithInvalidCardinality: string[];
+  setPathsWithInvalidCardinality: React.Dispatch<
+    React.SetStateAction<string[]>
+  >;
+  profile: StructureDefinition;
+  mode: Modes;
+  resourceType?: string;
 }
 
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
@@ -79,30 +68,45 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   };
 
   return (
-    <div className="">
-      <div className="flex flex-row mb-4">
-        <input
-          placeholder="search"
-          className="h-8 w-3/4 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          onChange={(e) => {
-            setSearchInput(e.target.value);
-          }}
-        />
-        <span className="flex-grow" />
-        <button
-          className="text-gray-500 hover:text-gray-70 text-xs rounded py-1 px-2"
-          onClick={() => setExpandedNodes([])}
-        >
-          Collapse All
-        </button>
-        <button
-          className="text-gray-500 hover:text-gray-700 text-xs rounded py-1 px-2"
-          onClick={() =>
-            setExpandedNodes(props.profileTree.map((node) => node.dataPath))
-          }
-        >
-          Open All
-        </button>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col mb-4 gap-2">
+        <div className="flex flex-row gap-4 items-center">
+          <span className="text-gray-500 text-xs">Profile URL:</span>
+          <span className="text-md">{props.profile.url}</span>
+          <span className="flex-grow"></span>
+          <AddResourceButton
+            mode={props.mode}
+            profileTree={props.profileTree}
+            setPathsWithInvalidCardinality={
+              props.setPathsWithInvalidCardinality
+            }
+            resourceType={props.resourceType}
+          />
+        </div>
+        <div className="flex flex-row">
+          <input
+            placeholder="Search Elements"
+            className="h-8 w-full border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            onChange={(e) => {
+              setSearchInput(e.target.value);
+            }}
+          />
+          <span className="flex-grow" />
+          <button
+            className="text-gray-500 w-32 hover:text-gray-70 text-xs rounded py-1 px-2"
+            onClick={() => setExpandedNodes([])}
+          >
+            Collapse All
+          </button>
+          <button
+            className="text-gray-500 w-32 hover:text-gray-700 text-xs rounded py-1 px-2"
+            onClick={() =>
+              setExpandedNodes(props.profileTree.map((node) => node.dataPath))
+            }
+          >
+            Open All
+          </button>
+        </div>
       </div>
       <div className="flex flex-col gap-4">
         {props.profileTree
