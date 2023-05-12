@@ -44,32 +44,36 @@ const RootParent = (props: RootParentProps) => {
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {
       return (
-        <PrimitveInput
-          key={node.dataPath}
-          node={node}
-          profileTreeNode={node}
-          setProfileTree={props.setProfileTree}
-          pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
-        />
+        <div key={node.dataPath} className="w-full pb-2">
+          <PrimitveInput
+            key={node.dataPath}
+            node={node}
+            profileTreeNode={node}
+            setProfileTree={props.setProfileTree}
+            pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
+          />
+        </div>
       );
     } else {
       return (
-        <IntermediateParent
-          key={props.node.dataPath}
-          isExpanded={props.isExpanded}
-          node={props.node}
-          pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
-          profileTree={props.profileTree}
-          setProfileTree={props.setProfileTree}
-          toggleNodeExpansion={props.toggleNodeExpansion}
-        />
+        <div className="w-full">
+          <IntermediateParent
+            key={node.dataPath}
+            isExpanded={props.isExpanded}
+            node={node}
+            pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
+            profileTree={props.profileTree}
+            setProfileTree={props.setProfileTree}
+            toggleNodeExpansion={props.toggleNodeExpansion}
+          />
+        </div>
       );
     }
   };
 
   return (
     <div
-      className={`w-full h-full rounded-md border-gray-200 ${
+      className={`w-full rounded-md border-gray-200 ${
         props.node.element.sliceName ? "border-violet-400" : ""
       } ${
         props.pathsWithInvalidCardinality.includes(props.node.dataPath)
@@ -79,10 +83,10 @@ const RootParent = (props: RootParentProps) => {
     `}
       key={props.node.dataPath}
     >
-      <div className="flex flex-row h-full">
-        <div className="flex bg-gray-100 p-1 text-xs rounded-md hover:bg-gray-200 transition-colors duration-300 ease-in-out cursor-pointer">
+      <div className="flex flex-row">
+        <div className="flex bg-blue-300 text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer">
           <button
-            className="flex flex-row items-center h-full"
+            className="flex flex-row items-center"
             onClick={() => props.toggleNodeExpansion(props.node.dataPath)}
           >
             {props.isExpanded ? (
@@ -94,15 +98,22 @@ const RootParent = (props: RootParentProps) => {
         </div>
         <div className="flex flex-col pl-2 w-full">
           <div className="flex flex-row items-center">
-            <h2
-              className={`font-light text-md ${
-                props.node.element.min! > 0
-                  ? "after:text-red-600 after:content-['*']"
-                  : ""
-              }`}
-            >
-              {getDisplayPath(props.node)}
-            </h2>
+            <div className="flex flex-row items-center gap-2">
+              <h2
+                className={`text-md font-bold ${
+                  props.node.element.min! > 0
+                    ? "after:text-red-600 after:content-['*']"
+                    : ""
+                }`}
+              >
+                {getDisplayPath(props.node)}
+              </h2>
+              <span className="text-gray-400 text-md font-normal">
+                {props.node.element.type
+                  ? "(" + props.node.element.type[0].code + ")"
+                  : null}
+              </span>
+            </div>
             <span className="flex-grow" />
             <div className="flex flex-row items-center gap-2">
               {props.node.element.sliceName && (
@@ -201,7 +212,7 @@ const RootParent = (props: RootParentProps) => {
             </div>
           </div>
           {props.isExpanded && (
-            <div className="flex flex-row flex-wrap gap-1 pl-8">
+            <div className="flex flex-row flex-wrap gap-1 pl-40 py-2">
               {props.node.childPaths.map((childPath: string) => {
                 let childNode = props.profileTree.find(
                   (n: ProfileTreeNode) => n.dataPath === childPath
@@ -221,7 +232,7 @@ const RootParent = (props: RootParentProps) => {
           )}
         </div>
       </div>
-      <hr className="my-1" />
+      <hr className="mb-2 mt-4" />
     </div>
   );
 };

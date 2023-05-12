@@ -1,7 +1,5 @@
 import { ProfileTree, ProfileTreeNode } from "@/utils/buildTree";
 import { getDisplayPath } from "@/utils/path_utils";
-import { removeMultiTypeString } from "@/utils/utils";
-import { ElementDefinition, StructureDefinition } from "fhir/r4";
 import React from "react";
 
 interface PrimitveInputProps {
@@ -45,7 +43,7 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         // boolean select with yes and no options
         <select
-          className="bg-gray-50 w-full h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           onChange={handleSelectChange}
           value={props.profileTreeNode.value}
         >
@@ -81,7 +79,7 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="number"
           onChange={handleInputChange}
-          className="bg-gray-50 w-full h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           value={props.profileTreeNode.value}
         />
       );
@@ -90,7 +88,7 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="datetime-local"
-          className="bg-gray-50 w-full h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           value={props.profileTreeNode.value}
           onChange={handleInputChange}
         />
@@ -99,7 +97,7 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="date"
-          className="bg-gray-50 w-full h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           value={props.profileTreeNode.value}
           onChange={handleInputChange}
         />
@@ -108,7 +106,7 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="time"
-          className="bg-gray-50 w-full h-8 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           value={props.profileTreeNode.value}
           onChange={handleInputChange}
         />
@@ -117,7 +115,7 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="text"
-          className="bg-gray-50 w-full h-8 p-1 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           value={props.profileTreeNode.value}
           onChange={handleInputChange}
         />
@@ -137,13 +135,18 @@ const PrimitveInput = (props: PrimitveInputProps) => {
     `}
     >
       <label
-        className={`block w-full text-xs font-medium text-gray-400 dark:text-gray-200 ${
+        className={`block w-full text-xs font-bold dark:text-gray-200 ${
           props.node.element.min! > 0
             ? "after:text-red-600 after:content-['*']"
             : ""
         }`}
       >
         {getDisplayPath(props.node)}
+        <span className="text-gray-400 font-normal text-md">
+          {props.node.element.type
+            ? " (" + props.node.element.type[0].code + ")"
+            : null}
+        </span>{" "}
       </label>
       <InputFromType
         type={props.node.element.type![0].code}

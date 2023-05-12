@@ -15,42 +15,58 @@ interface RootPrimitiveProps {
 const RootPrimitive = (props: RootPrimitiveProps) => {
   return (
     <div
-      className={`w-full p-1 border-[1px] border-dotted rounded-sm border-gray-200 ${
+      className={`w-full rounded-md border-gray-200 ${
         props.node.element.sliceName ? "border-violet-400" : ""
-      }`}
-      key={props.node.dataPath}
+      } ${
+        props.pathsWithInvalidCardinality.includes(props.node.dataPath)
+          ? "border-red-600 border-1"
+          : ""
+      }
+    `}
     >
-      <div className="flex flex-row items-center">
-        <button
-          className="flex flex-row items-center"
-          onClick={() => props.toggleNodeExpansion(props.node.dataPath)}
-        >
-          {props.isExpanded ? (
-            <MdExpandLess size={24} />
-          ) : (
-            <MdExpandMore size={24} />
-          )}
-          <h2
-            className={`font-light text-md ${
-              props.node.element.min! > 0
-                ? "after:text-red-600 after:content-['*']"
-                : ""
-            } `}
+      <div className="flex flex-row">
+        <div className="flex bg-blue-300 text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer">
+          <button
+            className="flex flex-row items-center"
+            onClick={() => props.toggleNodeExpansion(props.node.dataPath)}
           >
-            {getDisplayPath(props.node)}
-          </h2>
-        </button>
-      </div>
-      {props.isExpanded && (
-        <div key={props.node.dataPath} className="flex-grow pb-2 pl-32">
-          <PrimitveInput
-            node={props.node}
-            profileTreeNode={props.node}
-            setProfileTree={props.setProfileTree}
-            pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
-          />
+            {props.isExpanded ? (
+              <MdExpandLess size={24} />
+            ) : (
+              <MdExpandMore size={24} />
+            )}
+          </button>
         </div>
-      )}
+        <div className="flex flex-col pl-2 w-full">
+          <div className="flex flex-row items-center gap-2">
+            <h2
+              className={`text-md font-bold ${
+                props.node.element.min! > 0
+                  ? "after:text-red-600 after:content-['*']"
+                  : ""
+              }`}
+            >
+              {getDisplayPath(props.node)}
+            </h2>
+            <span className="text-gray-400 text-md">
+              {props.node.element.type
+                ? "(" + props.node.element.type[0].code + ")"
+                : null}
+            </span>
+          </div>
+          {props.isExpanded && (
+            <div key={props.node.dataPath} className="flex-grow py-2  pl-40">
+              <PrimitveInput
+                node={props.node}
+                profileTreeNode={props.node}
+                setProfileTree={props.setProfileTree}
+                pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+      <hr className="mb-2 mt-4" />
     </div>
   );
 };

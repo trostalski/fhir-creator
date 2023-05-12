@@ -37,6 +37,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   props: ProfileTreeComponentProps
 ) => {
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
+  const [searchInput, setSearchInput] = React.useState<string | null>(null);
 
   const isNodeExpanded = (nodePath: string) => {
     return expandedNodes.includes(nodePath);
@@ -79,7 +80,14 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
 
   return (
     <div className="">
-      <div className="flex flex-row">
+      <div className="flex flex-row mb-4">
+        <input
+          placeholder="search"
+          className="h-8 w-3/4 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          onChange={(e) => {
+            setSearchInput(e.target.value);
+          }}
+        />
         <span className="flex-grow" />
         <button
           className="text-gray-500 hover:text-gray-70 text-xs rounded py-1 px-2"
@@ -99,6 +107,15 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
       <div className="flex flex-col gap-4">
         {props.profileTree
           .filter((node) => shouldDisplayNode(node, props.checkedBranchIds))
+          .filter((node) => {
+            if (searchInput) {
+              return getDisplayPath(node)
+                .toLowerCase()
+                .includes(searchInput.toLowerCase());
+            } else {
+              return true;
+            }
+          })
           .map((node: ProfileTreeNode) => {
             if (node.parentDataPath === "root") {
               return renderRootNode(node);
