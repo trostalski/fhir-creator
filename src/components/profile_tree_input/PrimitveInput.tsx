@@ -129,7 +129,7 @@ const PrimitveInput = (props: PrimitveInputProps) => {
       className={`
     ${
       props.pathsWithInvalidCardinality.includes(props.profileTreeNode.dataPath)
-        ? "border-dashed border-red-600 border"
+        ? "border-solid border-2 border-red-600"
         : ""
     }
     `}
