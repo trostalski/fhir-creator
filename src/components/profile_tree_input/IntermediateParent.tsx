@@ -214,6 +214,8 @@ const IntermediateParent = (props: IntermediateParentProps) => {
           {props.expandedNodes.includes(props.node.dataPath) && (
             <div className="flex flex-row flex-wrap gap-1 pl-32 py-2">
               {props.node.childPaths.map((childPath: string) => {
+                console.log("childpath: ", childPath);
+                console.log("parent path: ", props.node.dataPath);
                 let childNode = props.profileTree.find(
                   (n: ProfileTreeNode) => n.dataPath === childPath
                 );

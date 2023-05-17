@@ -40,6 +40,7 @@ export interface ProfileTreeNode {
   basePath: string; // used for differential merging
   isPrimitive: boolean;
   codeableConceptCodes?: Coding[];
+  isMultiType?: boolean;
   isRootPrimitive?: boolean;
   type?: string;
   value: any;
@@ -237,7 +238,6 @@ export async function buildTreeFromElementsRecursive(
       const codeableConceptCodes = await tryGetCodeableConceptCodes(element);
       console.log(codeableConceptCodes);
       if (codeableConceptCodes && codeableConceptCodes.length > 0) {
-        console.log("CodeableConcept has codes");
         elementNode.codeableConceptCodes = codeableConceptCodes;
         elementNode.isPrimitive = true;
         profileTree.push(elementNode);

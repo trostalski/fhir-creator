@@ -46,7 +46,6 @@ const RootParent = (props: RootParentProps) => {
       return (
         <div key={node.dataPath} className="w-full pb-2">
           <PrimitveInput
-            key={node.dataPath}
             node={node}
             profileTreeNode={node}
             setProfileTree={props.setProfileTree}
@@ -55,11 +54,11 @@ const RootParent = (props: RootParentProps) => {
         </div>
       );
     } else {
+      console.log("rendering intermediate parent");
       return (
-        <div className="w-full">
+        <div className="w-full" key={node.dataPath}>
           <IntermediateParent
             expandedNodes={props.expandedNodes}
-            key={node.dataPath}
             node={node}
             pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
             profileTree={props.profileTree}
@@ -218,7 +217,7 @@ const RootParent = (props: RootParentProps) => {
                 let childNode = props.profileTree.find(
                   (n: ProfileTreeNode) => n.dataPath === childPath
                 );
-                if (props.node.type) {
+                if (props.node.isMultiType && props.node.type) {
                   // multiype node with select input for type selection
                   // the following code filters the child nodes to only show the ones that match the selected type
                   childNode = childNode?.dataPath
