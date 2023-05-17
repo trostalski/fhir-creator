@@ -39,7 +39,7 @@ const CheckoutModal = (props: CheckoutModalProps) => {
                 {resources.map((resource) => (
                   <div
                     key={resource.id}
-                    className="flex bg-gray-100 p-2 text-xs rounded-md hover:bg-gray-200 transition-colors duration-300 ease-in-out pl-"
+                    className="flex bg-gray-100 p-2 text-xs rounded-md hover:bg-gray-200 transition-colors duration-300 ease-in-out cursor-pointer"
                   >
                     <span className="w-4/12">{resource.resourceType}</span>
                     <span className="w-4/12">{resource.id}</span>

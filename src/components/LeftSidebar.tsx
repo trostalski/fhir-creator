@@ -1,15 +1,23 @@
-import React, { useState } from "react";
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdDoneAll } from "react-icons/io";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
 import { MdOutlineClear } from "react-icons/md";
-import { getResourceTypeFromUrl, isFhirBaseDefinition } from "../utils/utils";
+import { getResourceTypeFromUrl, isBaseUrl } from "../utils/utils";
 import { getBaseProfile } from "@/db/utils";
 import { StructureDefinition } from "fhir/r4";
 import { ProfileTree } from "@/utils/buildTree";
 import { Modes } from "@/utils/constants";
 import { InputData } from "@/types";
+import useResize from "@/hooks/useResize";
+import { min } from "lodash";
 
 interface ResourceIdListProps {
   setMode: React.Dispatch<React.SetStateAction<Modes>>;
@@ -48,7 +56,7 @@ export const ResourceIdList = (props: ResourceIdListProps) => {
                 const profileUrl = resourcePathRepr.data.find(
                   (data) => data.path === "meta.profile[0]"
                 )?.value;
-                if (profileUrl && isFhirBaseDefinition(profileUrl)) {
+                if (profileUrl && isBaseUrl(profileUrl)) {
                   const resourceType = getResourceTypeFromUrl(profileUrl);
                   profile = await getBaseProfile(resourceType);
                 } else if (profileUrl) {
@@ -108,32 +116,51 @@ interface LeftSidebarProps {
 
 const LeftSidebar = (props: LeftSidebarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
+  const resizeRef = useRef<HTMLInputElement>(null);
+  const { resizeWidth, startResizing } = useResize(resizeRef);
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 shadow-md">
-      {isOpen ? (
-        <div className="h-full p-2 w-60">
-          <button
-            onClick={(e) => setIsOpen(!isOpen)}
-            className="flex flex-row items-center w-full bg-inherit h-8"
-          >
-            <span className="grow" />
-            <RxHamburgerMenu />
-          </button>
-          {props.children}
-        </div>
-      ) : (
-        <div className="relative w-12">
-          <button
-            onClick={(e) => setIsOpen(!isOpen)}
-            className="fixed top-12 left-4"
-          >
-            <RxHamburgerMenu />
-          </button>
-        </div>
-      )}
-      <div className="grow"></div>
-      <button
+    <div
+      ref={resizeRef}
+      className={"flex overflow-hidden flex-row h-full shadow-md flex-shrink-0"}
+      onResize={(e) => console.log(e)}
+      style={{
+        flexBasis: `${resizeWidth}px`,
+        minWidth: "50px",
+        maxWidth: "400px",
+      }}
+      onMouseDown={(e) => e.preventDefault()}
+    >
+      <div className="min-w-0 flex-grow">
+        {isOpen ? (
+          <div className="flex flex-col h-full p-2">
+            <button
+              onClick={(e) => setIsOpen(!isOpen)}
+              className="flex flex-row items-center w-full bg-inherit h-8"
+            >
+              <span className="grow" />
+              <RxHamburgerMenu />
+            </button>
+            {props.children}
+          </div>
+        ) : (
+          <div className="relative w-12">
+            <button
+              onClick={(e) => setIsOpen(!isOpen)}
+              className="fixed top-12 left-4"
+            >
+              <RxHamburgerMenu />
+            </button>
+          </div>
+        )}
+        <div className="grow"></div>
+      </div>
+      <div
+        onMouseDown={startResizing}
+        className="w-2 hover:bg-gray-200 hover:cursor-col-resize"
+      ></div>
+    </div>
+    /* <button
         className="w-full bg-blue-800 p-2"
         onClick={() => {
           props.setCheckoutModalOpen(true);
@@ -149,8 +176,7 @@ const LeftSidebar = (props: LeftSidebarProps) => {
             }}
           />
         </div>
-      </button>
-    </div>
+      </button> */
   );
 };
 

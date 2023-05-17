@@ -26,6 +26,15 @@ export function logWithCopy(...args: any[]) {
   }
 }
 
+export const isUrl = (string: string) => {
+  try {
+    new URL(string);
+  } catch (_) {
+    return false;
+  }
+  return true;
+};
+
 export const containsSnapshot = (profile: StructureDefinition) => {
   return "snapshot" in profile;
 };
@@ -105,8 +114,8 @@ export const idIsImportant = (id: string) => {
   return result;
 };
 
-export const isFhirBaseDefinition = (url: string) => {
-  return url.startsWith("http://hl7.org/fhir/StructureDefinition/");
+export const isBaseUrl = (url: string) => {
+  return url.startsWith("http://hl7.org/fhir/");
 };
 
 export const getUid = function () {

@@ -12,14 +12,14 @@ export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
   const [searchInput, setSearchInput] = React.useState<string | null>(null);
   return (
     <div className="flex flex-col gap-1 p-2">
-      <div className="p-2 flex flex-row gap-2 items-center w-full">
-        <input
-          placeholder="search"
-          className="h-8 w-full border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          onChange={(e) => {
-            setSearchInput(e.target.value);
-          }}
-        />
+      <input
+        placeholder="search"
+        className="h-8 w-full border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        onChange={(e) => {
+          setSearchInput(e.target.value);
+        }}
+      />
+      <div className="p-2 flex flex-row gap-2 justify-end items-center w-full">
         <button
           className="text-blue-600 font-bold text-xs"
           onClick={(e) => {
@@ -43,6 +43,7 @@ export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
           reset
         </button>
       </div>
+
       {!props.branchIds
         ? null
         : props.branchIds
@@ -90,9 +91,10 @@ const RightSidebar = (props: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   return (
     <div
-      className={`relative bg-gray-50 shadow-md h-full overflow-scroll ${
-        isOpen ? "w-96" : "w-12"
-      }`}
+      className={`relative shadow-md h-full overflow-scroll ${
+        isOpen ? "w-72" : "w-12"
+      }
+      `}
     >
       {isOpen ? (
         <div className="bg-inherit">
