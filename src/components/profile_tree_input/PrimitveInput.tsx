@@ -1,6 +1,7 @@
 import { ProfileTree, ProfileTreeNode } from "@/utils/buildTree";
 import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
+import CodeableConceptInput from "./CodeableConceptInput";
 
 interface PrimitveInputProps {
   node: ProfileTreeNode;
@@ -36,7 +37,6 @@ const InputFromType = (props: InputFromTypeProps) => {
       return newProfileTree;
     });
   };
-
   switch (props.type) {
     //for each primitve type return its own component
     case "boolean":
@@ -109,6 +109,13 @@ const InputFromType = (props: InputFromTypeProps) => {
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           value={props.profileTreeNode.value}
           onChange={handleInputChange}
+        />
+      );
+    case "CodeableConcept":
+      return (
+        <CodeableConceptInput
+          node={props.profileTreeNode}
+          setProfileTree={props.setProfileTree}
         />
       );
     default:

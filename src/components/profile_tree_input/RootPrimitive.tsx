@@ -6,8 +6,8 @@ import PrimitveInput from "./PrimitveInput";
 
 interface RootPrimitiveProps {
   node: ProfileTreeNode;
-  isExpanded: boolean;
   toggleNodeExpansion: (nodePath: string) => void;
+  expandedNodes: string[];
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   pathsWithInvalidCardinality: string[];
 }
@@ -29,7 +29,7 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
             className="flex flex-row items-center"
             onClick={() => props.toggleNodeExpansion(props.node.dataPath)}
           >
-            {props.isExpanded ? (
+            {props.expandedNodes.includes(props.node.dataPath) ? (
               <MdExpandLess size={24} />
             ) : (
               <MdExpandMore size={24} />
@@ -53,7 +53,7 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
                 : null}
             </span>
           </div>
-          {props.isExpanded && (
+          {props.expandedNodes.includes(props.node.dataPath) && (
             <div key={props.node.dataPath} className="flex-grow py-2  pl-40">
               <PrimitveInput
                 node={props.node}

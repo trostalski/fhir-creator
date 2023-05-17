@@ -26,8 +26,8 @@ import PrimitveInput from "./PrimitveInput";
 
 interface IntermediateParentProps {
   node: ProfileTreeNode;
-  isExpanded: boolean;
   toggleNodeExpansion: (nodePath: string) => void;
+  expandedNodes: string[];
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   pathsWithInvalidCardinality: string[];
   profileTree: ProfileTree;
@@ -39,8 +39,6 @@ const IntermediateParent = (props: IntermediateParentProps) => {
     incrementPathCounter,
     evaluateRenderAddButton,
   } = usePathCounter();
-
-  console.log("IntermediateParent: ");
 
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {
@@ -57,7 +55,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
     } else {
       return (
         <IntermediateParent
-          isExpanded={props.isExpanded}
+          expandedNodes={props.expandedNodes}
           node={node}
           pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
           profileTree={props.profileTree}
@@ -85,9 +83,13 @@ const IntermediateParent = (props: IntermediateParentProps) => {
         >
           <button
             className="flex flex-row items-center h-full"
-            onClick={() => props.toggleNodeExpansion(props.node.dataPath)}
+            onClick={() => {
+              console.log("clicked");
+              console.log(props.node.dataPath);
+              props.toggleNodeExpansion(props.node.dataPath);
+            }}
           >
-            {props.isExpanded ? (
+            {props.expandedNodes.includes(props.node.dataPath) ? (
               <MdExpandLess size={24} />
             ) : (
               <MdExpandMore size={24} />
@@ -209,7 +211,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
               ) : null}
             </div>
           </div>
-          {props.isExpanded && (
+          {props.expandedNodes.includes(props.node.dataPath) && (
             <div className="flex flex-row flex-wrap gap-1 pl-32 py-2">
               {props.node.childPaths.map((childPath: string) => {
                 let childNode = props.profileTree.find(

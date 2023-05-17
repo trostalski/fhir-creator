@@ -27,11 +27,11 @@ import IntermediateParent from "./IntermediateParent";
 
 interface RootParentProps {
   node: ProfileTreeNode;
-  isExpanded: boolean;
   toggleNodeExpansion: (nodePath: string) => void;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   pathsWithInvalidCardinality: string[];
   profileTree: ProfileTree;
+  expandedNodes: string[];
 }
 
 const RootParent = (props: RootParentProps) => {
@@ -58,8 +58,8 @@ const RootParent = (props: RootParentProps) => {
       return (
         <div className="w-full">
           <IntermediateParent
+            expandedNodes={props.expandedNodes}
             key={node.dataPath}
-            isExpanded={props.isExpanded}
             node={node}
             pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
             profileTree={props.profileTree}
@@ -71,10 +71,6 @@ const RootParent = (props: RootParentProps) => {
     }
   };
 
-  console.log(
-    "pathsWithInvalidCardinality: ",
-    props.pathsWithInvalidCardinality
-  );
   return (
     <div
       className="w-full rounded-md border-gray-200"
@@ -94,7 +90,7 @@ const RootParent = (props: RootParentProps) => {
             className="flex flex-row items-center"
             onClick={() => props.toggleNodeExpansion(props.node.dataPath)}
           >
-            {props.isExpanded ? (
+            {props.expandedNodes.includes(props.node.dataPath) ? (
               <MdExpandLess size={24} />
             ) : (
               <MdExpandMore size={24} />
@@ -216,7 +212,7 @@ const RootParent = (props: RootParentProps) => {
               ) : null}
             </div>
           </div>
-          {props.isExpanded && (
+          {props.expandedNodes.includes(props.node.dataPath) && (
             <div className="flex flex-row flex-wrap gap-1 pl-40 py-2">
               {props.node.childPaths.map((childPath: string) => {
                 let childNode = props.profileTree.find(

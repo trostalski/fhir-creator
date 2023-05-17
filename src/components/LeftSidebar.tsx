@@ -10,7 +10,7 @@ import { IoMdDoneAll } from "react-icons/io";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
 import { MdOutlineClear } from "react-icons/md";
-import { getResourceTypeFromUrl, isFhirBaseDefinition } from "../utils/utils";
+import { getResourceTypeFromUrl, isBaseUrl } from "../utils/utils";
 import { getBaseProfile } from "@/db/utils";
 import { StructureDefinition } from "fhir/r4";
 import { ProfileTree } from "@/utils/buildTree";
@@ -56,7 +56,7 @@ export const ResourceIdList = (props: ResourceIdListProps) => {
                 const profileUrl = resourcePathRepr.data.find(
                   (data) => data.path === "meta.profile[0]"
                 )?.value;
-                if (profileUrl && isFhirBaseDefinition(profileUrl)) {
+                if (profileUrl && isBaseUrl(profileUrl)) {
                   const resourceType = getResourceTypeFromUrl(profileUrl);
                   profile = await getBaseProfile(resourceType);
                 } else if (profileUrl) {

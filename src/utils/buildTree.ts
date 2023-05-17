@@ -1,4 +1,5 @@
 import {
+  Coding,
   ElementDefinition,
   ElementDefinitionType,
   StructureDefinition,
@@ -28,6 +29,7 @@ import {
   replaceMultiTypePath,
 } from "./path_utils";
 import { extractDirectChildrenPaths } from "./tree_utils";
+import { ValueSetResolver } from "./valueset_utils";
 
 export interface ProfileTreeNode {
   element: ElementDefinition;
@@ -37,9 +39,10 @@ export interface ProfileTreeNode {
   childPaths: string[];
   basePath: string; // used for differential merging
   isPrimitive: boolean;
+  codeableConceptCodes?: Coding[];
   isRootPrimitive?: boolean;
   type?: string;
-  value: string;
+  value: any;
   sliceName?: string;
   cardinalityMet?: boolean;
 }
@@ -185,6 +188,15 @@ export function isSliceEntry(element: ElementDefinition) {
   return "slicing" in element;
 }
 
+const tryGetCodeableConceptCodes = async (element: ElementDefinition) => {
+  let codes: Coding[] | undefined;
+  if (element.binding?.valueSet) {
+    const valueSetResolver = new ValueSetResolver();
+    codes = await valueSetResolver.resolve(element.binding!.valueSet!);
+  }
+  return codes;
+};
+
 export async function buildTreeFromElementsRecursive(
   elements: ElementDefinition[],
   parentPath: string = rootName,
@@ -204,7 +216,8 @@ export async function buildTreeFromElementsRecursive(
     const elementDataPath = getDataPath(parentPath, element);
     const elementBasePath = mergePaths(parentBasePath, getPathSuffix(id!));
     let elementType;
-    if (isMultiTypeElement(element)) {
+
+    if (getElementTypes(element) && getElementTypes(element)!.length > 0) {
       elementType = getElementTypes(element)![0];
     }
 
@@ -219,6 +232,18 @@ export async function buildTreeFromElementsRecursive(
       childPaths: [],
       value: "",
     };
+
+    if (elementType === "CodeableConcept") {
+      const codeableConceptCodes = await tryGetCodeableConceptCodes(element);
+      console.log(codeableConceptCodes);
+      if (codeableConceptCodes && codeableConceptCodes.length > 0) {
+        console.log("CodeableConcept has codes");
+        elementNode.codeableConceptCodes = codeableConceptCodes;
+        elementNode.isPrimitive = true;
+        profileTree.push(elementNode);
+        continue; // skip children CodeableConcept is primitive here
+      }
+    }
 
     if (await isPrimitiveElement(element)) {
       if (!profileTree.find((node) => node.dataPath === elementDataPath)) {

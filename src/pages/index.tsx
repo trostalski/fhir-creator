@@ -7,7 +7,7 @@ import {
   containsSnapshot,
   containsDifferential,
   idIsImportant,
-  isFhirBaseDefinition,
+  isBaseUrl,
   getResourceTypeFromUrl,
   getBaseUrl,
   getResourceTypeFromProfile,
@@ -15,7 +15,7 @@ import {
 } from "../utils/utils";
 import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
-import { addProfile, getBaseProfile } from "@/db/utils";
+import { getBaseProfile } from "@/db/utils";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
 import {
   ProfileTree,
@@ -58,19 +58,11 @@ const Home = () => {
     if (containsSnapshot(profile) && profile.snapshot) {
       // all elements are present
       baseElements = profile.snapshot.element;
-      if (isFhirBaseDefinition(profile.url)) {
-        const profileTreeModule = await import(
-          `../fhir/profiletrees/${getResourceTypeFromUrl(profile.url)}`
-        );
-        profileTree = profileTreeModule.default;
-        console.log(profileTree);
-      } else {
-        profileTree = await buildTreeFromElementsRecursive(baseElements);
-      }
+      profileTree = await buildTreeFromElementsRecursive(baseElements);
     } else if (containsDifferential(profile) && profile.differential) {
       // only differential is present, needs to be merged with base profile
       const baseUrl = getBaseUrl(profile);
-      if (!baseUrl || !isFhirBaseDefinition(baseUrl)) {
+      if (!baseUrl || !isBaseUrl(baseUrl)) {
         alert("No base profile found");
         return [];
       } else {
@@ -123,6 +115,8 @@ const Home = () => {
     const profile = await getBaseProfile(value);
     loadProfile(profile);
   };
+
+  console.log("profileTree", profileTree)
 
   return (
     <div className="w-screen h-screen overflow-hidden">

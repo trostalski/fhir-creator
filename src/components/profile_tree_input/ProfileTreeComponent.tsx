@@ -28,11 +28,8 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
   const [searchInput, setSearchInput] = React.useState<string | null>(null);
 
-  const isNodeExpanded = (nodePath: string) => {
-    return expandedNodes.includes(nodePath);
-  };
   const toggleNodeExpansion = (nodePath: string) => {
-    if (isNodeExpanded(nodePath)) {
+    if (expandedNodes.includes(nodePath)) {
       setExpandedNodes(expandedNodes.filter((path) => path !== nodePath));
     } else {
       setExpandedNodes([...expandedNodes, nodePath]);
@@ -40,28 +37,29 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   };
 
   const renderRootNode = (node: ProfileTreeNode) => {
-    const isExpanded = isNodeExpanded(node.dataPath);
     if (node.isPrimitive) {
       if (node.isRootPrimitive) {
         return (
           <RootPrimitive
+            expandedNodes={expandedNodes}
             node={node}
+            key={node.dataPath}
             pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
             setProfileTree={props.setProfileTree}
             toggleNodeExpansion={toggleNodeExpansion}
-            isExpanded={isExpanded}
           />
         );
       }
     } else {
       return (
         <RootParent
+          expandedNodes={expandedNodes}
           node={node}
+          key={node.dataPath}
           pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
           profileTree={props.profileTree}
           setProfileTree={props.setProfileTree}
           toggleNodeExpansion={toggleNodeExpansion}
-          isExpanded={isExpanded}
         />
       );
     }
