@@ -121,7 +121,7 @@ export function mergeTreeWithDifferential(
         let children;
         if (isMultiTypeElement(differentialElement)) {
           const diffTypes = getElementTypes(differentialElement);
-          newNode.type = diffTypes![0];
+          newNode.multiTypeType = diffTypes![0];
           children = copyAllDescendants(node, profileTree, diffTypes!);
           children = children.map((child) => {
             let childType;

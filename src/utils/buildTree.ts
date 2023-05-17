@@ -5,6 +5,7 @@ import {
   StructureDefinition,
 } from "fhir/r4";
 import {
+  multiTypeString,
   pathDelimiter,
   primitiveTypes,
   rootName,
@@ -42,7 +43,7 @@ export interface ProfileTreeNode {
   codeableConceptCodes?: Coding[];
   isMultiType?: boolean;
   isRootPrimitive?: boolean;
-  type?: string;
+  multiTypeType?: string;
   value: any;
   sliceName?: string;
   cardinalityMet?: boolean;
@@ -216,11 +217,6 @@ export async function buildTreeFromElementsRecursive(
 
     const elementDataPath = getDataPath(parentPath, element);
     const elementBasePath = mergePaths(parentBasePath, getPathSuffix(id!));
-    let elementType;
-
-    if (getElementTypes(element) && getElementTypes(element)!.length > 0) {
-      elementType = getElementTypes(element)![0];
-    }
 
     const elementNode: ProfileTreeNode = {
       element: element,
@@ -234,9 +230,13 @@ export async function buildTreeFromElementsRecursive(
       value: "",
     };
 
-    if (elementType === "CodeableConcept") {
+    let multiTypeType;
+    if (isMultiTypeElement(element)) {
+      multiTypeType = getElementTypes(element)![0];
+    }
+
+    if (element.type && element.type[0].code === "CodeableConcept") {
       const codeableConceptCodes = await tryGetCodeableConceptCodes(element);
-      console.log(codeableConceptCodes);
       if (codeableConceptCodes && codeableConceptCodes.length > 0) {
         elementNode.codeableConceptCodes = codeableConceptCodes;
         elementNode.isPrimitive = true;
@@ -303,7 +303,7 @@ export async function buildTreeFromElementsRecursive(
         baseId: id!,
         isPrimitive: false,
         childPaths: childPaths,
-        type: elementType,
+        multiTypeType: multiTypeType,
         value: "",
       };
       profileTree.push(parentNode, ...childNodes);

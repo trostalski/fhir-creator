@@ -125,13 +125,13 @@ const RootParent = (props: RootParentProps) => {
                   id="element-type"
                   placeholder="Type"
                   className="bg-white py-0.5 px-4 w-40 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  value={props.node.type}
+                  value={props.node.multiTypeType}
                   onChange={(e) => {
                     const newProfileTree = [...props.profileTree];
                     const nodeIndex = newProfileTree.findIndex(
                       (n) => n.dataPath === props.node.dataPath
                     );
-                    (newProfileTree[nodeIndex].type = e.target.value),
+                    (newProfileTree[nodeIndex].multiTypeType = e.target.value),
                       props.setProfileTree(newProfileTree);
                   }}
                 >
@@ -217,12 +217,12 @@ const RootParent = (props: RootParentProps) => {
                 let childNode = props.profileTree.find(
                   (n: ProfileTreeNode) => n.dataPath === childPath
                 );
-                if (props.node.isMultiType && props.node.type) {
+                if (props.node.multiTypeType) {
                   // multiype node with select input for type selection
                   // the following code filters the child nodes to only show the ones that match the selected type
                   childNode = childNode?.dataPath
                     .toLowerCase()
-                    .includes(props.node.type.toLowerCase())
+                    .includes(props.node.multiTypeType.toLowerCase())
                     ? childNode
                     : undefined;
                 }
