@@ -16,11 +16,8 @@ import {
 import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
 import { getBaseProfile } from "@/db/utils";
-import { StructureDefinition, ElementDefinition } from "fhir/r4";
-import {
-  ProfileTree,
-  buildTreeFromElementsRecursive,
-} from "../utils/buildTree";
+import { StructureDefinition } from "fhir/r4";
+import { ProfileTree, getProfileTree } from "../utils/buildTree";
 import ProfileTreeComponent from "../components/profile_tree_input/ProfileTreeComponent";
 import { InputData } from "@/types";
 import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
@@ -29,6 +26,7 @@ import { getBranchIds } from "@/utils/tree_utils";
 import { removeNPathPartsFromStart } from "@/utils/path_utils";
 import CheckoutModal from "@/components/CheckoutModal";
 import UploadProfileButton from "@/components/buttons/UploadProfileButton";
+import AddResourceButton from "@/components/buttons/AddResourceButton";
 
 const Home = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
@@ -45,7 +43,6 @@ const Home = () => {
     profile: StructureDefinition,
     inputData?: InputData[]
   ) => {
-    let baseElements: ElementDefinition[];
     setProfile(profile);
     setPathsWithInvalidCardinality([]);
     const resourceType = getResourceTypeFromProfile(profile);
@@ -57,8 +54,7 @@ const Home = () => {
     let profileTree: ProfileTree = [];
     if (containsSnapshot(profile) && profile.snapshot) {
       // all elements are present
-      baseElements = profile.snapshot.element;
-      profileTree = await buildTreeFromElementsRecursive(baseElements);
+      profileTree = await getProfileTree(profile);
     } else if (containsDifferential(profile) && profile.differential) {
       // only differential is present, needs to be merged with base profile
       const baseUrl = getBaseUrl(profile);
@@ -70,8 +66,7 @@ const Home = () => {
         const baseProfile: StructureDefinition = await fetch(
           `api/profiles?filename=${baseResourceType}`
         ).then((res) => res.json());
-        baseElements = baseProfile.snapshot!.element;
-        profileTree = await buildTreeFromElementsRecursive(baseElements);
+        profileTree = await getProfileTree(baseProfile);
         profileTree = await mergeTreeWithDifferential(
           profileTree,
           profile.differential.element
@@ -116,7 +111,7 @@ const Home = () => {
     loadProfile(profile);
   };
 
-  console.log("profileTree", profileTree)
+  console.log("profileTree", profileTree);
 
   return (
     <div className="w-screen h-screen overflow-hidden">
@@ -144,6 +139,13 @@ const Home = () => {
             ></Select>
             <span className="text-gray-400">or</span>
             <UploadProfileButton loadProfile={loadProfile} />
+            <span className="flex-grow" />
+            <AddResourceButton
+              mode={mode}
+              profileTree={profileTree}
+              setPathsWithInvalidCardinality={setPathsWithInvalidCardinality}
+              resourceType={resourceType}
+            />
           </div>
           <div className="h-full pt-6 pb-10 overflow-scroll">
             {!profile ? null : (

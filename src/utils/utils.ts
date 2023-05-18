@@ -6,7 +6,7 @@ import {
   sliceDelimiter,
 } from "./constants";
 import { StructureDefinition, ElementDefinition } from "fhir/r4";
-import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
+import { ProfileTree, ProfileTreeNode, isSliceEntry } from "../utils/buildTree";
 import { getSliceNames, removeNPathPartsFromStart } from "./path_utils";
 import { getNodeByDataPath } from "./tree_utils";
 import uniq from "lodash/uniq";
@@ -372,9 +372,10 @@ function getChildrenForNode(
   profileTreeNode: ProfileTreeNode
 ): ProfileTreeNode[] {
   const children: ProfileTreeNode[] = [];
-  for (const child of profileTreeNode.childPaths) {
-    const childNode: ProfileTreeNode = profileTree.find(
-      (node) => node.dataPath === child
+  for (const childDataPath of profileTreeNode.childPaths) {
+    const childNode: ProfileTreeNode = getNodeByDataPath(
+      profileTree,
+      childDataPath
     )!;
     children.push(childNode);
   }
@@ -415,6 +416,13 @@ export function getPathsWithInvalidCardinality(
   if (hasChildren && existsInInputData(inputData, dataPath)) {
     const children = getChildrenForNode(profileTree, profileTreeNode);
     for (const child of children) {
+      if (child.element.sliceName) {
+        // if the child is a slice, check if any of its children have a value
+        const children = getChildrenForNode(profileTree, child);
+        if (!children.some((child) => child.value !== "")) {
+          continue;
+        }
+      }
       const childPath = child.dataPath;
       getPathsWithInvalidCardinality(
         profileTree,
@@ -436,10 +444,10 @@ export function checkCardinalities(
 ): CheckCardinalitiesResult {
   let isValid = true;
   const pathsWithInvalidCardinality: string[] = [];
-  const branchChilds = profileTree.filter(
+  const branchNodes = profileTree.filter(
     (node) => node.parentDataPath === rootName
   );
-  for (const child of branchChilds) {
+  for (const child of branchNodes) {
     const dataPath = child.dataPath;
     getPathsWithInvalidCardinality(
       profileTree,

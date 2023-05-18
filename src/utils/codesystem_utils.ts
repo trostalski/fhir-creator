@@ -62,6 +62,7 @@ export class CodeSystemResolver {
         new URLSearchParams({ filename: fileName })
     );
     if (!codeSystemRes.ok) {
+        console.log(codeSystemRes);
       throw new Error("Error fetching code system");
     }
     const codeSystem: CodeSystem = await codeSystemRes.json();

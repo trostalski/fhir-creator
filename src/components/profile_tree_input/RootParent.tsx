@@ -119,7 +119,7 @@ const RootParent = (props: RootParentProps) => {
               {props.node.element.sliceName && (
                 <AiOutlinePieChart style={{ color: "" }} />
               )}
-              {props.node.element.type ||
+              {props.node.element.type &&
               props.node.element.type!.length <= 1 ? null : (
                 <select
                   id="element-type"

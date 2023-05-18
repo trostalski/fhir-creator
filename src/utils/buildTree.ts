@@ -29,7 +29,7 @@ import {
   removeNPathPartsFromStart,
   replaceMultiTypePath,
 } from "./path_utils";
-import { extractDirectChildrenPaths } from "./tree_utils";
+import { extractDirectChildrenPaths, getNodeByDataPath } from "./tree_utils";
 import { ValueSetResolver } from "./valueset_utils";
 
 export interface ProfileTreeNode {
@@ -153,16 +153,23 @@ function isValidElement(element: ElementDefinition) {
     result = false;
   } else if (element.id.endsWith(".extension")) {
     result = false;
+  } else if (element.id.endsWith(".modifierExtension")) {
+    result = false;
   }
   return result;
 }
 
 function replaceWrongParentPaths(profileTree: ProfileTree) {
   for (const node of profileTree) {
-    const { dataPath: path, parentDataPath: parentPath } = node;
-    if (getPathLength(parentPath) < getPathLength(path) - 1) {
-      const childPathStem = removeNPathPartsFromEnd(path, 1);
+    if (getPathLength(node.parentDataPath) < getPathLength(node.dataPath) - 1) {
+      const childPathStem = removeNPathPartsFromEnd(node.dataPath, 1);
       node.parentDataPath = childPathStem;
+    }
+    if (!getNodeByDataPath(profileTree, node.parentDataPath)) {
+      let newParentPath = node.parentDataPath + "[0]"; // try if parent is array
+      if (getNodeByDataPath(profileTree, newParentPath)) {
+        node.parentDataPath = newParentPath;
+      }
     }
   }
 }
@@ -197,6 +204,16 @@ const tryGetCodeableConceptCodes = async (element: ElementDefinition) => {
     codes = await valueSetResolver.resolve(element.binding!.valueSet!);
   }
   return codes;
+};
+
+export const getProfileTree = async (
+  profile: StructureDefinition
+): Promise<ProfileTree> => {
+  const elements = profile.snapshot!.element!;
+  const profileTree = await buildTreeFromElementsRecursive(elements);
+  replaceWrongParentPaths(profileTree);
+  addMissingChildren(profileTree);
+  return profileTree;
 };
 
 export async function buildTreeFromElementsRecursive(
@@ -309,8 +326,5 @@ export async function buildTreeFromElementsRecursive(
       profileTree.push(parentNode, ...childNodes);
     }
   }
-
-  replaceWrongParentPaths(profileTree); // validate and fix parent paths
-  addMissingChildren(profileTree); // add missing children to parent nodes
   return profileTree;
 }

@@ -71,15 +71,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         <div className="flex flex-row gap-4 items-center">
           <span className="text-gray-500 text-xs">Profile URL:</span>
           <span className="text-md">{props.profile.url}</span>
-          <span className="flex-grow"></span>
-          <AddResourceButton
-            mode={props.mode}
-            profileTree={props.profileTree}
-            setPathsWithInvalidCardinality={
-              props.setPathsWithInvalidCardinality
-            }
-            resourceType={props.resourceType}
-          />
         </div>
         <div className="flex flex-row">
           <input

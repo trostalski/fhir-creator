@@ -40,7 +40,12 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
   if (props.mode == Modes.CREATE) {
     return (
       <button
-        className="bg-green-600 w-36 hover:bg-green-800 text-white text-xxs font-bold py-2 px-4 rounded"
+        disabled={props.profileTree.length === 0}
+        className={`bg-green-600 w-36  text-white py-1 px-4 rounded  ${
+          props.profileTree.length === 0
+            ? "bg-opacity-50 cursor-not-allowed"
+            : "hover:bg-green-800"
+        }}`}
         onClick={() => {
           if (props.profileTree.length === 0) {
             return;
