@@ -14,7 +14,7 @@ import {
   getUid,
 } from "../utils/utils";
 import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
-import LeftSidebar, { ResourceIdList } from "@/components/LeftSidebar";
+import LeftSidebar from "@/components/left-sidebar/LeftSidebar";
 import { getBaseProfile } from "@/db/utils";
 import { StructureDefinition } from "fhir/r4";
 import { ProfileTree, getProfileTree } from "../utils/buildTree";
@@ -117,16 +117,15 @@ const Home = () => {
     <div className="w-screen h-screen overflow-hidden">
       <Header />
       <main className="flex flex-row pt-8 h-full">
-        <LeftSidebar setCheckoutModalOpen={setCheckoutModalOpen}>
-          <ResourceIdList
-            setProfileTree={setProfileTree}
-            setMode={setMode}
-            loadProfile={loadProfile}
-            handleSelectBaseProfile={handleSelectBaseProfile}
-          />
-        </LeftSidebar>
-        <div className="w-full p-4">
-          <div className="flex flex-row w-full items-center gap-2">
+        <LeftSidebar
+          setCheckoutModalOpen={setCheckoutModalOpen}
+          handleSelectBaseProfile={handleSelectBaseProfile}
+          loadProfile={loadProfile}
+          setMode={setMode}
+          setProfileTree={setProfileTree}
+        />
+        <div className="p-4 w-full">
+          <div className="flex flex-row items-center gap-2">
             <Select
               instanceId={"baseprofile-select"}
               className="w-1/3"

@@ -37,6 +37,7 @@ const useResize = (resizeRef: RefObject<HTMLElement>) => {
 
   return {
     resizeWidth,
+    setResizeWidth,
     resizeRef,
     startResizing,
     isResizing,
