@@ -114,6 +114,7 @@ const RightPart = (props: RightPartProps) => {
           <button
             onClick={props.closeRightPart}
             className="flex flex-row items-center w-full bg-inherit h-8"
+            title="toggle sidebar"
           >
             <span className="grow" />
             <RxHamburgerMenu />

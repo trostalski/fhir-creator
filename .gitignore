@@ -39,4 +39,5 @@ next-env.d.ts
 .venv
 venv
 
+# local large data
 simplifier

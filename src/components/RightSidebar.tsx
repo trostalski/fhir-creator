@@ -101,6 +101,7 @@ const RightSidebar = (props: { children: React.ReactNode }) => {
           <button
             onClick={(e) => setIsOpen(!isOpen)}
             className="flex p-2 flex-row bg-inherit items-center sticky top-2 w-full h-8"
+            title="toggle sidebar"
           >
             <RxHamburgerMenu />
           </button>
@@ -111,6 +112,7 @@ const RightSidebar = (props: { children: React.ReactNode }) => {
           <button
             onClick={(e) => setIsOpen(!isOpen)}
             className="fixed top-12 right-4"
+            title="toggle sidebar"
           >
             <RxHamburgerMenu />
           </button>

@@ -29,7 +29,7 @@ const LeftSidebar = (props: LeftSidebarProps) => {
   return (
     <div
       ref={resizeRef}
-      className={"flex flex-row h-full flex-shrink-0 w-full"}
+      className={"flex flex-row h-full flex-shrink-0 w-80"}
       onResize={(e) => console.log(e)}
       style={{
         flexBasis: `${resizeWidth}px`,
@@ -39,7 +39,10 @@ const LeftSidebar = (props: LeftSidebarProps) => {
       onMouseDown={(e) => e.preventDefault()}
     >
       <div className="flex flex-col h-full w-16 pt-8 items-center flex-shrink-0 shadow-md">
-        <button className="p-4 rounded-md hover:bg-slate-300">
+        <button
+          className="p-4 rounded-md hover:bg-slate-300"
+          title="Resource Editor"
+        >
           <BsPersonAdd size={20} className="hover:scale-105" />
         </button>
       </div>
