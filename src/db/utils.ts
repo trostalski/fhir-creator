@@ -29,7 +29,6 @@ export async function getResource(id: string) {
     const resource = await db.resources.get(id);
     return resource;
   } catch (error) {
-    toastError(`Failed to get resource with id ${id}`);
     console.log(`Failed to get resource with id ${id}`);
   }
 }
@@ -37,17 +36,20 @@ export async function getResource(id: string) {
 export async function addResource(resource: Resource) {
   try {
     await db.resources.add(resource);
+    return true;
   } catch (error) {
-    toastError(`Failed to add resource`);
     console.log(`Failed to add resource`);
+    return false;
   }
 }
 
 export async function addProfile(profile: StructureDefinition) {
   try {
     await db.profiles.add(profile);
+    return true;
   } catch (error) {
     console.log(`Failed to add profile`);
+    return false;
   }
 }
 
@@ -58,16 +60,20 @@ export async function addResourcPathRepr(inputData: InputData[]) {
       id: id,
       data: inputData,
     });
+    return true;
   } catch (error) {
     console.log(`Failed to add path representation of resource`);
+    return false;
   }
 }
 
 export async function updateResource(resource: Resource) {
   try {
     await db.resources.update(resource.id!, resource);
+    return true;
   } catch (error) {
     console.log(`Failed to update resource`);
+    return false;
   }
 }
 

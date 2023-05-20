@@ -5,7 +5,7 @@ import {
   updateResourcePathRepr,
 } from "@/db/utils";
 import { toastError, toastSuccess } from "@/toasts";
-import { InputData } from "@/types";
+import { PathItem } from "@/types";
 import { ProfileTree } from "@/utils/buildTree";
 import { Modes } from "@/utils/constants";
 import { removeNPathPartsFromStart } from "@/utils/path_utils";
@@ -27,7 +27,7 @@ interface AddResourceButtonProps {
 }
 
 const AddResourceButton = (props: AddResourceButtonProps) => {
-  const addResourceTypeToInputData = (inputData: InputData[]) => {
+  const addResourceTypeToInputData = (inputData: PathItem[]) => {
     return [
       ...inputData,
       {

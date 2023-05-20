@@ -62,7 +62,7 @@ export class CodeSystemResolver {
         new URLSearchParams({ filename: fileName })
     );
     if (!codeSystemRes.ok) {
-        console.log(codeSystemRes);
+      console.log(codeSystemRes);
       throw new Error("Error fetching code system");
     }
     const codeSystem: CodeSystem = await codeSystemRes.json();
@@ -75,7 +75,9 @@ export class CodeSystemResolver {
       const [url, version] = codeSystemUrl.split("|");
       codeSystemUrl = url;
     }
-    const result = codeSystemUrl.split("/").at(-1)!;
+    // const result = codeSystemUrl.split("/").at(-1)!;
+    const result =
+      codeSystemUrl.split("/")[codeSystemUrl.split("/").length - 1];
     return result;
   }
 }

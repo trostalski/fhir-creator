@@ -1,6 +1,7 @@
 import { ResourcePathRepr, db } from "@/db/db";
 import { getBaseProfile } from "@/db/utils";
-import { InputData } from "@/types";
+import { toastError } from "@/toasts";
+import { PathItem } from "@/types";
 import { Modes } from "@/utils/constants";
 import { getResourceTypeFromUrl, isBaseUrl } from "@/utils/utils";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -10,7 +11,7 @@ import { MdOutlineClear } from "react-icons/md";
 
 interface ResourceListProps {
   setMode: React.Dispatch<React.SetStateAction<Modes>>;
-  loadProfile: (profile: StructureDefinition, inputData?: InputData[]) => void;
+  loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
 }
 
 const ResourceList = (props: ResourceListProps) => {
@@ -49,6 +50,7 @@ const ResourceList = (props: ResourceListProps) => {
               const profileUrl = resourcePathRepr.data.find(
                 (data) => data.path === "meta.profile[0]"
               )?.value;
+
               if (profileUrl && isBaseUrl(profileUrl)) {
                 const resourceType = getResourceTypeFromUrl(profileUrl);
                 profile = await getBaseProfile(resourceType);
@@ -56,6 +58,10 @@ const ResourceList = (props: ResourceListProps) => {
                 profile = profiles?.find(
                   (profile) => profile.url === profileUrl
                 );
+              }
+              if (!profile) {
+                toastError("No profile found for this resource");
+                return;
               }
               props.loadProfile(profile!, resourcePathRepr.data);
               props.setMode(Modes.EDIT);

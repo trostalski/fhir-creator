@@ -101,7 +101,7 @@ export class ValueSetResolver {
       const [url, version] = valueSetUrl.split("|");
       valueSetUrl = url;
     }
-    const result = valueSetUrl.split("/").at(-1)!;
+    const result = valueSetUrl.split("/")[valueSetUrl.split("/").length - 1];
     return result;
   }
 }

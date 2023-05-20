@@ -1,4 +1,4 @@
-export interface InputData {
+export interface PathItem {
   path: string;
   value: string;
 }

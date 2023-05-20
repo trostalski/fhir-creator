@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { StructureDefinition } from "fhir/r4";
 import { ProfileTree } from "@/utils/buildTree";
 import { Modes } from "@/utils/constants";
-import { InputData } from "@/types";
+import { PathItem } from "@/types";
 import useResize from "@/hooks/useResize";
 import { BsPersonAdd } from "react-icons/bs";
 import RightPart from "./RightPart";
@@ -11,7 +11,7 @@ interface LeftSidebarProps {
   setCheckoutModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   setMode: React.Dispatch<React.SetStateAction<Modes>>;
-  loadProfile: (profile: StructureDefinition, inputData?: InputData[]) => void;
+  loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
   handleSelectBaseProfile: (value: string) => void;
 }
 

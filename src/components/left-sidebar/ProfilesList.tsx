@@ -1,5 +1,5 @@
 import { db } from "@/db/db";
-import { InputData } from "@/types";
+import { PathItem } from "@/types";
 import { Modes } from "@/utils/constants";
 import { useLiveQuery } from "dexie-react-hooks";
 import { StructureDefinition } from "fhir/r4";
@@ -8,7 +8,7 @@ import { MdOutlineClear } from "react-icons/md";
 
 interface ProfilesListProps {
   setMode: React.Dispatch<React.SetStateAction<Modes>>;
-  loadProfile: (profile: StructureDefinition, inputData?: InputData[]) => void;
+  loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
 }
 
 const ProfilesList = (props: ProfilesListProps) => {

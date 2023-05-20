@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }: AppProps<CustomPageProps>) {
   return (
     <>
       <Component {...pageProps} />
-      <ToastContainer className="h-48 overflow-scroll" />
+      <ToastContainer className="h-24 overflow-scroll" />
     </>
   );
 }

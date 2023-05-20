@@ -1,5 +1,5 @@
 import useResize from "@/hooks/useResize";
-import { InputData } from "@/types";
+import { PathItem } from "@/types";
 import { ProfileTree } from "@/utils/buildTree";
 import { Modes } from "@/utils/constants";
 import { StructureDefinition } from "fhir/r4";
@@ -13,7 +13,7 @@ import ExportModal from "../CheckoutModal";
 interface AddResourceRightPartProps {
   setMode: React.Dispatch<React.SetStateAction<Modes>>;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
-  loadProfile: (profile: StructureDefinition, inputData?: InputData[]) => void;
+  loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
   handleSelectBaseProfile: (value: string) => void;
 }
 
@@ -24,8 +24,6 @@ export const StorageRightPart = (props: AddResourceRightPartProps) => {
   const [showImportMenu, setShowImportMenu] = useState<boolean>(false);
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
 
-  console.log("showResources", showResources);
-  console.log("showProfiles", showProfiles);
   return (
     <div
       className="h-full flex flex-col gap-4 overflow-scroll p-2"
@@ -37,7 +35,10 @@ export const StorageRightPart = (props: AddResourceRightPartProps) => {
       <div className="flex flex-row">
         <span className="font-bold">Storage</span>
         <span className="grow"></span>
-        <div className="relative overflow-visible flex flex-row gap-4">
+        <div
+          className="relative overflow-visible flex flex-row gap-4"
+          onClick={(e) => e.stopPropagation()}
+        >
           <button
             className="text-blue-600 hover:underline"
             data-dropdown-toggle="dropdown"
@@ -58,7 +59,7 @@ export const StorageRightPart = (props: AddResourceRightPartProps) => {
           >
             Import
           </button>
-          {showImportMenu && <ImportMenu />}
+          {showImportMenu && <ImportMenu loadProfile={props.loadProfile} />}
         </div>
       </div>
       <div className="flex flex-col gap-2">
@@ -99,7 +100,7 @@ export const StorageRightPart = (props: AddResourceRightPartProps) => {
 interface RightPartProps {
   setMode: React.Dispatch<React.SetStateAction<Modes>>;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
-  loadProfile: (profile: StructureDefinition, inputData?: InputData[]) => void;
+  loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
   handleSelectBaseProfile: (value: string) => void;
   startResizing: () => void;
   closeRightPart: () => void;

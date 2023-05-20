@@ -1,11 +1,11 @@
 // db.ts
 import Dexie, { Table } from "dexie";
-import { InputData } from "../types";
+import { PathItem } from "../types";
 import { StructureDefinition, Resource } from "fhir/r4";
 
 export interface ResourcePathRepr {
   id: string;
-  data: InputData[];
+  data: PathItem[];
 }
 
 export class MySubClassedDexie extends Dexie {

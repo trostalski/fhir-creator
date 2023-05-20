@@ -1,11 +1,11 @@
-import { Cardinality, CheckCardinalitiesResult, InputData } from "../types";
+import { Cardinality, CheckCardinalitiesResult, PathItem } from "../types";
 import {
   multiTypeString,
   notImportantIdSuffices as notImportantIds,
   rootName,
   sliceDelimiter,
 } from "./constants";
-import { StructureDefinition, ElementDefinition } from "fhir/r4";
+import { StructureDefinition, ElementDefinition, Resource } from "fhir/r4";
 import { ProfileTree, ProfileTreeNode, isSliceEntry } from "../utils/buildTree";
 import { getSliceNames, removeNPathPartsFromStart } from "./path_utils";
 import { getNodeByDataPath } from "./tree_utils";
@@ -173,7 +173,7 @@ export const removeBetweenColonAndPeriod = (str: string): string => {
   return str.replace(regex, "").replace(":", "");
 };
 
-function getCharsAfterVar(str: string, variable: string, n: number) {
+const getCharsAfterVar = (str: string, variable: string, n: number) => {
   const index = str.indexOf(variable);
   if (index < 0) {
     return "";
@@ -182,9 +182,9 @@ function getCharsAfterVar(str: string, variable: string, n: number) {
   } else {
     return str.substring(index + variable.length, index + variable.length + n);
   }
-}
+};
 
-export const formatInputDataForResource = (inputData: InputData[]) => {
+export const formatInputDataForResource = (inputData: PathItem[]) => {
   // TODO this is a mess
   inputData = inputData.sort((a, b) => {
     if (a.path < b.path) {
@@ -284,10 +284,39 @@ export function removeNullValues(obj: any): any {
     }, {});
 }
 
+export function convertObjectToPathArray(obj: object): PathItem[] {
+  const result: PathItem[] = [];
+
+  function traverseObject(obj: object, currentPath: string = "") {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const value = (obj as any)[key];
+        const newPath = currentPath ? `${currentPath}.${key}` : key;
+
+        if (Array.isArray(value)) {
+          value.forEach((item, index) => {
+            const arrayPath = `${newPath}[${index}]`;
+            if (typeof item === "object") {
+              traverseObject(item, arrayPath);
+            } else {
+              result.push({ path: arrayPath, value: item });
+            }
+          });
+        } else if (typeof value === "object") {
+          traverseObject(value, newPath);
+        } else {
+          result.push({ path: newPath, value });
+        }
+      }
+    }
+  }
+
+  traverseObject(obj);
+  return result;
+}
+
 // currently in use
-export function createJsonFromPathArray(
-  pathArray: { path: string; value: any }[]
-): any {
+export function createJsonFromPathArray(pathArray: PathItem[]): any {
   const result: any = {}; // Initialize the result object
 
   for (const pathObj of pathArray) {
@@ -382,7 +411,7 @@ function getChildrenForNode(
   return children;
 }
 
-function existsInInputData(inputData: InputData[], dataPath: string): boolean {
+function existsInInputData(inputData: PathItem[], dataPath: string): boolean {
   let path: string;
   if (isMultiTypeString(dataPath)) {
     path = removeMultiTypeString(dataPath);
@@ -393,7 +422,7 @@ function existsInInputData(inputData: InputData[], dataPath: string): boolean {
   return exists;
 }
 
-function hasValue(inputData: InputData[], path: string): boolean {
+function hasValue(inputData: PathItem[], path: string): boolean {
   const exists = inputData.some((data) => data.path === path && data.value);
   return exists;
 }
@@ -401,7 +430,7 @@ function hasValue(inputData: InputData[], path: string): boolean {
 export function getPathsWithInvalidCardinality(
   profileTree: ProfileTree,
   dataPath: string,
-  inputData: InputData[],
+  inputData: PathItem[],
   notMetPaths: string[]
 ): void {
   const profileTreeNode = getNodeByDataPath(profileTree, dataPath)!;
@@ -440,7 +469,7 @@ export function getPathsWithInvalidCardinality(
 
 export function checkCardinalities(
   profileTree: ProfileTree,
-  inputData: InputData[]
+  inputData: PathItem[]
 ): CheckCardinalitiesResult {
   let isValid = true;
   const pathsWithInvalidCardinality: string[] = [];

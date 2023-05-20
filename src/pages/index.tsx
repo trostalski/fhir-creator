@@ -19,7 +19,7 @@ import { getBaseProfile } from "@/db/utils";
 import { StructureDefinition } from "fhir/r4";
 import { ProfileTree, getProfileTree } from "../utils/buildTree";
 import ProfileTreeComponent from "../components/profile_tree_input/ProfileTreeComponent";
-import { InputData } from "@/types";
+import { PathItem } from "@/types";
 import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
 import uniq from "lodash/uniq";
 import { getBranchIds } from "@/utils/tree_utils";
@@ -41,7 +41,7 @@ const Home = () => {
 
   const loadProfile = async (
     profile: StructureDefinition,
-    inputData?: InputData[]
+    inputData?: PathItem[]
   ) => {
     setProfile(profile);
     setPathsWithInvalidCardinality([]);
@@ -81,7 +81,7 @@ const Home = () => {
       profileTree = profileTree.map((n) => {
         const valueDataForNode = inputData.find(
           (e) => e.path === removeNPathPartsFromStart(n.dataPath, 1)
-        ) as InputData;
+        ) as PathItem;
         if (valueDataForNode) {
           n.value = valueDataForNode.value;
         }
@@ -137,7 +137,11 @@ const Home = () => {
               }}
             ></Select>
             <span className="text-gray-400">or</span>
-            <UploadProfileButton loadProfile={loadProfile} />
+            <UploadProfileButton
+              loadProfile={loadProfile}
+              style="topbar"
+              text="Upload Profile"
+            />
             <span className="flex-grow" />
             <AddResourceButton
               mode={mode}
