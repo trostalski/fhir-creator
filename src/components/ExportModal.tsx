@@ -89,7 +89,7 @@ const ExportModal = (props: ExportModalProps) => {
               checkoutBundle(selectedResources);
             }}
           >
-            Create
+            Export
           </button>
         </div>
       </div>

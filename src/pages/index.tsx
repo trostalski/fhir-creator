@@ -24,7 +24,7 @@ import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
 import uniq from "lodash/uniq";
 import { getBranchIds } from "@/utils/tree_utils";
 import { removeNPathPartsFromStart } from "@/utils/path_utils";
-import ExportModal from "@/components/CheckoutModal";
+import ExportModal from "@/components/ExportModal";
 import UploadProfileButton from "@/components/buttons/UploadProfileButton";
 import AddResourceButton from "@/components/buttons/AddResourceButton";
 
