@@ -8,6 +8,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import ProfilesList from "./ProfilesList";
 import ResourceList from "./ResourceList";
 import ImportMenu from "./ImportMenu";
+import ExportModal from "../CheckoutModal";
 
 interface AddResourceRightPartProps {
   setMode: React.Dispatch<React.SetStateAction<Modes>>;
@@ -19,8 +20,12 @@ interface AddResourceRightPartProps {
 export const StorageRightPart = (props: AddResourceRightPartProps) => {
   const [showResources, setShowResources] = useState<boolean>(false);
   const [showProfiles, setShowProfiles] = useState<boolean>(false);
-  const [showImportMenu, setShowImportMenu] = useState<boolean>(false);
 
+  const [showImportMenu, setShowImportMenu] = useState<boolean>(false);
+  const [showExportModal, setShowExportModal] = useState<boolean>(false);
+
+  console.log("showResources", showResources);
+  console.log("showProfiles", showProfiles);
   return (
     <div
       className="h-full flex flex-col gap-4 overflow-scroll p-2"
@@ -32,7 +37,17 @@ export const StorageRightPart = (props: AddResourceRightPartProps) => {
       <div className="flex flex-row">
         <span className="font-bold">Storage</span>
         <span className="grow"></span>
-        <div className="relative overflow-visible">
+        <div className="relative overflow-visible flex flex-row gap-4">
+          <button
+            className="text-blue-600 hover:underline"
+            data-dropdown-toggle="dropdown"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowExportModal(!showExportModal);
+            }}
+          >
+            Export
+          </button>
           <button
             className="text-blue-600 hover:underline"
             data-dropdown-toggle="dropdown"
@@ -58,9 +73,7 @@ export const StorageRightPart = (props: AddResourceRightPartProps) => {
             loadProfile={props.loadProfile}
             setMode={props.setMode}
           />
-        ) : (
-          <span className="text-xs">No Resources.</span>
-        )}
+        ) : null}
       </div>
       <div className="flex flex-col gap-2">
         <button
@@ -74,10 +87,11 @@ export const StorageRightPart = (props: AddResourceRightPartProps) => {
             loadProfile={props.loadProfile}
             setMode={props.setMode}
           />
-        ) : (
-          <span className="text-xs">No Profiles.</span>
-        )}
+        ) : null}
       </div>
+      {showExportModal && (
+        <ExportModal isOpen={showExportModal} setIsOpen={setShowExportModal} />
+      )}
     </div>
   );
 };

@@ -3,11 +3,16 @@ import Dexie, { Table } from "dexie";
 import { InputData } from "../types";
 import { StructureDefinition, Resource } from "fhir/r4";
 
+export interface ResourcePathRepr {
+  id: string;
+  data: InputData[];
+}
+
 export class MySubClassedDexie extends Dexie {
   // 'friends' is added by dexie when declaring the stores()
   // We just tell the typing system this is the case
   resources!: Table<Resource>;
-  resourcesPathRepr!: Table<{ id: string; data: InputData[] }>;
+  resourcesPathRepr!: Table<ResourcePathRepr>;
   profiles!: Table<StructureDefinition>;
 
   constructor() {

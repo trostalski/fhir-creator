@@ -1,4 +1,4 @@
-import { db } from "@/db/db";
+import { ResourcePathRepr, db } from "@/db/db";
 import { getBaseProfile } from "@/db/utils";
 import { InputData } from "@/types";
 import { Modes } from "@/utils/constants";
@@ -24,8 +24,18 @@ const ResourceList = (props: ResourceListProps) => {
     db.resourcesPathRepr.delete(id);
     db.resources.delete(id);
   };
+
+  const getResourceTypeFromPathRepr = (pathRepr: ResourcePathRepr) => {
+    const result = pathRepr.data.find(
+      (data) => data.path === "resourceType"
+    )?.value;
+    return result;
+  };
   return (
     <div>
+      {resourcesPathRepr?.length === 0 && (
+        <div className="text-xs text-gray-500">No resources</div>
+      )}
       {resourcesPathRepr?.map((resourcePathRepr) => (
         <div
           key={resourcePathRepr.id}
@@ -51,7 +61,11 @@ const ResourceList = (props: ResourceListProps) => {
               props.setMode(Modes.EDIT);
             }}
           >
-            <span className="text-xs">{resourcePathRepr.id}</span>
+            <span className="text-xs">
+              {getResourceTypeFromPathRepr(resourcePathRepr) +
+                "/" +
+                resourcePathRepr.id}
+            </span>
           </button>
           <button
             className="hover:scale-105"

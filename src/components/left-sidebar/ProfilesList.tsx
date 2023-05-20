@@ -24,6 +24,9 @@ const ProfilesList = (props: ProfilesListProps) => {
 
   return (
     <div>
+      {profiles?.length === 0 && (
+        <div className="text-xs text-gray-500">No profiles</div>
+      )}
       {profiles?.map((profile) => (
         <div
           key={profile.url}

@@ -6,12 +6,12 @@ import { Resource } from "fhir/r4";
 import { checkoutBundle } from "@/db/utils";
 import { toastError } from "@/toasts";
 
-interface CheckoutModalProps {
+interface ExportModalProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CheckoutModal = (props: CheckoutModalProps) => {
+const ExportModal = (props: ExportModalProps) => {
   const resources = useLiveQuery(() => db.resources.toArray());
   const [selectedResources, setSelectedResources] = useState<
     Resource[] | undefined
@@ -97,4 +97,4 @@ const CheckoutModal = (props: CheckoutModalProps) => {
   );
 };
 
-export default CheckoutModal;
+export default ExportModal;
