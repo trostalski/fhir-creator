@@ -1,4 +1,4 @@
-import { InputData } from "@/types";
+import { PathItem } from "@/types";
 import { toastError } from "@/toasts";
 import { Resource, StructureDefinition } from "fhir/r4";
 import { db } from "./db";
@@ -53,7 +53,7 @@ export async function addProfile(profile: StructureDefinition) {
   }
 }
 
-export async function addResourcPathRepr(inputData: InputData[]) {
+export async function addResourcPathRepr(inputData: PathItem[]) {
   try {
     const id = inputData.find((data) => data.path === "id")?.value as string;
     await db.resourcesPathRepr.add({
@@ -77,7 +77,7 @@ export async function updateResource(resource: Resource) {
   }
 }
 
-export async function updateResourcePathRepr(inputData: InputData[]) {
+export async function updateResourcePathRepr(inputData: PathItem[]) {
   try {
     const id = inputData.find((data) => data.path === "id")?.value as string;
     await db.resourcesPathRepr.update(id, {
