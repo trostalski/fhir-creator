@@ -24,9 +24,10 @@ import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
 import uniq from "lodash/uniq";
 import { getBranchIds } from "@/utils/tree_utils";
 import { removeNPathPartsFromStart } from "@/utils/path_utils";
-import ExportModal from "@/components/CheckoutModal";
+import ExportModal from "@/components/ExportModal";
 import UploadProfileButton from "@/components/buttons/UploadProfileButton";
 import AddResourceButton from "@/components/buttons/AddResourceButton";
+import Head from "next/head";
 
 const Home = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
@@ -115,6 +116,20 @@ const Home = () => {
 
   return (
     <div className="w-screen h-screen overflow-hidden">
+      <Head>
+        <title>FHIR Creator | Create and Analyze your FHIR Data</title>
+        <meta
+          name="description"
+          content="Upload your FHIR data or create Resources from scratch. Analyze your data with the FHIR Creator."
+          key="desc"
+        />
+        <meta property="og:title" content="FHIR Creator" key="title" />
+        <meta property="og:url" content="https://fhir-creator.vercel.app/" />
+        <meta
+          property="og:description"
+          content="Upload your FHIR data or create Resources from scratch. Analyze your data with the FHIR Creator."
+        />
+      </Head>
       <Header />
       <main className="flex flex-row pt-8 h-full">
         <LeftSidebar

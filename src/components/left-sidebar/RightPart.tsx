@@ -8,7 +8,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import ProfilesList from "./ProfilesList";
 import ResourceList from "./ResourceList";
 import ImportMenu from "./ImportMenu";
-import ExportModal from "../CheckoutModal";
+import ExportModal from "../ExportModal";
 
 interface AddResourceRightPartProps {
   setMode: React.Dispatch<React.SetStateAction<Modes>>;
