@@ -40,7 +40,7 @@ export interface ProfileTreeNode {
   childPaths: string[];
   basePath: string; // used for differential merging
   isPrimitive: boolean;
-  codeableConceptCodes?: Coding[];
+  bindingCodes?: Coding[];
   isMultiType?: boolean;
   isRootPrimitive?: boolean;
   multiTypeType?: string;
@@ -197,12 +197,14 @@ export function isSliceEntry(element: ElementDefinition) {
   return "slicing" in element;
 }
 
-const tryGetCodeableConceptCodes = async (element: ElementDefinition) => {
+const tryGetBindingCodes = async (element: ElementDefinition) => {
   let codes: Coding[] | undefined;
+  console.log(element.id);
   if (element.binding?.valueSet) {
     const valueSetResolver = new ValueSetResolver();
     codes = await valueSetResolver.resolve(element.binding!.valueSet!);
   }
+  console.log(codes);
   return codes;
 };
 
@@ -252,13 +254,13 @@ export async function buildTreeFromElementsRecursive(
       multiTypeType = getElementTypes(element)![0];
     }
 
-    if (element.type && element.type[0].code === "CodeableConcept") {
-      const codeableConceptCodes = await tryGetCodeableConceptCodes(element);
-      if (codeableConceptCodes && codeableConceptCodes.length > 0) {
-        elementNode.codeableConceptCodes = codeableConceptCodes;
+    if (element.binding) {
+      const bindingCodes = await tryGetBindingCodes(element);
+      if (bindingCodes && bindingCodes.length > 0) {
+        elementNode.bindingCodes = bindingCodes;
         elementNode.isPrimitive = true;
         profileTree.push(elementNode);
-        continue; // skip children CodeableConcept is primitive here
+        continue; // skip children binding element is primitive here
       }
     }
 

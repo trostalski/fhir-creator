@@ -1,10 +1,6 @@
 import { CodeSystem, CodeSystemConcept, Coding } from "fhir/r4";
 import { isBaseUrl, isUrl } from "./utils";
 
-const isBaseCodeSystemUrl = (codeSystemUrl: string) => {
-  return codeSystemUrl.startsWith("http://terminology.hl7.org");
-};
-
 export class CodeSystemResolver {
   private _codeSystemEndpoint: string;
   private _codeSystemUrl: string | undefined;
@@ -16,7 +12,7 @@ export class CodeSystemResolver {
   public async resolve(codeSystemUrl: string) {
     let codes: Coding[] | undefined;
     const isurl = isUrl(codeSystemUrl);
-    if (isurl && isBaseCodeSystemUrl(codeSystemUrl)) {
+    if (isurl && isBaseUrl(codeSystemUrl)) {
       codes = await this.resolveBase(codeSystemUrl);
     } else if (isurl) {
     }
