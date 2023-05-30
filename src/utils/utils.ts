@@ -115,7 +115,7 @@ export const idIsImportant = (id: string) => {
 };
 
 export const isBaseUrl = (url: string) => {
-  return url.startsWith("http://hl7.org/fhir/");
+  return url.includes("hl7.org");
 };
 
 export const getUid = function () {

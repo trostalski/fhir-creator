@@ -92,6 +92,7 @@ export class ValueSetResolver {
   private async resolveSystem(system: string) {
     const codeSystemResolver = new CodeSystemResolver();
     const codes = await codeSystemResolver.resolve(system);
+    console.log(codeSystemResolver.codeSystemUrl);
     this.codeSystemUrl = codeSystemResolver.codeSystemUrl;
     return codes;
   }

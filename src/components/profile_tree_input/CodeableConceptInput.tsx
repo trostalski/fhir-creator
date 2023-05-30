@@ -2,14 +2,14 @@ import { ProfileTreeNode, ProfileTree } from "@/utils/buildTree";
 import React from "react";
 import Select from "react-select";
 
-interface CodeableConceptInputProps {
+interface BindingCodeInputProps {
   node: ProfileTreeNode;
   setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
 }
 
-const CodeableConceptInput = (props: CodeableConceptInputProps) => {
+const BindingCodeInput = (props: BindingCodeInputProps) => {
   const getOptions = () => {
-    const codes = props.node.codeableConceptCodes!;
+    const codes = props.node.bindingCodes!;
     const options = codes.map((code) => {
       let label = "";
       if (code.display) {
@@ -23,9 +23,7 @@ const CodeableConceptInput = (props: CodeableConceptInputProps) => {
   };
 
   const handleOnChange = (e: any) => {
-    const code = props.node.codeableConceptCodes!.find(
-      (code) => code.code === e.value
-    );
+    const code = props.node.bindingCodes!.find((code) => code.code === e.value);
     props.setProfileTree((prevProfileTree) => {
       const newProfileTree = [...prevProfileTree];
       const nodeIndex = newProfileTree.findIndex(
@@ -43,4 +41,4 @@ const CodeableConceptInput = (props: CodeableConceptInputProps) => {
   );
 };
 
-export default CodeableConceptInput;
+export default BindingCodeInput;

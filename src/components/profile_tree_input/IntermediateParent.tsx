@@ -57,6 +57,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
         <IntermediateParent
           expandedNodes={props.expandedNodes}
           node={node}
+          key={node.dataPath}
           pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
           profileTree={props.profileTree}
           setProfileTree={props.setProfileTree}
@@ -119,7 +120,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
               {props.node.element.sliceName && (
                 <AiOutlinePieChart style={{ color: "" }} />
               )}
-              {props.node.element.type ||
+              {props.node.element.type &&
               props.node.element.type!.length <= 1 ? null : (
                 <select
                   id="element-type"
@@ -214,8 +215,6 @@ const IntermediateParent = (props: IntermediateParentProps) => {
           {props.expandedNodes.includes(props.node.dataPath) && (
             <div className="flex flex-row flex-wrap gap-1 pl-32 py-2">
               {props.node.childPaths.map((childPath: string) => {
-                console.log("childpath: ", childPath);
-                console.log("parent path: ", props.node.dataPath);
                 let childNode = props.profileTree.find(
                   (n: ProfileTreeNode) => n.dataPath === childPath
                 );
