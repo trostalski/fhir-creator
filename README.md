@@ -2,6 +2,8 @@
 
 Visit the project at [https://fhir-creator.vercel.app/](https://fhir-creator.vercel.app/)
 
+The project is under active development.
+
 ## Features
 
 - All data is stored in the browser, no backend server used
