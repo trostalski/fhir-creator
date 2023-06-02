@@ -42,7 +42,6 @@ const ImportResourceButton = (props: ImportResourceButtonProps) => {
             const addPathReprSuccess = await addResourcPathRepr(
               convertObjectToPathArray(resource)
             );
-            console.log(addResSuccess, addPathReprSuccess);
             if (!addResSuccess || !addPathReprSuccess) {
               toastError("Could not import resource.");
               return;

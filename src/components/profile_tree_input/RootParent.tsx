@@ -54,7 +54,6 @@ const RootParent = (props: RootParentProps) => {
         </div>
       );
     } else {
-      console.log("rendering intermediate parent");
       return (
         <div className="w-full" key={node.dataPath}>
           <IntermediateParent

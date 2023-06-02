@@ -3,6 +3,8 @@ import { isBaseUrl } from "./utils";
 import { ValueSetCompose } from "fhir/r4b";
 import { ValueSetComposeInclude } from "fhir/r4";
 import { CodeSystemResolver } from "./codesystem_utils";
+import fs from "fs";
+import path from "path";
 
 export class ValueSetResolver {
   private valueSetEndpoint: string;
@@ -35,7 +37,7 @@ export class ValueSetResolver {
     return codes;
   }
 
-  public async getBaseValueSet(valueSetUrl: string) {
+  public async fetchBaseValueSet(valueSetUrl: string) {
     const fileName = valueSetUrl + ".json";
     const valueSetRes = await fetch(
       this.valueSetEndpoint + "?" + new URLSearchParams({ filename: fileName })
@@ -45,6 +47,16 @@ export class ValueSetResolver {
     }
     const valueSet: ValueSet = await valueSetRes.json();
     return valueSet;
+  }
+
+  private async getBaseValueSet(valueSetUrl: string) {
+    const filePath = path.join(
+      process.cwd(),
+      `data/valuesets/${valueSetUrl}.json`
+    );
+    const valueSet = fs.readFileSync(filePath, "utf8");
+    const data: ValueSet = JSON.parse(valueSet);
+    return data;
   }
 
   private async resolveCompose(compose: ValueSetCompose) {
@@ -92,7 +104,6 @@ export class ValueSetResolver {
   private async resolveSystem(system: string) {
     const codeSystemResolver = new CodeSystemResolver();
     const codes = await codeSystemResolver.resolve(system);
-    console.log(codeSystemResolver.codeSystemUrl);
     this.codeSystemUrl = codeSystemResolver.codeSystemUrl;
     return codes;
   }

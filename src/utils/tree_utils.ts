@@ -137,7 +137,6 @@ export function updateNode(profileTree: ProfileTree, newNode: ProfileTreeNode) {
   const node = getNodeByDataPath(profileTree, newNode.dataPath);
   if (node) {
     Object.assign(node, newNode);
-    console.log("updated node", node);
   }
   return profileTree;
 }
@@ -189,7 +188,6 @@ export function deleteBranch(profileTree: ProfileTree, node: ProfileTreeNode) {
       (childPath) => childPath !== node.dataPath
     );
   }
-  console.log("descendants", descendants);
   for (const descendant of descendants) {
     const index = profileTree.indexOf(descendant);
     profileTree.splice(index, 1);
