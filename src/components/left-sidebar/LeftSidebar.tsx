@@ -30,7 +30,6 @@ const LeftSidebar = (props: LeftSidebarProps) => {
     <div
       ref={resizeRef}
       className={"flex flex-row h-full flex-shrink-0 w-80"}
-      onResize={(e) => console.log(e)}
       style={{
         flexBasis: `${resizeWidth}px`,
         minWidth: `${minWidth}px`,

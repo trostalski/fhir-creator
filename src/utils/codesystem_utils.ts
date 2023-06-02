@@ -1,5 +1,7 @@
 import { CodeSystem, CodeSystemConcept, Coding } from "fhir/r4";
 import { isBaseUrl, isUrl } from "./utils";
+import fs from "fs";
+import path from "path";
 
 export class CodeSystemResolver {
   private _codeSystemEndpoint: string;
@@ -50,7 +52,7 @@ export class CodeSystemResolver {
     return this._codeSystemUrl;
   }
 
-  public async getBaseCodeSystem(codeSystemUrl: string) {
+  public async fetchBaseCodeSystem(codeSystemUrl: string) {
     const fileName = codeSystemUrl + ".json";
     const codeSystemRes = await fetch(
       this._codeSystemEndpoint +
@@ -58,12 +60,22 @@ export class CodeSystemResolver {
         new URLSearchParams({ filename: fileName })
     );
     if (!codeSystemRes.ok) {
-      console.log(codeSystemRes);
       throw new Error("Error fetching code system");
     }
     const codeSystem: CodeSystem = await codeSystemRes.json();
     this._codeSystemUrl = codeSystem.url;
     return codeSystem;
+  }
+
+  private async getBaseCodeSystem(codeSystemUrl: string) {
+    const filePath = path.join(
+      process.cwd(),
+      `data/codesystems/${codeSystemUrl}.json`
+    );
+    const codeSystem = fs.readFileSync(filePath, "utf8");
+    const data: CodeSystem = JSON.parse(codeSystem);
+    this._codeSystemUrl = data.url;
+    return data;
   }
 
   private parseCodeSystemUrl(codeSystemUrl: string): string {

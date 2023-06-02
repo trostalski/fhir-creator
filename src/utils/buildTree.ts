@@ -199,16 +199,14 @@ export function isSliceEntry(element: ElementDefinition) {
 
 const tryGetBindingCodes = async (element: ElementDefinition) => {
   let codes: Coding[] | undefined;
-  console.log(element.id);
   if (element.binding?.valueSet) {
     const valueSetResolver = new ValueSetResolver();
     codes = await valueSetResolver.resolve(element.binding!.valueSet!);
   }
-  console.log(codes);
   return codes;
 };
 
-export const getProfileTree = async (
+export const buildProfileTree = async (
   profile: StructureDefinition
 ): Promise<ProfileTree> => {
   const elements = profile.snapshot!.element!;

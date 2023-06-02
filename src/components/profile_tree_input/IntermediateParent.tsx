@@ -85,8 +85,6 @@ const IntermediateParent = (props: IntermediateParentProps) => {
           <button
             className="flex flex-row items-center h-full"
             onClick={() => {
-              console.log("clicked");
-              console.log(props.node.dataPath);
               props.toggleNodeExpansion(props.node.dataPath);
             }}
           >
