@@ -18,8 +18,8 @@ interface AddResourceRightPartProps {
 }
 
 export const StorageRightPart = (props: AddResourceRightPartProps) => {
-  const [showResources, setShowResources] = useState<boolean>(false);
-  const [showProfiles, setShowProfiles] = useState<boolean>(false);
+  const [showResources, setShowResources] = useState<boolean>(true);
+  const [showProfiles, setShowProfiles] = useState<boolean>(true);
 
   const [showImportMenu, setShowImportMenu] = useState<boolean>(false);
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
