@@ -5,6 +5,7 @@ import { Modes } from "@/utils/constants";
 import { PathItem } from "@/types";
 import useResize from "@/hooks/useResize";
 import { BsPersonAdd } from "react-icons/bs";
+import { TbTransform } from "react-icons/tb";
 import RightPart from "./RightPart";
 
 interface LeftSidebarProps {
@@ -43,6 +44,12 @@ const LeftSidebar = (props: LeftSidebarProps) => {
           title="Resource Editor"
         >
           <BsPersonAdd size={20} className="hover:scale-105" />
+        </button>
+        <button
+          className="p-4 rounded-md hover:bg-slate-300"
+          title="Data Transformer"
+        >
+          <TbTransform size={20} className="hover:scale-105" />
         </button>
       </div>
       <RightPart

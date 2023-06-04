@@ -18,6 +18,7 @@ import UploadProfileButton from "@/components/buttons/UploadProfileButton";
 import AddResourceButton from "@/components/buttons/AddResourceButton";
 import Head from "next/head";
 import { getProfileTree } from "@/utils/api";
+import { toastError } from "@/toasts";
 
 const Home = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
@@ -38,7 +39,8 @@ const Home = () => {
     setPathsWithInvalidCardinality([]);
     const resourceType = getResourceTypeFromProfile(profile);
     if (!resourceType) {
-      alert("Could not determine resource type from profile");
+      toastError("Could not determine resource type from profile");
+      return;
     } else {
       setResourceType(resourceType);
     }
@@ -80,7 +82,7 @@ const Home = () => {
           setProfileTree={setProfileTree}
         />
         <div className="p-4 w-full">
-          <div className="flex flex-row items-center gap-2">
+          <div className="flex flex-row items-center gap-2 bg-white p-2">
             <Select
               instanceId={"baseprofile-select"}
               className="w-1/3"
@@ -105,7 +107,7 @@ const Home = () => {
               resourceType={resourceType}
             />
           </div>
-          <div className="h-full pt-6 pb-10 overflow-scroll">
+          <div className="h-full pt-2 pb-10 overflow-scroll">
             {!profile ? null : (
               <div className="">
                 <div className="flex flex-col gap-2 px-8">

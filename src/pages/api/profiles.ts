@@ -10,7 +10,7 @@ export default function handler(
   const { filename } = req.query;
   const filePath = path.join(
     process.cwd(),
-    `data/base-profiles/${filename}_profile.json`
+    `data/base-profiles/${filename}.json`
   );
   let fileContents: string | undefined;
   try {
