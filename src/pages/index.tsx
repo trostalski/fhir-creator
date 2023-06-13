@@ -3,30 +3,21 @@ import Select from "react-select";
 import { Modes, resourceOptions } from "../utils/constants";
 import Header from "@/components/Header";
 import "react-tooltip/dist/react-tooltip.css";
-import {
-  containsSnapshot,
-  containsDifferential,
-  idIsImportant,
-  isBaseUrl,
-  getResourceTypeFromUrl,
-  getBaseUrl,
-  getResourceTypeFromProfile,
-  getUid,
-} from "../utils/utils";
+import { idIsImportant, getResourceTypeFromProfile } from "../utils/utils";
 import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import LeftSidebar from "@/components/left-sidebar/LeftSidebar";
 import { getBaseProfile } from "@/db/utils";
 import { StructureDefinition } from "fhir/r4";
-import { ProfileTree, getProfileTree } from "../utils/buildTree";
+import { ProfileTree } from "../utils/buildTree";
 import ProfileTreeComponent from "../components/profile_tree_input/ProfileTreeComponent";
 import { PathItem } from "@/types";
-import { mergeTreeWithDifferential } from "@/utils/mergeDifferential";
 import uniq from "lodash/uniq";
 import { getBranchIds } from "@/utils/tree_utils";
-import { removeNPathPartsFromStart } from "@/utils/path_utils";
-import ExportModal from "@/components/CheckoutModal";
+import ExportModal from "@/components/ExportModal";
 import UploadProfileButton from "@/components/buttons/UploadProfileButton";
 import AddResourceButton from "@/components/buttons/AddResourceButton";
+import Head from "next/head";
+import { getProfileTree } from "@/utils/api";
 
 const Home = () => {
   const [profile, setProfile] = useState<StructureDefinition>();
@@ -39,7 +30,7 @@ const Home = () => {
     useState<string[]>([]);
   const [mode, setMode] = useState<Modes>(Modes.CREATE);
 
-  const loadProfile = async (
+  const loadProfileTree = async (
     profile: StructureDefinition,
     inputData?: PathItem[]
   ) => {
@@ -51,55 +42,7 @@ const Home = () => {
     } else {
       setResourceType(resourceType);
     }
-    let profileTree: ProfileTree = [];
-    if (containsSnapshot(profile) && profile.snapshot) {
-      // all elements are present
-      profileTree = await getProfileTree(profile);
-    } else if (containsDifferential(profile) && profile.differential) {
-      // only differential is present, needs to be merged with base profile
-      const baseUrl = getBaseUrl(profile);
-      if (!baseUrl || !isBaseUrl(baseUrl)) {
-        alert("No base profile found");
-        return [];
-      } else {
-        const baseResourceType = getResourceTypeFromUrl(baseUrl);
-        const baseProfile: StructureDefinition = await fetch(
-          `api/profiles?filename=${baseResourceType}`
-        ).then((res) => res.json());
-        profileTree = await getProfileTree(baseProfile);
-        profileTree = await mergeTreeWithDifferential(
-          profileTree,
-          profile.differential.element
-        );
-      }
-    } else {
-      // no snapshot or differential is present
-      alert("No snapshot or differential is present in the profile");
-      return [];
-    }
-    if (inputData) {
-      profileTree = profileTree.map((n) => {
-        const valueDataForNode = inputData.find(
-          (e) => e.path === removeNPathPartsFromStart(n.dataPath, 1)
-        ) as PathItem;
-        if (valueDataForNode) {
-          n.value = valueDataForNode.value;
-        }
-        return n;
-      });
-    } else {
-      profileTree = profileTree = profileTree.map((node) => {
-        const path = removeNPathPartsFromStart(node.dataPath, 1);
-        if (path === "id") {
-          node.value = getUid();
-        } else if (path === "meta.profile[0]") {
-          node.value = profile?.url!;
-        } else if (path === "meta.lastUpdated") {
-          node.value = new Date().toISOString();
-        }
-        return node;
-      });
-    }
+    const profileTree = await getProfileTree(profile, inputData);
     const branchIds = uniq(getBranchIds(profileTree));
     setProfileTree(profileTree);
     setBranchIds(branchIds);
@@ -108,19 +51,31 @@ const Home = () => {
 
   const handleSelectBaseProfile = async (value: string) => {
     const profile = await getBaseProfile(value);
-    loadProfile(profile);
+    loadProfileTree(profile);
   };
-
-  console.log("profileTree", profileTree);
 
   return (
     <div className="w-screen h-screen overflow-hidden">
+      <Head>
+        <title>FHIR Creator | Create and Analyze your FHIR Data</title>
+        <meta
+          name="description"
+          content="Upload your FHIR data or create Resources from scratch. Analyze your data with the FHIR Creator."
+          key="desc"
+        />
+        <meta property="og:title" content="FHIR Creator" key="title" />
+        <meta property="og:url" content="https://fhir-creator.vercel.app/" />
+        <meta
+          property="og:description"
+          content="Upload your FHIR data or create Resources from scratch. Analyze your data with the FHIR Creator."
+        />
+      </Head>
       <Header />
       <main className="flex flex-row pt-8 h-full">
         <LeftSidebar
           setCheckoutModalOpen={setCheckoutModalOpen}
           handleSelectBaseProfile={handleSelectBaseProfile}
-          loadProfile={loadProfile}
+          loadProfile={loadProfileTree}
           setMode={setMode}
           setProfileTree={setProfileTree}
         />
@@ -138,7 +93,7 @@ const Home = () => {
             ></Select>
             <span className="text-gray-400">or</span>
             <UploadProfileButton
-              loadProfile={loadProfile}
+              loadProfile={loadProfileTree}
               style="topbar"
               text="Upload Profile"
             />

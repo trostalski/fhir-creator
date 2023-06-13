@@ -113,6 +113,5 @@ export function incrementDataPath(
     }
     return newDataPath;
   }
-  console.log("newDataPath", newDataPath);
   return node.dataPath.slice();
 }
