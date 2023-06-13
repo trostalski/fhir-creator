@@ -11,10 +11,9 @@ import ImportMenu from "./ImportMenu";
 import ExportModal from "../ExportModal";
 
 interface AddResourceRightPartProps {
-  setMode: React.Dispatch<React.SetStateAction<Modes>>;
-  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
-  loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
-  handleSelectBaseProfile: (value: string) => void;
+  // setMode: React.Dispatch<React.SetStateAction<Modes>>;
+  // setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
+  // loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
 }
 
 export const StorageRightPart = (props: AddResourceRightPartProps) => {
@@ -59,7 +58,7 @@ export const StorageRightPart = (props: AddResourceRightPartProps) => {
           >
             Import
           </button>
-          {showImportMenu && <ImportMenu loadProfile={props.loadProfile} />}
+          {showImportMenu && <ImportMenu />}
         </div>
       </div>
       <div className="flex flex-col gap-2">
@@ -69,12 +68,7 @@ export const StorageRightPart = (props: AddResourceRightPartProps) => {
         >
           Resources
         </button>
-        {showResources ? (
-          <ResourceList
-            loadProfile={props.loadProfile}
-            setMode={props.setMode}
-          />
-        ) : null}
+        {showResources ? <ResourceList /> : null}
       </div>
       <div className="flex flex-col gap-2">
         <button
@@ -83,12 +77,7 @@ export const StorageRightPart = (props: AddResourceRightPartProps) => {
         >
           Profiles
         </button>
-        {showProfiles ? (
-          <ProfilesList
-            loadProfile={props.loadProfile}
-            setMode={props.setMode}
-          />
-        ) : null}
+        {showProfiles ? <ProfilesList /> : null}
       </div>
       {showExportModal && (
         <ExportModal isOpen={showExportModal} setIsOpen={setShowExportModal} />
@@ -98,10 +87,6 @@ export const StorageRightPart = (props: AddResourceRightPartProps) => {
 };
 
 interface RightPartProps {
-  setMode: React.Dispatch<React.SetStateAction<Modes>>;
-  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
-  loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
-  handleSelectBaseProfile: (value: string) => void;
   startResizing: () => void;
   closeRightPart: () => void;
 }
@@ -119,12 +104,7 @@ const RightPart = (props: RightPartProps) => {
             <span className="grow" />
             <RxHamburgerMenu />
           </button>
-          <StorageRightPart
-            setMode={props.setMode}
-            handleSelectBaseProfile={props.handleSelectBaseProfile}
-            loadProfile={props.loadProfile}
-            setProfileTree={props.setProfileTree}
-          />
+          <StorageRightPart />
         </div>
       </div>
       <div

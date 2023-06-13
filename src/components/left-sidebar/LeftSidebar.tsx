@@ -6,14 +6,15 @@ import { PathItem } from "@/types";
 import useResize from "@/hooks/useResize";
 import { BsPersonAdd } from "react-icons/bs";
 import { TbTransform } from "react-icons/tb";
+import { TbDeviceAnalytics } from "react-icons/tb";
 import RightPart from "./RightPart";
 
 interface LeftSidebarProps {
   setCheckoutModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
-  setMode: React.Dispatch<React.SetStateAction<Modes>>;
-  loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
-  handleSelectBaseProfile: (value: string) => void;
+  // setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
+  // setMode: React.Dispatch<React.SetStateAction<Modes>>;
+  // loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
+  // handleSelectBaseProfile: (value: string) => void;
 }
 
 const LeftSidebar = (props: LeftSidebarProps) => {
@@ -47,13 +48,18 @@ const LeftSidebar = (props: LeftSidebarProps) => {
         </button>
         <button
           className="p-4 rounded-md hover:bg-slate-300"
+          title="Inspect Data"
+        >
+          <TbDeviceAnalytics size={20} className="hover:scale-105" />
+        </button>
+        <button
+          className="p-4 rounded-md hover:bg-slate-300"
           title="Data Transformer"
         >
           <TbTransform size={20} className="hover:scale-105" />
         </button>
       </div>
       <RightPart
-        handleSelectBaseProfile={props.handleSelectBaseProfile}
         loadProfile={props.loadProfile}
         setMode={props.setMode}
         setProfileTree={props.setProfileTree}

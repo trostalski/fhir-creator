@@ -17,7 +17,7 @@ import ExportModal from "@/components/ExportModal";
 import UploadProfileButton from "@/components/buttons/UploadProfileButton";
 import AddResourceButton from "@/components/buttons/AddResourceButton";
 import Head from "next/head";
-import { getProfileTree } from "@/utils/api";
+import { fetchProfileTree } from "@/utils/api";
 import { toastError } from "@/toasts";
 
 const Home = () => {
@@ -44,7 +44,7 @@ const Home = () => {
     } else {
       setResourceType(resourceType);
     }
-    const profileTree = await getProfileTree(profile, inputData);
+    const profileTree = await fetchProfileTree(profile, inputData);
     const branchIds = uniq(getBranchIds(profileTree));
     setProfileTree(profileTree);
     setBranchIds(branchIds);
