@@ -12,7 +12,7 @@ interface ProfilesListProps {}
 const ProfilesList = (props: ProfilesListProps) => {
   const profiles = useLiveQuery(() => db.profiles.toArray());
   const { setProfileTree, setMode } = useStore((state) => {
-    return { setProfileTree: state.loadProfileTree, setMode: state.setMode };
+    return { setProfileTree: state.setProfileTree, setMode: state.setMode };
   });
 
   const deleteProfile = (id: string) => {

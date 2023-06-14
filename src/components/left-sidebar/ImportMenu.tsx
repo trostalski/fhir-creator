@@ -8,7 +8,7 @@ interface ImportMenuProps {}
 
 const ImportMenu = (props: ImportMenuProps) => {
   const { setProfileTree } = useStore((state) => {
-    return { setProfileTree: state.loadProfileTree };
+    return { setProfileTree: state.setProfileTree };
   });
 
   return (

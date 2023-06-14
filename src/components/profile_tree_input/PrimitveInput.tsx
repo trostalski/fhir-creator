@@ -19,7 +19,7 @@ const InputFromType = (props: InputFromTypeProps) => {
   const { setProfileTree, profileTree, updateProfileTree } = useStore(
     (state) => {
       return {
-        setProfileTree: state.loadProfileTree,
+        setProfileTree: state.setProfileTree,
         profileTree: state.activeProfileTree,
         updateProfileTree: state.updateProfileTree,
       };
