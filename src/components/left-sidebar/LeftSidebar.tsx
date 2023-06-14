@@ -1,8 +1,4 @@
 import React, { useRef } from "react";
-import { StructureDefinition } from "fhir/r4";
-import { ProfileTree } from "@/utils/buildTree";
-import { Modes } from "@/utils/constants";
-import { PathItem } from "@/types";
 import useResize from "@/hooks/useResize";
 import { BsPersonAdd } from "react-icons/bs";
 import { TbTransform } from "react-icons/tb";
@@ -11,10 +7,6 @@ import RightPart from "./RightPart";
 
 interface LeftSidebarProps {
   setCheckoutModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  // setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
-  // setMode: React.Dispatch<React.SetStateAction<Modes>>;
-  // loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
-  // handleSelectBaseProfile: (value: string) => void;
 }
 
 const LeftSidebar = (props: LeftSidebarProps) => {
@@ -60,9 +52,6 @@ const LeftSidebar = (props: LeftSidebarProps) => {
         </button>
       </div>
       <RightPart
-        loadProfile={props.loadProfile}
-        setMode={props.setMode}
-        setProfileTree={props.setProfileTree}
         startResizing={startResizing}
         closeRightPart={closeRightPart}
       />

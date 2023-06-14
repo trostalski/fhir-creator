@@ -1,4 +1,5 @@
 import { db } from "@/db/db";
+import { useStore } from "@/stores/useStore";
 import { PathItem } from "@/types";
 import { Modes } from "@/utils/constants";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -6,13 +7,13 @@ import { StructureDefinition } from "fhir/r4";
 import React from "react";
 import { MdOutlineClear } from "react-icons/md";
 
-interface ProfilesListProps {
-  setMode: React.Dispatch<React.SetStateAction<Modes>>;
-  loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
-}
+interface ProfilesListProps {}
 
 const ProfilesList = (props: ProfilesListProps) => {
   const profiles = useLiveQuery(() => db.profiles.toArray());
+  const { setProfileTree, setMode } = useStore((state) => {
+    return { setProfileTree: state.loadProfileTree, setMode: state.setMode };
+  });
 
   const deleteProfile = (id: string) => {
     const confirm = window.confirm(
@@ -36,8 +37,8 @@ const ProfilesList = (props: ProfilesListProps) => {
             className="overflow-hidden hover:underline"
             title={profile.url}
             onClick={() => {
-              props.setMode(Modes.CREATE);
-              props.loadProfile(profile);
+              setProfileTree(profile);
+              setMode(Modes.EDIT);
             }}
           >
             <span className="text-xs">{profile.name}</span>

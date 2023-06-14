@@ -1,30 +1,29 @@
 import React, { useState } from "react";
-import { ProfileTree, ProfileTreeNode } from "../../utils/buildTree";
+import { ProfileTreeNode } from "../../utils/buildTree";
 import { shouldDisplayNode } from "@/utils/utils";
 import { getDisplayPath } from "@/utils/path_utils";
 import "react-tooltip/dist/react-tooltip.css";
 import RootPrimitive from "./RootPrimitive";
 import RootParent from "./RootParent";
-import { StructureDefinition } from "fhir/r4";
-import AddResourceButton from "../buttons/AddResourceButton";
-import { Modes } from "@/utils/constants";
+import { useStore } from "@/stores/useStore";
 
 interface ProfileTreeComponentProps {
-  profileTree: ProfileTree;
-  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   checkedBranchIds: string[];
   pathsWithInvalidCardinality: string[];
   setPathsWithInvalidCardinality: React.Dispatch<
     React.SetStateAction<string[]>
   >;
-  profile: StructureDefinition;
-  mode: Modes;
-  resourceType?: string;
 }
 
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   props: ProfileTreeComponentProps
 ) => {
+  const { profileTree, profile } = useStore((state) => {
+    return {
+      profileTree: state.activeProfileTree,
+      profile: state.activeProfile,
+    };
+  });
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
   const [searchInput, setSearchInput] = React.useState<string | null>(null);
 
@@ -45,7 +44,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
             node={node}
             key={node.dataPath}
             pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
-            setProfileTree={props.setProfileTree}
             toggleNodeExpansion={toggleNodeExpansion}
           />
         );
@@ -57,8 +55,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
           node={node}
           key={node.dataPath}
           pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
-          profileTree={props.profileTree}
-          setProfileTree={props.setProfileTree}
           toggleNodeExpansion={toggleNodeExpansion}
         />
       );
@@ -70,7 +66,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
       <div className="flex flex-col mb-4 gap-2">
         <div className="flex flex-row gap-4 items-center">
           <span className="text-gray-500 text-xs">Profile URL:</span>
-          <span className="text-md">{props.profile.url}</span>
+          <span className="text-md">{profile!.url}</span>
         </div>
         <div className="flex flex-row">
           <input
@@ -90,7 +86,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
           <button
             className="text-gray-500 w-32 hover:text-gray-700 text-xs rounded py-1 px-2"
             onClick={() =>
-              setExpandedNodes(props.profileTree.map((node) => node.dataPath))
+              setExpandedNodes(profileTree!.map((node) => node.dataPath))
             }
           >
             Open All
@@ -98,7 +94,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         </div>
       </div>
       <div className="flex flex-col gap-4">
-        {props.profileTree
+        {profileTree!
           .filter((node) => shouldDisplayNode(node, props.checkedBranchIds))
           .filter((node) => {
             if (searchInput) {

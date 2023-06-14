@@ -1,21 +1,21 @@
 import { ResourcePathRepr, db } from "@/db/db";
 import { getBaseProfile } from "@/db/utils";
 import { toastError } from "@/toasts";
-import { PathItem } from "@/types";
 import { Modes } from "@/utils/constants";
 import { getResourceTypeFromUrl, isBaseUrl } from "@/utils/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { StructureDefinition } from "fhir/r4";
 import React from "react";
 import { MdOutlineClear } from "react-icons/md";
+import { useStore } from "@/stores/useStore";
 
-interface ResourceListProps {
-  setMode: React.Dispatch<React.SetStateAction<Modes>>;
-  loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
-}
+interface ResourceListProps {}
 
 const ResourceList = (props: ResourceListProps) => {
   const resourcesPathRepr = useLiveQuery(() => db.resourcesPathRepr.toArray());
+  const { setProfileTree, setMode } = useStore((state) => {
+    return { setProfileTree: state.setProfileTree, setMode: state.setMode };
+  });
   const profiles = useLiveQuery(() => db.profiles.toArray());
   const deleteResource = (id: string) => {
     const confirm = window.confirm(
@@ -63,8 +63,8 @@ const ResourceList = (props: ResourceListProps) => {
                 toastError("No profile found for this resource");
                 return;
               }
-              props.loadProfile(profile!, resourcePathRepr.data);
-              props.setMode(Modes.EDIT);
+              setProfileTree(profile, resourcePathRepr.data);
+              setMode(Modes.EDIT);
             }}
           >
             <span className="text-xs">

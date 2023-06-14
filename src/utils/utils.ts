@@ -128,7 +128,7 @@ export const getResourceTypeFromUrl = (url: string) => {
 };
 
 export const getResourceTypeFromProfile = (profile: StructureDefinition) => {
-  let result = null;
+  let result = undefined;
   if (containsSnapshot(profile)) {
     result = profile.snapshot!.element[0].id?.split(".")[0];
   } else if (containsDifferential(profile)) {
@@ -254,7 +254,7 @@ export function shouldDisplayNode(
   return result;
 }
 
-export function extractInputDataFromProfileTree(profileTree: ProfileTree) {
+export function extractPathValuePairs(profileTree: ProfileTree) {
   const inputData = profileTree
     .filter((node) => node.value)
     .map((node) => ({
