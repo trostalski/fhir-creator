@@ -48,7 +48,7 @@ const Home = () => {
 
   return (
     <Layout>
-      <div className="flex flex-col w-full pt-4 pb-10 overflow-scroll gap-2 px-8">
+      <div className="flex flex-col w-full pb-10 pt-4 overflow-scroll gap-2 px-8">
         <div className="flex flex-row items-center gap-2 bg-white p-2">
           <Select
             instanceId={"baseprofile-select"}

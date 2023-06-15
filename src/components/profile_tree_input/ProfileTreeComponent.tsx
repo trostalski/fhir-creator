@@ -18,10 +18,11 @@ interface ProfileTreeComponentProps {
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   props: ProfileTreeComponentProps
 ) => {
-  const { profileTree, profile } = useStore((state) => {
+  const { profileTree, profile, updateProfileTree } = useStore((state) => {
     return {
       profileTree: state.activeProfileTree,
       profile: state.activeProfile,
+      updateProfileTree: state.updateProfileTree,
     };
   });
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
@@ -64,9 +65,9 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col mb-4 gap-2">
-        <div className="flex flex-row gap-4 items-center">
+        <div className="flex flex-rowp gap-4 items-center">
           <span className="text-gray-500 text-xs">Profile URL:</span>
-          <span className="text-md">{profile!.url}</span>
+          <span className="text-sm">{profile!.url}</span>
         </div>
         <div className="flex flex-row">
           <input
@@ -90,6 +91,16 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
             }
           >
             Open All
+          </button>
+          <button
+            className="text-red-500 w-20 hover:text-red-700 text-xs rounded py-1 px-2"
+            onClick={() => {
+              props.setPathsWithInvalidCardinality([]);
+              setExpandedNodes([]);
+              updateProfileTree(undefined);
+            }}
+          >
+            Clear
           </button>
         </div>
       </div>

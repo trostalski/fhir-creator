@@ -1,31 +1,24 @@
-import useResize from "@/hooks/useResize";
-import { PathItem } from "@/types";
-import { ProfileTree } from "@/utils/buildTree";
-import { Modes } from "@/utils/constants";
-import { StructureDefinition } from "fhir/r4";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import ProfilesList from "./ProfilesList";
 import ResourceList from "./ResourceList";
 import ImportMenu from "./ImportMenu";
 import ExportModal from "../ExportModal";
+import BundleList from "./BundleList";
 
-interface AddResourceRightPartProps {
-  // setMode: React.Dispatch<React.SetStateAction<Modes>>;
-  // setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
-  // loadProfile: (profile: StructureDefinition, inputData?: PathItem[]) => void;
-}
+interface AddResourceRightPartProps {}
 
 export const StorageRightPart = (props: AddResourceRightPartProps) => {
-  const [showResources, setShowResources] = useState<boolean>(true);
-  const [showProfiles, setShowProfiles] = useState<boolean>(true);
+  const [showResources, setShowResources] = useState<boolean>(false);
+  const [showBundles, setShowBundles] = useState<boolean>(false);
+  const [showProfiles, setShowProfiles] = useState<boolean>(false);
 
   const [showImportMenu, setShowImportMenu] = useState<boolean>(false);
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
 
   return (
     <div
-      className="h-full flex flex-col gap-4 overflow-scroll p-2"
+      className="h-full flex flex-col gap-4 overflow-y-scroll overflow-x-hidden p-2"
       onClick={(e) => {
         e.stopPropagation();
         setShowImportMenu(false);
@@ -69,6 +62,15 @@ export const StorageRightPart = (props: AddResourceRightPartProps) => {
           Resources
         </button>
         {showResources ? <ResourceList /> : null}
+      </div>
+      <div className="flex flex-col gap-2">
+        <button
+          className="bg-slate-200 rounded-md py-1 hover:bg-slate-300 overflow-hidden"
+          onClick={() => setShowBundles(!showBundles)}
+        >
+          Bundles
+        </button>
+        {showBundles ? <BundleList /> : null}
       </div>
       <div className="flex flex-col gap-2">
         <button

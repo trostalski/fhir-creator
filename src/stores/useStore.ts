@@ -17,7 +17,7 @@ interface Store {
     profile: StructureDefinition,
     inputData?: PathItem[]
   ) => Promise<void>;
-  updateProfileTree: (newProfileTree: ProfileTree) => void;
+  updateProfileTree: (newProfileTree: ProfileTree | undefined) => void;
   setMode: (mode: Modes) => void;
 }
 
@@ -37,7 +37,7 @@ export const useStore = create<Store>((set) => ({
     set({ activeResourceType: getResourceTypeFromProfile(profile) });
     set({ activeProfileTree: profileTree });
   },
-  updateProfileTree: async (newProfileTree: ProfileTree) => {
+  updateProfileTree: async (newProfileTree?: ProfileTree) => {
     set({ activeProfileTree: newProfileTree });
   },
   setMode: (mode: Modes) => set({ mode: mode }),
