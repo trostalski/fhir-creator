@@ -50,7 +50,6 @@ const ResourceList = (props: ResourceListProps) => {
               const profileUrl = resourcePathRepr.data.find(
                 (data) => data.path === "meta.profile[0]"
               )?.value;
-
               if (profileUrl && isBaseUrl(profileUrl)) {
                 const resourceType = getResourceTypeFromUrl(profileUrl);
                 profile = await getBaseProfile(resourceType);
