@@ -21,25 +21,25 @@ const loadProfileTree = async (
 ) => {
   let profileTree: ProfileTree = [];
   if (containsSnapshot(profile) && profile.snapshot) {
-    // all elements are present
     profileTree = await buildProfileTree(profile);
   } else if (containsDifferential(profile) && profile.differential) {
-    // only differential is present, needs to be merged with base profile
     const baseUrl = getBaseUrl(profile);
     if (!baseUrl || !isBaseUrl(baseUrl)) {
-      alert("No base profile found");
-      return [];
-    } else {
-      const baseResourceType = getResourceTypeFromUrl(baseUrl);
-      const baseProfile: StructureDefinition = await fetch(
-        `api/profiles?filename=${baseResourceType}`
-      ).then((res) => res.json());
-      profileTree = await buildProfileTree(baseProfile);
-      profileTree = await mergeTreeWithDifferential(
-        profileTree,
-        profile.differential.element
-      );
+      throw new Error("No base url found in profile");
     }
+    const baseResourceType = getResourceTypeFromUrl(baseUrl);
+    const baseProfile: StructureDefinition = JSON.parse(
+      fs.readFileSync(
+        path.join(process.cwd(), `data/base-profiles/${baseResourceType}.json`),
+        "utf8"
+      )
+    );
+
+    profileTree = await buildProfileTree(baseProfile);
+    profileTree = await mergeTreeWithDifferential(
+      profileTree,
+      profile.differential.element
+    );
   } else {
     // no snapshot or differential is present
     alert("No snapshot or differential is present in the profile");

@@ -1,13 +1,19 @@
+import { useStore } from "@/stores/useStore";
 import { ProfileTreeNode, ProfileTree } from "@/utils/buildTree";
 import React from "react";
 import Select from "react-select";
 
 interface BindingCodeInputProps {
   node: ProfileTreeNode;
-  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
 }
 
 const BindingCodeInput = (props: BindingCodeInputProps) => {
+  const { updateProfileTree, profileTree } = useStore((state) => {
+    return {
+      updateProfileTree: state.updateProfileTree,
+      profileTree: state.activeProfileTree,
+    };
+  });
   const getOptions = () => {
     const codes = props.node.bindingCodes!;
     const options = codes.map((code) => {
@@ -24,14 +30,12 @@ const BindingCodeInput = (props: BindingCodeInputProps) => {
 
   const handleOnChange = (e: any) => {
     const code = props.node.bindingCodes!.find((code) => code.code === e.value);
-    props.setProfileTree((prevProfileTree) => {
-      const newProfileTree = [...prevProfileTree];
-      const nodeIndex = newProfileTree.findIndex(
-        (node) => node.dataPath === props.node.dataPath
-      );
-      newProfileTree[nodeIndex].value = code;
-      return newProfileTree;
-    });
+    const newProfileTree = [...profileTree!];
+    const nodeIndex = newProfileTree.findIndex(
+      (node) => node.dataPath === props.node.dataPath
+    );
+    newProfileTree[nodeIndex].value = code;
+    updateProfileTree(newProfileTree);
   };
 
   return (

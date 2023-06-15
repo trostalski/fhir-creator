@@ -1,7 +1,7 @@
 import { PathItem } from "@/types";
 import { StructureDefinition } from "fhir/r4";
 
-export const getProfileTree = async (
+export const fetchProfileTree = async (
   profile: StructureDefinition,
   inputData?: PathItem[]
 ) => {

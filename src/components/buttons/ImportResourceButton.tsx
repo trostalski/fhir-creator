@@ -1,15 +1,21 @@
 import { db } from "@/db/db";
-import { addResourcPathRepr, addResource, getBaseProfile } from "@/db/utils";
+import {
+  addBundle,
+  addResourcPathRepr,
+  addResource,
+  getBaseProfile,
+} from "@/db/utils";
 import { toastError, toastSuccess } from "@/toasts";
 import { convertObjectToPathArray, isBaseUrl } from "@/utils/utils";
-import { Resource, StructureDefinition } from "fhir/r4";
+import { Bundle, Resource, StructureDefinition } from "fhir/r4";
 import React from "react";
 
 interface ImportResourceButtonProps {
   text: string;
+  inputType: "Resource" | "Bundle";
 }
 
-const resolveProfileForResource = async (resource: Resource) => {
+export const resolveProfileForResource = async (resource: Resource) => {
   let profile: StructureDefinition | undefined;
   const profileUrl = resource.meta?.profile?.[0];
   const resourceType = resource.resourceType;
@@ -56,6 +62,49 @@ const ImportResourceButton = (props: ImportResourceButtonProps) => {
     }
   };
 
+  const handleBundleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const numFiles = e.target.files?.length;
+    if (e.target.files && numFiles) {
+      for (let i = 0; i < numFiles; i++) {
+        const file = e.target.files[i];
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          if (e.target) {
+            const bundle = JSON.parse(e.target.result as string) as Bundle;
+            if (bundle.resourceType !== "Bundle" || !bundle.entry) {
+              toastError("File is not a bundle.");
+              return;
+            }
+            if (!bundle.id) {
+              bundle.id = Math.random().toString(36).substring(7);
+            }
+            for (const entry of bundle.entry) {
+              const resource = entry.resource as Resource;
+              const profile = resolveProfileForResource(resource);
+              if (!profile) {
+                toastError(
+                  `Could not find profile for resource ${
+                    resource.resourceType + "/" + resource.id
+                  }. Please import a profile first.`
+                );
+                return;
+              }
+            }
+            const addBundleSuccess = await addBundle(bundle);
+            if (!addBundleSuccess) {
+              toastError("Could not import bundle.");
+              return;
+            }
+            toastSuccess("Bundle imported successfully.");
+          }
+        };
+        if (file) {
+          reader.readAsText(file);
+        }
+      }
+    }
+  };
+
   return (
     <div className="flex flex-row gap-2">
       <label
@@ -67,7 +116,13 @@ const ImportResourceButton = (props: ImportResourceButtonProps) => {
           type="file"
           hidden
           multiple
-          onChange={(e) => handleResourceUpload(e)}
+          onChange={(e) => {
+            if (props.inputType === "Resource") {
+              handleResourceUpload(e);
+            } else if (props.inputType === "Bundle") {
+              handleBundleUpload(e);
+            }
+          }}
         />
         {props.text}
       </label>

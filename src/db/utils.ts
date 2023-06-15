@@ -1,6 +1,6 @@
 import { PathItem } from "@/types";
 import { toastError } from "@/toasts";
-import { Resource, StructureDefinition } from "fhir/r4";
+import { Bundle, Resource, StructureDefinition } from "fhir/r4";
 import { db } from "./db";
 
 interface FhirBundleEntry {
@@ -18,10 +18,14 @@ interface FhirBundle {
 }
 
 export const getBaseProfile = async (resourceType: string) => {
-  const profile = await fetch(`api/profiles?filename=${resourceType}`).then(
-    (res) => res.json()
-  );
-  return profile;
+  try {
+    const profile = await fetch(`api/profiles?filename=${resourceType}`).then(
+      (res) => res.json()
+    );
+    return profile;
+  } catch (error) {
+    toastError(`Failed to get base profile for ${resourceType}`);
+  }
 };
 
 export async function getResource(id: string) {
@@ -86,6 +90,25 @@ export async function updateResourcePathRepr(inputData: PathItem[]) {
     });
   } catch (error) {
     console.log(`Failed to update path representation of resource`);
+  }
+}
+
+export async function addBundle(bundle: Bundle) {
+  try {
+    await db.bundles.add(bundle);
+    return true;
+  } catch (error) {
+    console.log(`Failed to add bundle`);
+    return false;
+  }
+}
+
+export async function getBundle(id: string) {
+  try {
+    const bundle = await db.bundles.get(id);
+    return bundle;
+  } catch (error) {
+    console.log(`Failed to get bundle with id ${id}`);
   }
 }
 

@@ -2,52 +2,46 @@ import { ProfileTree, ProfileTreeNode } from "@/utils/buildTree";
 import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
 import BindingCodeInput from "./CodeableConceptInput";
+import { useStore } from "@/stores/useStore";
 
 interface PrimitveInputProps {
   node: ProfileTreeNode;
   profileTreeNode: ProfileTreeNode;
-  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   pathsWithInvalidCardinality: string[];
 }
 
 interface InputFromTypeProps {
   type: string;
   profileTreeNode: ProfileTreeNode;
-  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
 }
 
 const InputFromType = (props: InputFromTypeProps) => {
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.setProfileTree((prevProfileTree) => {
-      const newProfileTree = [...prevProfileTree];
-      const nodeIndex = newProfileTree.findIndex(
-        (node) => node.dataPath === props.profileTreeNode.dataPath
-      );
-      newProfileTree[nodeIndex].value = e.target.value;
-      return newProfileTree;
-    });
-  };
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    props.setProfileTree((prevProfileTree) => {
-      const newProfileTree = [...prevProfileTree];
-      const nodeIndex = newProfileTree.findIndex(
-        (node) => node.dataPath === props.profileTreeNode.dataPath
-      );
-      newProfileTree[nodeIndex].value = e.target.value;
-      return newProfileTree;
-    });
+  const { setProfileTree, profileTree, updateProfileTree } = useStore(
+    (state) => {
+      return {
+        setProfileTree: state.setProfileTree,
+        profileTree: state.activeProfileTree,
+        updateProfileTree: state.updateProfileTree,
+      };
+    }
+  );
+  const handleChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
+    const newProfileTree = [...profileTree!];
+    const nodeIndex = newProfileTree!.findIndex(
+      (node: ProfileTreeNode) =>
+        node.dataPath === props.profileTreeNode.dataPath
+    );
+    newProfileTree[nodeIndex].value = e.target.value;
+    updateProfileTree(newProfileTree);
   };
 
   if (
     props.profileTreeNode.bindingCodes &&
     props.profileTreeNode.bindingCodes.length > 0
   ) {
-    return (
-      <BindingCodeInput
-        node={props.profileTreeNode}
-        setProfileTree={props.setProfileTree}
-      />
-    );
+    return <BindingCodeInput node={props.profileTreeNode} />;
   }
 
   switch (props.type) {
@@ -57,7 +51,7 @@ const InputFromType = (props: InputFromTypeProps) => {
         // boolean select with yes and no options
         <select
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          onChange={handleSelectChange}
+          onChange={handleChange}
           value={props.profileTreeNode.value}
         >
           <option value={undefined}>{}</option>
@@ -79,7 +73,7 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="text"
           value={props.profileTreeNode.value}
-          onChange={handleInputChange}
+          onChange={handleChange}
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
       );
@@ -91,7 +85,7 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="number"
-          onChange={handleInputChange}
+          onChange={handleChange}
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           value={props.profileTreeNode.value}
         />
@@ -103,7 +97,7 @@ const InputFromType = (props: InputFromTypeProps) => {
           type="datetime-local"
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           value={props.profileTreeNode.value}
-          onChange={handleInputChange}
+          onChange={handleChange}
         />
       );
     case "date":
@@ -112,7 +106,7 @@ const InputFromType = (props: InputFromTypeProps) => {
           type="date"
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           value={props.profileTreeNode.value}
-          onChange={handleInputChange}
+          onChange={handleChange}
         />
       );
     case "time":
@@ -121,7 +115,7 @@ const InputFromType = (props: InputFromTypeProps) => {
           type="time"
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           value={props.profileTreeNode.value}
-          onChange={handleInputChange}
+          onChange={handleChange}
         />
       );
     default:
@@ -130,7 +124,7 @@ const InputFromType = (props: InputFromTypeProps) => {
           type="text"
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           value={props.profileTreeNode.value}
-          onChange={handleInputChange}
+          onChange={handleChange}
         />
       );
   }
@@ -164,7 +158,6 @@ const PrimitveInput = (props: PrimitveInputProps) => {
       <InputFromType
         type={props.node.element.type![0].code}
         profileTreeNode={props.profileTreeNode}
-        setProfileTree={props.setProfileTree}
       />
     </div>
   );

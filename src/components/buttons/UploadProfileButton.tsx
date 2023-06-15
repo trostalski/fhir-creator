@@ -1,16 +1,18 @@
 import { addProfile } from "@/db/utils";
-import { StructureDefinition } from "fhir/r4";
+import { useStore } from "@/stores/useStore";
 import React from "react";
 
 export type UploadProfileButtonStyle = "topbar" | "sidebar";
 
 interface UploadProfileButtonProps {
-  loadProfile: (profile: StructureDefinition) => void;
   text: string;
   style: UploadProfileButtonStyle;
 }
 
 const UploadProfileButton = (props: UploadProfileButtonProps) => {
+  const { setProfileTree } = useStore((state) => {
+    return { setProfileTree: state.setProfileTree };
+  });
   const handleProfileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const numFiles = e.target.files?.length;
     if (e.target.files && numFiles) {
@@ -21,7 +23,7 @@ const UploadProfileButton = (props: UploadProfileButtonProps) => {
           if (e.target) {
             const profile = JSON.parse(e.target.result as string);
             if (numFiles == 1) {
-              props.loadProfile(profile);
+              setProfileTree(profile);
             }
             addProfile(profile);
           }
