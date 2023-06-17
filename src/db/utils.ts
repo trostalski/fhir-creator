@@ -2,20 +2,7 @@ import { PathItem } from "@/types";
 import { toastError } from "@/toasts";
 import { Bundle, Resource, StructureDefinition } from "fhir/r4";
 import { db } from "./db";
-
-interface FhirBundleEntry {
-  resource: Resource;
-}
-
-interface FhirBundle {
-  entry: FhirBundleEntry[];
-  resourceType: string;
-  type: string;
-  timestamp: string;
-  meta: {
-    lastUpdated: string;
-  };
-}
+import { FhirResource } from "fhir/r4";
 
 export const getBaseProfile = async (resourceType: string) => {
   try {
@@ -112,8 +99,8 @@ export async function getBundle(id: string) {
   }
 }
 
-function createBundle(resources: Resource[]): FhirBundle {
-  const bundle: FhirBundle = {
+function createBundle(resources: Resource[]): Bundle {
+  const bundle: Bundle = {
     resourceType: "Bundle",
     type: "collection",
     timestamp: new Date().toISOString(),
@@ -123,15 +110,32 @@ function createBundle(resources: Resource[]): FhirBundle {
     entry: [],
   };
   resources.forEach((resourceEle) => {
-    bundle.entry.push({
-      resource: resourceEle,
+    bundle.entry!.push({
+      resource: resourceEle as FhirResource,
     });
   });
   return bundle;
 }
 
-export async function checkoutBundle(resources: Resource[]) {
-  const bundle_created: FhirBundle = createBundle(resources);
+function addBundlesToBundle(bundle: Bundle, bundles: Bundle[]) {
+  bundles.forEach((bundleEle) => {
+    if (!bundleEle.entry) return;
+    for (const resource of bundleEle.entry) {
+      bundle.entry!.push(resource);
+    }
+  });
+  return bundle;
+}
+
+export async function checkoutBundle(
+  resources?: Resource[],
+  bundles?: Bundle[]
+) {
+  resources = resources || [];
+  let bundle_created = createBundle(resources);
+  if (bundles) {
+    bundle_created = addBundlesToBundle(bundle_created, bundles);
+  }
 
   const bundle_string = JSON.stringify(bundle_created, null, 2);
   //convert to a blob

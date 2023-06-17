@@ -1,9 +1,9 @@
-import { RefObject, useCallback, useEffect, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useState } from "react";
 
-const useResize = (resizeRef: RefObject<HTMLElement>) => {
+const useResize = (resizeRef: RefObject<HTMLElement>, startSize: number) => {
   const [isResizing, setIsResizing] = useState(false);
-  const [resizeWidth, setResizeWidth] = useState<number | undefined>(
-    resizeRef.current?.offsetWidth
+  const [resizeWidth, setResizeWidth] = useState<number>(
+    startSize || resizeRef.current!.offsetWidth
   );
 
   const startResizing = useCallback(() => {

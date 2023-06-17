@@ -1,6 +1,7 @@
 import { idIsImportant } from "../utils/utils";
 import { RxHamburgerMenu } from "react-icons/rx";
 import React, { useState } from "react";
+import { useStore } from "@/stores/useStore";
 
 interface ProfileCheckboxesProps {
   setCheckedBranchIds: React.Dispatch<React.SetStateAction<string[]>>;
@@ -10,6 +11,7 @@ interface ProfileCheckboxesProps {
 
 export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
   const [searchInput, setSearchInput] = React.useState<string | null>(null);
+
   return (
     <div className="flex flex-col gap-1 p-2">
       <input
@@ -89,6 +91,16 @@ export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
 
 const RightSidebar = (props: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
+  const { profileTree } = useStore((state) => {
+    return {
+      profileTree: state.activeProfileTree,
+    };
+  });
+
+  if (!profileTree) {
+    return null;
+  }
+
   return (
     <div
       className={`relative shadow-md h-full overflow-scroll ${
