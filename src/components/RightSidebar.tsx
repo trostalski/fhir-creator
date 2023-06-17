@@ -103,8 +103,8 @@ const RightSidebar = (props: { children: React.ReactNode }) => {
 
   return (
     <div
-      className={`relative shadow-md h-full overflow-scroll ${
-        isOpen ? "w-72" : "w-12"
+      className={`relative shadow-md h-full overflow-scroll flex-shrink-0 ${
+        isOpen ? "w-48" : "w-12"
       }
       `}
     >

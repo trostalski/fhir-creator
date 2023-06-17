@@ -13,8 +13,12 @@ interface ResourceListProps {}
 
 const ResourceList = (props: ResourceListProps) => {
   const resourcesPathRepr = useLiveQuery(() => db.resourcesPathRepr.toArray());
-  const { setProfileTree, setMode } = useStore((state) => {
-    return { setProfileTree: state.setProfileTree, setMode: state.setMode };
+  const { setProfileTree, setMode, setResource } = useStore((state) => {
+    return {
+      setProfileTree: state.setProfileTree,
+      setMode: state.setMode,
+      setResource: state.setResource,
+    };
   });
   const profiles = useLiveQuery(() => db.profiles.toArray());
   const deleteResource = (id: string) => {
@@ -47,6 +51,7 @@ const ResourceList = (props: ResourceListProps) => {
             title={resourcePathRepr.id}
             onClick={async () => {
               let profile: StructureDefinition | undefined;
+              const resource = await db.resources.get(resourcePathRepr.id);
               const profileUrl = resourcePathRepr.data.find(
                 (data) => data.path === "meta.profile[0]"
               )?.value;
@@ -63,6 +68,7 @@ const ResourceList = (props: ResourceListProps) => {
                 return;
               }
               setProfileTree(profile, resourcePathRepr.data);
+              setResource(resource!);
               setMode(Modes.EDIT);
             }}
           >

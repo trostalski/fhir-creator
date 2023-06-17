@@ -19,6 +19,7 @@ interface Store {
   ) => Promise<void>;
   updateProfileTree: (newProfileTree: ProfileTree | undefined) => void;
   setMode: (mode: Modes) => void;
+  setResource: (resource: Resource) => Promise<void>;
 }
 
 export const useStore = create<Store>((set) => ({
@@ -39,6 +40,9 @@ export const useStore = create<Store>((set) => ({
   },
   updateProfileTree: async (newProfileTree?: ProfileTree) => {
     set({ activeProfileTree: newProfileTree });
+  },
+  setResource: async (resource: Resource) => {
+    set({ activeResource: resource });
   },
   setMode: (mode: Modes) => set({ mode: mode }),
 }));
