@@ -22,6 +22,7 @@ export const notImportantIdSuffices = [
   "identifier",
   "stage",
   "evidence",
+  "entry",
 ];
 
 export const validFhirTypes = [
