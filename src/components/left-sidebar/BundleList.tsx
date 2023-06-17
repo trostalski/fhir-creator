@@ -5,12 +5,7 @@ import { convertObjectToPathArray } from "@/utils/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import React from "react";
 import omit from "lodash/omit";
-import {
-  MdExpand,
-  MdExpandLess,
-  MdExpandMore,
-  MdOutlineClear,
-} from "react-icons/md";
+import { MdExpandLess, MdExpandMore, MdOutlineClear } from "react-icons/md";
 import { StructureDefinition } from "fhir/r4";
 
 const BundleList = () => {
@@ -34,7 +29,10 @@ const BundleList = () => {
         <div className="text-xs text-gray-500 w-full">No bundles</div>
       )}
       {bundles?.map((bundle) => (
-        <div className="border boder-gray-200 rounded-md p-1 w-full">
+        <div
+          key={bundle.id}
+          className="border boder-gray-200 rounded-md p-1 w-full"
+        >
           <div className="flex flex-row items-center w-full text-sm">
             <div className="flex flex-row gap-2 items-center grow overflow-hidden">
               <button
@@ -88,7 +86,10 @@ const BundleList = () => {
                     ) ?? 0
                 )
                 .map((entry) => (
-                  <div className="flex flex-row items-center text-xs whitespace-nowrap">
+                  <div
+                    key={entry.id}
+                    className="flex flex-row items-center text-xs whitespace-nowrap"
+                  >
                     <span>
                       {entry.resource?.resourceType} / {entry.resource?.id}
                     </span>
