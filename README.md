@@ -1,8 +1,8 @@
 # Fhir-Creator
 
-Visit the project at [https://fhir-creator.com](https://fhir-creator.com) :)
+Visit the project at [https://fhir-creator.com](https://fhir-creator.com)
 
-This project is under active development.
+This project is under active development!
 
 The project is under active development.
 
