@@ -1,13 +1,14 @@
 import Layout from "@/components/Layout";
+import AllOverview from "@/components/explorer/AllOverview";
 import ResourceJsonViewer from "@/components/explorer/ResourceJsonViewer";
 import { useStore } from "@/stores/useStore";
 import React from "react";
 
-enum ViewFormat {
+export enum ViewFormat {
   JSON = "json",
   OVERVIEW = "overview",
 }
-enum ViewEntity {
+export enum ViewEntity {
   ALL = "all",
   RESOURCE = "resource",
   PROFILE = "profile",
@@ -33,35 +34,39 @@ const Explorer = () => {
   return (
     <div>
       <Layout>
-        <div className="flex flex-col w-full pb-10 pt-4 overflow-scroll gap-2 px-8">
+        <div className="flex flex-col w-full pb-10 pt-4 overflow-scroll gap-2 px-12">
           <div className="flex flex-col gap-2">
             <div className="flex flex-row gap-4 items-center">
               <span className="text-gray-600">View Entity:</span>
               <button
-                className={`text-gray-600 border-2 w-16 rounded-md p-2 ${
+                className={`text-gray-600 border-2 w-16 rounded-md p-2 hover:scale-105 ${
                   viewEntity === ViewEntity.ALL ? "bg-gray-200" : ""
                 }`}
+                onClick={() => setViewEntity(ViewEntity.ALL)}
               >
                 All
               </button>
               <button
-                className={`text-gray-600 border-2 rounded-md p-2 ${
+                className={`text-gray-600 border-2 rounded-md p-2 hover:scale-105 ${
                   viewEntity === ViewEntity.PROFILE ? "bg-gray-200" : ""
                 }`}
+                onClick={() => setViewEntity(ViewEntity.PROFILE)}
               >
                 Profile
               </button>
               <button
-                className={`text-gray-600 border-2 rounded-md p-2 ${
+                className={`text-gray-600 border-2 rounded-md p-2 hover:scale-105 ${
                   viewEntity === ViewEntity.RESOURCE ? "bg-gray-200" : ""
                 }`}
+                onClick={() => setViewEntity(ViewEntity.RESOURCE)}
               >
                 Resource
               </button>
               <button
-                className={`text-gray-600 border-2 rounded-md p-2 ${
+                className={`text-gray-600 border-2 rounded-md p-2 hover:scale-105 ${
                   viewEntity === ViewEntity.BUNDLE ? "bg-gray-200" : ""
                 }`}
+                onClick={() => setViewEntity(ViewEntity.BUNDLE)}
               >
                 Bundle
               </button>
@@ -70,16 +75,19 @@ const Explorer = () => {
             <div className="flex flex-row gap-4 items-center">
               <span className="text-gray-600">View Format:</span>
               <button
-                className={`text-gray-600 border-2 rounded-md p-2 ${
+                className={`text-gray-600 border-2 rounded-md p-2 hover:scale-105 ${
                   viewFormat === ViewFormat.OVERVIEW ? "bg-gray-200" : ""
                 }`}
+                onClick={() => setViewFormat(ViewFormat.OVERVIEW)}
               >
                 Overview
               </button>
               <button
-                className={`text-gray-600 border-2 rounded-md p-2 ${
+                className={`text-gray-600 border-2 rounded-md p-2 hover:scale-105 ${
                   viewFormat === ViewFormat.JSON ? "bg-gray-200" : ""
                 }`}
+                disabled={viewEntity === ViewEntity.ALL}
+                onClick={() => setViewFormat(ViewFormat.JSON)}
               >
                 JSON
               </button>
@@ -91,7 +99,7 @@ const Explorer = () => {
               Please select a resource or bundle from the storage.
             </span>
           ) : null}
-          <ResourceJsonViewer />
+          <AllOverview />
         </div>
       </Layout>
     </div>
