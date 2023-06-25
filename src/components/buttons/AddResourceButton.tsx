@@ -4,56 +4,65 @@ import {
   updateResource,
   updateResourcePathRepr,
 } from "@/db/utils";
+import { useStore } from "@/stores/useStore";
 import { toastError, toastSuccess } from "@/toasts";
 import { PathItem } from "@/types";
-import { ProfileTree } from "@/utils/buildTree";
 import { Modes } from "@/utils/constants";
 import { removeNPathPartsFromStart } from "@/utils/path_utils";
 import {
   checkCardinalities,
   createJsonFromPathArray,
-  extractInputDataFromProfileTree,
+  extractPathValuePairs,
   formatInputDataForResource,
 } from "@/utils/utils";
 import React from "react";
 
 interface AddResourceButtonProps {
-  mode: Modes;
-  profileTree: ProfileTree;
   setPathsWithInvalidCardinality: React.Dispatch<
     React.SetStateAction<string[]>
   >;
-  resourceType?: string;
 }
 
 const AddResourceButton = (props: AddResourceButtonProps) => {
+  const { mode, resourceType, profileTree } = useStore((state) => {
+    return {
+      mode: state.mode,
+      resourceType: state.activeResourceType,
+      profileTree: state.activeProfileTree,
+    };
+  });
+
+  if (!profileTree) {
+    return null;
+  }
+
   const addResourceTypeToInputData = (inputData: PathItem[]) => {
     return [
       ...inputData,
       {
         path: "resourceType",
-        value: props.resourceType!,
+        value: resourceType!,
       },
     ];
   };
 
-  if (props.mode == Modes.CREATE) {
+  if (mode == Modes.CREATE) {
     return (
       <button
-        disabled={props.profileTree.length === 0}
+        disabled={profileTree.length === 0}
         className={`bg-green-600 w-36  text-white py-1 px-4 rounded  ${
-          props.profileTree.length === 0
+          profileTree.length === 0
             ? "bg-opacity-50 cursor-not-allowed"
             : "hover:bg-green-800"
         }}`}
         onClick={() => {
-          if (props.profileTree.length === 0) {
+          if (profileTree.length === 0) {
             return;
           }
           props.setPathsWithInvalidCardinality([]);
-          const inputData = extractInputDataFromProfileTree(props.profileTree);
+          const inputData = extractPathValuePairs(profileTree);
           const checkCardinalityResponse = checkCardinalities(
-            props.profileTree,
+            profileTree,
             inputData
           );
           if (!checkCardinalityResponse.isValid) {
@@ -78,16 +87,30 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
         Save Resource
       </button>
     );
-  } else if (props.mode == Modes.EDIT) {
+  } else if (mode == Modes.EDIT) {
     return (
       <button
-        className="bg-green-600 max-h-8 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded"
+        className={`bg-green-600 w-36  text-white py-1 px-4 rounded  ${
+          profileTree.length === 0
+            ? "bg-opacity-50 cursor-not-allowed"
+            : "hover:bg-green-800"
+        }}`}
         onClick={() => {
-          let inputData = extractInputDataFromProfileTree(props.profileTree);
-          inputData = formatInputDataForResource(inputData);
-          const resource = createJsonFromPathArray(inputData);
+          let inputPathValuePairs = extractPathValuePairs(profileTree);
+          if (!inputPathValuePairs.find((p) => p.path == "root.resourceType")) {
+            inputPathValuePairs = [
+              ...inputPathValuePairs,
+              {
+                path: "root.resourceType",
+                value: resourceType!,
+              },
+            ];
+          }
+          console.log(inputPathValuePairs);
+          inputPathValuePairs = formatInputDataForResource(inputPathValuePairs);
+          const resource = createJsonFromPathArray(inputPathValuePairs);
           updateResource(resource);
-          updateResourcePathRepr(inputData);
+          updateResourcePathRepr(inputPathValuePairs);
           toastSuccess("Resource updated");
         }}
       >

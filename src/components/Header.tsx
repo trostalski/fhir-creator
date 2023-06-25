@@ -12,7 +12,7 @@ const Header = () => {
           <a href="https://github.com/trostalski/fhir-creator" target="_blank">
             <AiFillGithub size={32} style={{ color: "white" }} />
           </a>
-          <a href="http://whipples.io/" target="_blank">
+          <a href="https://healthnerd.solutions" target="_blank">
             <RiAncientGateFill size={32} style={{ color: "white" }} />
           </a>
         </div>

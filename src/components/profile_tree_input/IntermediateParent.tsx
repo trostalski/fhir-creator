@@ -23,14 +23,13 @@ import { GrFormAdd } from "react-icons/gr";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { Tooltip } from "react-tooltip";
 import PrimitveInput from "./PrimitveInput";
+import { useStore } from "@/stores/useStore";
 
 interface IntermediateParentProps {
   node: ProfileTreeNode;
   toggleNodeExpansion: (nodePath: string) => void;
   expandedNodes: string[];
-  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   pathsWithInvalidCardinality: string[];
-  profileTree: ProfileTree;
 }
 
 const IntermediateParent = (props: IntermediateParentProps) => {
@@ -40,15 +39,22 @@ const IntermediateParent = (props: IntermediateParentProps) => {
     evaluateRenderAddButton,
   } = usePathCounter();
 
+  const { profileTree, profile, updateProfileTree } = useStore((state) => {
+    return {
+      profileTree: state.activeProfileTree,
+      profile: state.activeProfile,
+      updateProfileTree: state.updateProfileTree,
+    };
+  });
+
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {
       return (
         <div key={node.dataPath} className="w-full pb-2">
           <PrimitveInput
             node={node}
-            profileTreeNode={node}
-            setProfileTree={props.setProfileTree}
             pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
+            profileTreeNode={node}
           />
         </div>
       );
@@ -59,8 +65,6 @@ const IntermediateParent = (props: IntermediateParentProps) => {
           node={node}
           key={node.dataPath}
           pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
-          profileTree={props.profileTree}
-          setProfileTree={props.setProfileTree}
           toggleNodeExpansion={props.toggleNodeExpansion}
         />
       );
@@ -126,12 +130,12 @@ const IntermediateParent = (props: IntermediateParentProps) => {
                   className="bg-white py-0.5 px-4 w-40 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   value={props.node.multiTypeType}
                   onChange={(e) => {
-                    const newProfileTree = [...props.profileTree];
+                    const newProfileTree = [...profileTree!];
                     const nodeIndex = newProfileTree.findIndex(
                       (n) => n.dataPath === props.node.dataPath
                     );
                     (newProfileTree[nodeIndex].multiTypeType = e.target.value),
-                      props.setProfileTree(newProfileTree);
+                      updateProfileTree(newProfileTree);
                   }}
                 >
                   {props.node.element.type ? (
@@ -166,9 +170,9 @@ const IntermediateParent = (props: IntermediateParentProps) => {
               {extractIndex(getPathSuffix(props.node.dataPath)) > 0 ? (
                 <button
                   onClick={() => {
-                    let newProfileTree = [...props.profileTree];
+                    let newProfileTree = [...profileTree!];
                     newProfileTree = deleteBranch(newProfileTree, props.node);
-                    props.setProfileTree(newProfileTree);
+                    updateProfileTree(newProfileTree);
                     // decrement pathCounter
                     decrementPathCounter(props.node.dataPath);
                   }}
@@ -185,14 +189,14 @@ const IntermediateParent = (props: IntermediateParentProps) => {
                     const newNode = structuredClone(props.node);
                     newNode.value = "";
                     newNode.dataPath = incrementDataPath(
-                      props.profileTree,
+                      profileTree!,
                       props.node
                     );
                     const lastDescendant = getLastDescendant(
-                      props.profileTree,
+                      profileTree!,
                       props.node
                     );
-                    let newProfileTree = [...props.profileTree];
+                    let newProfileTree = [...profileTree!];
                     // TODO does not work yet in the UI
                     newProfileTree = insertAfterNode(
                       newProfileTree,
@@ -200,7 +204,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
                       newNode
                     );
                     newProfileTree = duplicateBranch(newProfileTree, newNode);
-                    props.setProfileTree(newProfileTree);
+                    updateProfileTree(newProfileTree);
                     // increment pathCounter
                     incrementPathCounter(props.node.dataPath);
                   }}
@@ -213,7 +217,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
           {props.expandedNodes.includes(props.node.dataPath) && (
             <div className="flex flex-row flex-wrap gap-1 pl-32 py-2">
               {props.node.childPaths.map((childPath: string) => {
-                let childNode = props.profileTree.find(
+                let childNode = profileTree!.find(
                   (n: ProfileTreeNode) => n.dataPath === childPath
                 );
                 if (props.node.multiTypeType) {

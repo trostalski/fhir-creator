@@ -1,18 +1,23 @@
-import { ProfileTree, ProfileTreeNode } from "@/utils/buildTree";
+import { ProfileTreeNode } from "@/utils/buildTree";
 import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import PrimitveInput from "./PrimitveInput";
+import { useStore } from "@/stores/useStore";
 
 interface RootPrimitiveProps {
   node: ProfileTreeNode;
   toggleNodeExpansion: (nodePath: string) => void;
   expandedNodes: string[];
-  setProfileTree: React.Dispatch<React.SetStateAction<ProfileTree>>;
   pathsWithInvalidCardinality: string[];
 }
 
 const RootPrimitive = (props: RootPrimitiveProps) => {
+  const { setProfileTree } = useStore((state) => {
+    return {
+      setProfileTree: state.setProfileTree,
+    };
+  });
   return (
     <div className="w-full rounded-md border-gray-200">
       <div className="flex flex-row">
@@ -58,7 +63,6 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
               <PrimitveInput
                 node={props.node}
                 profileTreeNode={props.node}
-                setProfileTree={props.setProfileTree}
                 pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
               />
             </div>

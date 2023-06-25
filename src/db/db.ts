@@ -1,7 +1,7 @@
 // db.ts
 import Dexie, { Table } from "dexie";
 import { PathItem } from "../types";
-import { StructureDefinition, Resource } from "fhir/r4";
+import { StructureDefinition, Resource, Bundle } from "fhir/r4";
 
 export interface ResourcePathRepr {
   id: string;
@@ -12,6 +12,7 @@ export class MySubClassedDexie extends Dexie {
   // 'friends' is added by dexie when declaring the stores()
   // We just tell the typing system this is the case
   resources!: Table<Resource>;
+  bundles!: Table<Bundle>;
   resourcesPathRepr!: Table<ResourcePathRepr>;
   profiles!: Table<StructureDefinition>;
 
@@ -21,6 +22,7 @@ export class MySubClassedDexie extends Dexie {
       resources: "id", // Primary key and indexed props
       resourcesPathRepr: "id",
       profiles: "url",
+      bundles: "id",
     });
   }
 }

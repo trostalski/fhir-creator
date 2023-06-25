@@ -1,27 +1,18 @@
 import { PathItem } from "@/types";
 import { toastError } from "@/toasts";
-import { Resource, StructureDefinition } from "fhir/r4";
+import { Bundle, Resource, StructureDefinition } from "fhir/r4";
 import { db } from "./db";
-
-interface FhirBundleEntry {
-  resource: Resource;
-}
-
-interface FhirBundle {
-  entry: FhirBundleEntry[];
-  resourceType: string;
-  type: string;
-  timestamp: string;
-  meta: {
-    lastUpdated: string;
-  };
-}
+import { FhirResource } from "fhir/r4";
 
 export const getBaseProfile = async (resourceType: string) => {
-  const profile = await fetch(`api/profiles?filename=${resourceType}`).then(
-    (res) => res.json()
-  );
-  return profile;
+  try {
+    const profile = await fetch(`api/profiles?filename=${resourceType}`).then(
+      (res) => res.json()
+    );
+    return profile;
+  } catch (error) {
+    toastError(`Failed to get base profile for ${resourceType}`);
+  }
 };
 
 export async function getResource(id: string) {
@@ -89,8 +80,27 @@ export async function updateResourcePathRepr(inputData: PathItem[]) {
   }
 }
 
-function createBundle(resources: Resource[]): FhirBundle {
-  const bundle: FhirBundle = {
+export async function addBundle(bundle: Bundle) {
+  try {
+    await db.bundles.add(bundle);
+    return true;
+  } catch (error) {
+    console.log(`Failed to add bundle`);
+    return false;
+  }
+}
+
+export async function getBundle(id: string) {
+  try {
+    const bundle = await db.bundles.get(id);
+    return bundle;
+  } catch (error) {
+    console.log(`Failed to get bundle with id ${id}`);
+  }
+}
+
+function createBundle(resources: Resource[]): Bundle {
+  const bundle: Bundle = {
     resourceType: "Bundle",
     type: "collection",
     timestamp: new Date().toISOString(),
@@ -100,15 +110,32 @@ function createBundle(resources: Resource[]): FhirBundle {
     entry: [],
   };
   resources.forEach((resourceEle) => {
-    bundle.entry.push({
-      resource: resourceEle,
+    bundle.entry!.push({
+      resource: resourceEle as FhirResource,
     });
   });
   return bundle;
 }
 
-export async function checkoutBundle(resources: Resource[]) {
-  const bundle_created: FhirBundle = createBundle(resources);
+function addBundlesToBundle(bundle: Bundle, bundles: Bundle[]) {
+  bundles.forEach((bundleEle) => {
+    if (!bundleEle.entry) return;
+    for (const resource of bundleEle.entry) {
+      bundle.entry!.push(resource);
+    }
+  });
+  return bundle;
+}
+
+export async function checkoutBundle(
+  resources?: Resource[],
+  bundles?: Bundle[]
+) {
+  resources = resources || [];
+  let bundle_created = createBundle(resources);
+  if (bundles) {
+    bundle_created = addBundlesToBundle(bundle_created, bundles);
+  }
 
   const bundle_string = JSON.stringify(bundle_created, null, 2);
   //convert to a blob
