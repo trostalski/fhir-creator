@@ -1,6 +1,7 @@
 import fhirpath from "fhirpath";
 import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { ConstraintItem } from "@/types";
+import { id } from "date-fns/locale";
 
 
 
@@ -8,23 +9,48 @@ import { ConstraintItem } from "@/types";
 export class ConstraintResolver {
     private profileTree: ProfileTree;
     private constraintTree : ProfileTreeNode[];
+    private resource: any;
+    private evaluationResult: {node:ProfileTreeNode, constraint:ConstraintItem[]}[];
+
 
     constructor(profileTree:ProfileTree){
         this.profileTree = profileTree;
         this.constraintTree = [];
+        this.evaluationResult = [];
         this.createConstraintTree();
         // DEVELOP
         console.log("constraint tree");
         console.log(this.constraintTree);
         // DEVELOP
+    }
 
-        this.handleChoiceType();
+    setResource(resource:any){
+        this.resource = resource;
+    }
+
+    evaluate(){
+        const resourceString = JSON.stringify(this.resource);
+        this.constraintTree.forEach(item =>{
+            const constraints = item.element.constraint;
+            if(constraints){
+                constraints.forEach(element =>{
+                    const expression = [item.element.id, element.expression].join(".");
+                    if(expression){
+                        const result = fhirpath.evaluate(resourceString, expression);
+                        if(!result){
+                            this.evaluationResult.push(result);
+                        }
+                    }
+                })
+            }
+        })
+        console.log(this.evaluationResult);
     }
 
     // So plan first of all: from the profile tree create a subset. This subset
     // contains all the leaf nodes with values as well as all their parent nodes
 
-    createConstraintTree(){
+    private createConstraintTree(){
         // apparently the profileTree does not contain the root node...
         let firstChildren: ProfileTreeNode[];
         firstChildren = this.getFirstChildren();
@@ -35,7 +61,7 @@ export class ConstraintResolver {
 
     // recursive method to parse profileTree for constraintTree construction
     // a node is to be included if a descendant is primitive with value
-    flagNodesAndBuildTree(node:ProfileTreeNode): {selfPath:string, includeParent:boolean}{
+    private flagNodesAndBuildTree(node:ProfileTreeNode): {selfPath:string, includeParent:boolean}{
         let includeParent = false;
         let childrenResponses: {selfPath:string, includeParent:boolean}[] = [];
         let selfPath = node.dataPath;
@@ -63,7 +89,7 @@ export class ConstraintResolver {
         return {selfPath, includeParent};
     }
 
-    updateChildPaths(node: ProfileTreeNode, childrenResponses: {selfPath:string, includeParent:boolean}[]){
+    private updateChildPaths(node: ProfileTreeNode, childrenResponses: {selfPath:string, includeParent:boolean}[]){
         // update the childPaths of the node
         let newChildPaths: string[] = [];
         childrenResponses.forEach(response => {
@@ -74,12 +100,12 @@ export class ConstraintResolver {
         node.childPaths = newChildPaths;
     }
 
-    getChildNodeFromPath(childPath: string){
+    private getChildNodeFromPath(childPath: string){
         const childNode = this.profileTree.find(node => node.dataPath === childPath);
         return childNode;
     }
 
-    getFirstChildren(){
+    private getFirstChildren(){
         let firstChildren: ProfileTreeNode[] = [];
         this.profileTree.forEach((node)=>{
             // find nodes one level below the root node
@@ -90,27 +116,39 @@ export class ConstraintResolver {
         return firstChildren;
     }
 
-    handleChoiceType(){
+    private handleChoiceType(){
         // find all choice nodes
         const choiceNodes = this.constraintTree.filter(node =>{
             return node.dataPath.includes("[x]");
         })
-        
-        // need to get index of choice in path
-
-        // resolve Choice from children
         choiceNodes.forEach(node => {
-            let parentFromChildren = [];
-            for(let i=0; i< node.childPaths.length; i++){
-                
-            }
-            console.log("Choice nodes");
-            console.log(choiceNodes);
-            console.log("parent from children");
-            console.log(parentFromChildren);
-            console.log("Parent from Children");
-            console.log(parentFromChildren);
+            let parentFromChildren = this.getParentFromChildren(node);
+            this.updateChoiceType(node, parentFromChildren);
         });
         
+    }
+    
+    private getParentFromChildren(node:ProfileTreeNode){
+        let parentFromChildren = [];
+        for(let i=0; i< node.childPaths.length; i++){
+            const childPath = node.childPaths[i];
+            const indexX = node.dataPath.split(".").findIndex(element =>{return element.includes("[x]")});
+            parentFromChildren.push({parentFromChildren:childPath.split(".")[indexX], index: indexX});
+        }
+        return parentFromChildren
+    }
+
+    private updateChoiceType(node:ProfileTreeNode, parentFromChildren:{parentFromChildren:string, index:number}[]){
+        // assuming there is only one parent from children
+        let pathArr = node.dataPath.split(".");
+        pathArr[parentFromChildren[0].index] = parentFromChildren[0].parentFromChildren;
+        const updatedPath = pathArr.join(".");
+        node.dataPath = updatedPath;
+       
+        // update a path in element as well for constraint checking
+        let idArr = node.element.id!.split(".");
+        idArr[parentFromChildren[0].index] = parentFromChildren[0].parentFromChildren;
+        const updatedId = idArr.join(".");
+        node.element.id = updatedId;
     }
 }

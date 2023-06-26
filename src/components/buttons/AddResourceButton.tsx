@@ -86,6 +86,8 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
           let formattedInputData = formatInputDataForResource(inputData);
           formattedInputData = addResourceTypeToInputData(formattedInputData);
           const resource = createJsonFromPathArray(formattedInputData);
+          constraintResolver.setResource(resource);
+          constraintResolver.evaluate();
           addResource(resource);
           addResourcPathRepr(formattedInputData);
           toastSuccess("Resource added");
