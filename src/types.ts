@@ -28,3 +28,15 @@ export interface PathCounter {
   path: string;
   count: number;
 }
+
+export interface ConstraintItem {
+  path: string;
+  ConstraintArray: {
+    key: string,
+    expression: string,
+    human: string,
+    severity: string,
+    source: string,
+    xpath: string
+  }[];
+}

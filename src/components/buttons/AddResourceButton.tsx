@@ -8,6 +8,7 @@ import { useStore } from "@/stores/useStore";
 import { toastError, toastSuccess } from "@/toasts";
 import { PathItem } from "@/types";
 import { Modes } from "@/utils/constants";
+import { ConstraintResolver, createConstraintTree } from "@/utils/constraint_utils";
 import { removeNPathPartsFromStart } from "@/utils/path_utils";
 import {
   checkCardinalities,
@@ -56,6 +57,9 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
             : "hover:bg-green-800"
         }}`}
         onClick={() => {
+          // DEBUG
+          console.log(profileTree);
+          // DEBUG
           if (profileTree.length === 0) {
             return;
           }
@@ -76,6 +80,9 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
             );
             return;
           }
+          // DEVELOP
+          const constraintResolver = new ConstraintResolver(profileTree);
+          // DEVELOP
           let formattedInputData = formatInputDataForResource(inputData);
           formattedInputData = addResourceTypeToInputData(formattedInputData);
           const resource = createJsonFromPathArray(formattedInputData);
