@@ -13,8 +13,12 @@ export class ConstraintResolver {
         this.profileTree = profileTree;
         this.constraintTree = [];
         this.createConstraintTree();
+        // DEVELOP
         console.log("constraint tree");
         console.log(this.constraintTree);
+        // DEVELOP
+
+        this.handleChoiceType();
     }
 
     // So plan first of all: from the profile tree create a subset. This subset
@@ -25,14 +29,16 @@ export class ConstraintResolver {
         let firstChildren: ProfileTreeNode[];
         firstChildren = this.getFirstChildren();
         firstChildren.forEach(this.flagNodesAndBuildTree, this);
+        this.handleChoiceType();
     }
 
 
     // recursive method to parse profileTree for constraintTree construction
     // a node is to be included if a descendant is primitive with value
-    flagNodesAndBuildTree(node:ProfileTreeNode): boolean{
+    flagNodesAndBuildTree(node:ProfileTreeNode): {selfPath:string, includeParent:boolean}{
         let includeParent = false;
-        let childrenResponses: boolean[] = [];
+        let childrenResponses: {selfPath:string, includeParent:boolean}[] = [];
+        let selfPath = node.dataPath;
 
         // end of recursion
         if(node.isPrimitive && node.value){
@@ -48,11 +54,24 @@ export class ConstraintResolver {
                 }
             }
         }
-        if(includeParent || childrenResponses.includes(true)){
+        // if any of the children is to be included, then the parent is to be included
+        if(includeParent || childrenResponses.some(response => response.includeParent)){
             this.constraintTree.push(node);
             includeParent = true;
+            this.updateChildPaths(node, childrenResponses);
         }
-        return includeParent;
+        return {selfPath, includeParent};
+    }
+
+    updateChildPaths(node: ProfileTreeNode, childrenResponses: {selfPath:string, includeParent:boolean}[]){
+        // update the childPaths of the node
+        let newChildPaths: string[] = [];
+        childrenResponses.forEach(response => {
+            if(response.includeParent){
+                newChildPaths.push(response.selfPath);
+            }
+        });
+        node.childPaths = newChildPaths;
     }
 
     getChildNodeFromPath(childPath: string){
@@ -71,7 +90,27 @@ export class ConstraintResolver {
         return firstChildren;
     }
 
-    handleChoiceType(node:ProfileTreeNode, firstChildren: ProfileTreeNode[]){
-        // might actually be too early to handle it here already
+    handleChoiceType(){
+        // find all choice nodes
+        const choiceNodes = this.constraintTree.filter(node =>{
+            return node.dataPath.includes("[x]");
+        })
+        
+        // need to get index of choice in path
+
+        // resolve Choice from children
+        choiceNodes.forEach(node => {
+            let parentFromChildren = [];
+            for(let i=0; i< node.childPaths.length; i++){
+                
+            }
+            console.log("Choice nodes");
+            console.log(choiceNodes);
+            console.log("parent from children");
+            console.log(parentFromChildren);
+            console.log("Parent from Children");
+            console.log(parentFromChildren);
+        });
+        
     }
 }

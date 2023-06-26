@@ -261,7 +261,6 @@ export function extractPathValuePairs(profileTree: ProfileTree) {
       path: node.dataPath,
       value: node.value!,
     }));
-    console.log(inputData);
   return inputData;
 }
 
@@ -318,10 +317,6 @@ export function convertObjectToPathArray(obj: object): PathItem[] {
 
 // currently in use
 export function createJsonFromPathArray(pathArray: PathItem[]): any {
-  //DEBUG
-  console.log(pathArray);
-  //DEBUG
-
   const result: any = {}; // Initialize the result object
 
   for (const pathObj of pathArray) {
