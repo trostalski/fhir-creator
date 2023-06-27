@@ -1,5 +1,6 @@
 import { useStore } from "@/stores/useStore";
 import { ProfileTreeNode, ProfileTree } from "@/utils/buildTree";
+import { nodeIsType } from "@/utils/tree_utils";
 import React, { useState } from "react";
 import Select from "react-select";
 
@@ -34,7 +35,11 @@ const BindingCodeInput = (props: BindingCodeInputProps) => {
     const nodeIndex = newProfileTree.findIndex(
       (node) => node.dataPath === props.node.dataPath
     );
-    newProfileTree[nodeIndex].value = code;
+    if (nodeIsType(props.node, "CodeableConcept")) {
+      newProfileTree[nodeIndex].value = code;
+    } else {
+      newProfileTree[nodeIndex].value = code!.code;
+    }
     updateProfileTree(newProfileTree);
   };
 

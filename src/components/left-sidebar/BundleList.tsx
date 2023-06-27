@@ -8,20 +8,17 @@ import omit from "lodash/omit";
 import { MdExpandLess, MdExpandMore, MdOutlineClear } from "react-icons/md";
 import { StructureDefinition } from "fhir/r4";
 
-const BundleList = () => {
+interface BundleListProps {
+  setCheckedBundles: (checkedBundles: string[]) => void;
+  checkedBundles: string[];
+}
+
+const BundleList = (props: BundleListProps) => {
   const bundles = useLiveQuery(() => db.bundles.toArray());
   const { setProfileTree, setMode } = useStore((state) => {
     return { setProfileTree: state.setProfileTree, setMode: state.setMode };
   });
   const [openBundles, setOpenBundles] = React.useState<string[]>([]);
-
-  const deleteBundle = (id: string) => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this bundle?"
-    );
-    if (!confirm) return;
-    db.bundles.delete(id);
-  };
 
   return (
     <div className="flex flex-col gap-2">
@@ -29,10 +26,7 @@ const BundleList = () => {
         <div className="text-xs text-gray-500 w-full">No bundles</div>
       )}
       {bundles?.map((bundle) => (
-        <div
-          key={bundle.id}
-          className="border boder-gray-200 rounded-md p-1 w-full"
-        >
+        <>
           <div className="flex flex-row items-center w-full text-sm">
             <div className="flex flex-row gap-2 items-center grow overflow-hidden">
               <button
@@ -68,12 +62,18 @@ const BundleList = () => {
                 Bundle/{bundle.id}
               </button>
             </div>
-            <button
-              className="hover:scale-105"
-              onClick={() => deleteBundle(bundle.id!)}
-            >
-              <MdOutlineClear size={20} className="ml-2" />
-            </button>
+            <input
+              type="checkbox"
+              checked={props.checkedBundles.includes(bundle.id!)}
+              className="ml-2 cursor-pointer"
+              onChange={() => {
+                props.setCheckedBundles(
+                  props.checkedBundles.includes(bundle.id!)
+                    ? props.checkedBundles.filter((id) => id !== bundle.id)
+                    : [...props.checkedBundles, bundle.id!]
+                );
+              }}
+            />
           </div>
           {openBundles.includes(bundle.id!) && (
             <div className="w-full overflow-scroll pt-2 pl-2">
@@ -96,7 +96,7 @@ const BundleList = () => {
                 ))}
             </div>
           )}
-        </div>
+        </>
       ))}
     </div>
   );

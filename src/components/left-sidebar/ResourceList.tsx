@@ -9,7 +9,10 @@ import React from "react";
 import { MdOutlineClear } from "react-icons/md";
 import { useStore } from "@/stores/useStore";
 
-interface ResourceListProps {}
+interface ResourceListProps {
+  setCheckedResources: (checkedResources: string[]) => void;
+  checkedResources: string[];
+}
 
 const ResourceList = (props: ResourceListProps) => {
   const resourcesPathRepr = useLiveQuery(() => db.resourcesPathRepr.toArray());
@@ -21,15 +24,6 @@ const ResourceList = (props: ResourceListProps) => {
     };
   });
   const profiles = useLiveQuery(() => db.profiles.toArray());
-  const deleteResource = (id: string) => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this resource?"
-    );
-    if (!confirm) return;
-    db.resourcesPathRepr.delete(id);
-    db.resources.delete(id);
-  };
-
   const getResourceTypeFromPathRepr = (pathRepr: ResourcePathRepr) => {
     const result = pathRepr.data.find(
       (data) => data.path === "resourceType"
@@ -78,12 +72,20 @@ const ResourceList = (props: ResourceListProps) => {
                 resourcePathRepr.id}
             </span>
           </button>
-          <button
-            className="hover:scale-105"
-            onClick={() => deleteResource(resourcePathRepr.id)}
-          >
-            <MdOutlineClear size={20} className="ml-2" />
-          </button>
+          <input
+            type="checkbox"
+            checked={props.checkedResources.includes(resourcePathRepr.id)}
+            className="ml-2 cursor-pointer"
+            onChange={(e) => {
+              props.setCheckedResources(
+                props.checkedResources.includes(resourcePathRepr.id)
+                  ? props.checkedResources.filter(
+                      (id) => id !== resourcePathRepr.id
+                    )
+                  : [...props.checkedResources, resourcePathRepr.id]
+              );
+            }}
+          />
         </div>
       ))}
     </div>

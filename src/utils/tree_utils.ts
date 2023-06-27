@@ -1,7 +1,7 @@
 import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { rootName } from "./constants";
 import { getPathLength } from "./path_utils";
-import { getBranchId, logWithCopy } from "./utils";
+import { getBranchId } from "./utils";
 
 export function extractDirectChildrenPaths(
   parentPath: string,
@@ -218,13 +218,23 @@ export function getExpansionBgColour(
   pathsWithInvalidCardinality: string[],
   node: ProfileTreeNode
 ) {
-  if (pathsWithInvalidCardinality.includes(node.dataPath)) {
-    return "bg-red-400";
-  } else if (nodeOrChildWasModified(profileTree, node)) {
+  if (nodeOrChildWasModified(profileTree, node)) {
     return "bg-green-500";
+  } else if (pathsWithInvalidCardinality.includes(node.dataPath)) {
+    return "bg-red-400";
   } else if (node.element.sliceName) {
     return "bg-violet-300";
   } else {
     return "bg-blue-300";
+  }
+}
+
+export function nodeIsType(node: ProfileTreeNode, type: string) {
+  if (node.multiTypeType) {
+    return node.multiTypeType === type;
+  } else if (!node.element.type) {
+    return false;
+  } else {
+    return node.element.type[0].code === type;
   }
 }
