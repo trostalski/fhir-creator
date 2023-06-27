@@ -31,6 +31,8 @@ import {
 } from "./path_utils";
 import { extractDirectChildrenPaths, getNodeByDataPath } from "./tree_utils";
 import { ValueSetResolver } from "./valueset_utils";
+import { profile } from "console";
+import { ro } from "date-fns/locale";
 
 export interface ProfileTreeNode {
   element: ElementDefinition;
@@ -40,6 +42,7 @@ export interface ProfileTreeNode {
   childPaths: string[];
   basePath: string; // used for differential merging
   isPrimitive: boolean;
+  isRoot?: boolean;
   bindingCodes?: Coding[];
   isMultiType?: boolean;
   isRootPrimitive?: boolean;
@@ -206,6 +209,27 @@ const tryGetBindingCodes = async (element: ElementDefinition) => {
   return codes;
 };
 
+function addRootNode(
+  profileTree: ProfileTreeNode[],
+  elements:ElementDefinition[])
+  {
+    const rootElement = elements.find(element=>{
+      return !element.id!.includes(pathDelimiter);
+    })
+    const elementNode: ProfileTreeNode = {
+      element: rootElement!,
+      dataPath: rootName,
+      parentDataPath: "",
+      basePath: rootName,
+      baseId: rootElement!.id!,
+      isPrimitive: false,
+      isRoot: true,
+      childPaths: [],
+      value: "",
+    };
+    profileTree.push(elementNode);
+  }
+
 export const buildProfileTree = async (
   profile: StructureDefinition
 ): Promise<ProfileTree> => {
@@ -213,6 +237,8 @@ export const buildProfileTree = async (
   const profileTree = await buildTreeFromElementsRecursive(elements);
   replaceWrongParentPaths(profileTree);
   addMissingChildren(profileTree);
+  // add root node for constraint checking
+  addRootNode(profileTree, elements);
   return profileTree;
 };
 

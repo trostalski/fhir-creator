@@ -1,16 +1,16 @@
 import fhirpath from "fhirpath";
 import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { ConstraintItem } from "@/types";
-import { id } from "date-fns/locale";
+import { id, ro } from "date-fns/locale";
+import { ElementDefinitionConstraint } from "fhir/r4";
 
 
 
-// gonna first implement some stuff with functions before putting it all in a class I guess
 export class ConstraintResolver {
     private profileTree: ProfileTree;
     private constraintTree : ProfileTreeNode[];
     private resource: any;
-    private evaluationResult: {node:ProfileTreeNode, constraint:ConstraintItem[]}[];
+    private evaluationResult: {node:ProfileTreeNode, constraints:ElementDefinitionConstraint[]}[];
 
 
     constructor(profileTree:ProfileTree){
@@ -29,33 +29,78 @@ export class ConstraintResolver {
     }
 
     evaluate(){
-        const resourceString = JSON.stringify(this.resource);
-        this.constraintTree.forEach(item =>{
-            const constraints = item.element.constraint;
+        this.constraintTree.forEach(node =>{
+            const constraints = node.element.constraint;
             if(constraints){
-                constraints.forEach(element =>{
-                    const expression = [item.element.id, element.expression].join(".");
+                let failedConstraints: ElementDefinitionConstraint[] = [];
+                constraints.forEach(constraint =>{
+                    const expression = [node.element.id, constraint.expression].join(".");
                     if(expression){
-                        const result = fhirpath.evaluate(resourceString, expression);
-                        if(!result){
-                            this.evaluationResult.push(result);
+                        const result = fhirpath.evaluate(this.resource, expression);
+                        if(!result[0]){
+                            failedConstraints.push(constraint);
                         }
                     }
                 })
+                if(failedConstraints.length > 0){
+                    this.evaluationResult.push({
+                        node: node,
+                        constraints: failedConstraints
+                    })
+                }
             }
         })
+        console.log("evaluationResult");
         console.log(this.evaluationResult);
     }
 
-    // So plan first of all: from the profile tree create a subset. This subset
-    // contains all the leaf nodes with values as well as all their parent nodes
+    private addRootNode(){
+        const rootNode = this.profileTree.find(item => {
+            return item.dataPath === "root";
+        });
+        if(rootNode){
+            this.constraintTree.push(rootNode);
+        };
+    }
 
     private createConstraintTree(){
-        // apparently the profileTree does not contain the root node...
         let firstChildren: ProfileTreeNode[];
         firstChildren = this.getFirstChildren();
         firstChildren.forEach(this.flagNodesAndBuildTree, this);
         this.handleChoiceType();
+        this.addRootNode();
+        this.ensureElementIds();
+    }
+
+    private ensureElementIds(){
+        // the profile tree nodes that were created from complex types do not have correct id in their element
+        // correct IDs needed for correct expression generation
+        const resourceType = this.getResourceType();
+        if(resourceType){
+            this.constraintTree.forEach(node =>{
+                this.updateBaseId(node, resourceType);
+            });
+        };
+
+    }
+
+    private updateBaseId(node:ProfileTreeNode, resourceType:string){
+        const dataPath = node.dataPath;
+        const updatedDataPath = dataPath.replace("root", resourceType);
+        node.element.id = updatedDataPath;
+    }
+
+    private getResourceType(){
+        const rootNode = this.getRootNode();
+        const resourceType = rootNode?.baseId;
+        return resourceType;
+    }
+
+    private getRootNode(){
+        const rootNode = this.constraintTree.find(node => {
+            return node.dataPath === "root";
+        })
+        return rootNode;
     }
 
 
