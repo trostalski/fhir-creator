@@ -116,6 +116,14 @@ export const primitiveTypes = [
   "uuid",
 ];
 
+export const availableAnalyzerMethods = ["Patient Similarity"];
+export const availablePatSimTypes = [
+  "categorical_string",
+  "numerical",
+  "coded_concept",
+  "coded_numerical",
+];
+
 export const resourceList = [
   "Account",
   "ActivityDefinition",

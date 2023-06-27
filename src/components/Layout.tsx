@@ -11,7 +11,7 @@ export default function Layout(props: LayoutProps) {
   const [checkoutModalOpen, setCheckoutModalOpen] = useState<boolean>(false);
 
   return (
-    <div className="w-screen h-screen overflow-hidden">
+    <div className="overflow-hidden">
       <Head>
         <title>FHIR Creator | Create and Analyze your FHIR Data</title>
         <meta
@@ -28,7 +28,7 @@ export default function Layout(props: LayoutProps) {
       </Head>
       <div className="w-screen h-screen overflow-hidden">
         <Header />
-        <main className="flex flex-row pt-8 h-full">
+        <main className="flex flex-row pt-8 h-full overflow-scroll">
           <LeftSidebar setCheckoutModalOpen={setCheckoutModalOpen} />
           {props.children}
         </main>

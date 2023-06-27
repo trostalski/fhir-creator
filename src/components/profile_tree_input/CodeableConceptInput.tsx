@@ -1,6 +1,6 @@
 import { useStore } from "@/stores/useStore";
 import { ProfileTreeNode, ProfileTree } from "@/utils/buildTree";
-import React from "react";
+import React, { useState } from "react";
 import Select from "react-select";
 
 interface BindingCodeInputProps {
@@ -37,10 +37,17 @@ const BindingCodeInput = (props: BindingCodeInputProps) => {
     newProfileTree[nodeIndex].value = code;
     updateProfileTree(newProfileTree);
   };
+  console.log(props.node);
 
   return (
     <>
-      <Select options={getOptions()} onChange={handleOnChange} />
+      <Select
+        options={getOptions()}
+        onChange={(e) => handleOnChange(e)}
+        value={getOptions().find(
+          (option) => option.value === props.node.value.code
+        )}
+      />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { ProfileTree, ProfileTreeNode } from "@/utils/buildTree";
+import { ProfileTreeNode } from "@/utils/buildTree";
 import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
 import BindingCodeInput from "./CodeableConceptInput";
@@ -16,15 +16,13 @@ interface InputFromTypeProps {
 }
 
 const InputFromType = (props: InputFromTypeProps) => {
-  const { setProfileTree, profileTree, updateProfileTree } = useStore(
-    (state) => {
-      return {
-        setProfileTree: state.setProfileTree,
-        profileTree: state.activeProfileTree,
-        updateProfileTree: state.updateProfileTree,
-      };
-    }
-  );
+  const { profileTree, updateProfileTree } = useStore((state) => {
+    return {
+      setProfileTree: state.setProfileTree,
+      profileTree: state.activeProfileTree,
+      updateProfileTree: state.updateProfileTree,
+    };
+  });
   const handleChange = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {

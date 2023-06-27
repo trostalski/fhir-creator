@@ -1,18 +1,18 @@
 import Layout from "@/components/Layout";
 import PatSimFeatureInput from "@/components/analyzer/PatSimFeatureInput";
 import { db } from "@/db/db";
-import { resourceList } from "@/utils/constants";
+import {
+  availableAnalyzerMethods,
+  availablePatSimTypes,
+  resourceList,
+} from "@/utils/constants";
 import { useLiveQuery } from "dexie-react-hooks";
 import React from "react";
 
 export interface PatientSimilarityFeature {
   id: number;
   name: string;
-  type:
-    | "categorical_string"
-    | "numerical"
-    | "coded_concept"
-    | "coded_numerical";
+  type: (typeof availablePatSimTypes)[number];
   targetResources: (typeof resourceList)[number][];
   targetPaths: string;
   conditionalPaths: string;
@@ -21,21 +21,27 @@ export interface PatientSimilarityFeature {
 const Analyzer = () => {
   const bundles = useLiveQuery(() => db.bundles.toArray());
   const resources = useLiveQuery(() => db.resources.toArray());
-  const currentFeatureIndex = React.useRef(1);
-  const [inputFeatures, setInputFeatures] = React.useState<
+  const [analysisMethod, setAnalysisMethod] = React.useState<
+    (typeof availableAnalyzerMethods)[number]
+  >(availableAnalyzerMethods[0]);
+  const defaultFeature: PatientSimilarityFeature = {
+    id: 0,
+    name: "",
+    type: "",
+    targetResources: [],
+    targetPaths: "",
+    conditionalPaths: "",
+  };
+  const [selectedFeatures, setSelectedFeatures] = React.useState<
     PatientSimilarityFeature[]
-  >([
-    {
-      id: 1,
-      name: "Age",
-      type: "numerical",
-      targetResources: ["Patient"],
-      targetPaths: "",
-      conditionalPaths: "",
-    },
-  ]);
-
-  const availableAnalyzerMethods = ["Patient Similarity"];
+  >([defaultFeature]);
+  const [seletcedResourceIds, setSelectedResourceIds] = React.useState<
+    string[]
+  >([]);
+  const [selectedBundleIds, setSelectedBundleIds] = React.useState<string[]>(
+    []
+  );
+  const [results, setResults] = React.useState<any[]>([]);
 
   return (
     <div>
@@ -46,81 +52,194 @@ const Analyzer = () => {
             <div className="flex flex-row w-full gap-4 p-4 rounded-lg bg-blue-50">
               {availableAnalyzerMethods.map((method) => (
                 <div key={method}>
-                  <button className="bg-white border p-2 rounded-lg">
+                  <button
+                    className={`p-2 rounded-lg ${
+                      method === analysisMethod
+                        ? "bg-sky-600 border-0 text-white"
+                        : "bg-white"
+                    }`}
+                  >
                     {method}
                   </button>
                 </div>
               ))}
             </div>
           </div>
-          <div className="flex flex-col w-full max-h-1/2 overflow-scroll">
-            <span className="text-lg">Select data</span>
+          <div className="flex flex-col w-full max-h-1/2">
+            <span className="text-lg">Data</span>
             <div className="flex flex-row gap-4 w-full p-4 rounded-lg bg-blue-50">
               <div className="flex flex-col gap-2 w-1/3">
-                {bundles?.map((bundle) => (
-                  <div
-                    key={bundle.id}
-                    className="flex flex-row items-center bg-white rounded-lg p-2"
+                <div className="flex flex-row gap-4">
+                  <span>Bundles</span>
+                  <button
+                    className="text-xs text-blue-600 hover:text-blue-800"
+                    onClick={() => {
+                      if (bundles) {
+                        setSelectedBundleIds(
+                          bundles?.map((bundle) => bundle.id!.toString())
+                        );
+                      }
+                    }}
                   >
-                    <input
-                      type="checkbox"
-                      id={bundle.id}
-                      name={bundle.id}
-                      value={bundle.id}
-                      className="rounded-md p-2 mr-2 cursor-pointer"
-                    />
-                    <label htmlFor={bundle.id}>{"Bundle/" + bundle.id}</label>
-                  </div>
-                ))}
+                    Select All
+                  </button>
+                </div>
+                {!bundles ? (
+                  <span className="text-gray-400">
+                    No bundles found. Please import a bundle first.
+                  </span>
+                ) : (
+                  bundles?.map((bundle) => (
+                    <div
+                      key={bundle.id}
+                      className="flex flex-row items-center bg-white rounded-lg p-2"
+                    >
+                      <input
+                        type="checkbox"
+                        id={bundle.id}
+                        name={bundle.id}
+                        value={bundle.id}
+                        className="rounded-md p-2 mr-2 cursor-pointer"
+                        checked={selectedBundleIds?.includes(
+                          bundle.id!.toString()
+                        )}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedBundleIds((prev) => [
+                              ...(prev ?? []),
+                              e.target.value,
+                            ]);
+                          } else {
+                            setSelectedBundleIds((prev) =>
+                              prev?.filter((id) => id !== e.target.value)
+                            );
+                          }
+                        }}
+                      />
+                      <label htmlFor={bundle.id}>{"Bundle/" + bundle.id}</label>
+                    </div>
+                  ))
+                )}
               </div>
               <div className="flex flex-col gap-2 w-1/3">
-                {resources?.map((resource) => (
-                  <div
-                    key={resource.id}
-                    className="flex flex-row items-center bg-white rounded-lg p-2"
+                <div className="flex flex-row gap-4">
+                  <span>Resources</span>
+                  <button
+                    className="text-xs text-blue-600 hover:text-blue-800"
+                    onClick={() => {
+                      if (resources) {
+                        setSelectedResourceIds(
+                          resources?.map((resource) => resource.id!.toString())
+                        );
+                      }
+                    }}
                   >
-                    <input
-                      type="checkbox"
-                      id={resource.id}
-                      name={resource.id}
-                      value={resource.id}
-                      className="rounded-md p-2 mr-2 cursor-pointer"
-                    />
-                    <label htmlFor={resource.id}>
-                      {resource.resourceType + "/" + resource.id}
-                    </label>
-                  </div>
-                ))}
+                    Select All
+                  </button>
+                </div>
+                {!resources ? (
+                  <span className="text-gray-400">
+                    No resources found. Please import a resources first.
+                  </span>
+                ) : (
+                  resources?.map((resource) => (
+                    <div
+                      key={resource.id}
+                      className="flex flex-row items-center bg-white rounded-lg p-2"
+                    >
+                      <input
+                        type="checkbox"
+                        id={resource.id}
+                        name={resource.id}
+                        value={resource.id}
+                        checked={seletcedResourceIds?.includes(
+                          resource.id!.toString()
+                        )}
+                        className="rounded-md p-2 mr-2 cursor-pointer"
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedResourceIds((prev) => [
+                              ...(prev ?? []),
+                              e.target.value,
+                            ]);
+                          } else {
+                            setSelectedResourceIds((prev) =>
+                              prev?.filter((id) => id !== e.target.value)
+                            );
+                          }
+                        }}
+                      />
+                      <label htmlFor={resource.id}>
+                        {resource.resourceType + "/" + resource.id}
+                      </label>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
-          <div className="flex flex-col w-full max-h-1/2">
+          <div className="flex flex-col w-full">
             <div className="flex flex-row items-center gap-4">
               <span className="text-lg">Features</span>
-              <button className="text-md text-blue-600 hover:text-blue-800">
+              <button
+                className="text-md text-blue-600 hover:text-blue-800"
+                onClick={() => {
+                  setSelectedFeatures((prev) => [
+                    ...prev,
+                    {
+                      id: Math.max(...prev.map((f) => f.id)) + 1,
+                      name: "",
+                      type: "",
+                      targetResources: [],
+                      targetPaths: "",
+                      conditionalPaths: "",
+                    },
+                  ]);
+                }}
+              >
                 Add Feature
               </button>
             </div>
-            <div className="flex flex-col gap-2 bg-blue-50 rounded-lg">
-              {inputFeatures.map((feature, index) => (
+            <div className="flex flex-col bg-blue-50 rounded-lg">
+              {selectedFeatures.map((feature) => (
                 <PatSimFeatureInput
-                  key={index}
-                  featureId={index}
-                  inputFeatures={inputFeatures}
-                  setInputFeatures={setInputFeatures}
+                  key={feature.id}
+                  featureId={feature.id}
+                  inputFeatures={selectedFeatures}
+                  setInputFeatures={setSelectedFeatures}
                 />
               ))}
             </div>
           </div>
           <div className="flex flex-row w-full gap-4">
-            <button className="bg-green-600 text-white w-32 text-lg rounded py-1 px-2">
+            <button
+              className="bg-green-600 text-white w-32 text-lg rounded py-1 px-2"
+              onClick={() => {}}
+            >
               Apply
             </button>
-            <button className="bg-red-500 text-white w-32 text-lg rounded py-1 px-2">
+            <button
+              className="bg-red-500 text-white w-32 text-lg rounded py-1 px-2"
+              onClick={() => {
+                setSelectedBundleIds([]);
+                setSelectedResourceIds([]);
+                setSelectedFeatures([defaultFeature]);
+              }}
+            >
               Reset
             </button>
           </div>
           <hr className="border-gray-300" />
+          <div className="flex flex-col w-full">
+            <span className="text-lg">Results</span>
+            <div className="flex flex-col gap-2 w-full">
+              {results.length === 0 ? (
+                <span className="text-gray-400">
+                  No results found. Please apply an analysis first.
+                </span>
+              ) : null}
+            </div>
+          </div>
         </div>
       </Layout>
     </div>
