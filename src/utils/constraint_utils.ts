@@ -3,32 +3,101 @@ import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { ConstraintItem } from "@/types";
 import { id, ro } from "date-fns/locale";
 import { ElementDefinitionConstraint } from "fhir/r4";
+import ElementDefinition from "@/fhir/types/ElementDefinition";
+import { JsxEmit } from "typescript";
 
+export interface evaluationResult{
+    node:ProfileTreeNode,
+    constraints:ElementDefinitionConstraint[]
+}
+
+export interface ConstraintTreeNode extends ProfileTreeNode{
+    constraintPath:string
+}
 
 
 export class ConstraintResolver {
+
     private profileTree: ProfileTree;
-    private constraintTree : ProfileTreeNode[];
+    private constraintTree : ConstraintTreeNode[];
     private resource: any;
-    private evaluationResult: {node:ProfileTreeNode, constraints:ElementDefinitionConstraint[]}[];
+    private evaluationResults: evaluationResult[];
+    private orderedEvaluationResults: {
+        errors: evaluationResult[],
+        warnings: evaluationResult[],
+        guidelines: evaluationResult[]
+    }
+    private severityLevels = {
+        error: "error",
+        warning: "warning",
+        guideline: "guideline"
+    }
 
 
-    constructor(profileTree:ProfileTree){
+
+    constructor(profileTree:ProfileTree, resource: any){
         this.profileTree = profileTree;
+        this.resource = resource;
         this.constraintTree = [];
-        this.evaluationResult = [];
+        this.evaluationResults = [];
+        this.orderedEvaluationResults = {
+            errors:[],
+            warnings:[],
+            guidelines:[]
+        }
         this.createConstraintTree();
+        this.evaluate();
+        this.orderEvaluationResult();
         // DEVELOP
         console.log("constraint tree");
         console.log(this.constraintTree);
         // DEVELOP
     }
 
-    setResource(resource:any){
-        this.resource = resource;
+    getEvaluationResult(){
+        return this.orderedEvaluationResults;
     }
 
-    evaluate(){
+    private orderEvaluationResult(){
+        const errors = this.getSeverityLevel(this.severityLevels.error);
+        const warnings = this.getSeverityLevel(this.severityLevels.warning);
+        const guidelines = this.getSeverityLevel(this.severityLevels.guideline);
+        this.orderedEvaluationResults = {
+            errors: errors,
+            warnings: warnings,
+            guidelines: guidelines
+        };
+        console.log("orderedEvaluationResults");
+        console.log(this.orderedEvaluationResults);
+    }
+
+    private getSeverityLevel(severityLevel:string){
+        // assert that severityLevel is one of "error", "warning", "guideline"
+        const severityLevels = ["error", "warning", "guideline"];
+        if(!severityLevels.includes(severityLevel)){
+            throw new Error("severityLevel must be one of 'error', 'warning', 'guideline'");
+        };
+
+        const severityLevelResults: evaluationResult[] = [];
+        this.evaluationResults.forEach(result =>{
+            let foundConstraints: ElementDefinitionConstraint[] = [];
+            result.constraints.forEach(constraint=>{
+                if(constraint.severity === severityLevel){
+                    foundConstraints.push(constraint);
+                }
+            })
+            if(foundConstraints.length > 0){
+                const severityLevelResult: evaluationResult = {
+                    node: result.node,
+                    constraints: foundConstraints
+                }
+                severityLevelResults.push(severityLevelResult);
+            }
+        })
+        return severityLevelResults;
+    }
+
+    private evaluate(){
         this.constraintTree.forEach(node =>{
             const constraints = node.element.constraint;
             if(constraints){
@@ -43,15 +112,13 @@ export class ConstraintResolver {
                     }
                 })
                 if(failedConstraints.length > 0){
-                    this.evaluationResult.push({
+                    this.evaluationResults.push({
                         node: node,
                         constraints: failedConstraints
                     })
                 }
             }
         })
-        console.log("evaluationResult");
-        console.log(this.evaluationResult);
     }
 
     private addRootNode(){
@@ -59,8 +126,17 @@ export class ConstraintResolver {
             return item.dataPath === "root";
         });
         if(rootNode){
-            this.constraintTree.push(rootNode);
+            let constraintTreeNode = this.createConstraintTreeNode(rootNode);
+            this.constraintTree.push(constraintTreeNode);
         };
+    }
+
+    private createConstraintTreeNode(node:ProfileTreeNode){
+        let constraintTreeNode: ConstraintTreeNode = {
+            ...JSON.parse(JSON.stringify(node)),
+            constraintPath: node.dataPath
+        };
+        return constraintTreeNode;
     }
 
     private createConstraintTree(){
@@ -84,10 +160,14 @@ export class ConstraintResolver {
 
     }
 
-    private updateBaseId(node:ProfileTreeNode, resourceType:string){
-        const dataPath = node.dataPath;
-        const updatedDataPath = dataPath.replace("root", resourceType);
-        node.element.id = updatedDataPath;
+    private updateBaseId(node:ConstraintTreeNode, resourceType:string){
+        const constraintPath = node.constraintPath;
+        if(constraintPath){
+            const updatedPath = constraintPath.replace("root", resourceType);
+            node.element.id = updatedPath;
+        } else{
+            console.log("No constraint path defined for ", node);
+        }
     }
 
     private getResourceType(){
@@ -127,14 +207,16 @@ export class ConstraintResolver {
         }
         // if any of the children is to be included, then the parent is to be included
         if(includeParent || childrenResponses.some(response => response.includeParent)){
-            this.constraintTree.push(node);
+            // deep copy of profileTreeNode
+            let constraintTreeNode = this.createConstraintTreeNode(node)
+            this.constraintTree.push(constraintTreeNode);
             includeParent = true;
-            this.updateChildPaths(node, childrenResponses);
+            this.updateChildPaths(constraintTreeNode, childrenResponses);
         }
         return {selfPath, includeParent};
     }
 
-    private updateChildPaths(node: ProfileTreeNode, childrenResponses: {selfPath:string, includeParent:boolean}[]){
+    private updateChildPaths(node: ConstraintTreeNode, childrenResponses: {selfPath:string, includeParent:boolean}[]){
         // update the childPaths of the node
         let newChildPaths: string[] = [];
         childrenResponses.forEach(response => {
@@ -164,7 +246,7 @@ export class ConstraintResolver {
     private handleChoiceType(){
         // find all choice nodes
         const choiceNodes = this.constraintTree.filter(node =>{
-            return node.dataPath.includes("[x]");
+            return node.constraintPath.includes("[x]");
         })
         choiceNodes.forEach(node => {
             let parentFromChildren = this.getParentFromChildren(node);
@@ -173,7 +255,7 @@ export class ConstraintResolver {
         
     }
     
-    private getParentFromChildren(node:ProfileTreeNode){
+    private getParentFromChildren(node:ConstraintTreeNode){
         let parentFromChildren = [];
         for(let i=0; i< node.childPaths.length; i++){
             const childPath = node.childPaths[i];
@@ -183,12 +265,12 @@ export class ConstraintResolver {
         return parentFromChildren
     }
 
-    private updateChoiceType(node:ProfileTreeNode, parentFromChildren:{parentFromChildren:string, index:number}[]){
+    private updateChoiceType(node:ConstraintTreeNode, parentFromChildren:{parentFromChildren:string, index:number}[]){
         // assuming there is only one parent from children
-        let pathArr = node.dataPath.split(".");
+        let pathArr = node.constraintPath.split(".");
         pathArr[parentFromChildren[0].index] = parentFromChildren[0].parentFromChildren;
         const updatedPath = pathArr.join(".");
-        node.dataPath = updatedPath;
+        node.constraintPath = updatedPath;
        
         // update a path in element as well for constraint checking
         let idArr = node.element.id!.split(".");

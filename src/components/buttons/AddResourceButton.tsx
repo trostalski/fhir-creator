@@ -80,14 +80,23 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
             );
             return;
           }
-          // DEVELOP
-          const constraintResolver = new ConstraintResolver(profileTree);
-          // DEVELOP
           let formattedInputData = formatInputDataForResource(inputData);
           formattedInputData = addResourceTypeToInputData(formattedInputData);
           const resource = createJsonFromPathArray(formattedInputData);
-          constraintResolver.setResource(resource);
-          constraintResolver.evaluate();
+          // Constraint check
+          const constraintResolver = new ConstraintResolver(profileTree, resource);
+          const constraintResults = constraintResolver.getEvaluationResult();
+          if(constraintResults.warnings.length > 0){
+            const confirm = window.confirm("There are constraint warnings in this document")
+            if(!confirm){
+              return;
+            }
+          } else if(constraintResults.errors.length > 0){
+            toastError(
+              "Constraint error"
+              )
+              return;
+          }
           addResource(resource);
           addResourcPathRepr(formattedInputData);
           toastSuccess("Resource added");

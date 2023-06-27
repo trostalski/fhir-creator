@@ -30,6 +30,7 @@ interface RootParentProps {
   node: ProfileTreeNode;
   toggleNodeExpansion: (nodePath: string) => void;
   pathsWithInvalidCardinality: string[];
+  //CONSTRAINTPROP
   expandedNodes: string[];
 }
 
