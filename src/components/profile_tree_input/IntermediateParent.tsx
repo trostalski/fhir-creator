@@ -10,6 +10,7 @@ import { tooltipStyles } from "@/utils/styles";
 import {
   deleteBranch,
   duplicateBranch,
+  getExpansionBgColour,
   getLastDescendant,
   insertAfterNode,
 } from "@/utils/tree_utils";
@@ -79,6 +80,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
       <div className="flex flex-row">
         <div
           className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
+            profileTree!,
             props.pathsWithInvalidCardinality,
             props.node
           )}`}

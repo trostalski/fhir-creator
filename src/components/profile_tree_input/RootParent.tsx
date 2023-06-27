@@ -82,6 +82,7 @@ const RootParent = (props: RootParentProps) => {
       <div className="flex flex-row">
         <div
           className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
+            profileTree!,
             props.pathsWithInvalidCardinality,
             props.node
           )}`}

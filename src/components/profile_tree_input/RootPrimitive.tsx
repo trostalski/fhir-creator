@@ -3,9 +3,8 @@ import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import PrimitveInput from "./PrimitveInput";
-import { useStore } from "@/stores/useStore";
-import { get } from "lodash";
 import { getExpansionBgColour } from "@/utils/tree_utils";
+import { useStore } from "@/stores/useStore";
 
 interface RootPrimitiveProps {
   node: ProfileTreeNode;
@@ -15,17 +14,18 @@ interface RootPrimitiveProps {
 }
 
 const RootPrimitive = (props: RootPrimitiveProps) => {
-  const { setProfileTree } = useStore((state) => {
+  const { profileTree } = useStore((state) => {
     return {
-      setProfileTree: state.setProfileTree,
+      profileTree: state.activeProfileTree,
     };
   });
-  console.log("invalid cardinality: ", props.pathsWithInvalidCardinality);
+
   return (
     <div className="w-full rounded-md border-gray-200">
       <div className="flex flex-row">
         <div
           className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
+            profileTree!,
             props.pathsWithInvalidCardinality,
             props.node
           )}`}

@@ -197,13 +197,30 @@ export function deleteBranch(profileTree: ProfileTree, node: ProfileTreeNode) {
   return profileTree;
 }
 
+function nodeOrChildWasModified(
+  profileTree: ProfileTree,
+  node: ProfileTreeNode
+) {
+  if (node.value !== "") {
+    return true;
+  }
+  const children = getChildNodes(profileTree, node);
+  for (const child of children) {
+    if (nodeOrChildWasModified(profileTree, child)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export function getExpansionBgColour(
+  profileTree: ProfileTree,
   pathsWithInvalidCardinality: string[],
   node: ProfileTreeNode
 ) {
   if (pathsWithInvalidCardinality.includes(node.dataPath)) {
     return "bg-red-400";
-  } else if (node.value !== "") {
+  } else if (nodeOrChildWasModified(profileTree, node)) {
     return "bg-green-500";
   } else if (node.element.sliceName) {
     return "bg-violet-300";

@@ -5,7 +5,6 @@ import {
   StructureDefinition,
 } from "fhir/r4";
 import {
-  multiTypeString,
   pathDelimiter,
   primitiveTypes,
   rootName,
