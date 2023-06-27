@@ -10,6 +10,7 @@ import { tooltipStyles } from "@/utils/styles";
 import {
   deleteBranch,
   duplicateBranch,
+  getExpansionBgColour,
   getLastDescendant,
   insertAfterNode,
 } from "@/utils/tree_utils";
@@ -80,13 +81,10 @@ const RootParent = (props: RootParentProps) => {
     >
       <div className="flex flex-row">
         <div
-          className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${
-            props.pathsWithInvalidCardinality.includes(props.node.dataPath)
-              ? "bg-red-400"
-              : props.node.element.sliceName
-              ? "bg-violet-300"
-              : "bg-blue-300 "
-          }`}
+          className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
+            props.pathsWithInvalidCardinality,
+            props.node
+          )}`}
         >
           <button
             className="flex flex-row items-center"

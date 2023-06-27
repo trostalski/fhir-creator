@@ -106,7 +106,6 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
               },
             ];
           }
-          console.log(inputPathValuePairs);
           inputPathValuePairs = formatInputDataForResource(inputPathValuePairs);
           const resource = createJsonFromPathArray(inputPathValuePairs);
           updateResource(resource);

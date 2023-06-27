@@ -196,3 +196,18 @@ export function deleteBranch(profileTree: ProfileTree, node: ProfileTreeNode) {
   profileTree.splice(index, 1);
   return profileTree;
 }
+
+export function getExpansionBgColour(
+  pathsWithInvalidCardinality: string[],
+  node: ProfileTreeNode
+) {
+  if (pathsWithInvalidCardinality.includes(node.dataPath)) {
+    return "bg-red-400";
+  } else if (node.value !== "") {
+    return "bg-green-500";
+  } else if (node.element.sliceName) {
+    return "bg-violet-300";
+  } else {
+    return "bg-blue-300";
+  }
+}

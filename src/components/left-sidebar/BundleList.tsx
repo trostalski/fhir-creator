@@ -62,7 +62,6 @@ const BundleList = () => {
                   const inputData = convertObjectToPathArray(
                     omit(bundle, "entry")
                   );
-                  console.log("budnle input data: ", inputData);
                   setProfileTree(profile, inputData);
                 }}
               >

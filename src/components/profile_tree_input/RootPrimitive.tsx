@@ -4,6 +4,8 @@ import React from "react";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import PrimitveInput from "./PrimitveInput";
 import { useStore } from "@/stores/useStore";
+import { get } from "lodash";
+import { getExpansionBgColour } from "@/utils/tree_utils";
 
 interface RootPrimitiveProps {
   node: ProfileTreeNode;
@@ -18,17 +20,15 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
       setProfileTree: state.setProfileTree,
     };
   });
+  console.log("invalid cardinality: ", props.pathsWithInvalidCardinality);
   return (
     <div className="w-full rounded-md border-gray-200">
       <div className="flex flex-row">
         <div
-          className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${
-            props.pathsWithInvalidCardinality.includes(props.node.dataPath)
-              ? "bg-red-400"
-              : props.node.element.sliceName
-              ? "bg-violet-300"
-              : "bg-blue-300 "
-          }`}
+          className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
+            props.pathsWithInvalidCardinality,
+            props.node
+          )}`}
         >
           <button
             className="flex flex-row items-center"

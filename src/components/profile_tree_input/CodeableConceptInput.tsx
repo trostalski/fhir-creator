@@ -37,7 +37,6 @@ const BindingCodeInput = (props: BindingCodeInputProps) => {
     newProfileTree[nodeIndex].value = code;
     updateProfileTree(newProfileTree);
   };
-  console.log(props.node);
 
   return (
     <>
