@@ -3,6 +3,9 @@ import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
 import BindingCodeInput from "./CodeableConceptInput";
 import { useStore } from "@/stores/useStore";
+import { AiOutlineQuestionCircle } from "react-icons/ai";
+import { Tooltip } from "react-tooltip";
+import { tooltipStyles } from "@/utils/styles";
 
 interface PrimitveInputProps {
   node: ProfileTreeNode;
@@ -139,20 +142,37 @@ const PrimitveInput = (props: PrimitveInputProps) => {
     }
     `}
     >
-      <label
-        className={`block w-full text-xs font-bold dark:text-gray-200 ${
-          props.node.element.min! > 0
-            ? "after:text-red-600 after:content-['*']"
-            : ""
-        }`}
-      >
-        {getDisplayPath(props.node)}
-        <span className="text-gray-400 font-normal text-md">
-          {props.node.element.type
-            ? " (" + props.node.element.type[0].code + ")"
-            : null}
-        </span>{" "}
-      </label>
+      <div className="flex flex-row w-full gap-2">
+        <div
+          className={`flex flex-row text-xs font-bold ${
+            props.node.element.min! > 0
+              ? "after:text-red-600 after:content-['*']"
+              : ""
+          }`}
+        >
+          <span>{getDisplayPath(props.node)}</span>
+          <span className="text-gray-400 font-normal text-md">
+            {props.node.element.type
+              ? " (" + props.node.element.type[0].code + ")"
+              : null}
+          </span>{" "}
+        </div>
+        {props.node.element.short && (
+          <>
+            <div
+              data-tooltip-id={props.node.dataPath}
+              data-tooltip-content={props.node.element.short}
+            >
+              <AiOutlineQuestionCircle />{" "}
+            </div>
+            <Tooltip
+              id={props.node.dataPath}
+              place="right"
+              style={tooltipStyles}
+            />
+          </>
+        )}
+      </div>
       <InputFromType
         type={props.node.element.type![0].code}
         profileTreeNode={props.profileTreeNode}

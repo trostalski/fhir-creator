@@ -42,8 +42,7 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
           </button>
         </div>
         <div className="flex flex-col pl-2 w-full">
-          <div className="flex flex-row items-center gap-2">
-            <h2
+          <div className="flex flex-row items-center gap-2"> <h2
               className={`text-md font-bold ${
                 props.node.element.min! > 0
                   ? "after:text-red-600 after:content-['*']"

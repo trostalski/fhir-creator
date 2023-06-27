@@ -1,5 +1,5 @@
 import { usePathCounter } from "@/hooks/usePathCounter";
-import { ProfileTree, ProfileTreeNode } from "@/utils/buildTree";
+import { ProfileTreeNode } from "@/utils/buildTree";
 import {
   extractIndex,
   getDisplayPath,
