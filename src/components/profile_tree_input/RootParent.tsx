@@ -30,7 +30,6 @@ interface RootParentProps {
   node: ProfileTreeNode;
   toggleNodeExpansion: (nodePath: string) => void;
   pathsWithInvalidCardinality: string[];
-  //CONSTRAINTPROP
   expandedNodes: string[];
 }
 
@@ -48,6 +47,7 @@ const RootParent = (props: RootParentProps) => {
       updateProfileTree: state.updateProfileTree,
     };
   });
+
 
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {

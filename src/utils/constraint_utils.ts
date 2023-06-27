@@ -5,6 +5,7 @@ import { id, ro } from "date-fns/locale";
 import { ElementDefinitionConstraint } from "fhir/r4";
 import ElementDefinition from "@/fhir/types/ElementDefinition";
 import { JsxEmit } from "typescript";
+import { useValResultStore } from "@/stores/useStore";
 
 export interface ConstraintEvaluationResult{
     node:ProfileTreeNode,
@@ -15,6 +16,12 @@ export interface ConstraintTreeNode extends ProfileTreeNode{
     constraintPath:string
 }
 
+export interface OrderedConstraintResults{
+    errors: ConstraintEvaluationResult[],
+    warnings: ConstraintEvaluationResult[],
+    guidelines: ConstraintEvaluationResult[]
+}
+
 
 export class ConstraintResolver {
 
@@ -22,11 +29,7 @@ export class ConstraintResolver {
     private constraintTree : ConstraintTreeNode[];
     private resource: any;
     private evaluationResults: ConstraintEvaluationResult[];
-    private orderedEvaluationResults: {
-        errors: ConstraintEvaluationResult[],
-        warnings: ConstraintEvaluationResult[],
-        guidelines: ConstraintEvaluationResult[]
-    }
+    private orderedEvaluationResults: OrderedConstraintResults;
     private severityLevels = {
         error: "error",
         warning: "warning",
@@ -67,8 +70,6 @@ export class ConstraintResolver {
             warnings: warnings,
             guidelines: guidelines
         };
-        console.log("orderedEvaluationResults");
-        console.log(this.orderedEvaluationResults);
     }
 
     private getSeverityLevel(severityLevel:string){

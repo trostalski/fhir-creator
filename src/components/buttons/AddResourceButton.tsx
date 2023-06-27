@@ -5,6 +5,7 @@ import {
   updateResourcePathRepr,
 } from "@/db/utils";
 import { useStore } from "@/stores/useStore";
+import { useValResultStore } from "@/stores/useStore";
 import { toastError, toastSuccess } from "@/toasts";
 import { PathItem } from "@/types";
 import { Modes } from "@/utils/constants";
@@ -25,6 +26,12 @@ interface AddResourceButtonProps {
 }
 
 const AddResourceButton = (props: AddResourceButtonProps) => {
+  const { constraintEvaluationResults, setConstraintEvaluationResults} = useValResultStore((set) =>{
+    return{
+        constraintEvaluationResults: set.constraintEvaluationResults,
+        setConstraintEvaluationResults: set.setConstraintEvaluationResults
+    };
+  })
   const { mode, resourceType, profileTree } = useStore((state) => {
     return {
       mode: state.mode,
@@ -86,6 +93,7 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
           // Constraint check
           const constraintResolver = new ConstraintResolver(profileTree, resource);
           const constraintResults = constraintResolver.getEvaluationResult();
+          setConstraintEvaluationResults(constraintResults);
           if(constraintResults.warnings.length > 0){
             const confirm = window.confirm("There are constraint warnings in this document")
             if(!confirm){
