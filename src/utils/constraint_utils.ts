@@ -6,7 +6,7 @@ import { ElementDefinitionConstraint } from "fhir/r4";
 import ElementDefinition from "@/fhir/types/ElementDefinition";
 import { JsxEmit } from "typescript";
 
-export interface evaluationResult{
+export interface ConstraintEvaluationResult{
     node:ProfileTreeNode,
     constraints:ElementDefinitionConstraint[]
 }
@@ -21,11 +21,11 @@ export class ConstraintResolver {
     private profileTree: ProfileTree;
     private constraintTree : ConstraintTreeNode[];
     private resource: any;
-    private evaluationResults: evaluationResult[];
+    private evaluationResults: ConstraintEvaluationResult[];
     private orderedEvaluationResults: {
-        errors: evaluationResult[],
-        warnings: evaluationResult[],
-        guidelines: evaluationResult[]
+        errors: ConstraintEvaluationResult[],
+        warnings: ConstraintEvaluationResult[],
+        guidelines: ConstraintEvaluationResult[]
     }
     private severityLevels = {
         error: "error",
@@ -78,7 +78,7 @@ export class ConstraintResolver {
             throw new Error("severityLevel must be one of 'error', 'warning', 'guideline'");
         };
 
-        const severityLevelResults: evaluationResult[] = [];
+        const severityLevelResults: ConstraintEvaluationResult[] = [];
         this.evaluationResults.forEach(result =>{
             let foundConstraints: ElementDefinitionConstraint[] = [];
             result.constraints.forEach(constraint=>{
@@ -87,7 +87,7 @@ export class ConstraintResolver {
                 }
             })
             if(foundConstraints.length > 0){
-                const severityLevelResult: evaluationResult = {
+                const severityLevelResult: ConstraintEvaluationResult = {
                     node: result.node,
                     constraints: foundConstraints
                 }

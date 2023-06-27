@@ -2,6 +2,7 @@ import { PathItem } from "@/types";
 import { fetchProfileTree } from "@/utils/api";
 import { ProfileTree } from "@/utils/buildTree";
 import { Modes } from "@/utils/constants";
+import { ConstraintEvaluationResult } from "@/utils/constraint_utils";
 import { getResourceTypeFromProfile } from "@/utils/utils";
 import { Bundle, Resource, StructureDefinition } from "fhir/r4";
 import { create } from "zustand";
@@ -42,3 +43,12 @@ export const useStore = create<Store>((set) => ({
   },
   setMode: (mode: Modes) => set({ mode: mode }),
 }));
+
+
+interface ValResultStore{
+  constraintEvaluationResults: ConstraintEvaluationResult[]
+}
+
+export const useValResultStore = create<Store>((state)=>{
+
+})
