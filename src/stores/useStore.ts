@@ -46,13 +46,13 @@ export const useStore = create<Store>((set) => ({
 
 
 interface ValResultStore{
-  constraintEvaluationResults?: OrderedConstraintResults,
-  setConstraintEvaluationResults: (constraintEvaluationResults: OrderedConstraintResults) => void;
+  orderedConstraintResults?: OrderedConstraintResults,
+  setOrderedConstraintResults: (orderedConstraintResults: OrderedConstraintResults) => void;
 }
 
 export const useValResultStore = create<ValResultStore>((set)=>({ 
-  constraintEvaluationResults: undefined,
-  setConstraintEvaluationResults: (constraintEvaluationResults: OrderedConstraintResults) =>set({
-    constraintEvaluationResults:constraintEvaluationResults
+  orderedConstraintResults: undefined,
+  setOrderedConstraintResults: (orderedConstraintResults: OrderedConstraintResults) =>set({
+    orderedConstraintResults:orderedConstraintResults
   }),
 }));

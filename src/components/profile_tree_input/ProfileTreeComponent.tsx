@@ -6,6 +6,8 @@ import "react-tooltip/dist/react-tooltip.css";
 import RootPrimitive from "./RootPrimitive";
 import RootParent from "./RootParent";
 import { useStore } from "@/stores/useStore";
+import { useValResultStore } from "@/stores/useStore";
+import { GUIConstraintResolver } from "@/utils/constraint_utils";
 
 interface ProfileTreeComponentProps {
   checkedBranchIds: string[];
@@ -25,6 +27,11 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
       updateProfileTree: state.updateProfileTree,
     };
   });
+  const { orderedConstraintResults } = useValResultStore((set) =>{
+    return{
+      orderedConstraintResults: set.orderedConstraintResults,
+    };
+  })
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
   const [searchInput, setSearchInput] = React.useState<string | null>(null);
 
@@ -61,6 +68,13 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
       );
     }
   };
+
+
+
+  const rootGUIConstraintResolver = new GUIConstraintResolver();
+  if(orderedConstraintResults){
+    const rootGUIConstraintResolver = new GUIConstraintResolver({orderedConstraintResults: orderedConstraintResults});
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -102,6 +116,9 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
           >
             Clear
           </button>
+        </div>
+        <div>
+
         </div>
       </div>
       <div className="flex flex-col gap-4">

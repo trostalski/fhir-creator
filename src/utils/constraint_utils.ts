@@ -6,6 +6,8 @@ import { ElementDefinitionConstraint } from "fhir/r4";
 import ElementDefinition from "@/fhir/types/ElementDefinition";
 import { JsxEmit } from "typescript";
 import { useValResultStore } from "@/stores/useStore";
+import { has } from "lodash";
+import { defaultOrderedConstraintResults, defaultProfileTreeNode } from "./constants";
 
 export interface ConstraintEvaluationResult{
     node:ProfileTreeNode,
@@ -279,4 +281,67 @@ export class ConstraintResolver {
         const updatedId = idArr.join(".");
         node.element.id = updatedId;
     }
+}
+
+export interface HasConstraint{
+    error: boolean,
+    warning: boolean,
+    guideline: boolean
+}
+
+
+type GUIConstraintResolverArgs = {
+    node?: ProfileTreeNode
+    orderedConstraintResults?: OrderedConstraintResults
+}
+
+export class GUIConstraintResolver{
+    
+    private node!: ProfileTreeNode;
+    private orderedConstraintResults!: OrderedConstraintResults;
+    private hasConstraint: HasConstraint = {
+        error: false,
+        warning: false,
+        guideline: false
+    };
+
+    constructor({
+        node = defaultProfileTreeNode,
+        orderedConstraintResults = defaultOrderedConstraintResults
+    }: GUIConstraintResolverArgs = {}
+    ){
+        this.node = node;
+        this.orderedConstraintResults = orderedConstraintResults;
+        this.evalHasConstraint();
+        console.log("constraint resolver created");
+    }
+    
+    private evalHasConstraint(){
+        const hasError = this.orderedConstraintResults.errors.some(item=>{
+            return item.node.dataPath === this.node.dataPath;
+        })
+        const hasWarning = this.orderedConstraintResults.warnings.some(item=>{
+            return item.node.dataPath === this.node.dataPath;
+        })
+        const hasGuideline = this.orderedConstraintResults.guidelines.some(item=>{
+            return item.node.dataPath === this.node.dataPath;
+        })
+        this.hasConstraint = {
+            error: hasError,
+            warning: hasWarning,
+            guideline: hasGuideline
+        }
+    }
+    hasError(){
+        return this.hasConstraint.error;
+    }
+    hasWarning(){
+        return this.hasConstraint.warning;
+    }
+    hasGuideline(){
+        return this.hasConstraint.guideline;
+    }
+
+
+
 }

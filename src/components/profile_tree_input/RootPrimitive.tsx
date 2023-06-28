@@ -3,7 +3,8 @@ import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import PrimitveInput from "./PrimitveInput";
-import { useStore } from "@/stores/useStore";
+import { useStore, useValResultStore } from "@/stores/useStore";
+import { GUIConstraintResolver } from "@/utils/constraint_utils";
 
 interface RootPrimitiveProps {
   node: ProfileTreeNode;
@@ -13,6 +14,17 @@ interface RootPrimitiveProps {
 }
 
 const RootPrimitive = (props: RootPrimitiveProps) => {
+  const { orderedConstraintResults } = useValResultStore((set) =>{
+    return{
+      orderedConstraintResults: set.orderedConstraintResults
+    };
+  })
+  let guiConstraintResolver = new GUIConstraintResolver();
+  if(orderedConstraintResults){
+    let guiConstraintResolver = new GUIConstraintResolver(props.node, orderedConstraintResults);
+    console.log(guiConstraintResolver.hasWarning());
+  }
+
   const { setProfileTree } = useStore((state) => {
     return {
       setProfileTree: state.setProfileTree,
@@ -24,6 +36,8 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
         <div
           className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${
             props.pathsWithInvalidCardinality.includes(props.node.dataPath)
+              ? "bg-red-400"
+              : !guiConstraintResolver.hasWarning()
               ? "bg-red-400"
               : props.node.element.sliceName
               ? "bg-violet-300"

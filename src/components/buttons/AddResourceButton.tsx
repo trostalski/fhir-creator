@@ -9,7 +9,7 @@ import { useValResultStore } from "@/stores/useStore";
 import { toastError, toastSuccess } from "@/toasts";
 import { PathItem } from "@/types";
 import { Modes } from "@/utils/constants";
-import { ConstraintResolver, createConstraintTree } from "@/utils/constraint_utils";
+import { ConstraintResolver } from "@/utils/constraint_utils";
 import { removeNPathPartsFromStart } from "@/utils/path_utils";
 import {
   checkCardinalities,
@@ -26,10 +26,10 @@ interface AddResourceButtonProps {
 }
 
 const AddResourceButton = (props: AddResourceButtonProps) => {
-  const { constraintEvaluationResults, setConstraintEvaluationResults} = useValResultStore((set) =>{
+  const { orderedConstraintResults, setOrderedConstraintResults} = useValResultStore((set) =>{
     return{
-        constraintEvaluationResults: set.constraintEvaluationResults,
-        setConstraintEvaluationResults: set.setConstraintEvaluationResults
+      orderedConstraintResults: set.orderedConstraintResults,
+      setOrderedConstraintResults: set.setOrderedConstraintResults
     };
   })
   const { mode, resourceType, profileTree } = useStore((state) => {
@@ -92,14 +92,14 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
           const resource = createJsonFromPathArray(formattedInputData);
           // Constraint check
           const constraintResolver = new ConstraintResolver(profileTree, resource);
-          const constraintResults = constraintResolver.getEvaluationResult();
-          setConstraintEvaluationResults(constraintResults);
-          if(constraintResults.warnings.length > 0){
+          const orderedConstraintResults = constraintResolver.getEvaluationResult();
+          setOrderedConstraintResults(orderedConstraintResults);
+          if(orderedConstraintResults.warnings.length > 0){
             const confirm = window.confirm("There are constraint warnings in this document")
             if(!confirm){
               return;
             }
-          } else if(constraintResults.errors.length > 0){
+          } else if(orderedConstraintResults.errors.length > 0){
             toastError(
               "Constraint error"
               )
