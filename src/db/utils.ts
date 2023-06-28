@@ -113,7 +113,7 @@ export async function addBundle(bundle: Bundle) {
 
 export async function deleteBundles(ids: string[]) {
   try {
-    await db.bundles.delete(ids);
+    await db.bundles.bulkDelete(ids);
     return true;
   } catch (error) {
     console.log(`Failed to delete bundles with ids ${ids}`);

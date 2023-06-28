@@ -26,7 +26,7 @@ const BundleList = (props: BundleListProps) => {
         <div className="text-xs text-gray-500 w-full">No bundles</div>
       )}
       {bundles?.map((bundle) => (
-        <>
+        <div key={bundle.id}>
           <div className="flex flex-row items-center w-full text-sm">
             <div className="flex flex-row gap-2 items-center grow overflow-hidden">
               <button
@@ -96,7 +96,7 @@ const BundleList = (props: BundleListProps) => {
                 ))}
             </div>
           )}
-        </>
+        </div>
       ))}
     </div>
   );

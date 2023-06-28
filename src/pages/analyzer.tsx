@@ -1,22 +1,15 @@
 import Layout from "@/components/Layout";
-import PatSimFeatureInput from "@/components/analyzer/PatSimFeatureInput";
+import CsvFeatureInput from "@/components/analyzer/csv_export/CsvFeatureInput";
+import PatSimFeatureInput from "@/components/analyzer/patient_similarity/PatSimFeatureInput";
 import { db } from "@/db/db";
+import { CsvExportFeature, PatSimFeature } from "@/types";
 import {
   availableAnalyzerMethods,
-  availablePatSimTypes,
-  resourceList,
+  csvExportMethod,
+  patSimMethod,
 } from "@/utils/constants";
 import { useLiveQuery } from "dexie-react-hooks";
 import React from "react";
-
-export interface PatientSimilarityFeature {
-  id: number;
-  name: string;
-  type: (typeof availablePatSimTypes)[number];
-  targetResources: (typeof resourceList)[number][];
-  targetPaths: string;
-  conditionalPaths: string;
-}
 
 const Analyzer = () => {
   const bundles = useLiveQuery(() => db.bundles.toArray());
@@ -24,24 +17,84 @@ const Analyzer = () => {
   const [analysisMethod, setAnalysisMethod] = React.useState<
     (typeof availableAnalyzerMethods)[number]
   >(availableAnalyzerMethods[0]);
-  const defaultFeature: PatientSimilarityFeature = {
-    id: 0,
-    name: "",
-    type: "",
-    targetResources: [],
-    targetPaths: "",
-    conditionalPaths: "",
-  };
-  const [selectedFeatures, setSelectedFeatures] = React.useState<
-    PatientSimilarityFeature[]
-  >([defaultFeature]);
-  const [seletcedResourceIds, setSelectedResourceIds] = React.useState<
+
+  const [patSimFeatures, setPatSimFeatures] = React.useState<PatSimFeature[]>([
+    {
+      id: 0,
+      name: "",
+      targetResources: [],
+      type: "",
+      targetPath: "",
+      condition: "",
+    },
+  ]);
+  const [csvExportFeatures, setCsvExportFeatures] = React.useState<
+    CsvExportFeature[]
+  >([
+    {
+      id: 0,
+      name: "",
+      targetResources: [],
+      targetPath: "",
+      condition: "",
+    },
+  ]);
+  const [selectedResourceIds, setSelectedResourceIds] = React.useState<
     string[]
   >([]);
   const [selectedBundleIds, setSelectedBundleIds] = React.useState<string[]>(
     []
   );
   const [results, setResults] = React.useState<any[]>([]);
+
+  const handleAddFeature = () => {
+    if (analysisMethod === patSimMethod) {
+      setPatSimFeatures((prev: PatSimFeature[]) => [
+        ...prev,
+        {
+          id: Math.max(...prev.map((f) => f.id)) + 1,
+          name: "",
+          type: "",
+          targetResources: [],
+          targetPath: "",
+          conditionalPath: "",
+        },
+      ]);
+    } else if (analysisMethod === csvExportMethod) {
+      setCsvExportFeatures((prev: CsvExportFeature[]) => [
+        ...prev,
+        {
+          id: Math.max(...prev.map((f) => f.id)) + 1,
+          name: "",
+          targetResources: [],
+          targetPath: "",
+          condition: "",
+        },
+      ]);
+    }
+  };
+
+  const getFeatureComponent = () => {
+    if (analysisMethod === patSimMethod) {
+      return patSimFeatures.map((feature) => (
+        <PatSimFeatureInput
+          key={feature.id}
+          featureId={feature.id}
+          inputFeature={feature}
+          setInputFeatures={setPatSimFeatures}
+        />
+      ));
+    } else if (analysisMethod === csvExportMethod) {
+      return csvExportFeatures.map((feature) => (
+        <CsvFeatureInput
+          key={feature.id}
+          featureId={feature.id}
+          inputFeature={feature}
+          setInputFeatures={setCsvExportFeatures}
+        />
+      ));
+    }
+  };
 
   return (
     <div>
@@ -53,6 +106,7 @@ const Analyzer = () => {
               {availableAnalyzerMethods.map((method) => (
                 <div key={method}>
                   <button
+                    onClick={() => setAnalysisMethod(method)}
                     className={`p-2 rounded-lg ${
                       method === analysisMethod
                         ? "bg-sky-600 border-0 text-white"
@@ -152,7 +206,7 @@ const Analyzer = () => {
                         id={resource.id}
                         name={resource.id}
                         value={resource.id}
-                        checked={seletcedResourceIds?.includes(
+                        checked={selectedResourceIds?.includes(
                           resource.id!.toString()
                         )}
                         className="rounded-md p-2 mr-2 cursor-pointer"
@@ -183,32 +237,13 @@ const Analyzer = () => {
               <span className="text-lg">Features</span>
               <button
                 className="text-md text-blue-600 hover:text-blue-800"
-                onClick={() => {
-                  setSelectedFeatures((prev) => [
-                    ...prev,
-                    {
-                      id: Math.max(...prev.map((f) => f.id)) + 1,
-                      name: "",
-                      type: "",
-                      targetResources: [],
-                      targetPaths: "",
-                      conditionalPaths: "",
-                    },
-                  ]);
-                }}
+                onClick={handleAddFeature}
               >
                 Add Feature
               </button>
             </div>
             <div className="flex flex-col bg-blue-50 rounded-lg">
-              {selectedFeatures.map((feature) => (
-                <PatSimFeatureInput
-                  key={feature.id}
-                  featureId={feature.id}
-                  inputFeatures={selectedFeatures}
-                  setInputFeatures={setSelectedFeatures}
-                />
-              ))}
+              {getFeatureComponent()}
             </div>
           </div>
           <div className="flex flex-row w-full gap-4">
@@ -223,7 +258,27 @@ const Analyzer = () => {
               onClick={() => {
                 setSelectedBundleIds([]);
                 setSelectedResourceIds([]);
-                setSelectedFeatures([defaultFeature]);
+                // reset to default features
+                setPatSimFeatures([
+                  {
+                    id: 0,
+                    name: "",
+                    targetResources: [],
+                    type: "",
+                    targetPath: "",
+                    condition: "",
+                  },
+                ]);
+                setCsvExportFeatures([
+                  {
+                    id: 0,
+                    name: "",
+                    targetResources: [],
+                    targetPath: "",
+                    condition: "",
+                  },
+                ]);
+                console.log(patSimFeatures);
               }}
             >
               Reset

@@ -1,4 +1,4 @@
-import { OptionType } from "../types";
+import { OptionType, PatSimFeature } from "../types";
 
 export const rootName = "root";
 export const pathDelimiter = ".";
@@ -116,7 +116,24 @@ export const primitiveTypes = [
   "uuid",
 ];
 
-export const availableAnalyzerMethods = ["Patient Similarity"];
+export const csvExportMethod = "CSV Export";
+export const patSimMethod = "Patient Similarity";
+export const availableAnalyzerMethods = [csvExportMethod, patSimMethod];
+export const defaultCsvExportFeature = {
+  id: 0,
+  name: "",
+  targetResources: [],
+  condition: "",
+  targetPath: "",
+};
+export const defaultPatSimFeature: PatSimFeature = {
+  id: 0,
+  name: "",
+  type: "",
+  targetResources: [],
+  targetPath: "",
+  condition: "",
+};
 export const availablePatSimTypes = [
   "categorical_string",
   "numerical",
