@@ -64,9 +64,6 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
             : "hover:bg-green-800"
         }}`}
         onClick={() => {
-          // DEBUG
-          console.log(profileTree);
-          // DEBUG
           if (profileTree.length === 0) {
             return;
           }

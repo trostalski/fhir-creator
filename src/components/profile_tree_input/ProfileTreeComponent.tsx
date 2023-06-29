@@ -7,7 +7,10 @@ import RootPrimitive from "./RootPrimitive";
 import RootParent from "./RootParent";
 import { useStore } from "@/stores/useStore";
 import { useValResultStore } from "@/stores/useStore";
-import { GUIConstraintResolver } from "@/utils/constraint_utils";
+import { GUIConstraintResolver, OrderedConstraintResults } from "@/utils/constraint_utils";
+import { defaultProfileTreeNode } from "@/utils/constants";
+import { has } from "lodash";
+import { WarningComponent } from "./WarningComponent";
 
 interface ProfileTreeComponentProps {
   checkedBranchIds: string[];
@@ -69,79 +72,96 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     }
   };
 
+  function renderWarning(node: ProfileTreeNode, guiConstraintResolver: GUIConstraintResolver){
+    const warnings = guiConstraintResolver.getWarnings();
+    if(warnings){
+     return (
+      warnings.map(warning=>{
+        return(
+          <span className="text-gray-500 text-xs" key={warning.key}>{warning.human}</span>
+        )
+      })
+      )
+    }
+  }
 
+  const dummyRootNode = {...defaultProfileTreeNode, dataPath:"root"};
 
-  const rootGUIConstraintResolver = new GUIConstraintResolver();
+  let guiConstraintResolver;
   if(orderedConstraintResults){
-    const rootGUIConstraintResolver = new GUIConstraintResolver({orderedConstraintResults: orderedConstraintResults});
+    guiConstraintResolver = new GUIConstraintResolver({ node:dummyRootNode ,orderedConstraintResults});
+  } else{
+    guiConstraintResolver = new GUIConstraintResolver();
   }
 
   return (
+
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col mb-4 gap-2">
-        <div className="flex flex-rowp gap-4 items-center">
-          <span className="text-gray-500 text-xs">Profile URL:</span>
+    <div className="flex flex-col mb-4 gap-2">
+    <div className="flex flex-row gap-4 items-center">
+    <span className="text-gray-500 text-xs">Profile URL:</span>
           <span className="text-sm">{profile!.url}</span>
         </div>
         <div className="flex flex-row">
-          <input
-            placeholder="Search Elements"
-            className="h-8 w-full border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            onChange={(e) => {
+        <input
+        placeholder="Search Elements"
+        className="h-8 w-full border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        onChange={(e) => {
               setSearchInput(e.target.value);
             }}
-          />
-          <span className="flex-grow" />
-          <button
+            />
+            <span className="flex-grow" />
+            <button
             className="text-gray-500 w-32 hover:text-gray-70 text-xs rounded py-1 px-2"
             onClick={() => setExpandedNodes([])}
-          >
+            >
             Collapse All
-          </button>
-          <button
+            </button>
+            <button
             className="text-gray-500 w-32 hover:text-gray-700 text-xs rounded py-1 px-2"
             onClick={() =>
               setExpandedNodes(profileTree!.map((node) => node.dataPath))
             }
-          >
-            Open All
+            >
+          Open All
           </button>
           <button
-            className="text-red-500 w-20 hover:text-red-700 text-xs rounded py-1 px-2"
-            onClick={() => {
-              props.setPathsWithInvalidCardinality([]);
-              setExpandedNodes([]);
-              updateProfileTree(undefined);
-            }}
+          className="text-red-500 w-20 hover:text-red-700 text-xs rounded py-1 px-2"
+          onClick={() => {
+            props.setPathsWithInvalidCardinality([]);
+            setExpandedNodes([]);
+            updateProfileTree(undefined);
+          }}
           >
-            Clear
+          Clear
           </button>
-        </div>
-        <div>
-
-        </div>
-      </div>
-      <div className="flex flex-col gap-4">
-        {profileTree!
-          .filter((node) => shouldDisplayNode(node, props.checkedBranchIds))
-          .filter((node) => {
-            if (searchInput) {
-              return getDisplayPath(node)
+          </div>
+          <WarningComponent
+            node={dummyRootNode}
+          />
+          </div>
+          <div className="flex flex-col gap-4">
+          {profileTree!
+            .filter((node) => shouldDisplayNode(node, props.checkedBranchIds))
+            .filter((node) => {
+              if (searchInput) {
+                return getDisplayPath(node)
                 .toLowerCase()
                 .includes(searchInput.toLowerCase());
-            } else {
-              return true;
-            }
-          })
-          .map((node: ProfileTreeNode) => {
+              } else {
+                return true;
+              }
+            })
+            .map((node: ProfileTreeNode) => {
             if (node.parentDataPath === "root") {
               return renderRootNode(node);
             }
             return null;
           })}
       </div>
-    </div>
-  );
-};
+      </div>
+      );
+    };
 
-export default ProfileTreeComponent;
+    export default ProfileTreeComponent;
+    

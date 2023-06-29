@@ -5,6 +5,7 @@ import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import PrimitveInput from "./PrimitveInput";
 import { useStore, useValResultStore } from "@/stores/useStore";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
+import { WarningComponent } from "./WarningComponent";
 
 interface RootPrimitiveProps {
   node: ProfileTreeNode;
@@ -21,8 +22,7 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
   })
   let guiConstraintResolver = new GUIConstraintResolver();
   if(orderedConstraintResults){
-    let guiConstraintResolver = new GUIConstraintResolver(props.node, orderedConstraintResults);
-    console.log(guiConstraintResolver.hasWarning());
+    let guiConstraintResolver = new GUIConstraintResolver({node: props.node, orderedConstraintResults});
   }
 
   const { setProfileTree } = useStore((state) => {
@@ -71,6 +71,9 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
                 ? "(" + props.node.element.type[0].code + ")"
                 : null}
             </span>
+            <WarningComponent
+              node={props.node}
+            />
           </div>
           {props.expandedNodes.includes(props.node.dataPath) && (
             <div key={props.node.dataPath} className="flex-grow py-2  pl-40">

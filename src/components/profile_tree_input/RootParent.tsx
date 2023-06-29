@@ -26,6 +26,7 @@ import PrimitveInput from "./PrimitveInput";
 import IntermediateParent from "./IntermediateParent";
 import { useStore, useValResultStore } from "@/stores/useStore";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
+import { WarningComponent } from "./WarningComponent";
 
 interface RootParentProps {
   node: ProfileTreeNode;
@@ -55,8 +56,7 @@ const RootParent = (props: RootParentProps) => {
   })
   let guiConstraintResolver = new GUIConstraintResolver();
   if(orderedConstraintResults){
-    let guiConstraintResolver = new GUIConstraintResolver(props.node, orderedConstraintResults);
-    console.log(guiConstraintResolver.hasWarning());
+    let guiConstraintResolver = new GUIConstraintResolver({node: props.node, orderedConstraintResults});
   }
 
 
@@ -130,6 +130,9 @@ const RootParent = (props: RootParentProps) => {
                   ? "(" + props.node.element.type[0].code + ")"
                   : null}
               </span>
+              <WarningComponent
+                node={props.node}
+              />
             </div>
             <span className="flex-grow" />
             <div className="flex flex-row items-center gap-2">

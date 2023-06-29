@@ -297,7 +297,7 @@ type GUIConstraintResolverArgs = {
 
 export class GUIConstraintResolver{
     
-    private node!: ProfileTreeNode;
+    private node: ProfileTreeNode;
     private orderedConstraintResults!: OrderedConstraintResults;
     private hasConstraint: HasConstraint = {
         error: false,
@@ -313,7 +313,6 @@ export class GUIConstraintResolver{
         this.node = node;
         this.orderedConstraintResults = orderedConstraintResults;
         this.evalHasConstraint();
-        console.log("constraint resolver created");
     }
     
     private evalHasConstraint(){
@@ -340,6 +339,25 @@ export class GUIConstraintResolver{
     }
     hasGuideline(){
         return this.hasConstraint.guideline;
+    }
+
+    getErrors(){
+        const errors = this.orderedConstraintResults.errors.find(item =>{
+            return item.node.dataPath === this.node.dataPath;
+        })?.constraints;
+        return errors;
+    }
+    getWarnings(){
+        const warnings = this.orderedConstraintResults.warnings.find(item =>{
+            return item.node.dataPath === this.node.dataPath;
+        })?.constraints;
+        return warnings;
+    }
+    getGuidelines(){
+        const guidelines = this.orderedConstraintResults.guidelines.find(item =>{
+            return item.node.dataPath === this.node.dataPath;
+        })?.constraints;
+        return guidelines;
     }
 
 

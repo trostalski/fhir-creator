@@ -4,6 +4,7 @@ import React from "react";
 import BindingCodeInput from "./CodeableConceptInput";
 import { useStore, useValResultStore } from "@/stores/useStore";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
+import { WarningComponent } from "./WarningComponent";
 
 interface PrimitveInputProps {
   node: ProfileTreeNode;
@@ -139,8 +140,7 @@ const PrimitveInput = (props: PrimitveInputProps) => {
   })
   let guiConstraintResolver = new GUIConstraintResolver();
   if(orderedConstraintResults){
-    let guiConstraintResolver = new GUIConstraintResolver(props.node, orderedConstraintResults);
-    console.log(guiConstraintResolver.hasWarning());
+    let guiConstraintResolver = new GUIConstraintResolver({node: props.node, orderedConstraintResults});
   }
   return (
     <div
@@ -165,6 +165,9 @@ const PrimitveInput = (props: PrimitveInputProps) => {
             ? " (" + props.node.element.type[0].code + ")"
             : null}
         </span>{" "}
+        <WarningComponent
+          node={props.node}
+        />
       </label>
       <InputFromType
         type={props.node.element.type![0].code}
