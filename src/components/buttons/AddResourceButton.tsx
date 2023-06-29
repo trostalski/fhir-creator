@@ -87,13 +87,13 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
           const orderedConstraintResults = constraintResolver.getEvaluationResult();
           setOrderedConstraintResults(orderedConstraintResults);
           if(orderedConstraintResults.warnings.length > 0){
-            const confirm = window.confirm("There are constraint warnings in this document")
+            const confirm = window.confirm("There are constraint warnings in this document. By clicking ok you chose to ignore them and proceed anyway.")
             if(!confirm){
               return;
             }
           } else if(orderedConstraintResults.errors.length > 0){
             toastError(
-              "Constraint error"
+              "Constraint error. Inspect the form for more details"
               )
               return;
           }
