@@ -24,9 +24,8 @@ import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { Tooltip } from "react-tooltip";
 import PrimitveInput from "./PrimitveInput";
 import IntermediateParent from "./IntermediateParent";
-import { useStore, useValResultStore } from "@/stores/useStore";
-import { GUIConstraintResolver } from "@/utils/constraint_utils";
-import { WarningComponent } from "./WarningComponent";
+import { useStore } from "@/stores/useStore";
+import { ConstraintComponent } from "./ConstraintComponent";
 
 interface RootParentProps {
   node: ProfileTreeNode;
@@ -49,15 +48,6 @@ const RootParent = (props: RootParentProps) => {
       updateProfileTree: state.updateProfileTree,
     };
   });
-  const { orderedConstraintResults } = useValResultStore((set) =>{
-    return{
-      orderedConstraintResults: set.orderedConstraintResults
-    };
-  })
-  let guiConstraintResolver = new GUIConstraintResolver();
-  if(orderedConstraintResults){
-    let guiConstraintResolver = new GUIConstraintResolver({node: props.node, orderedConstraintResults});
-  }
 
 
   const renderNode = (node: ProfileTreeNode) => {
@@ -95,8 +85,6 @@ const RootParent = (props: RootParentProps) => {
           className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${
             props.pathsWithInvalidCardinality.includes(props.node.dataPath)
               ? "bg-red-400"
-              : !guiConstraintResolver.hasWarning()
-              ? "bg-red-400"
               : props.node.element.sliceName
               ? "bg-violet-300"
               : "bg-blue-300 "
@@ -130,7 +118,7 @@ const RootParent = (props: RootParentProps) => {
                   ? "(" + props.node.element.type[0].code + ")"
                   : null}
               </span>
-              <WarningComponent
+              <ConstraintComponent
                 node={props.node}
               />
             </div>

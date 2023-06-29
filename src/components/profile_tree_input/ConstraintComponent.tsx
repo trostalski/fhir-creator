@@ -26,7 +26,7 @@ function renderConstraints(constraints:ElementDefinitionConstraint[]){
 
 
 
-export function WarningComponent(props: WarningComponentProps){
+export function ConstraintComponent(props: WarningComponentProps){
     const { orderedConstraintResults } = useValResultStore((set) =>{
         return{
           orderedConstraintResults: set.orderedConstraintResults
@@ -35,7 +35,6 @@ export function WarningComponent(props: WarningComponentProps){
       let guiConstraintResolver;
       if(orderedConstraintResults){
         guiConstraintResolver = new GUIConstraintResolver({node: props.node, orderedConstraintResults});
-        console.log(props.node.dataPath, guiConstraintResolver.hasWarning());
       }
       if(guiConstraintResolver){
           const warnings = guiConstraintResolver.getWarnings()!;

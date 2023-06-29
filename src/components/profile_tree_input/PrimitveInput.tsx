@@ -2,9 +2,8 @@ import { ProfileTree, ProfileTreeNode } from "@/utils/buildTree";
 import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
 import BindingCodeInput from "./CodeableConceptInput";
-import { useStore, useValResultStore } from "@/stores/useStore";
-import { GUIConstraintResolver } from "@/utils/constraint_utils";
-import { WarningComponent } from "./WarningComponent";
+import { useStore } from "@/stores/useStore";
+import { ConstraintComponent } from "./ConstraintComponent";
 
 interface PrimitveInputProps {
   node: ProfileTreeNode;
@@ -133,15 +132,6 @@ const InputFromType = (props: InputFromTypeProps) => {
 };
 
 const PrimitveInput = (props: PrimitveInputProps) => {
-  const { orderedConstraintResults } = useValResultStore((set) =>{
-    return{
-      orderedConstraintResults: set.orderedConstraintResults
-    };
-  })
-  let guiConstraintResolver = new GUIConstraintResolver();
-  if(orderedConstraintResults){
-    let guiConstraintResolver = new GUIConstraintResolver({node: props.node, orderedConstraintResults});
-  }
   return (
     <div
       className={`
@@ -165,7 +155,7 @@ const PrimitveInput = (props: PrimitveInputProps) => {
             ? " (" + props.node.element.type[0].code + ")"
             : null}
         </span>{" "}
-        <WarningComponent
+        <ConstraintComponent
           node={props.node}
         />
       </label>

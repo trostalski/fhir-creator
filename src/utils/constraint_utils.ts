@@ -53,10 +53,6 @@ export class ConstraintResolver {
         this.createConstraintTree();
         this.evaluate();
         this.orderEvaluationResult();
-        // DEVELOP
-        console.log("constraint tree");
-        console.log(this.constraintTree);
-        // DEVELOP
     }
 
     getEvaluationResult(){

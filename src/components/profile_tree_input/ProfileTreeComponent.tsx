@@ -7,10 +7,9 @@ import RootPrimitive from "./RootPrimitive";
 import RootParent from "./RootParent";
 import { useStore } from "@/stores/useStore";
 import { useValResultStore } from "@/stores/useStore";
-import { GUIConstraintResolver, OrderedConstraintResults } from "@/utils/constraint_utils";
 import { defaultProfileTreeNode } from "@/utils/constants";
 import { has } from "lodash";
-import { WarningComponent } from "./WarningComponent";
+import { ConstraintComponent } from "./ConstraintComponent";
 
 interface ProfileTreeComponentProps {
   checkedBranchIds: string[];
@@ -72,27 +71,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     }
   };
 
-  function renderWarning(node: ProfileTreeNode, guiConstraintResolver: GUIConstraintResolver){
-    const warnings = guiConstraintResolver.getWarnings();
-    if(warnings){
-     return (
-      warnings.map(warning=>{
-        return(
-          <span className="text-gray-500 text-xs" key={warning.key}>{warning.human}</span>
-        )
-      })
-      )
-    }
-  }
-
   const dummyRootNode = {...defaultProfileTreeNode, dataPath:"root"};
-
-  let guiConstraintResolver;
-  if(orderedConstraintResults){
-    guiConstraintResolver = new GUIConstraintResolver({ node:dummyRootNode ,orderedConstraintResults});
-  } else{
-    guiConstraintResolver = new GUIConstraintResolver();
-  }
 
   return (
 
@@ -136,7 +115,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
           Clear
           </button>
           </div>
-          <WarningComponent
+          <ConstraintComponent
             node={dummyRootNode}
           />
           </div>
