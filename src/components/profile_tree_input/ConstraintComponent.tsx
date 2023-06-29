@@ -30,6 +30,7 @@ function renderConstraints(constraints:ElementDefinitionConstraint[]){
             </div>
         )
     }
+    return null;
 }
 
 
@@ -47,4 +48,5 @@ export function ConstraintComponent(props: WarningComponentProps){
             </div>
           )
       }
+      return null;
 }
