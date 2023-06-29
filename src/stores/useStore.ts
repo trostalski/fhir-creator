@@ -20,6 +20,8 @@ interface Store {
   ) => Promise<void>;
   updateProfileTree: (newProfileTree: ProfileTree | undefined) => void;
   setMode: (mode: Modes) => void;
+  orderedConstraintResults?: OrderedConstraintResults | undefined,
+  setOrderedConstraintResults: (orderedConstraintResults: OrderedConstraintResults | undefined) => void;
 }
 
 export const useStore = create<Store>((set) => ({
@@ -37,22 +39,27 @@ export const useStore = create<Store>((set) => ({
     set({ activeProfile: profile });
     set({ activeResourceType: getResourceTypeFromProfile(profile) });
     set({ activeProfileTree: profileTree });
+    set({ orderedConstraintResults: undefined })
   },
   updateProfileTree: async (newProfileTree?: ProfileTree) => {
     set({ activeProfileTree: newProfileTree });
   },
   setMode: (mode: Modes) => set({ mode: mode }),
+  orderedConstraintResults: undefined,
+  setOrderedConstraintResults: (orderedConstraintResults: OrderedConstraintResults | undefined) =>set({
+    orderedConstraintResults:orderedConstraintResults
+  })
 }));
 
 
 interface ValResultStore{
-  orderedConstraintResults?: OrderedConstraintResults,
-  setOrderedConstraintResults: (orderedConstraintResults: OrderedConstraintResults) => void;
+  orderedConstraintResults?: OrderedConstraintResults | undefined,
+  setOrderedConstraintResults: (orderedConstraintResults: OrderedConstraintResults | undefined) => void;
 }
 
 export const useValResultStore = create<ValResultStore>((set)=>({ 
   orderedConstraintResults: undefined,
-  setOrderedConstraintResults: (orderedConstraintResults: OrderedConstraintResults) =>set({
+  setOrderedConstraintResults: (orderedConstraintResults: OrderedConstraintResults | undefined) =>set({
     orderedConstraintResults:orderedConstraintResults
   }),
 }));

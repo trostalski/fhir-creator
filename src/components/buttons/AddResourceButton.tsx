@@ -26,17 +26,12 @@ interface AddResourceButtonProps {
 }
 
 const AddResourceButton = (props: AddResourceButtonProps) => {
-  const { orderedConstraintResults, setOrderedConstraintResults} = useValResultStore((set) =>{
-    return{
-      orderedConstraintResults: set.orderedConstraintResults,
-      setOrderedConstraintResults: set.setOrderedConstraintResults
-    };
-  })
-  const { mode, resourceType, profileTree } = useStore((state) => {
+  const { mode, resourceType, profileTree, setOrderedConstraintResults } = useStore((state) => {
     return {
       mode: state.mode,
       resourceType: state.activeResourceType,
       profileTree: state.activeProfileTree,
+      setOrderedConstraintResults: state.setOrderedConstraintResults
     };
   });
 

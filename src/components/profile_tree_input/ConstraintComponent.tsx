@@ -4,19 +4,27 @@ import { GUIConstraintResolver } from "@/utils/constraint_utils";
 import { ElementDefinitionConstraint } from "fhir/r4";
 
 export interface WarningComponentProps{
-    node: ProfileTreeNode
+    resolver?: GUIConstraintResolver
 }
 
 function renderConstraints(constraints:ElementDefinitionConstraint[]){
     if(constraints){
         const severity = constraints[0].severity
         return(
-            <div>
+            <div className={`rounded ${
+                severity === "warning"
+                ?"bg-orange-400"
+                : severity === "error"
+                ? "bg-pink-400"
+                : severity === "guideline"
+                ? "bg-orange-500"
+                : ""
+            }`}>
                 <h2>Constraint {severity.toUpperCase()}S</h2>
             {
             constraints.map(constraint=>{
                 return(
-                    <span className="text-gray-500 text-xs" key={constraint.key}><b>Expression:</b> {constraint.expression}  <b>Explanation:</b> {constraint.human}</span>
+                    <span className="text-white-500 text-xs" key={constraint.key}><b>Expression:</b> {constraint.expression}  <b>Explanation:</b> {constraint.human}</span>
                     )
                 })}
             </div>
@@ -26,20 +34,11 @@ function renderConstraints(constraints:ElementDefinitionConstraint[]){
 
 
 
-export function ConstraintComponent(props: WarningComponentProps){
-    const { orderedConstraintResults } = useValResultStore((set) =>{
-        return{
-          orderedConstraintResults: set.orderedConstraintResults
-        };
-      })
-      let guiConstraintResolver;
-      if(orderedConstraintResults){
-        guiConstraintResolver = new GUIConstraintResolver({node: props.node, orderedConstraintResults});
-      }
-      if(guiConstraintResolver){
-          const warnings = guiConstraintResolver.getWarnings()!;
-          const errors = guiConstraintResolver.getErrors()!;
-          const guidelines = guiConstraintResolver.getGuidelines()!;
+export function ConstraintComponent(props: WarningComponentProps){  
+    if(props.resolver){
+          const warnings = props.resolver.getWarnings()!;
+          const errors = props.resolver.getErrors()!;
+          const guidelines = props.resolver.getGuidelines()!;
           return(
             <div>
                 {renderConstraints(warnings)}

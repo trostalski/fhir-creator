@@ -42,18 +42,14 @@ const IntermediateParent = (props: IntermediateParentProps) => {
     evaluateRenderAddButton,
   } = usePathCounter();
 
-  const { profileTree, profile, updateProfileTree } = useStore((state) => {
+  const { profileTree, profile, updateProfileTree, orderedConstraintResults } = useStore((state) => {
     return {
       profileTree: state.activeProfileTree,
       profile: state.activeProfile,
       updateProfileTree: state.updateProfileTree,
+      orderedConstraintResults: state.orderedConstraintResults
     };
   });
-  const { orderedConstraintResults } = useValResultStore((set) =>{
-    return{
-      orderedConstraintResults: set.orderedConstraintResults
-    };
-  })
 
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {
@@ -78,7 +74,10 @@ const IntermediateParent = (props: IntermediateParentProps) => {
       );
     }
   };
-
+  let guiConstraintResolver;
+  if(orderedConstraintResults){
+    guiConstraintResolver = new GUIConstraintResolver({node: props.node, orderedConstraintResults});
+  }
 
   return (
     <div
@@ -90,6 +89,8 @@ const IntermediateParent = (props: IntermediateParentProps) => {
           className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${
             props.pathsWithInvalidCardinality.includes(props.node.dataPath)
               ? "bg-red-400"
+              : guiConstraintResolver?.hasConstraintIssue()
+              ? "bg-pink-800"
               : props.node.element.sliceName
               ? "bg-violet-300"
               : "bg-blue-300 "
@@ -126,7 +127,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
                   : null}
               </span>
               <ConstraintComponent
-                node={props.node}
+                resolver={guiConstraintResolver}
               />
             </div>
             <span className="flex-grow" />

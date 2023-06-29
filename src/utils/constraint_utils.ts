@@ -8,6 +8,7 @@ import { JsxEmit } from "typescript";
 import { useValResultStore } from "@/stores/useStore";
 import { has } from "lodash";
 import { defaultOrderedConstraintResults, defaultProfileTreeNode } from "./constants";
+import exp from "constants";
 
 export interface ConstraintEvaluationResult{
     node:ProfileTreeNode,
@@ -26,6 +27,10 @@ export interface OrderedConstraintResults{
 
 
 export class ConstraintResolver {
+
+    // evaluates a created resource against the constraints specified in the corresponding structure definition
+    // provides the application with it's result in a ordered form for the GUI to communicate back to the user
+    // communication with the GUI elements is handled by the GUIConstraintResolver
 
     private profileTree: ProfileTree;
     private constraintTree : ConstraintTreeNode[];
@@ -292,6 +297,8 @@ type GUIConstraintResolverArgs = {
 }
 
 export class GUIConstraintResolver{
+
+    // handles logic to provide GUI elements with individualized information wether they are affected from constraint issues
     
     private node: ProfileTreeNode;
     private orderedConstraintResults!: OrderedConstraintResults;
@@ -327,6 +334,8 @@ export class GUIConstraintResolver{
             guideline: hasGuideline
         }
     }
+    // these are not used atm, but keep for later use maybe
+    // to highlight nodes in gui with constraint issues
     hasError(){
         return this.hasConstraint.error;
     }
@@ -335,6 +344,10 @@ export class GUIConstraintResolver{
     }
     hasGuideline(){
         return this.hasConstraint.guideline;
+    }
+    // 
+    hasConstraintIssue(){
+        return this.hasConstraint.error || this.hasConstraint.warning || this.hasConstraint.guideline;
     }
 
     getErrors(){
