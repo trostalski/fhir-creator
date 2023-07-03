@@ -17,12 +17,13 @@ interface ProfileTreeComponentProps {
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   props: ProfileTreeComponentProps
 ) => {
-  const { profileTree, profile, updateProfileTree, checkedBranchIds } = useStore((state) => {
+  const { profileTree, profile, updateProfileTree, checkedBranchIds, clearProfileTree } = useStore((state) => {
     return {
       profileTree: state.activeProfileTree,
       profile: state.activeProfile,
       updateProfileTree: state.updateProfileTree,
-      checkedBranchIds: state.checkedBranchIds
+      checkedBranchIds: state.checkedBranchIds,
+      clearProfileTree: state.clearProfileTree
     };
   });
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
@@ -97,7 +98,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
             onClick={() => {
               props.setPathsWithInvalidCardinality([]);
               setExpandedNodes([]);
-              updateProfileTree(undefined);
+              clearProfileTree();
             }}
           >
             Clear
