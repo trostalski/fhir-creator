@@ -2,12 +2,9 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { Modes, resourceOptions } from "../utils/constants";
 import "react-tooltip/dist/react-tooltip.css";
-import { idIsImportant } from "../utils/utils";
 import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import { getBaseProfile } from "@/db/utils";
 import ProfileTreeComponent from "../components/profile_tree_input/ProfileTreeComponent";
-import uniq from "lodash/uniq";
-import { getBranchIds } from "@/utils/tree_utils";
 import ExportModal from "@/components/ExportModal";
 import UploadProfileButton from "@/components/buttons/UploadProfileButton";
 import AddResourceButton from "@/components/buttons/AddResourceButton";
@@ -15,13 +12,16 @@ import { useStore } from "@/stores/useStore";
 import Layout from "@/components/Layout";
 
 const Home = () => {
-  const [checkedBranchIds, setCheckedBranchIds] = useState<string[]>([]);
   const [checkoutModalOpen, setCheckoutModalOpen] = useState<boolean>(false);
-  const [branchIds, setBranchIds] = useState<string[]>([]);
   const [pathsWithInvalidCardinality, setPathsWithInvalidCardinality] =
     useState<string[]>([]);
 
-  const { setProfileTree, profileTree, profile, mode, setMode } = useStore(
+  const {
+    setProfileTree,
+    profileTree,
+    profile,
+    mode,
+    setMode } = useStore(
     (state) => {
       return {
         setProfileTree: state.setProfileTree,
@@ -37,14 +37,6 @@ const Home = () => {
     const profile = await getBaseProfile(value);
     setProfileTree(profile);
   };
-
-  useEffect(() => {
-    if (profileTree) {
-      const branchIds = uniq(getBranchIds(profileTree));
-      setBranchIds(branchIds);
-      setCheckedBranchIds(branchIds.filter((id) => idIsImportant(id)));
-    }
-  }, [profileTree]);
 
   return (
     <Layout>
@@ -71,18 +63,13 @@ const Home = () => {
           {!profileTree ? null : (
             <ProfileTreeComponent
               setPathsWithInvalidCardinality={setPathsWithInvalidCardinality}
-              checkedBranchIds={checkedBranchIds}
               pathsWithInvalidCardinality={pathsWithInvalidCardinality}
             />
           )}
         </div>
       </div>
       <RightSidebar>
-        <BranchIdsCheckboxes
-          branchIds={branchIds}
-          setCheckedBranchIds={setCheckedBranchIds}
-          checkedBranchIds={checkedBranchIds}
-        />
+        <BranchIdsCheckboxes/>
       </RightSidebar>
       {checkoutModalOpen && (
         <ExportModal

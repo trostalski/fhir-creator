@@ -3,14 +3,22 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import React, { useState } from "react";
 import { useStore } from "@/stores/useStore";
 
-interface ProfileCheckboxesProps {
-  setCheckedBranchIds: React.Dispatch<React.SetStateAction<string[]>>;
-  branchIds: string[];
-  checkedBranchIds: string[];
-}
-
-export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
+export const BranchIdsCheckboxes = () => {
   const [searchInput, setSearchInput] = React.useState<string | null>(null);
+
+
+  const {
+    setCheckedBranchIds,
+    checkedBranchIds,
+    branchIds } = useStore(
+    (state) => {
+      return {
+        setCheckedBranchIds: state.setCheckedBranchIds,
+        checkedBranchIds: state.checkedBranchIds,
+        branchIds: state.branchIds
+      };
+    }
+  );
 
   return (
     <div className="flex flex-col gap-1 p-2">
@@ -25,10 +33,10 @@ export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
         <button
           className="text-blue-600 font-bold text-xs"
           onClick={(e) => {
-            if (props.branchIds.length > props.checkedBranchIds?.length) {
-              props.setCheckedBranchIds(props.branchIds);
+            if (branchIds.length > checkedBranchIds?.length) {
+              setCheckedBranchIds(branchIds);
             } else {
-              props.setCheckedBranchIds([]);
+              setCheckedBranchIds([]);
             }
           }}
         >
@@ -37,8 +45,8 @@ export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
         <button
           className="text-gray-500 font-bold text-xs"
           onClick={(e) =>
-            props.setCheckedBranchIds(
-              props.branchIds.filter((id) => idIsImportant(id))
+            setCheckedBranchIds(
+              branchIds.filter((id) => idIsImportant(id))
             )
           }
         >
@@ -46,9 +54,9 @@ export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
         </button>
       </div>
 
-      {!props.branchIds
+      {!branchIds
         ? null
-        : props.branchIds
+        : branchIds
             .filter((id) => {
               if (searchInput) {
                 return id.toLowerCase().includes(searchInput.toLowerCase());
@@ -61,13 +69,13 @@ export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
                 <input
                   id="default-checkbox"
                   type="checkbox"
-                  checked={props.checkedBranchIds.includes(id)}
+                  checked={checkedBranchIds.includes(id)}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      props.setCheckedBranchIds((prev) => [...prev, id]);
+                      setCheckedBranchIds([...useStore.getState().checkedBranchIds, id]);
                     } else {
-                      props.setCheckedBranchIds(
-                        props.checkedBranchIds.filter((i) => i !== id)
+                      setCheckedBranchIds(
+                        checkedBranchIds.filter((i) => i !== id)
                       );
                     }
                   }}

@@ -8,7 +8,6 @@ import RootParent from "./RootParent";
 import { useStore } from "@/stores/useStore";
 
 interface ProfileTreeComponentProps {
-  checkedBranchIds: string[];
   pathsWithInvalidCardinality: string[];
   setPathsWithInvalidCardinality: React.Dispatch<
     React.SetStateAction<string[]>
@@ -18,11 +17,12 @@ interface ProfileTreeComponentProps {
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   props: ProfileTreeComponentProps
 ) => {
-  const { profileTree, profile, updateProfileTree } = useStore((state) => {
+  const { profileTree, profile, updateProfileTree, checkedBranchIds } = useStore((state) => {
     return {
       profileTree: state.activeProfileTree,
       profile: state.activeProfile,
       updateProfileTree: state.updateProfileTree,
+      checkedBranchIds: state.checkedBranchIds
     };
   });
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
@@ -61,7 +61,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
       );
     }
   };
-  console.log("Checked branch ids", props.checkedBranchIds);
 
   return (
     <div className="flex flex-col gap-4">
@@ -107,7 +106,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
       </div>
       <div className="flex flex-col gap-4">
         {profileTree!
-          .filter((node) => shouldDisplayNode(node, props.checkedBranchIds))
+          .filter((node) => shouldDisplayNode(node, checkedBranchIds))
           .filter((node) => {
             if (searchInput) {
               return getDisplayPath(node)
