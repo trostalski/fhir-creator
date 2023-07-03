@@ -107,6 +107,7 @@ export function getBranchId(id: string) {
 }
 
 export const idIsImportant = (id: string) => {
+  console.log("Evaluating importance of ids")
   let result = true;
   if (notImportantIds.includes(id)) {
     result = false;

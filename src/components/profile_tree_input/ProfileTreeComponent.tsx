@@ -61,6 +61,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
       );
     }
   };
+  console.log("Checked branch ids", props.checkedBranchIds);
 
   return (
     <div className="flex flex-col gap-4">

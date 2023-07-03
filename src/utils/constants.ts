@@ -14,7 +14,7 @@ export const notImportantIdSuffices = [
   "meta",
   "implicitRules",
   "language",
-  "text",
+  // "text",
   "contained",
   "extension",
   "modifierExtension",
