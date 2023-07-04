@@ -155,3 +155,26 @@ export async function checkoutBundle(
       document.body.removeChild(link);
     });
 }
+
+export async function checkoutResources(
+  resources?: Resource[]
+) {
+  if(resources){
+    resources.forEach(resource => {
+      const resource_string = JSON.stringify(resource, null, 2);
+      const blob = new Blob([resource_string], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const filename = "export.json";
+      fetch(url)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+    })
+  }
+}

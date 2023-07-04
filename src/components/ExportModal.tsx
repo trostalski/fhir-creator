@@ -3,7 +3,7 @@ import ModalWrapper from "./ModalWrapper";
 import { db } from "@/db/db";
 import { useEffect, useState } from "react";
 import { Bundle, Resource } from "fhir/r4";
-import { checkoutBundle } from "@/db/utils";
+import { checkoutBundle, checkoutResources } from "@/db/utils";
 import { toastError } from "@/toasts";
 
 interface ExportModalProps {
@@ -137,8 +137,11 @@ const ExportModal = (props: ExportModalProps) => {
               if (!selectedResources || selectedResources.length === 0) {
                 toastError("No resources selected");
                 return;
+              } else if(!bundleOuptut) {
+                checkoutResources(resources)
+              } else {
+                checkoutBundle(selectedResources, selectedBundles);
               }
-              checkoutBundle(selectedResources, selectedBundles);
             }}
           >
             Export
