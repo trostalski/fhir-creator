@@ -15,6 +15,7 @@ const ExportModal = (props: ExportModalProps) => {
   const resources = useLiveQuery(() => db.resources.toArray());
   const bundles = useLiveQuery(() => db.bundles.toArray());
   const [bundleOuptut, setBundleOutput] = useState<boolean>(true);
+  const [bundleIndividually, setBundleIndividually] = useState<boolean>(false);
   const [selectedResources, setSelectedResources] = useState<Resource[]>(
     resources || []
   );
@@ -121,6 +122,23 @@ const ExportModal = (props: ExportModalProps) => {
             <label htmlFor="bundle-output-checkbox" className="text-sm">
               Bundle Output
             </label>
+            {bundleOuptut &&
+            <>
+            {/* might need some rework for bundle checkout */}
+              <input
+                id="bundle-individually-checkbox"
+                type="checkbox"
+                checked={bundleIndividually}
+                className="border-gray-300 border-2 cursor-pointer"
+                onChange={(e) => {
+                  setBundleIndividually(e.target.checked);
+                }}
+                />
+              <label htmlFor="bundle-individually-checkbox" className="text-sm">
+                Bundle Individually
+              </label>
+            </>
+            }
           </div>
           <span className="flex-grow" />
           <button
@@ -138,7 +156,11 @@ const ExportModal = (props: ExportModalProps) => {
                 toastError("No resources selected");
                 return;
               } else if(!bundleOuptut) {
-                checkoutResources(resources)
+                checkoutResources(selectedResources)
+              } else if(bundleIndividually) {
+                selectedResources.forEach( resource => {
+                  checkoutBundle([resource], selectedBundles)
+                })
               } else {
                 checkoutBundle(selectedResources, selectedBundles);
               }
