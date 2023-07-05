@@ -7,7 +7,8 @@ import ExportModal from "../ExportModal";
 import BundleList from "./BundleList";
 import ExpandAccordinoToggle from "../shared/ExpandAccordinoToggle";
 import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/db/db";
+import { ResourcePathRepr, db } from "@/db/db";
+import { PreviewModal } from "./PreviewModal";
 
 interface RightPartProps {
   startResizing: () => void;
@@ -21,6 +22,8 @@ const RightPart = (props: RightPartProps) => {
 
   const [showImportMenu, setShowImportMenu] = useState<boolean>(false);
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
+  const [showPreviewModal, setShowPreviewModal] = useState<boolean>(true);
+  const [previewPathRepr, setPreviewPathRepr] = useState<ResourcePathRepr>({id:"", data:[]});
 
   const profiles = useLiveQuery(() => db.profiles.toArray());
   const resources = useLiveQuery(() => db.resources.toArray());
@@ -82,7 +85,7 @@ const RightPart = (props: RightPartProps) => {
                   Resources {"(" + !resources ? null : resources?.length + ")"}{" "}
                 </span>
               </div>
-              {showResources ? <ResourceList /> : null}
+              {showResources ? <ResourceList setPreviewOpen={setShowPreviewModal} setPreviewPathRepr={setPreviewPathRepr}/> : null}
               <hr />
             </div>
             <div className="flex flex-col gap-2">
@@ -116,6 +119,12 @@ const RightPart = (props: RightPartProps) => {
                 setIsOpen={setShowExportModal}
               />
             )}
+            {showPreviewModal && (
+            <PreviewModal
+              pathRepr={previewPathRepr}
+              isOpen={showPreviewModal}
+              setIsOpen={setShowPreviewModal}
+            />)}
           </div>
         </div>
       </div>

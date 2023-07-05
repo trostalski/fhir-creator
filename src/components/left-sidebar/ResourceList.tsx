@@ -8,8 +8,13 @@ import { StructureDefinition } from "fhir/r4";
 import React from "react";
 import { MdOutlineClear } from "react-icons/md";
 import { useStore } from "@/stores/useStore";
+import { AiOutlineEye } from "react-icons/ai";
 
-interface ResourceListProps {}
+
+interface ResourceListProps {
+  setPreviewOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setPreviewPathRepr: React.Dispatch<React.SetStateAction<ResourcePathRepr>>
+}
 
 const ResourceList = (props: ResourceListProps) => {
   const resourcesPathRepr = useLiveQuery(() => db.resourcesPathRepr.toArray());
@@ -72,12 +77,26 @@ const ResourceList = (props: ResourceListProps) => {
                 resourcePathRepr.id}
             </span>
           </button>
+          <div className="text-right">
+          <button
+            className="hover:scale-105"
+            onClick={()=>{
+              props.setPreviewOpen(true);
+              props.setPreviewPathRepr(resourcePathRepr);
+            }}
+            >
+          <AiOutlineEye size={15} className="ml-2"/>
+          </button>
           <button
             className="hover:scale-105"
             onClick={() => deleteResource(resourcePathRepr.id)}
-          >
-            <MdOutlineClear size={20} className="ml-2" />
+            >
+            <MdOutlineClear
+              size={20}
+              className="ml-2"
+              />
           </button>
+          </div>
         </div>
       ))}
     </div>
