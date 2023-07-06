@@ -1,4 +1,11 @@
-import { OptionType, PatSimFeature } from "../types";
+import {
+  CategoricalStringFeatureInput,
+  CodedConceptFeatureInput,
+  CodedNumericalFeatureInput,
+  NumericalFeatureInput,
+  OptionType,
+  PatSimFeature,
+} from "../types";
 
 export const rootName = "root";
 export const pathDelimiter = ".";
@@ -119,6 +126,7 @@ export const primitiveTypes = [
 export const csvExportMethod = "CSV Export";
 export const patSimMethod = "Patient Similarity";
 export const availableAnalyzerMethods = [csvExportMethod, patSimMethod];
+
 export const defaultCsvExportFeature = {
   id: 0,
   name: "",
@@ -126,19 +134,58 @@ export const defaultCsvExportFeature = {
   condition: "",
   targetPath: "",
 };
-export const defaultPatSimFeature: PatSimFeature = {
+
+export const defaultCategoricalStringInput: CategoricalStringFeatureInput = {
   id: 0,
   name: "",
   type: "",
   targetResources: [],
   targetPath: "",
-  condition: "",
+  conditionalTargetPath: "",
 };
+
+export const defaultNumericalStringInput: NumericalFeatureInput = {
+  id: 0,
+  name: "",
+  type: "",
+  targetResources: [],
+  targetPath: "",
+  conditionalTargetPath: "",
+};
+
+export const defaultCodedConceptInput: CodedConceptFeatureInput = {
+  id: 0,
+  name: "",
+  type: "",
+  targetResources: [],
+  codePath: "",
+  systemPath: "",
+  conditionalCodePath: "",
+  conditionalSystemPath: "",
+};
+
+export const defaultCodedNumericalInput: CodedNumericalFeatureInput = {
+  id: 0,
+  name: "",
+  type: "",
+  targetResources: [],
+  codePath: "",
+  valuePath: "",
+  conditionalCodePath: "",
+  conditionalValuePath: "",
+};
+
+export const _categoricalString = "categorical_string";
+export const _numerical = "numerical";
+export const _codedConcept = "coded_concept";
+export const _codedNumerical = "coded_numerical";
+export const _csvExport = "csv_export";
+
 export const availablePatSimTypes = [
-  "categorical_string",
-  "numerical",
-  "coded_concept",
-  "coded_numerical",
+  _categoricalString,
+  _numerical,
+  _codedConcept,
+  _codedNumerical,
 ];
 
 export const resourceList = [

@@ -1,5 +1,4 @@
 import { db } from "@/db/db";
-import { ViewEntity } from "@/pages/explorer";
 import { useLiveQuery } from "dexie-react-hooks";
 import React from "react";
 

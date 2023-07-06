@@ -2,14 +2,23 @@ import Layout from "@/components/Layout";
 import CsvFeatureInput from "@/components/analyzer/csv_export/CsvFeatureInput";
 import PatSimFeatureInput from "@/components/analyzer/patient_similarity/PatSimFeatureInput";
 import { db } from "@/db/db";
-import { CsvExportFeature, PatSimFeature } from "@/types";
 import {
+  CategoricalStringFeatureInput,
+  CodedConceptFeatureInput,
+  CodedNumericalFeatureInput,
+  CsvExportFeature,
+  NumericalFeatureInput,
+  PatSimFeature,
+} from "@/types";
+import {
+  _categoricalString,
+  _csvExport,
   availableAnalyzerMethods,
   csvExportMethod,
   patSimMethod,
 } from "@/utils/constants";
 import { useLiveQuery } from "dexie-react-hooks";
-import React from "react";
+import React, { useState } from "react";
 
 const Analyzer = () => {
   const bundles = useLiveQuery(() => db.bundles.toArray());
@@ -18,33 +27,82 @@ const Analyzer = () => {
     (typeof availableAnalyzerMethods)[number]
   >(availableAnalyzerMethods[0]);
 
-  const [patSimFeatures, setPatSimFeatures] = React.useState<PatSimFeature[]>([
+  const [categoricalStringFeatures, setCategoricalStringFeatures] = useState<
+    CategoricalStringFeatureInput[]
+  >([
     {
       id: 0,
       name: "",
       targetResources: [],
       type: "",
       targetPath: "",
-      condition: "",
+      conditionalTargetPath: "",
     },
   ]);
+
+  const [numericalFeatures, setNumericalFeatures] = useState<
+    NumericalFeatureInput[]
+  >([
+    {
+      id: 0,
+      name: "",
+      targetResources: [],
+      type: "",
+      targetPath: "",
+      conditionalTargetPath: "",
+    },
+  ]);
+
+  const [codedConceptFeatures, setCodedConceptsFeatures] = useState<
+    CodedConceptFeatureInput[]
+  >([
+    {
+      id: 0,
+      name: "",
+      targetResources: [],
+      type: "",
+      codePath: "",
+      systemPath: "",
+      conditionalCodePath: "",
+      conditionalSystemPath: "",
+    },
+  ]);
+
+  const [codedNumericalFeatures, setCodedNumericalFeatures] = useState<
+    CodedNumericalFeatureInput[]
+  >([
+    {
+      id: 0,
+      name: "",
+      targetResources: [],
+      type: "",
+      codePath: "",
+      valuePath: "",
+      conditionalCodePath: "",
+      conditionalValuePath: "",
+    },
+  ]);
+
   const [csvExportFeatures, setCsvExportFeatures] = React.useState<
     CsvExportFeature[]
   >([
     {
       id: 0,
+      type: _csvExport,
       name: "",
       targetResources: [],
       targetPath: "",
       condition: "",
     },
   ]);
+
   const [selectedResourceIds, setSelectedResourceIds] = React.useState<
     string[]
   >([]);
   const [selectedBundleIds, setSelectedBundleIds] = React.useState<string[]>(
     []
   );
+
   const [results, setResults] = React.useState<any[]>([]);
 
   const handleAddFeature = () => {
@@ -54,10 +112,10 @@ const Analyzer = () => {
         {
           id: Math.max(...prev.map((f) => f.id)) + 1,
           name: "",
-          type: "",
+          type: _categoricalString,
           targetResources: [],
           targetPath: "",
-          conditionalPath: "",
+          conditionalTargetPath: "",
         },
       ]);
     } else if (analysisMethod === csvExportMethod) {
@@ -66,6 +124,7 @@ const Analyzer = () => {
         {
           id: Math.max(...prev.map((f) => f.id)) + 1,
           name: "",
+          type: _csvExport,
           targetResources: [],
           targetPath: "",
           condition: "",
@@ -102,7 +161,7 @@ const Analyzer = () => {
         <div className="flex flex-col w-full pb-10 pt-4 overflow-scroll gap-4 px-12">
           <div className="flex flex-col w-full">
             <span className="text-lg">Method</span>
-            <div className="flex flex-row w-full gap-4 p-4 rounded-lg bg-blue-50">
+            <div className="flex flex-row w-full gap-4 p-4 rounded-lg bg-gray-50">
               {availableAnalyzerMethods.map((method) => (
                 <div key={method}>
                   <button
@@ -121,7 +180,7 @@ const Analyzer = () => {
           </div>
           <div className="flex flex-col w-full max-h-1/2">
             <span className="text-lg">Data</span>
-            <div className="flex flex-row gap-4 w-full p-4 rounded-lg bg-blue-50">
+            <div className="flex flex-row gap-4 w-full p-4 rounded-lg bg-gray-50">
               <div className="flex flex-col gap-2 w-1/3">
                 <div className="flex flex-row gap-4">
                   <span>Bundles</span>
@@ -242,7 +301,7 @@ const Analyzer = () => {
                 Add Feature
               </button>
             </div>
-            <div className="flex flex-col bg-blue-50 rounded-lg">
+            <div className="flex flex-col bg-gray-50 rounded-lg">
               {getFeatureComponent()}
             </div>
           </div>
@@ -266,13 +325,14 @@ const Analyzer = () => {
                     targetResources: [],
                     type: "",
                     targetPath: "",
-                    condition: "",
+                    conditionalTargetPath: "",
                   },
                 ]);
                 setCsvExportFeatures([
                   {
                     id: 0,
                     name: "",
+                    type: _csvExport,
                     targetResources: [],
                     targetPath: "",
                     condition: "",

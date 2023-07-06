@@ -31,16 +31,44 @@ export interface PathCounter {
   count: number;
 }
 
-export interface BaseFeature {
+export interface BaseFeatureInput {
   id: number;
   name: string;
+  type: string;
   targetResources: (typeof resourceList)[number][];
-  targetPath: string;
-  condition?: string;
 }
 
-export type PatSimFeature = BaseFeature & {
-  type: (typeof availablePatSimTypes)[number];
-};
+export interface CategoricalStringFeatureInput extends BaseFeatureInput {
+  targetPath: string;
+  conditionalTargetPath: string;
+}
 
-export type CsvExportFeature = BaseFeature;
+export interface NumericalFeatureInput extends BaseFeatureInput {
+  targetPath: string;
+  conditionalTargetPath: string;
+}
+
+export interface CodedConceptFeatureInput extends BaseFeatureInput {
+  codePath: string;
+  systemPath: string;
+  conditionalCodePath: string;
+  conditionalSystemPath: string;
+}
+
+export interface CodedNumericalFeatureInput extends BaseFeatureInput {
+  valuePath: string;
+  codePath: string;
+  conditionalValuePath: string;
+  conditionalCodePath: string;
+}
+
+export type PatSimFeature =
+  | CategoricalStringFeatureInput
+  | NumericalFeatureInput
+  | CodedConceptFeatureInput
+  | CodedNumericalFeatureInput;
+
+export interface CsvExportFeature extends BaseFeatureInput {
+  targetPath: string;
+  condition: string;
+}
