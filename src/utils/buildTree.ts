@@ -5,7 +5,6 @@ import {
   StructureDefinition,
 } from "fhir/r4";
 import {
-  multiTypeString,
   pathDelimiter,
   primitiveTypes,
   rootName,
@@ -31,8 +30,6 @@ import {
 } from "./path_utils";
 import { extractDirectChildrenPaths, getNodeByDataPath } from "./tree_utils";
 import { ValueSetResolver } from "./valueset_utils";
-import { profile } from "console";
-import { ro } from "date-fns/locale";
 
 export interface ProfileTreeNode {
   element: ElementDefinition;
@@ -211,24 +208,24 @@ const tryGetBindingCodes = async (element: ElementDefinition) => {
 
 function addRootNode(
   profileTree: ProfileTreeNode[],
-  elements:ElementDefinition[])
-  {
-    const rootElement = elements.find(element=>{
-      return !element.id!.includes(pathDelimiter);
-    })
-    const elementNode: ProfileTreeNode = {
-      element: rootElement!,
-      dataPath: rootName,
-      parentDataPath: "",
-      basePath: rootName,
-      baseId: rootElement!.id!,
-      isPrimitive: false,
-      isRoot: true,
-      childPaths: [],
-      value: "",
-    };
-    profileTree.push(elementNode);
-  }
+  elements: ElementDefinition[]
+) {
+  const rootElement = elements.find((element) => {
+    return !element.id!.includes(pathDelimiter);
+  });
+  const elementNode: ProfileTreeNode = {
+    element: rootElement!,
+    dataPath: rootName,
+    parentDataPath: "",
+    basePath: rootName,
+    baseId: rootElement!.id!,
+    isPrimitive: false,
+    isRoot: true,
+    childPaths: [],
+    value: "",
+  };
+  profileTree.push(elementNode);
+}
 
 export const buildProfileTree = async (
   profile: StructureDefinition
