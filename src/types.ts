@@ -31,44 +31,76 @@ export interface PathCounter {
   count: number;
 }
 
-export interface BaseFeatureInput {
+export interface BaseFeature {
   id: number;
   name: string;
   type: string;
   targetResources: (typeof resourceList)[number][];
 }
 
-export interface CategoricalStringFeatureInput extends BaseFeatureInput {
-  targetPath: string;
-  conditionalTargetPath: string;
+export interface CategoricalStringFeature extends BaseFeature {
+  targetPath?: string;
+  conditionalTargetPath?: string;
 }
 
-export interface NumericalFeatureInput extends BaseFeatureInput {
-  targetPath: string;
-  conditionalTargetPath: string;
+export interface CategoricalStringReqParam {
+  feature_name: string;
+  target_resource_types: string[];
+  target_paths?: string[];
+  conditional_paths?: string[];
 }
 
-export interface CodedConceptFeatureInput extends BaseFeatureInput {
-  codePath: string;
-  systemPath: string;
-  conditionalCodePath: string;
-  conditionalSystemPath: string;
+export interface NumericalFeature extends BaseFeature {
+  targetPath?: string;
+  conditionalTargetPath?: string;
 }
 
-export interface CodedNumericalFeatureInput extends BaseFeatureInput {
-  valuePath: string;
-  codePath: string;
-  conditionalValuePath: string;
-  conditionalCodePath: string;
+export interface NumericalReqParam {
+  feature_name: string;
+  target_resource_types: string[];
+  target_paths?: string[];
+  conditional_paths?: string[];
+}
+
+export interface CodedConceptFeature extends BaseFeature {
+  codePath?: string;
+  systemPath?: string;
+  conditionalCodePath?: string;
+  conditionalSystemPath?: string;
+}
+
+export interface CodedConceptReqParam {
+  feature_name: string;
+  target_resource_types: string[];
+  code_paths?: string[];
+  system_paths?: string[];
+  conditional_code_paths?: string[];
+  conditional_system_paths?: string[];
+}
+
+export interface CodedNumericalFeature extends BaseFeature {
+  valuePath?: string;
+  codePath?: string;
+  conditionalValuePath?: string;
+  conditionalCodePath?: string;
+}
+
+export interface CodedNumericalReqParam {
+  feature_name: string;
+  target_resource_types: string[];
+  code_paths?: string[];
+  system_paths?: string[];
+  conditional_code_paths?: string[];
+  conditional_system_paths?: string[];
 }
 
 export type PatSimFeature =
-  | CategoricalStringFeatureInput
-  | NumericalFeatureInput
-  | CodedConceptFeatureInput
-  | CodedNumericalFeatureInput;
+  | CategoricalStringFeature
+  | NumericalFeature
+  | CodedConceptFeature
+  | CodedNumericalFeature;
 
-export interface CsvExportFeature extends BaseFeatureInput {
-  targetPath: string;
-  condition: string;
+export interface CsvExportFeature extends BaseFeature {
+  targetPath?: string;
+  condition?: string;
 }

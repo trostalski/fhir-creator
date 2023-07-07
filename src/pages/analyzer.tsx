@@ -4,14 +4,8 @@ import PatSimFeatureInput from "@/components/analyzer/patient_similarity/PatSimF
 import { db } from "@/db/db";
 import { getBundles, getResources } from "@/db/utils";
 import { toastError } from "@/toasts";
-import {
-  CategoricalStringFeatureInput,
-  CodedConceptFeatureInput,
-  CodedNumericalFeatureInput,
-  CsvExportFeature,
-  NumericalFeatureInput,
-  PatSimFeature,
-} from "@/types";
+import { CsvExportFeature, PatSimFeature } from "@/types";
+import { postPatSimData } from "@/utils/api";
 import {
   _categoricalString,
   _csvExport,
@@ -21,10 +15,8 @@ import {
   defaultCsvExportFeature,
   patSimMethod,
 } from "@/utils/constants";
-import {
-  getResourcesFromBundle,
-  getResourcesFromBundles,
-} from "@/utils/fhir_utils";
+import { getResourcesFromBundles } from "@/utils/fhir_utils";
+import { parseFeaturesForRequest } from "@/utils/patsim_utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import React, { useState } from "react";
 
@@ -36,28 +28,12 @@ const Analyzer = () => {
   >(availableAnalyzerMethods[0]);
 
   const [patSimFeatures, setPatSimFeatures] = useState<PatSimFeature[]>([
-    {
-      id: 0,
-      name: "",
-      targetResources: [],
-      type: _categoricalString,
-      targetPath: "",
-      conditionalTargetPath: "",
-    },
+    { ...defaultCategoricalStringInput, id: 0 },
   ]);
 
   const [csvExportFeatures, setCsvExportFeatures] = React.useState<
     CsvExportFeature[]
-  >([
-    {
-      id: 0,
-      type: _csvExport,
-      name: "",
-      targetResources: [],
-      targetPath: "",
-      condition: "",
-    },
-  ]);
+  >([{ ...defaultCsvExportFeature, id: 0 }]);
 
   const [selectedResourceIds, setSelectedResourceIds] = React.useState<
     string[]
@@ -112,6 +88,7 @@ const Analyzer = () => {
 
   const handleApply = async () => {
     if (analysisMethod === patSimMethod) {
+      // collect all resources
       let bundles = (await getBundles(selectedBundleIds)) || [];
       let resources = (await getResources(selectedResourceIds)) || [];
       if (bundles && bundles.length > 0) {
@@ -123,14 +100,14 @@ const Analyzer = () => {
           "No resources selected. Please select at least one resource."
         );
       } else {
-        console.log("resources: ", resources);
+        const reqFeatures = parseFeaturesForRequest(patSimFeatures);
+        const r = postPatSimData(resources.slice(0, 2), reqFeatures);
+        console.log(r);
       }
     } else {
       throw new Error("Not implemented yet");
     }
   };
-
-  console.log("patSimFeatures: ", patSimFeatures);
 
   return (
     <div>

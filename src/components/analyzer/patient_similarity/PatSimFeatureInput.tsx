@@ -1,8 +1,8 @@
 import {
-  CategoricalStringFeatureInput,
-  CodedConceptFeatureInput,
-  CodedNumericalFeatureInput,
-  NumericalFeatureInput,
+  CategoricalStringFeature,
+  CodedConceptFeature,
+  CodedNumericalFeature,
+  NumericalFeature,
   PatSimFeature,
 } from "@/types";
 import {
@@ -52,13 +52,13 @@ const PatSimFeatureInput = (props: PatSimFeatureInputProps) => {
             placeholder="Target Paths"
             className="grow h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
             value={
-              (props.inputFeature as CategoricalStringFeatureInput).targetPath
+              (props.inputFeature as CategoricalStringFeature).targetPath
             }
             onChange={(e) => {
               props.setInputFeatures((prev) => {
                 (prev.find((f) => f.id === props.featureId) as
-                  | CategoricalStringFeatureInput
-                  | NumericalFeatureInput)!.targetPath = e.target.value;
+                  | CategoricalStringFeature
+                  | NumericalFeature)!.targetPath = e.target.value;
                 return [...prev];
               });
             }}
@@ -72,12 +72,12 @@ const PatSimFeatureInput = (props: PatSimFeatureInputProps) => {
             type="text"
             placeholder="Code Paths"
             className="grow h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
-            value={(props.inputFeature as CodedConceptFeatureInput).codePath}
+            value={(props.inputFeature as CodedConceptFeature).codePath}
             onChange={(e) => {
               props.setInputFeatures((prev) => {
                 (prev.find(
                   (f) => f.id === props.featureId
-                ) as CodedConceptFeatureInput)!.codePath = e.target.value;
+                ) as CodedConceptFeature)!.codePath = e.target.value;
                 return [...prev];
               });
             }}
@@ -86,12 +86,12 @@ const PatSimFeatureInput = (props: PatSimFeatureInputProps) => {
             type="text"
             placeholder="System Paths"
             className="grow h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
-            value={(props.inputFeature as CodedConceptFeatureInput).systemPath}
+            value={(props.inputFeature as CodedConceptFeature).systemPath}
             onChange={(e) => {
               props.setInputFeatures((prev) => {
                 (prev.find(
                   (f) => f.id === props.featureId
-                ) as CodedConceptFeatureInput)!.systemPath = e.target.value;
+                ) as CodedConceptFeature)!.systemPath = e.target.value;
                 return [...prev];
               });
             }}
@@ -105,12 +105,12 @@ const PatSimFeatureInput = (props: PatSimFeatureInputProps) => {
             type="text"
             placeholder="Code Paths"
             className="grow h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
-            value={(props.inputFeature as CodedNumericalFeatureInput).codePath}
+            value={(props.inputFeature as CodedNumericalFeature).codePath}
             onChange={(e) => {
               props.setInputFeatures((prev) => {
                 (prev.find(
                   (f) => f.id === props.featureId
-                ) as CodedNumericalFeatureInput)!.codePath = e.target.value;
+                ) as CodedNumericalFeature)!.codePath = e.target.value;
                 return [...prev];
               });
             }}
@@ -119,12 +119,12 @@ const PatSimFeatureInput = (props: PatSimFeatureInputProps) => {
             type="text"
             placeholder="System Paths"
             className="grow h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
-            value={(props.inputFeature as CodedNumericalFeatureInput).valuePath}
+            value={(props.inputFeature as CodedNumericalFeature).valuePath}
             onChange={(e) => {
               props.setInputFeatures((prev) => {
                 (prev.find(
                   (f) => f.id === props.featureId
-                ) as CodedNumericalFeatureInput)!.valuePath = e.target.value;
+                ) as CodedNumericalFeature)!.valuePath = e.target.value;
                 return [...prev];
               });
             }}

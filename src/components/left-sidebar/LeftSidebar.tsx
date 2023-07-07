@@ -53,17 +53,6 @@ const LeftSidebar = (props: LeftSidebarProps) => {
         </button>
         <button
           className={`p-4 rounded-md hover:bg-slate-300 ${
-            routerPath.includes("explorer") ? "bg-slate-300" : ""
-          }`}
-          title="Inspect Data"
-          onClick={() => {
-            router.push("/explorer");
-          }}
-        >
-          <TbDeviceAnalytics size={20} className="hover:scale-105" />
-        </button>
-        <button
-          className={`p-4 rounded-md hover:bg-slate-300 ${
             routerPath.includes("analyzer") ? "bg-slate-300" : ""
           }`}
           title="Data Transformer"

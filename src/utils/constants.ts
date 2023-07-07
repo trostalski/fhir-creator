@@ -1,9 +1,9 @@
 import {
-  CategoricalStringFeatureInput,
-  CodedConceptFeatureInput,
-  CodedNumericalFeatureInput,
+  CategoricalStringFeature,
+  CodedConceptFeature,
+  CodedNumericalFeature,
   CsvExportFeature,
-  NumericalFeatureInput,
+  NumericalFeature,
   OptionType,
 } from "../types";
 
@@ -127,6 +127,12 @@ export const csvExportMethod = "CSV Export";
 export const patSimMethod = "Patient Similarity";
 export const availableAnalyzerMethods = [csvExportMethod, patSimMethod];
 
+export const _categoricalString = "categorical_string";
+export const _numerical = "numerical";
+export const _codedConcept = "coded_concept";
+export const _codedNumerical = "coded_numerical";
+export const _csvExport = "csv_export";
+
 export const defaultCsvExportFeature: CsvExportFeature = {
   id: 0,
   name: "",
@@ -136,28 +142,28 @@ export const defaultCsvExportFeature: CsvExportFeature = {
   targetPath: "",
 };
 
-export const defaultCategoricalStringInput: CategoricalStringFeatureInput = {
+export const defaultCategoricalStringInput: CategoricalStringFeature = {
   id: 0,
   name: "",
-  type: "",
+  type: _categoricalString,
   targetResources: [],
   targetPath: "",
   conditionalTargetPath: "",
 };
 
-export const defaultNumericalInput: NumericalFeatureInput = {
+export const defaultNumericalInput: NumericalFeature = {
   id: 0,
   name: "",
-  type: "",
+  type: _numerical,
   targetResources: [],
   targetPath: "",
   conditionalTargetPath: "",
 };
 
-export const defaultCodedConceptInput: CodedConceptFeatureInput = {
+export const defaultCodedConceptInput: CodedConceptFeature = {
   id: 0,
   name: "",
-  type: "",
+  type: _codedConcept,
   targetResources: [],
   codePath: "",
   systemPath: "",
@@ -165,22 +171,16 @@ export const defaultCodedConceptInput: CodedConceptFeatureInput = {
   conditionalSystemPath: "",
 };
 
-export const defaultCodedNumericalInput: CodedNumericalFeatureInput = {
+export const defaultCodedNumericalInput: CodedNumericalFeature = {
   id: 0,
   name: "",
-  type: "",
+  type: _codedNumerical,
   targetResources: [],
   codePath: "",
   valuePath: "",
   conditionalCodePath: "",
   conditionalValuePath: "",
 };
-
-export const _categoricalString = "categorical_string";
-export const _numerical = "numerical";
-export const _codedConcept = "coded_concept";
-export const _codedNumerical = "coded_numerical";
-export const _csvExport = "csv_export";
 
 export const availablePatSimTypes = [
   _categoricalString,

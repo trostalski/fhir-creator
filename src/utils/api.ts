@@ -1,6 +1,22 @@
-import { PatSimFeature, PathItem } from "@/types";
-import { Bundle, StructureDefinition } from "fhir/r4";
-import { availablePatSimTypes } from "./constants";
+import {
+  CategoricalStringFeature,
+  CategoricalStringReqParam,
+  CodedConceptFeature,
+  CodedConceptReqParam,
+  CodedNumericalFeature,
+  CodedNumericalReqParam,
+  NumericalReqParam,
+  PatSimFeature,
+  PathItem,
+} from "@/types";
+import { Bundle, Resource, StructureDefinition } from "fhir/r4";
+import {
+  _categoricalString,
+  _codedConcept,
+  _codedNumerical,
+  _numerical,
+  availablePatSimTypes,
+} from "./constants";
 
 export const fetchProfileTree = async (
   profile: StructureDefinition,
@@ -34,4 +50,45 @@ export const fetchPatSim = (features: PatSimFeature[], data: Bundle) => {
       }
     }
   }
+};
+
+export const pingBackend = async () => {
+  const pingResponse = await fetch(`http://localhost:8000/api/v1/ping/`);
+  if (!pingResponse.ok) {
+    throw new Error("Error fetching profile tree");
+  }
+  const pingJson = await pingResponse.json();
+  return pingJson;
+};
+
+export const postPatSimData = async (
+  data: Resource[],
+  inputFeatures: {
+    categorical_features: CategoricalStringReqParam[];
+    numerical_features: NumericalReqParam[];
+    coded_concept_features: CodedConceptReqParam[];
+    coded_numerical_features: CodedNumericalReqParam[];
+  }
+) => {
+  const body = {
+    data: data,
+    categorical_features: inputFeatures.categorical_features || [],
+    numerical_features: inputFeatures.numerical_features || [],
+    coded_concept_features: inputFeatures.coded_concept_features || [],
+    coded_numerical_features: inputFeatures.coded_numerical_features || [],
+  };
+  console.log("body: ", body);
+
+  const patSimResponse = await fetch(`http://localhost:8000/api/v1/patsim/`, {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!patSimResponse.ok) {
+    throw new Error("Error fetching patient similarity results.");
+  }
+  const patSimJson = await patSimResponse.json();
+  return patSimJson;
 };
