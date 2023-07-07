@@ -3,6 +3,8 @@ import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
 import BindingCodeInput from "./CodeableConceptInput";
 import { useStore } from "@/stores/useStore";
+import { ConstraintComponent } from "./ConstraintComponent";
+import { GUIConstraintResolver } from "@/utils/constraint_utils";
 
 interface PrimitveInputProps {
   node: ProfileTreeNode;
@@ -131,12 +133,23 @@ const InputFromType = (props: InputFromTypeProps) => {
 };
 
 const PrimitveInput = (props: PrimitveInputProps) => {
+  const { orderedConstraintResults } = useStore((state) => {
+    return {
+      orderedConstraintResults: state.orderedConstraintResults
+    };
+  });
+  let guiConstraintResolver;
+  if(orderedConstraintResults){
+    guiConstraintResolver = new GUIConstraintResolver({node: props.node, orderedConstraintResults});
+  }
   return (
     <div
       className={`
     ${
       props.pathsWithInvalidCardinality.includes(props.profileTreeNode.dataPath)
         ? "border-solid border-2 border-red-600"
+        : guiConstraintResolver?.hasConstraintIssue()
+        ? "bg-pink-800"
         : ""
     }
     `}
@@ -154,6 +167,9 @@ const PrimitveInput = (props: PrimitveInputProps) => {
             ? " (" + props.node.element.type[0].code + ")"
             : null}
         </span>{" "}
+        <ConstraintComponent
+          resolver={guiConstraintResolver}
+        />
       </label>
       <InputFromType
         type={props.node.element.type![0].code}

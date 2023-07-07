@@ -1,7 +1,7 @@
 import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { rootName } from "./constants";
 import { getPathLength } from "./path_utils";
-import { getBranchId, logWithCopy } from "./utils";
+import { getBranchId } from "./utils";
 
 export function extractDirectChildrenPaths(
   parentPath: string,
@@ -178,7 +178,16 @@ export function duplicateBranch(
   return profileTree;
 }
 
-export function copyNode() {}
+export function getFirstChildren(profileTree: ProfileTree) {
+  let firstChildren: ProfileTreeNode[] = [];
+  profileTree.forEach((node) => {
+    // find nodes one level below the root node
+    if (node.dataPath.split(".").length == 2) {
+      firstChildren.push(node);
+    }
+  });
+  return firstChildren;
+}
 
 export function deleteBranch(profileTree: ProfileTree, node: ProfileTreeNode) {
   const parentNode = getNodeByDataPath(profileTree, node.parentDataPath);
