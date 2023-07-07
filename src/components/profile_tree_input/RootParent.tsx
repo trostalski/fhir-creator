@@ -24,7 +24,9 @@ import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { Tooltip } from "react-tooltip";
 import PrimitveInput from "./PrimitveInput";
 import IntermediateParent from "./IntermediateParent";
-import { useStore } from "@/stores/useStore";
+import { useStore, useValResultStore } from "@/stores/useStore";
+import { ConstraintComponent } from "./ConstraintComponent";
+import { GUIConstraintResolver } from "@/utils/constraint_utils";
 
 interface RootParentProps {
   node: ProfileTreeNode;
@@ -40,13 +42,15 @@ const RootParent = (props: RootParentProps) => {
     evaluateRenderAddButton,
   } = usePathCounter();
 
-  const { profileTree, profile, updateProfileTree } = useStore((state) => {
+  const { profileTree, profile, updateProfileTree, orderedConstraintResults } = useStore((state) => {
     return {
       profileTree: state.activeProfileTree,
       profile: state.activeProfile,
       updateProfileTree: state.updateProfileTree,
+      orderedConstraintResults: state.orderedConstraintResults
     };
   });
+
 
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {
@@ -72,7 +76,10 @@ const RootParent = (props: RootParentProps) => {
       );
     }
   };
-
+  let guiConstraintResolver;
+  if(orderedConstraintResults){
+    guiConstraintResolver = new GUIConstraintResolver({node: props.node, orderedConstraintResults});
+  }
   return (
     <div
       className="w-full rounded-md border-gray-200"
@@ -83,6 +90,8 @@ const RootParent = (props: RootParentProps) => {
           className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${
             props.pathsWithInvalidCardinality.includes(props.node.dataPath)
               ? "bg-red-400"
+              : guiConstraintResolver?.hasConstraintIssue()
+              ? "bg-pink-800"
               : props.node.element.sliceName
               ? "bg-violet-300"
               : "bg-blue-300 "
@@ -116,6 +125,9 @@ const RootParent = (props: RootParentProps) => {
                   ? "(" + props.node.element.type[0].code + ")"
                   : null}
               </span>
+              <ConstraintComponent
+                resolver={guiConstraintResolver}
+              />
             </div>
             <span className="flex-grow" />
             <div className="flex flex-row items-center gap-2">
