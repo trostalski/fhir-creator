@@ -5,8 +5,8 @@ import {
   rootName,
   sliceDelimiter,
 } from "./constants";
-import { StructureDefinition, ElementDefinition, Resource } from "fhir/r4";
-import { ProfileTree, ProfileTreeNode, isSliceEntry } from "../utils/buildTree";
+import { StructureDefinition, ElementDefinition } from "fhir/r4";
+import { ProfileTree, ProfileTreeNode } from "../utils/buildTree";
 import { getSliceNames, removeNPathPartsFromStart } from "./path_utils";
 import { getNodeByDataPath } from "./tree_utils";
 import uniq from "lodash/uniq";

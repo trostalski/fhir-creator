@@ -24,6 +24,15 @@ export async function getResource(id: string) {
   }
 }
 
+export async function getResources(ids: string[]) {
+  try {
+    const resources = await db.resources.bulkGet(ids);
+    return resources as Resource[];
+  } catch (error) {
+    console.log(`Failed to get resources with ids ${ids}`);
+  }
+}
+
 export async function deleteResources(ids: string[]) {
   try {
     await db.resources.bulkDelete(ids);
@@ -127,6 +136,15 @@ export async function getBundle(id: string) {
     return bundle;
   } catch (error) {
     console.log(`Failed to get bundle with id ${id}`);
+  }
+}
+
+export async function getBundles(ids: string[]) {
+  try {
+    const bundles = await db.bundles.bulkGet(ids);
+    return bundles as Bundle[];
+  } catch (error) {
+    console.log(`Failed to get bundles with ids ${ids}`);
   }
 }
 

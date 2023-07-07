@@ -2,6 +2,8 @@ import Layout from "@/components/Layout";
 import CsvFeatureInput from "@/components/analyzer/csv_export/CsvFeatureInput";
 import PatSimFeatureInput from "@/components/analyzer/patient_similarity/PatSimFeatureInput";
 import { db } from "@/db/db";
+import { getBundles, getResources } from "@/db/utils";
+import { toastError } from "@/toasts";
 import {
   CategoricalStringFeatureInput,
   CodedConceptFeatureInput,
@@ -15,8 +17,14 @@ import {
   _csvExport,
   availableAnalyzerMethods,
   csvExportMethod,
+  defaultCategoricalStringInput,
+  defaultCsvExportFeature,
   patSimMethod,
 } from "@/utils/constants";
+import {
+  getResourcesFromBundle,
+  getResourcesFromBundles,
+} from "@/utils/fhir_utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import React, { useState } from "react";
 
@@ -27,59 +35,14 @@ const Analyzer = () => {
     (typeof availableAnalyzerMethods)[number]
   >(availableAnalyzerMethods[0]);
 
-  const [categoricalStringFeatures, setCategoricalStringFeatures] = useState<
-    CategoricalStringFeatureInput[]
-  >([
+  const [patSimFeatures, setPatSimFeatures] = useState<PatSimFeature[]>([
     {
       id: 0,
       name: "",
       targetResources: [],
-      type: "",
+      type: _categoricalString,
       targetPath: "",
       conditionalTargetPath: "",
-    },
-  ]);
-
-  const [numericalFeatures, setNumericalFeatures] = useState<
-    NumericalFeatureInput[]
-  >([
-    {
-      id: 0,
-      name: "",
-      targetResources: [],
-      type: "",
-      targetPath: "",
-      conditionalTargetPath: "",
-    },
-  ]);
-
-  const [codedConceptFeatures, setCodedConceptsFeatures] = useState<
-    CodedConceptFeatureInput[]
-  >([
-    {
-      id: 0,
-      name: "",
-      targetResources: [],
-      type: "",
-      codePath: "",
-      systemPath: "",
-      conditionalCodePath: "",
-      conditionalSystemPath: "",
-    },
-  ]);
-
-  const [codedNumericalFeatures, setCodedNumericalFeatures] = useState<
-    CodedNumericalFeatureInput[]
-  >([
-    {
-      id: 0,
-      name: "",
-      targetResources: [],
-      type: "",
-      codePath: "",
-      valuePath: "",
-      conditionalCodePath: "",
-      conditionalValuePath: "",
     },
   ]);
 
@@ -110,24 +73,16 @@ const Analyzer = () => {
       setPatSimFeatures((prev: PatSimFeature[]) => [
         ...prev,
         {
+          ...defaultCategoricalStringInput,
           id: Math.max(...prev.map((f) => f.id)) + 1,
-          name: "",
-          type: _categoricalString,
-          targetResources: [],
-          targetPath: "",
-          conditionalTargetPath: "",
         },
       ]);
     } else if (analysisMethod === csvExportMethod) {
       setCsvExportFeatures((prev: CsvExportFeature[]) => [
         ...prev,
         {
+          ...defaultCsvExportFeature,
           id: Math.max(...prev.map((f) => f.id)) + 1,
-          name: "",
-          type: _csvExport,
-          targetResources: [],
-          targetPath: "",
-          condition: "",
         },
       ]);
     }
@@ -154,6 +109,28 @@ const Analyzer = () => {
       ));
     }
   };
+
+  const handleApply = async () => {
+    if (analysisMethod === patSimMethod) {
+      let bundles = (await getBundles(selectedBundleIds)) || [];
+      let resources = (await getResources(selectedResourceIds)) || [];
+      if (bundles && bundles.length > 0) {
+        const bundleResources = getResourcesFromBundles(bundles);
+        resources = [...resources, ...bundleResources];
+      }
+      if (resources.length === 0) {
+        toastError(
+          "No resources selected. Please select at least one resource."
+        );
+      } else {
+        console.log("resources: ", resources);
+      }
+    } else {
+      throw new Error("Not implemented yet");
+    }
+  };
+
+  console.log("patSimFeatures: ", patSimFeatures);
 
   return (
     <div>
@@ -308,7 +285,7 @@ const Analyzer = () => {
           <div className="flex flex-row w-full gap-4">
             <button
               className="bg-green-600 text-white w-32 text-lg rounded py-1 px-2"
-              onClick={() => {}}
+              onClick={handleApply}
             >
               Apply
             </button>
@@ -318,26 +295,8 @@ const Analyzer = () => {
                 setSelectedBundleIds([]);
                 setSelectedResourceIds([]);
                 // reset to default features
-                setPatSimFeatures([
-                  {
-                    id: 0,
-                    name: "",
-                    targetResources: [],
-                    type: "",
-                    targetPath: "",
-                    conditionalTargetPath: "",
-                  },
-                ]);
-                setCsvExportFeatures([
-                  {
-                    id: 0,
-                    name: "",
-                    type: _csvExport,
-                    targetResources: [],
-                    targetPath: "",
-                    condition: "",
-                  },
-                ]);
+                setPatSimFeatures([{ ...defaultCategoricalStringInput }]);
+                setCsvExportFeatures([{ ...defaultCsvExportFeature }]);
                 console.log(patSimFeatures);
               }}
             >

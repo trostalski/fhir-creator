@@ -2,9 +2,9 @@ import {
   CategoricalStringFeatureInput,
   CodedConceptFeatureInput,
   CodedNumericalFeatureInput,
+  CsvExportFeature,
   NumericalFeatureInput,
   OptionType,
-  PatSimFeature,
 } from "../types";
 
 export const rootName = "root";
@@ -127,9 +127,10 @@ export const csvExportMethod = "CSV Export";
 export const patSimMethod = "Patient Similarity";
 export const availableAnalyzerMethods = [csvExportMethod, patSimMethod];
 
-export const defaultCsvExportFeature = {
+export const defaultCsvExportFeature: CsvExportFeature = {
   id: 0,
   name: "",
+  type: csvExportMethod,
   targetResources: [],
   condition: "",
   targetPath: "",
@@ -144,7 +145,7 @@ export const defaultCategoricalStringInput: CategoricalStringFeatureInput = {
   conditionalTargetPath: "",
 };
 
-export const defaultNumericalStringInput: NumericalFeatureInput = {
+export const defaultNumericalInput: NumericalFeatureInput = {
   id: 0,
   name: "",
   type: "",
@@ -186,6 +187,13 @@ export const availablePatSimTypes = [
   _numerical,
   _codedConcept,
   _codedNumerical,
+];
+
+export const availablePatSimOptions: OptionType[] = [
+  { value: _categoricalString, label: "Categorical String" },
+  { value: _numerical, label: "Numerical" },
+  { value: _codedConcept, label: "Coded Concept" },
+  { value: _codedNumerical, label: "Coded Numerical" },
 ];
 
 export const resourceList = [

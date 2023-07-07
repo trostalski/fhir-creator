@@ -1,5 +1,7 @@
 import {
   CategoricalStringFeatureInput,
+  CodedConceptFeatureInput,
+  CodedNumericalFeatureInput,
   NumericalFeatureInput,
   PatSimFeature,
 } from "@/types";
@@ -8,7 +10,12 @@ import {
   _codedConcept,
   _codedNumerical,
   _numerical,
+  availablePatSimOptions,
   availablePatSimTypes,
+  defaultCategoricalStringInput,
+  defaultCodedConceptInput,
+  defaultCodedNumericalInput,
+  defaultNumericalInput,
   resourceOptions,
 } from "@/utils/constants";
 import React from "react";
@@ -21,47 +28,109 @@ interface PatSimFeatureInputProps {
   setInputFeatures: React.Dispatch<React.SetStateAction<PatSimFeature[]>>;
 }
 
-const UncodedInput = () => {};
+function getDefaultFeatureInputForType(
+  type: (typeof availablePatSimTypes)[number]
+) {
+  if (type === _categoricalString) {
+    return { ...defaultCategoricalStringInput };
+  } else if (type === _codedConcept) {
+    return { ...defaultCodedConceptInput };
+  } else if (type === _codedNumerical) {
+    return { ...defaultCodedNumericalInput };
+  } else if (type === _numerical) {
+    return { ...defaultNumericalInput };
+  }
+}
 
 const PatSimFeatureInput = (props: PatSimFeatureInputProps) => {
   const getPathInputForType = (type: string) => {
     if (type === _categoricalString || type === _numerical) {
-
-      const inputFeature = props.inputFeature as
-        | CategoricalStringFeatureInput
-        | NumericalFeatureInput;
-
       return (
         <>
           <input
             type="text"
             placeholder="Target Paths"
-            className="h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
-            value={inputFeature.targetPath}
+            className="grow h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
+            value={
+              (props.inputFeature as CategoricalStringFeatureInput).targetPath
+            }
             onChange={(e) => {
               props.setInputFeatures((prev) => {
-                prev.find((f) => f.id === props.featureId)!.targetPath =
-                  e.target.value;
-                return [...prev];
-              });
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Condition"
-            className="h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-            value={props.inputFeature.condition}
-            onChange={(e) => {
-              props.setInputFeatures((prev) => {
-                prev.find((f) => f.id === props.featureId)!.condition =
-                  e.target.value;
+                (prev.find((f) => f.id === props.featureId) as
+                  | CategoricalStringFeatureInput
+                  | NumericalFeatureInput)!.targetPath = e.target.value;
                 return [...prev];
               });
             }}
           />
         </>
       );
-    } else if (type === _codedConcept || type === _codedNumerical) {
+    } else if (type === _codedConcept) {
+      return (
+        <>
+          <input
+            type="text"
+            placeholder="Code Paths"
+            className="grow h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
+            value={(props.inputFeature as CodedConceptFeatureInput).codePath}
+            onChange={(e) => {
+              props.setInputFeatures((prev) => {
+                (prev.find(
+                  (f) => f.id === props.featureId
+                ) as CodedConceptFeatureInput)!.codePath = e.target.value;
+                return [...prev];
+              });
+            }}
+          />
+          <input
+            type="text"
+            placeholder="System Paths"
+            className="grow h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
+            value={(props.inputFeature as CodedConceptFeatureInput).systemPath}
+            onChange={(e) => {
+              props.setInputFeatures((prev) => {
+                (prev.find(
+                  (f) => f.id === props.featureId
+                ) as CodedConceptFeatureInput)!.systemPath = e.target.value;
+                return [...prev];
+              });
+            }}
+          />
+        </>
+      );
+    } else if (type === _codedNumerical) {
+      return (
+        <>
+          <input
+            type="text"
+            placeholder="Code Paths"
+            className="grow h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
+            value={(props.inputFeature as CodedNumericalFeatureInput).codePath}
+            onChange={(e) => {
+              props.setInputFeatures((prev) => {
+                (prev.find(
+                  (f) => f.id === props.featureId
+                ) as CodedNumericalFeatureInput)!.codePath = e.target.value;
+                return [...prev];
+              });
+            }}
+          />
+          <input
+            type="text"
+            placeholder="System Paths"
+            className="grow h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
+            value={(props.inputFeature as CodedNumericalFeatureInput).valuePath}
+            onChange={(e) => {
+              props.setInputFeatures((prev) => {
+                (prev.find(
+                  (f) => f.id === props.featureId
+                ) as CodedNumericalFeatureInput)!.valuePath = e.target.value;
+                return [...prev];
+              });
+            }}
+          />
+        </>
+      );
     }
   };
 
@@ -104,12 +173,22 @@ const PatSimFeatureInput = (props: PatSimFeatureInputProps) => {
       />
       <Select
         instanceId={"featureType-select"}
-        options={availablePatSimTypes}
+        options={availablePatSimOptions}
+        value={availablePatSimOptions.find(
+          (o) => o.value === props.inputFeature.type
+        )}
         className="w-64"
         placeholder="Feature Type"
-        onChange={(selectedOption, triggeredAction) => {
+        onChange={(option) => {
+          if (!option || option.value === props.inputFeature.type) return;
           props.setInputFeatures((prev) => {
-            prev.find((f) => f.id === props.featureId)!.type = selectedOption!;
+            const oldFeature = prev.find((f) => f.id === props.featureId)!;
+            const newFeature = getDefaultFeatureInputForType(option.value)!;
+            newFeature.type = option.value;
+            newFeature.id = oldFeature.id;
+            newFeature.name = oldFeature.name;
+            newFeature.targetResources = oldFeature.targetResources;
+            prev[prev.indexOf(oldFeature)] = newFeature;
             return [...prev];
           });
         }}
