@@ -216,12 +216,15 @@ function nodeOrChildWasModified(
 export function getExpansionBgColour(
   profileTree: ProfileTree,
   pathsWithInvalidCardinality: string[],
+  hastConstraintIssues: boolean,
   node: ProfileTreeNode
 ) {
   if (nodeOrChildWasModified(profileTree, node)) {
     return "bg-green-500";
   } else if (pathsWithInvalidCardinality.includes(node.dataPath)) {
     return "bg-red-400";
+  } else if (hastConstraintIssues) {
+    return "bg-pink-800";
   } else if (node.element.sliceName) {
     return "bg-violet-300";
   } else {

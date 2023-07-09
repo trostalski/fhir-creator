@@ -1,12 +1,12 @@
 # Fhir-Creator
 
-Visit the project at [https://fhir-creator.vercel.app/](https://fhir-creator.vercel.app/)
+Visit the project at [https://fhir-creator.com](https://fhir-creator.com)
 
 The project is under active development.
 
 ## Features
 
-- All data is stored in the browser, no backend server used
+- All data is stored in the browser, **no backend server** used
 - Create FHIR Resources from custom or base profiles
 - Upload and edit FHIR Resources
 

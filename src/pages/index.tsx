@@ -45,8 +45,6 @@ const Home = () => {
       setCheckedBranchIds(branchIds.filter((id) => idIsImportant(id)));
     }
   }, [profileTree]);
-
-  console.log("profile tres: ", profileTree)
   return (
     <Layout>
       <div className="flex flex-col w-full pb-10 pt-4 overflow-scroll gap-2 px-8">

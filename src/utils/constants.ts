@@ -8,6 +8,12 @@ import {
 } from "../types";
 
 export const detaSpaceUrl = "https://fhircreator-1-q8790833.deta.app";
+import { ElementDefinitionConstraint } from "fhir/r4";
+import { ProfileTreeNode } from "./buildTree";
+import {
+  ConstraintEvaluationResult,
+  OrderedConstraintResults,
+} from "./constraint_utils";
 
 export const rootName = "root";
 export const pathDelimiter = ".";
@@ -518,3 +524,33 @@ export const resourceOptions: OptionType[] = [
   { value: "VerificationResult", label: "VerificationResult" },
   { value: "VisionPrescription", label: "VisionPrescription" },
 ];
+
+export const defaultProfileTreeNode: ProfileTreeNode = {
+  element: {
+    path: "",
+  },
+  dataPath: "",
+  baseId: "",
+  parentDataPath: "",
+  childPaths: [],
+  basePath: "",
+  isPrimitive: false,
+  value: "",
+};
+
+export const defaultConstraintElement: ElementDefinitionConstraint = {
+  human: "",
+  key: "",
+  severity: "error",
+};
+
+export const defaultConstraintResults: ConstraintEvaluationResult = {
+  node: defaultProfileTreeNode,
+  constraints: [],
+};
+
+export const defaultOrderedConstraintResults: OrderedConstraintResults = {
+  errors: [],
+  warnings: [],
+  guidelines: [],
+};

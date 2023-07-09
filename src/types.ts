@@ -114,3 +114,11 @@ export interface CsvExportReqParam {
   target_paths?: string[];
   conditional_target_paths?: string[];
 }
+export interface ConstraintItem {
+  key: string;
+  expression: string;
+  human: string;
+  severity: string;
+  source: string;
+  xpath: string;
+}

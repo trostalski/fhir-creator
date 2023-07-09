@@ -25,6 +25,9 @@ import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { Tooltip } from "react-tooltip";
 import PrimitveInput from "./PrimitveInput";
 import { useStore } from "@/stores/useStore";
+import { useValResultStore } from "@/stores/useStore";
+import { GUIConstraintResolver } from "@/utils/constraint_utils";
+import { ConstraintComponent } from "./ConstraintComponent";
 
 interface IntermediateParentProps {
   node: ProfileTreeNode;
@@ -40,13 +43,15 @@ const IntermediateParent = (props: IntermediateParentProps) => {
     evaluateRenderAddButton,
   } = usePathCounter();
 
-  const { profileTree, profile, updateProfileTree } = useStore((state) => {
-    return {
-      profileTree: state.activeProfileTree,
-      profile: state.activeProfile,
-      updateProfileTree: state.updateProfileTree,
-    };
-  });
+  const { profileTree, profile, updateProfileTree, orderedConstraintResults } =
+    useStore((state) => {
+      return {
+        profileTree: state.activeProfileTree,
+        profile: state.activeProfile,
+        updateProfileTree: state.updateProfileTree,
+        orderedConstraintResults: state.orderedConstraintResults,
+      };
+    });
 
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {
@@ -71,6 +76,13 @@ const IntermediateParent = (props: IntermediateParentProps) => {
       );
     }
   };
+  let guiConstraintResolver;
+  if (orderedConstraintResults) {
+    guiConstraintResolver = new GUIConstraintResolver({
+      node: props.node,
+      orderedConstraintResults,
+    });
+  }
 
   return (
     <div
@@ -82,6 +94,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
           className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
             profileTree!,
             props.pathsWithInvalidCardinality,
+            guiConstraintResolver?.hasConstraintIssue() || false,
             props.node
           )}`}
         >
@@ -115,6 +128,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
                   ? "(" + props.node.element.type[0].code + ")"
                   : null}
               </span>
+              <ConstraintComponent resolver={guiConstraintResolver} />
             </div>
             <span className="flex-grow" />
             <div className="flex flex-row items-center gap-2">
