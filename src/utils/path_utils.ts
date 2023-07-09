@@ -1,6 +1,5 @@
 import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { multiTypeString, pathDelimiter } from "./constants";
-import { getAllDescendants } from "./tree_utils";
 import {
   capitalizeFirstLetter,
   isSliceString,
