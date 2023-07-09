@@ -77,7 +77,6 @@ export const postPatSimData = async (
     coded_concept_features: inputFeatures.coded_concept_features || [],
     coded_numerical_features: inputFeatures.coded_numerical_features || [],
   };
-  console.log("body: ", body);
 
   const patSimResponse = await fetch(`http://localhost:8000/api/v1/patsim/`, {
     method: "POST",
@@ -86,9 +85,9 @@ export const postPatSimData = async (
       "Content-Type": "application/json",
     },
   });
+
   if (!patSimResponse.ok) {
     throw new Error("Error fetching patient similarity results.");
   }
-  const patSimJson = await patSimResponse.json();
-  return patSimJson;
+  return patSimResponse;
 };

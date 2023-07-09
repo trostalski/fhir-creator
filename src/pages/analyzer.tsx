@@ -18,9 +18,10 @@ import {
 import { getResourcesFromBundles } from "@/utils/fhir_utils";
 import { parseFeaturesForRequest } from "@/utils/patsim_utils";
 import { useLiveQuery } from "dexie-react-hooks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Analyzer = () => {
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const bundles = useLiveQuery(() => db.bundles.toArray());
   const resources = useLiveQuery(() => db.resources.toArray());
   const [analysisMethod, setAnalysisMethod] = React.useState<
@@ -41,6 +42,14 @@ const Analyzer = () => {
   const [selectedBundleIds, setSelectedBundleIds] = React.useState<string[]>(
     []
   );
+
+  useEffect(() => {
+    if (isLoading) {
+      document.body.style.cursor = "wait";
+    } else {
+      document.body.style.cursor = "default";
+    }
+  }, [isLoading]);
 
   const [results, setResults] = React.useState<any[]>([]);
 
@@ -101,8 +110,17 @@ const Analyzer = () => {
         );
       } else {
         const reqFeatures = parseFeaturesForRequest(patSimFeatures);
-        const r = postPatSimData(resources.slice(0, 2), reqFeatures);
-        console.log(r);
+        setIsLoading(true);
+        const patSimResponse = await postPatSimData(resources, reqFeatures);
+        const blob = await patSimResponse.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `patsim_${new Date().toISOString()}.zip`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setIsLoading(false);
       }
     } else {
       throw new Error("Not implemented yet");
@@ -132,9 +150,9 @@ const Analyzer = () => {
               ))}
             </div>
           </div>
-          <div className="flex flex-col w-full max-h-1/2">
+          <div className="flex flex-col w-full h-1/2">
             <span className="text-lg">Data</span>
-            <div className="flex flex-row gap-4 w-full p-4 rounded-lg bg-gray-50">
+            <div className="flex flex-row gap-4 w-full p-4 rounded-lg bg-gray-50 overflow-scroll">
               <div className="flex flex-col gap-2 w-1/3">
                 <div className="flex flex-row gap-4">
                   <span>Bundles</span>
@@ -279,17 +297,6 @@ const Analyzer = () => {
             >
               Reset
             </button>
-          </div>
-          <hr className="border-gray-300" />
-          <div className="flex flex-col w-full">
-            <span className="text-lg">Results</span>
-            <div className="flex flex-col gap-2 w-full">
-              {results.length === 0 ? (
-                <span className="text-gray-400">
-                  No results found. Please apply an analysis first.
-                </span>
-              ) : null}
-            </div>
           </div>
         </div>
       </Layout>

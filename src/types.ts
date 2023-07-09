@@ -89,7 +89,7 @@ export interface CodedNumericalReqParam {
   feature_name: string;
   target_resource_types: string[];
   code_paths?: string[];
-  system_paths?: string[];
+  value_paths?: string[];
   conditional_code_paths?: string[];
   conditional_system_paths?: string[];
 }

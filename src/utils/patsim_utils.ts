@@ -3,6 +3,7 @@ import {
   CategoricalStringReqParam,
   CodedConceptFeature,
   CodedConceptReqParam,
+  CodedNumericalFeature,
   CodedNumericalReqParam,
   NumericalFeature,
   NumericalReqParam,
@@ -55,15 +56,15 @@ export function parseFeaturesForRequest(patSimFeatures: PatSimFeature[]) {
           .map((path) => path.trim()),
       });
     } else if (feature.type === _codedNumerical) {
-      const feat = feature as CodedConceptFeature;
+      const feat = feature as CodedNumericalFeature;
       codedNumericalFeatures.push({
         feature_name: feat.name,
         target_resource_types: feat.targetResources,
         code_paths: feat
           .codePath!.split(pathsSeparator)
           .map((path) => path.trim()),
-        system_paths: feat
-          .systemPath!.split(pathsSeparator)
+        value_paths: feat
+          .valuePath!.split(pathsSeparator)
           .map((path) => path.trim()),
       });
     } else {

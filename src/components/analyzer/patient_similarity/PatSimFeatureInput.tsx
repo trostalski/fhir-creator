@@ -51,9 +51,7 @@ const PatSimFeatureInput = (props: PatSimFeatureInputProps) => {
             type="text"
             placeholder="Target Paths"
             className="grow h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
-            value={
-              (props.inputFeature as CategoricalStringFeature).targetPath
-            }
+            value={(props.inputFeature as CategoricalStringFeature).targetPath}
             onChange={(e) => {
               props.setInputFeatures((prev) => {
                 (prev.find((f) => f.id === props.featureId) as
@@ -117,7 +115,7 @@ const PatSimFeatureInput = (props: PatSimFeatureInputProps) => {
           />
           <input
             type="text"
-            placeholder="System Paths"
+            placeholder="Value Paths"
             className="grow h-12 w-52 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
             value={(props.inputFeature as CodedNumericalFeature).valuePath}
             onChange={(e) => {
