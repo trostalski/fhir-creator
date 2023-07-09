@@ -7,6 +7,8 @@ import {
   OptionType,
 } from "../types";
 
+export const detaSpaceUrl = "https://fhircreator-1-q8790833.deta.app";
+
 export const rootName = "root";
 export const pathDelimiter = ".";
 export const multiTypeString = "[x]";

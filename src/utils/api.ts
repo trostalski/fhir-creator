@@ -1,11 +1,7 @@
 import {
-  CategoricalStringFeature,
   CategoricalStringReqParam,
-  CodedConceptFeature,
   CodedConceptReqParam,
-  CodedNumericalFeature,
   CodedNumericalReqParam,
-  CsvExportFeature,
   CsvExportReqParam,
   NumericalReqParam,
   PatSimFeature,
@@ -18,6 +14,7 @@ import {
   _codedNumerical,
   _numerical,
   availablePatSimTypes,
+  detaSpaceUrl,
 } from "./constants";
 
 export const fetchProfileTree = async (
@@ -55,7 +52,7 @@ export const fetchPatSim = (features: PatSimFeature[], data: Bundle) => {
 };
 
 export const pingBackend = async () => {
-  const pingResponse = await fetch(`http://localhost:8000/api/v1/ping/`);
+  const pingResponse = await fetch(`${detaSpaceUrl}/api/v1/ping/`);
   if (!pingResponse.ok) {
     throw new Error("Error fetching profile tree");
   }
@@ -80,7 +77,7 @@ export const postPatSimData = async (
     coded_numerical_features: inputFeatures.coded_numerical_features || [],
   };
 
-  const patSimResponse = await fetch(`http://localhost:8000/api/v1/patsim/`, {
+  const patSimResponse = await fetch(`${detaSpaceUrl}/api/v1/patsim/`, {
     method: "POST",
     body: JSON.stringify(body),
     headers: {
@@ -104,7 +101,7 @@ export const postCsvExportData = async (
   };
 
   const csvExportResponse = await fetch(
-    `http://localhost:8000/api/v1/feature-extractor/`,
+    `${detaSpaceUrl}/api/v1/feature-extractor/`,
     {
       method: "POST",
       body: JSON.stringify(body),
