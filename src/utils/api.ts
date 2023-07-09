@@ -5,6 +5,8 @@ import {
   CodedConceptReqParam,
   CodedNumericalFeature,
   CodedNumericalReqParam,
+  CsvExportFeature,
+  CsvExportReqParam,
   NumericalReqParam,
   PatSimFeature,
   PathItem,
@@ -90,4 +92,30 @@ export const postPatSimData = async (
     throw new Error("Error fetching patient similarity results.");
   }
   return patSimResponse;
+};
+
+export const postCsvExportData = async (
+  data: Resource[],
+  inputFeatures: CsvExportReqParam[]
+) => {
+  const body = {
+    data: data,
+    features: inputFeatures,
+  };
+
+  const csvExportResponse = await fetch(
+    `http://localhost:8000/api/v1/feature-extractor/`,
+    {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!csvExportResponse.ok) {
+    throw new Error("Error fetching patient similarity results.");
+  }
+  return csvExportResponse;
 };

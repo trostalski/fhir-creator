@@ -136,7 +136,6 @@ export const _csvExport = "csv_export";
 export const defaultCsvExportFeature: CsvExportFeature = {
   id: 0,
   name: "",
-  type: csvExportMethod,
   targetResources: [],
   condition: "",
   targetPath: "",

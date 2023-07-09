@@ -61,19 +61,6 @@ const CsvFeatureInput = (props: CsvFeatureInputProps) => {
           });
         }}
       />
-      <input
-        type="text"
-        placeholder="Condition"
-        className="h-12 w-64 border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-        value={props.inputFeature.condition}
-        onChange={(e) => {
-          props.setInputFeatures((prev) => {
-            prev.find((f) => f.id === props.featureId)!.condition =
-              e.target.value;
-            return [...prev];
-          });
-        }}
-      />
       <MdClear
         size={24}
         className="cursor-pointer"

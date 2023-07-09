@@ -34,12 +34,12 @@ export interface PathCounter {
 export interface BaseFeature {
   id: number;
   name: string;
-  type: string;
   targetResources: (typeof resourceList)[number][];
 }
 
 export interface CategoricalStringFeature extends BaseFeature {
   targetPath?: string;
+  type: string;
   conditionalTargetPath?: string;
 }
 
@@ -52,6 +52,7 @@ export interface CategoricalStringReqParam {
 
 export interface NumericalFeature extends BaseFeature {
   targetPath?: string;
+  type: string;
   conditionalTargetPath?: string;
 }
 
@@ -64,6 +65,7 @@ export interface NumericalReqParam {
 
 export interface CodedConceptFeature extends BaseFeature {
   codePath?: string;
+  type: string;
   systemPath?: string;
   conditionalCodePath?: string;
   conditionalSystemPath?: string;
@@ -80,6 +82,7 @@ export interface CodedConceptReqParam {
 
 export interface CodedNumericalFeature extends BaseFeature {
   valuePath?: string;
+  type: string;
   codePath?: string;
   conditionalValuePath?: string;
   conditionalCodePath?: string;
@@ -103,4 +106,11 @@ export type PatSimFeature =
 export interface CsvExportFeature extends BaseFeature {
   targetPath?: string;
   condition?: string;
+}
+
+export interface CsvExportReqParam {
+  feature_name: string;
+  target_resource_types: string[];
+  target_paths?: string[];
+  conditional_target_paths?: string[];
 }

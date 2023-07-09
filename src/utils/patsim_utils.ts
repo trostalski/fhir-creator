@@ -5,6 +5,8 @@ import {
   CodedConceptReqParam,
   CodedNumericalFeature,
   CodedNumericalReqParam,
+  CsvExportFeature,
+  CsvExportReqParam,
   NumericalFeature,
   NumericalReqParam,
   PatSimFeature,
@@ -16,13 +18,30 @@ import {
   _numerical,
 } from "./constants";
 
-export function parseFeaturesForRequest(patSimFeatures: PatSimFeature[]) {
+export function parseCsvFeaturesForRequest(csvFeatures: CsvExportFeature[]) {
+  let parsedFeatures: CsvExportReqParam[] = [];
+
+  const pathSeparator = ",";
+
+  for (const feature of csvFeatures) {
+    parsedFeatures.push({
+      feature_name: feature.name,
+      target_resource_types: feature.targetResources,
+      target_paths: feature
+        .targetPath!.split(pathSeparator)
+        .map((path) => path.trim()),
+    });
+  }
+  return parsedFeatures;
+}
+
+export function parsePatSimFeaturesForRequest(patSimFeatures: PatSimFeature[]) {
   let codedNumericalFeatures: CodedNumericalReqParam[] = [];
   let categoricalStringFeatures: CategoricalStringReqParam[] = [];
   let numericalFeatures: NumericalReqParam[] = [];
   let codedConceptFeatures: CodedConceptReqParam[] = [];
 
-  const pathsSeparator = ",";
+  const pathSeparator = ",";
 
   for (const feature of patSimFeatures) {
     if (feature.type === _categoricalString) {
@@ -31,7 +50,7 @@ export function parseFeaturesForRequest(patSimFeatures: PatSimFeature[]) {
         feature_name: feat.name,
         target_resource_types: feat.targetResources,
         target_paths: feat
-          .targetPath!.split(pathsSeparator)
+          .targetPath!.split(pathSeparator)
           .map((path) => path.trim()),
       });
     } else if (feature.type === _numerical) {
@@ -40,7 +59,7 @@ export function parseFeaturesForRequest(patSimFeatures: PatSimFeature[]) {
         feature_name: feat.name,
         target_resource_types: feat.targetResources,
         target_paths: feat
-          .targetPath!.split(pathsSeparator)
+          .targetPath!.split(pathSeparator)
           .map((path) => path.trim()),
       });
     } else if (feature.type === _codedConcept) {
@@ -49,10 +68,10 @@ export function parseFeaturesForRequest(patSimFeatures: PatSimFeature[]) {
         feature_name: feat.name,
         target_resource_types: feat.targetResources,
         code_paths: feat
-          .codePath!.split(pathsSeparator)
+          .codePath!.split(pathSeparator)
           .map((path) => path.trim()),
         system_paths: feat
-          .systemPath!.split(pathsSeparator)
+          .systemPath!.split(pathSeparator)
           .map((path) => path.trim()),
       });
     } else if (feature.type === _codedNumerical) {
@@ -61,10 +80,10 @@ export function parseFeaturesForRequest(patSimFeatures: PatSimFeature[]) {
         feature_name: feat.name,
         target_resource_types: feat.targetResources,
         code_paths: feat
-          .codePath!.split(pathsSeparator)
+          .codePath!.split(pathSeparator)
           .map((path) => path.trim()),
         value_paths: feat
-          .valuePath!.split(pathsSeparator)
+          .valuePath!.split(pathSeparator)
           .map((path) => path.trim()),
       });
     } else {
@@ -78,4 +97,18 @@ export function parseFeaturesForRequest(patSimFeatures: PatSimFeature[]) {
     coded_concept_features: codedConceptFeatures,
     coded_numerical_features: codedNumericalFeatures,
   };
+}
+
+export async function downloadFileFromResponse(
+  responseObj: Response,
+  fileName: string
+) {
+  const blob = await responseObj.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", fileName);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }

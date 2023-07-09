@@ -5,7 +5,7 @@ import { db } from "@/db/db";
 import { getBundles, getResources } from "@/db/utils";
 import { toastError } from "@/toasts";
 import { CsvExportFeature, PatSimFeature } from "@/types";
-import { postPatSimData } from "@/utils/api";
+import { postCsvExportData, postPatSimData } from "@/utils/api";
 import {
   _categoricalString,
   _csvExport,
@@ -16,7 +16,11 @@ import {
   patSimMethod,
 } from "@/utils/constants";
 import { getResourcesFromBundles } from "@/utils/fhir_utils";
-import { parseFeaturesForRequest } from "@/utils/patsim_utils";
+import {
+  downloadFileFromResponse,
+  parseCsvFeaturesForRequest,
+  parsePatSimFeaturesForRequest,
+} from "@/utils/patsim_utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import React, { useEffect, useState } from "react";
 
@@ -96,35 +100,52 @@ const Analyzer = () => {
   };
 
   const handleApply = async () => {
-    if (analysisMethod === patSimMethod) {
-      // collect all resources
-      let bundles = (await getBundles(selectedBundleIds)) || [];
-      let resources = (await getResources(selectedResourceIds)) || [];
-      if (bundles && bundles.length > 0) {
-        const bundleResources = getResourcesFromBundles(bundles);
-        resources = [...resources, ...bundleResources];
-      }
-      if (resources.length === 0) {
-        toastError(
-          "No resources selected. Please select at least one resource."
-        );
-      } else {
-        const reqFeatures = parseFeaturesForRequest(patSimFeatures);
-        setIsLoading(true);
-        const patSimResponse = await postPatSimData(resources, reqFeatures);
-        const blob = await patSimResponse.blob();
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `patsim_${new Date().toISOString()}.zip`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setIsLoading(false);
-      }
-    } else {
-      throw new Error("Not implemented yet");
+    let bundles = (await getBundles(selectedBundleIds)) || [];
+    let resources = (await getResources(selectedResourceIds)) || [];
+    if (bundles && bundles.length > 0) {
+      const bundleResources = getResourcesFromBundles(bundles);
+      resources = [...resources, ...bundleResources];
     }
+    if (resources.length === 0) {
+      toastError("No resources selected. Please select at least one resource.");
+    }
+    if (analysisMethod === patSimMethod) {
+      const targetResources = patSimFeatures
+        .map((feature) => feature.targetResources)
+        .flat();
+      if (!targetResources.includes("Patient")) {
+        targetResources.push("Patient");
+      }
+      resources = resources.filter((resource) =>
+        targetResources.includes(resource.resourceType)
+      );
+      const reqFeatures = parsePatSimFeaturesForRequest(patSimFeatures);
+      setIsLoading(true);
+      const patSimResponse = await postPatSimData(resources, reqFeatures);
+      await downloadFileFromResponse(
+        patSimResponse,
+        `patsim_${new Date().toISOString()}.zip`
+      );
+      setIsLoading(false);
+    } else if (analysisMethod === csvExportMethod) {
+      const targetResources = csvExportFeatures
+        .map((feature) => feature.targetResources)
+        .flat();
+      if (!targetResources.includes("Patient")) {
+        targetResources.push("Patient");
+      }
+      resources = resources.filter((resource) =>
+        targetResources.includes(resource.resourceType)
+      );
+      const reqFeatures = parseCsvFeaturesForRequest(csvExportFeatures);
+      setIsLoading(true);
+      const csvResponse = await postCsvExportData(resources, reqFeatures);
+      await downloadFileFromResponse(
+        csvResponse,
+        `csvexport_${new Date().toISOString()}.csv`
+      );
+    }
+    setIsLoading(false);
   };
 
   return (

@@ -90,7 +90,7 @@ const BundleList = (props: BundleListProps) => {
                     className="flex flex-row items-center text-xs whitespace-nowrap"
                   >
                     <span>
-                      {entry.resource?.resourceType} / {entry.resource?.id}
+                      {entry.resource?.resourceType}/{entry.resource?.id}
                     </span>
                   </div>
                 ))}
