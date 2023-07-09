@@ -26,6 +26,7 @@ const LeftSidebar = (props: LeftSidebarProps) => {
     setResizeWidth(minWidth);
   };
   const router = useRouter();
+  const routerPath = router.route;
 
   return (
     <div
@@ -40,7 +41,9 @@ const LeftSidebar = (props: LeftSidebarProps) => {
     >
       <div className="flex flex-col h-full w-16 pt-20 gap-4 items-center flex-shrink-0 shadow-md">
         <button
-          className="p-4 rounded-md hover:bg-slate-300"
+          className={`p-4 rounded-md hover:bg-slate-300 ${
+            routerPath === "/" ? "bg-slate-300" : ""
+          }`}
           title="Resource Editor"
           onClick={() => {
             router.push("/");
@@ -49,17 +52,13 @@ const LeftSidebar = (props: LeftSidebarProps) => {
           <BsPersonAdd size={20} className="hover:scale-105" />
         </button>
         <button
-          className="p-4 rounded-md hover:bg-slate-300"
-          title="Inspect Data"
-          onClick={() => {
-            router.push("/explorer");
-          }}
-        >
-          <TbDeviceAnalytics size={20} className="hover:scale-105" />
-        </button>
-        <button
-          className="p-4 rounded-md hover:bg-slate-300"
+          className={`p-4 rounded-md hover:bg-slate-300 ${
+            routerPath.includes("analyzer") ? "bg-slate-300" : ""
+          }`}
           title="Data Transformer"
+          onClick={() => {
+            router.push("/analyzer");
+          }}
         >
           <TbTransform size={20} className="hover:scale-105" />
         </button>

@@ -1,8 +1,11 @@
-import { ProfileTree, ProfileTreeNode } from "@/utils/buildTree";
+import { ProfileTreeNode } from "@/utils/buildTree";
 import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
 import BindingCodeInput from "./CodeableConceptInput";
 import { useStore } from "@/stores/useStore";
+import { AiOutlineQuestionCircle } from "react-icons/ai";
+import { Tooltip } from "react-tooltip";
+import { tooltipStyles } from "@/utils/styles";
 import { ConstraintComponent } from "./ConstraintComponent";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
 
@@ -18,15 +21,13 @@ interface InputFromTypeProps {
 }
 
 const InputFromType = (props: InputFromTypeProps) => {
-  const { setProfileTree, profileTree, updateProfileTree } = useStore(
-    (state) => {
-      return {
-        setProfileTree: state.setProfileTree,
-        profileTree: state.activeProfileTree,
-        updateProfileTree: state.updateProfileTree,
-      };
-    }
-  );
+  const { profileTree, updateProfileTree } = useStore((state) => {
+    return {
+      setProfileTree: state.setProfileTree,
+      profileTree: state.activeProfileTree,
+      updateProfileTree: state.updateProfileTree,
+    };
+  });
   const handleChange = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
@@ -135,12 +136,15 @@ const InputFromType = (props: InputFromTypeProps) => {
 const PrimitveInput = (props: PrimitveInputProps) => {
   const { orderedConstraintResults } = useStore((state) => {
     return {
-      orderedConstraintResults: state.orderedConstraintResults
+      orderedConstraintResults: state.orderedConstraintResults,
     };
   });
   let guiConstraintResolver;
-  if(orderedConstraintResults){
-    guiConstraintResolver = new GUIConstraintResolver({node: props.node, orderedConstraintResults});
+  if (orderedConstraintResults) {
+    guiConstraintResolver = new GUIConstraintResolver({
+      node: props.node,
+      orderedConstraintResults,
+    });
   }
   return (
     <div
@@ -154,23 +158,38 @@ const PrimitveInput = (props: PrimitveInputProps) => {
     }
     `}
     >
-      <label
-        className={`block w-full text-xs font-bold dark:text-gray-200 ${
-          props.node.element.min! > 0
-            ? "after:text-red-600 after:content-['*']"
-            : ""
-        }`}
-      >
-        {getDisplayPath(props.node)}
-        <span className="text-gray-400 font-normal text-md">
-          {props.node.element.type
-            ? " (" + props.node.element.type[0].code + ")"
-            : null}
-        </span>{" "}
-        <ConstraintComponent
-          resolver={guiConstraintResolver}
-        />
-      </label>
+      <div className="flex flex-row w-full gap-2">
+        <div
+          className={`flex flex-row text-xs font-bold ${
+            props.node.element.min! > 0
+              ? "after:text-red-600 after:content-['*']"
+              : ""
+          }`}
+        >
+          <span>{getDisplayPath(props.node)}</span>
+          <span className="text-gray-400 font-normal text-md">
+            {props.node.element.type
+              ? " (" + props.node.element.type[0].code + ")"
+              : null}
+          </span>{" "}
+          <ConstraintComponent resolver={guiConstraintResolver} />
+        </div>
+        {props.node.element.short && (
+          <>
+            <div
+              data-tooltip-id={props.node.dataPath}
+              data-tooltip-content={props.node.element.short}
+            >
+              <AiOutlineQuestionCircle />{" "}
+            </div>
+            <Tooltip
+              id={props.node.dataPath}
+              place="right"
+              style={tooltipStyles}
+            />
+          </>
+        )}
+      </div>
       <InputFromType
         type={props.node.element.type![0].code}
         profileTreeNode={props.profileTreeNode}

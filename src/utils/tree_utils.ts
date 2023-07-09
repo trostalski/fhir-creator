@@ -205,3 +205,48 @@ export function deleteBranch(profileTree: ProfileTree, node: ProfileTreeNode) {
   profileTree.splice(index, 1);
   return profileTree;
 }
+
+function nodeOrChildWasModified(
+  profileTree: ProfileTree,
+  node: ProfileTreeNode
+) {
+  if (node.value !== "") {
+    return true;
+  }
+  const children = getChildNodes(profileTree, node);
+  for (const child of children) {
+    if (nodeOrChildWasModified(profileTree, child)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function getExpansionBgColour(
+  profileTree: ProfileTree,
+  pathsWithInvalidCardinality: string[],
+  hastConstraintIssues: boolean,
+  node: ProfileTreeNode
+) {
+  if (nodeOrChildWasModified(profileTree, node)) {
+    return "bg-green-500";
+  } else if (pathsWithInvalidCardinality.includes(node.dataPath)) {
+    return "bg-red-400";
+  } else if (hastConstraintIssues) {
+    return "bg-pink-800";
+  } else if (node.element.sliceName) {
+    return "bg-violet-300";
+  } else {
+    return "bg-blue-300";
+  }
+}
+
+export function nodeIsType(node: ProfileTreeNode, type: string) {
+  if (node.multiTypeType) {
+    return node.multiTypeType === type;
+  } else if (!node.element.type) {
+    return false;
+  } else {
+    return node.element.type[0].code === type;
+  }
+}
