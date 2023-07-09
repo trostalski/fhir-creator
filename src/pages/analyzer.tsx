@@ -25,7 +25,6 @@ import { useLiveQuery } from "dexie-react-hooks";
 import React, { useEffect, useState } from "react";
 
 const Analyzer = () => {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const bundles = useLiveQuery(() => db.bundles.toArray());
   const resources = useLiveQuery(() => db.resources.toArray());
   const [analysisMethod, setAnalysisMethod] = React.useState<
@@ -46,16 +45,6 @@ const Analyzer = () => {
   const [selectedBundleIds, setSelectedBundleIds] = React.useState<string[]>(
     []
   );
-
-  useEffect(() => {
-    if (isLoading) {
-      document.body.style.cursor = "wait";
-    } else {
-      document.body.style.cursor = "default";
-    }
-  }, [isLoading]);
-
-  const [results, setResults] = React.useState<any[]>([]);
 
   const handleAddFeature = () => {
     if (analysisMethod === patSimMethod) {
@@ -120,13 +109,11 @@ const Analyzer = () => {
         targetResources.includes(resource.resourceType)
       );
       const reqFeatures = parsePatSimFeaturesForRequest(patSimFeatures);
-      setIsLoading(true);
       const patSimResponse = await postPatSimData(resources, reqFeatures);
       await downloadFileFromResponse(
         patSimResponse,
         `patsim_${new Date().toISOString()}.zip`
       );
-      setIsLoading(false);
     } else if (analysisMethod === csvExportMethod) {
       const targetResources = csvExportFeatures
         .map((feature) => feature.targetResources)
@@ -138,14 +125,12 @@ const Analyzer = () => {
         targetResources.includes(resource.resourceType)
       );
       const reqFeatures = parseCsvFeaturesForRequest(csvExportFeatures);
-      setIsLoading(true);
       const csvResponse = await postCsvExportData(resources, reqFeatures);
       await downloadFileFromResponse(
         csvResponse,
         `csvexport_${new Date().toISOString()}.csv`
       );
     }
-    setIsLoading(false);
   };
 
   return (
