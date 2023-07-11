@@ -5,7 +5,6 @@ import {
   updateResourcePathRepr,
 } from "@/db/utils";
 import { useStore } from "@/stores/useStore";
-import { useValResultStore } from "@/stores/useStore";
 import { toastError, toastSuccess } from "@/toasts";
 import { PathItem } from "@/types";
 import { Modes } from "@/utils/constants";
@@ -26,14 +25,15 @@ interface AddResourceButtonProps {
 }
 
 const AddResourceButton = (props: AddResourceButtonProps) => {
-  const { mode, resourceType, profileTree, setOrderedConstraintResults } = useStore((state) => {
-    return {
-      mode: state.mode,
-      resourceType: state.activeResourceType,
-      profileTree: state.activeProfileTree,
-      setOrderedConstraintResults: state.setOrderedConstraintResults
-    };
-  });
+  const { mode, resourceType, profileTree, setOrderedConstraintResults } =
+    useStore((state) => {
+      return {
+        mode: state.mode,
+        resourceType: state.activeResourceType,
+        profileTree: state.activeProfileTree,
+        setOrderedConstraintResults: state.setOrderedConstraintResults,
+      };
+    });
 
   if (!profileTree) {
     return null;
@@ -83,19 +83,23 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
           formattedInputData = addResourceTypeToInputData(formattedInputData);
           const resource = createJsonFromPathArray(formattedInputData);
           // Constraint check
-          const constraintResolver = new ConstraintResolver(profileTree, resource);
-          const orderedConstraintResults = constraintResolver.getEvaluationResult();
+          const constraintResolver = new ConstraintResolver(
+            profileTree,
+            resource
+          );
+          const orderedConstraintResults =
+            constraintResolver.getEvaluationResult();
           setOrderedConstraintResults(orderedConstraintResults);
-          if(orderedConstraintResults.warnings.length > 0){
-            const confirm = window.confirm("There are constraint warnings in this document. By clicking ok you chose to ignore them and proceed anyway.")
-            if(!confirm){
+          if (orderedConstraintResults.warnings.length > 0) {
+            const confirm = window.confirm(
+              "There are constraint warnings in this document. By clicking ok you chose to ignore them and proceed anyway."
+            );
+            if (!confirm) {
               return;
             }
-          } else if(orderedConstraintResults.errors.length > 0){
-            toastError(
-              "Constraint error. Inspect the form for more details"
-              )
-              return;
+          } else if (orderedConstraintResults.errors.length > 0) {
+            toastError("Constraint error. Inspect the form for more details");
+            return;
           }
           addResource(resource);
           addResourcPathRepr(formattedInputData);
@@ -124,7 +128,6 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
               },
             ];
           }
-          console.log(inputPathValuePairs);
           inputPathValuePairs = formatInputDataForResource(inputPathValuePairs);
           const resource = createJsonFromPathArray(inputPathValuePairs);
           updateResource(resource);

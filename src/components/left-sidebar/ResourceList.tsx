@@ -10,27 +10,23 @@ import { MdOutlineClear } from "react-icons/md";
 import { useStore } from "@/stores/useStore";
 import { AiOutlineEye } from "react-icons/ai";
 
-
 interface ResourceListProps {
-  setPreviewOpen: React.Dispatch<React.SetStateAction<boolean>>
-  setPreviewPathRepr: React.Dispatch<React.SetStateAction<ResourcePathRepr>>
+  setPreviewOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setPreviewPathRepr: React.Dispatch<React.SetStateAction<ResourcePathRepr>>;
+  setCheckedResources: (checkedResources: string[]) => void;
+  checkedResources: string[];
 }
 
 const ResourceList = (props: ResourceListProps) => {
   const resourcesPathRepr = useLiveQuery(() => db.resourcesPathRepr.toArray());
-  const { setProfileTree, setMode } = useStore((state) => {
-    return { setProfileTree: state.setProfileTree, setMode: state.setMode };
+  const { setProfileTree, setMode, setResource } = useStore((state) => {
+    return {
+      setProfileTree: state.setProfileTree,
+      setMode: state.setMode,
+      setResource: state.setResource,
+    };
   });
   const profiles = useLiveQuery(() => db.profiles.toArray());
-  const deleteResource = (id: string) => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this resource?"
-    );
-    if (!confirm) return;
-    db.resourcesPathRepr.delete(id);
-    db.resources.delete(id);
-  };
-
   const getResourceTypeFromPathRepr = (pathRepr: ResourcePathRepr) => {
     const result = pathRepr.data.find(
       (data) => data.path === "resourceType"
@@ -52,6 +48,7 @@ const ResourceList = (props: ResourceListProps) => {
             title={resourcePathRepr.id}
             onClick={async () => {
               let profile: StructureDefinition | undefined;
+              const resource = await db.resources.get(resourcePathRepr.id);
               const profileUrl = resourcePathRepr.data.find(
                 (data) => data.path === "meta.profile[0]"
               )?.value;
@@ -68,6 +65,7 @@ const ResourceList = (props: ResourceListProps) => {
                 return;
               }
               setProfileTree(profile, resourcePathRepr.data);
+              setResource(resource!);
               setMode(Modes.EDIT);
             }}
           >
@@ -78,25 +76,30 @@ const ResourceList = (props: ResourceListProps) => {
             </span>
           </button>
           <div className="text-right">
-          <button
-            className="hover:scale-105"
-            onClick={()=>{
-              props.setPreviewOpen(true);
-              props.setPreviewPathRepr(resourcePathRepr);
-            }}
+            <button
+              className="hover:scale-105"
+              onClick={() => {
+                props.setPreviewOpen(true);
+                props.setPreviewPathRepr(resourcePathRepr);
+              }}
             >
-          <AiOutlineEye size={15} className="ml-2"/>
-          </button>
-          <button
-            className="hover:scale-105"
-            onClick={() => deleteResource(resourcePathRepr.id)}
-            >
-            <MdOutlineClear
-              size={20}
-              className="ml-2"
-              />
-          </button>
+              <AiOutlineEye size={15} className="ml-2" />
+            </button>
           </div>
+          <input
+            type="checkbox"
+            checked={props.checkedResources.includes(resourcePathRepr.id)}
+            className="ml-2 cursor-pointer"
+            onChange={(e) => {
+              props.setCheckedResources(
+                props.checkedResources.includes(resourcePathRepr.id)
+                  ? props.checkedResources.filter(
+                      (id) => id !== resourcePathRepr.id
+                    )
+                  : [...props.checkedResources, resourcePathRepr.id]
+              );
+            }}
+          />
         </div>
       ))}
     </div>

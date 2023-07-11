@@ -5,7 +5,6 @@ import {
   StructureDefinition,
 } from "fhir/r4";
 import {
-  multiTypeString,
   pathDelimiter,
   primitiveTypes,
   rootName,
@@ -31,8 +30,6 @@ import {
 } from "./path_utils";
 import { extractDirectChildrenPaths, getNodeByDataPath } from "./tree_utils";
 import { ValueSetResolver } from "./valueset_utils";
-import { profile } from "console";
-import { ro } from "date-fns/locale";
 
 export interface ProfileTreeNode {
   element: ElementDefinition;
@@ -187,6 +184,17 @@ function addMissingChildren(profileTree: ProfileTree) {
   }
 }
 
+function removeNonePrimmitiveWithoutChildren(profileTree: ProfileTree) {
+  // removes all none primitive elements without children
+  // this is needed for some backbone children e.g. Observation.component.referenceRange
+  for (const node of profileTree) {
+    if (!node.isPrimitive && !node.childPaths.length) {
+      const idx = profileTree.indexOf(node);
+      profileTree.splice(idx, 1);
+    }
+  }
+}
+
 export function removeSliceNames(str: string): string {
   let result = str;
   const sliceNames = getSliceNames(str);
@@ -211,24 +219,24 @@ const tryGetBindingCodes = async (element: ElementDefinition) => {
 
 function addRootNode(
   profileTree: ProfileTreeNode[],
-  elements:ElementDefinition[])
-  {
-    const rootElement = elements.find(element=>{
-      return !element.id!.includes(pathDelimiter);
-    })
-    const elementNode: ProfileTreeNode = {
-      element: rootElement!,
-      dataPath: rootName,
-      parentDataPath: "",
-      basePath: rootName,
-      baseId: rootElement!.id!,
-      isPrimitive: false,
-      isRoot: true,
-      childPaths: [],
-      value: "",
-    };
-    profileTree.push(elementNode);
-  }
+  elements: ElementDefinition[]
+) {
+  const rootElement = elements.find((element) => {
+    return !element.id!.includes(pathDelimiter);
+  });
+  const elementNode: ProfileTreeNode = {
+    element: rootElement!,
+    dataPath: rootName,
+    parentDataPath: "",
+    basePath: rootName,
+    baseId: rootElement!.id!,
+    isPrimitive: false,
+    isRoot: true,
+    childPaths: [],
+    value: "",
+  };
+  profileTree.push(elementNode);
+}
 
 export const buildProfileTree = async (
   profile: StructureDefinition
@@ -237,6 +245,7 @@ export const buildProfileTree = async (
   const profileTree = await buildTreeFromElementsRecursive(elements);
   replaceWrongParentPaths(profileTree);
   addMissingChildren(profileTree);
+  removeNonePrimmitiveWithoutChildren(profileTree);
   // add root node for constraint checking
   addRootNode(profileTree, elements);
   return profileTree;

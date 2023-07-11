@@ -10,6 +10,7 @@ import { tooltipStyles } from "@/utils/styles";
 import {
   deleteBranch,
   duplicateBranch,
+  getExpansionBgColour,
   getLastDescendant,
   insertAfterNode,
 } from "@/utils/tree_utils";
@@ -42,15 +43,15 @@ const RootParent = (props: RootParentProps) => {
     evaluateRenderAddButton,
   } = usePathCounter();
 
-  const { profileTree, profile, updateProfileTree, orderedConstraintResults } = useStore((state) => {
-    return {
-      profileTree: state.activeProfileTree,
-      profile: state.activeProfile,
-      updateProfileTree: state.updateProfileTree,
-      orderedConstraintResults: state.orderedConstraintResults
-    };
-  });
-
+  const { profileTree, profile, updateProfileTree, orderedConstraintResults } =
+    useStore((state) => {
+      return {
+        profileTree: state.activeProfileTree,
+        profile: state.activeProfile,
+        updateProfileTree: state.updateProfileTree,
+        orderedConstraintResults: state.orderedConstraintResults,
+      };
+    });
 
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {
@@ -77,8 +78,11 @@ const RootParent = (props: RootParentProps) => {
     }
   };
   let guiConstraintResolver;
-  if(orderedConstraintResults){
-    guiConstraintResolver = new GUIConstraintResolver({node: props.node, orderedConstraintResults});
+  if (orderedConstraintResults) {
+    guiConstraintResolver = new GUIConstraintResolver({
+      node: props.node,
+      orderedConstraintResults,
+    });
   }
   return (
     <div
@@ -87,15 +91,12 @@ const RootParent = (props: RootParentProps) => {
     >
       <div className="flex flex-row">
         <div
-          className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${
-            props.pathsWithInvalidCardinality.includes(props.node.dataPath)
-              ? "bg-red-400"
-              : guiConstraintResolver?.hasConstraintIssue()
-              ? "bg-pink-800"
-              : props.node.element.sliceName
-              ? "bg-violet-300"
-              : "bg-blue-300 "
-          }`}
+          className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
+            profileTree!,
+            props.pathsWithInvalidCardinality,
+            guiConstraintResolver?.hasConstraintIssue() || false,
+            props.node
+          )}`}
         >
           <button
             className="flex flex-row items-center"
@@ -125,9 +126,7 @@ const RootParent = (props: RootParentProps) => {
                   ? "(" + props.node.element.type[0].code + ")"
                   : null}
               </span>
-              <ConstraintComponent
-                resolver={guiConstraintResolver}
-              />
+              <ConstraintComponent resolver={guiConstraintResolver} />
             </div>
             <span className="flex-grow" />
             <div className="flex flex-row items-center gap-2">

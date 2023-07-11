@@ -108,11 +108,11 @@ const ImportResourceButton = (props: ImportResourceButtonProps) => {
   return (
     <div className="flex flex-row gap-2">
       <label
-        htmlFor="profile-upload"
+        htmlFor="resource-upload"
         className="hover:underline hover:cursor-pointer"
       >
         <input
-          id="profile-upload"
+          id="resource-upload"
           type="file"
           hidden
           multiple
