@@ -1,4 +1,3 @@
-// import ReactJson from "react-json-view";
 import ModalWrapper from "../ModalWrapper";
 import { ResourcePathRepr, db } from "@/db/db";
 import { getBaseProfile } from "@/db/utils";
@@ -6,8 +5,8 @@ import { toastError } from "@/toasts";
 import { getResourceTypeFromUrl, isBaseUrl } from "@/utils/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { StructureDefinition } from "fhir/r4";
-import dynamic from "next/dynamic";
-const ReactJson = dynamic(import("react-json-view"), { ssr: false });
+import JsonView from "react18-json-view";
+import "react18-json-view/src/style.css";
 import { AiFillEdit } from "react-icons/ai";
 import { BsHandThumbsUp } from "react-icons/bs";
 import { useStore } from "@/stores/useStore";
@@ -29,15 +28,7 @@ export function PreviewModal(props: PreviewModalProps) {
   return (
     <ModalWrapper setShow={props.setIsOpen}>
       <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
-        {resource && (
-          <ReactJson
-            src={resource}
-            name={null}
-            displayObjectSize={false}
-            displayDataTypes={false}
-            enableClipboard={false}
-          />
-        )}
+        {resource && <JsonView src={resource} />}
       </div>
       <div className="flex flex-row gap-4">
         <div className="grow"></div>
