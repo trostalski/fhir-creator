@@ -44,7 +44,6 @@ const RightPart = (props: RightPartProps) => {
       deleteResources(checkedResources);
     }
     if (checkedBundles.length > 0) {
-      console.log("checked bundles: ",checkedBundles);
       deleteBundles(checkedBundles);
     }
     if (checkedProfiles.length > 0) {

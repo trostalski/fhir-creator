@@ -35,22 +35,6 @@ export const fetchProfileTree = async (
   return profileTreeJson;
 };
 
-export const fetchPatSim = (features: PatSimFeature[], data: Bundle) => {
-  const body = {
-    data: data,
-    categorical_features: [],
-    numerical_features: [],
-    coded_concept_features: [],
-    coded_numerical_features: [],
-  };
-  for (const type of availablePatSimTypes) {
-    for (const feat of features) {
-      if (feat.type === type) {
-      }
-    }
-  }
-};
-
 export const pingBackend = async () => {
   const pingResponse = await fetch(`${detaSpaceUrl}/api/v1/ping/`);
   if (!pingResponse.ok) {
@@ -60,7 +44,7 @@ export const pingBackend = async () => {
   return pingJson;
 };
 
-export const postPatSimData = async (
+export const fetchPatSimData = async (
   data: Resource[],
   inputFeatures: {
     categorical_features: CategoricalStringReqParam[];
@@ -76,22 +60,17 @@ export const postPatSimData = async (
     coded_concept_features: inputFeatures.coded_concept_features || [],
     coded_numerical_features: inputFeatures.coded_numerical_features || [],
   };
-
-  const patSimResponse = await fetch(`${detaSpaceUrl}/api/v1/patsim/`, {
+  const patSimResponse = await fetch("api/patsim/", {
     method: "POST",
     body: JSON.stringify(body),
     headers: {
       "Content-Type": "application/json",
     },
   });
-
-  if (!patSimResponse.ok) {
-    throw new Error("Error fetching patient similarity results.");
-  }
   return patSimResponse;
 };
 
-export const postCsvExportData = async (
+export const fetchCsvExportData = async (
   data: Resource[],
   inputFeatures: CsvExportReqParam[]
 ) => {
@@ -100,16 +79,13 @@ export const postCsvExportData = async (
     features: inputFeatures,
   };
 
-  const csvExportResponse = await fetch(
-    `${detaSpaceUrl}/api/v1/feature-extractor/`,
-    {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const csvExportResponse = await fetch(`api/csv-export/`, {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   if (!csvExportResponse.ok) {
     throw new Error("Error fetching patient similarity results.");

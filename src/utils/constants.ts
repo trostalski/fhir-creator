@@ -8,6 +8,7 @@ import {
 } from "../types";
 
 export const detaSpaceUrl = "https://fhircreator-1-q8790833.deta.app";
+// export const detaSpaceUrl = "http://localhost:8000";
 import { ElementDefinitionConstraint } from "fhir/r4";
 import { ProfileTreeNode } from "./buildTree";
 import {
