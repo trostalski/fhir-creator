@@ -184,6 +184,17 @@ function addMissingChildren(profileTree: ProfileTree) {
   }
 }
 
+function removeNonePrimmitiveWithoutChildren(profileTree: ProfileTree) {
+  // removes all none primitive elements without children
+  // this is needed for some backbone children e.g. Observation.component.referenceRange
+  for (const node of profileTree) {
+    if (!node.isPrimitive && !node.childPaths.length) {
+      const idx = profileTree.indexOf(node);
+      profileTree.splice(idx, 1);
+    }
+  }
+}
+
 export function removeSliceNames(str: string): string {
   let result = str;
   const sliceNames = getSliceNames(str);
@@ -234,6 +245,7 @@ export const buildProfileTree = async (
   const profileTree = await buildTreeFromElementsRecursive(elements);
   replaceWrongParentPaths(profileTree);
   addMissingChildren(profileTree);
+  removeNonePrimmitiveWithoutChildren(profileTree);
   // add root node for constraint checking
   addRootNode(profileTree, elements);
   return profileTree;
