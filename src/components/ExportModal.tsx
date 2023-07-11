@@ -14,19 +14,16 @@ interface ExportModalProps {
 const ExportModal = (props: ExportModalProps) => {
   const resources = useLiveQuery(() => db.resources.toArray());
   const bundles = useLiveQuery(() => db.bundles.toArray());
+
   const [bundleOuptut, setBundleOutput] = useState<boolean>(true);
   const [bundleIndividually, setBundleIndividually] = useState<boolean>(false);
+
   const [selectedResources, setSelectedResources] = useState<Resource[]>(
     resources || []
   );
   const [selectedBundles, setSelectedBundles] = useState<Bundle[]>(
     bundles || []
   );
-  useEffect(() => {
-    if (resources) {
-      setSelectedResources(resources);
-    }
-  }, [resources]);
   return (
     <ModalWrapper setShow={props.setIsOpen}>
       <div className="flex flex-col h-96">
@@ -122,23 +119,26 @@ const ExportModal = (props: ExportModalProps) => {
             <label htmlFor="bundle-output-checkbox" className="text-sm">
               Bundle Output
             </label>
-            {bundleOuptut &&
-            <>
-            {/* might need some rework for bundle checkout */}
-              <input
-                id="bundle-individually-checkbox"
-                type="checkbox"
-                checked={bundleIndividually}
-                className="border-gray-300 border-2 cursor-pointer"
-                onChange={(e) => {
-                  setBundleIndividually(e.target.checked);
-                }}
+            {bundleOuptut && (
+              <>
+                {/* might need some rework for bundle checkout */}
+                <input
+                  id="bundle-individually-checkbox"
+                  type="checkbox"
+                  checked={bundleIndividually}
+                  className="border-gray-300 border-2 cursor-pointer"
+                  onChange={(e) => {
+                    setBundleIndividually(e.target.checked);
+                  }}
                 />
-              <label htmlFor="bundle-individually-checkbox" className="text-sm">
-                Bundle Individually
-              </label>
-            </>
-            }
+                <label
+                  htmlFor="bundle-individually-checkbox"
+                  className="text-sm"
+                >
+                  Bundle Individually
+                </label>
+              </>
+            )}
           </div>
           <span className="flex-grow" />
           <button
@@ -155,12 +155,12 @@ const ExportModal = (props: ExportModalProps) => {
               if (!selectedResources || selectedResources.length === 0) {
                 toastError("No resources selected");
                 return;
-              } else if(!bundleOuptut) {
-                checkoutResources(selectedResources)
-              } else if(bundleIndividually) {
-                selectedResources.forEach( resource => {
-                  checkoutBundle([resource], selectedBundles)
-                })
+              } else if (!bundleOuptut) {
+                checkoutResources(selectedResources);
+              } else if (bundleIndividually) {
+                selectedResources.forEach((resource) => {
+                  checkoutBundle([resource], selectedBundles);
+                });
               } else {
                 checkoutBundle(selectedResources, selectedBundles);
               }
