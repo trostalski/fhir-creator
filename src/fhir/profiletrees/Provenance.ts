@@ -1,0 +1,5000 @@
+const data = [
+  {
+    element: {
+      id: "Provenance.meta",
+      path: "Provenance.meta",
+      short: "Metadata about the resource",
+      definition:
+        "The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource.",
+      min: 0,
+      max: "1",
+      base: { path: "Resource.meta", min: 0, max: "1" },
+      type: [{ code: "Meta" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: true,
+    },
+    dataPath: "root.meta",
+    parentDataPath: "root",
+    basePath: "root.meta",
+    baseId: "Provenance.meta",
+    isPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Provenance.implicitRules",
+      path: "Provenance.implicitRules",
+      short: "A set of rules under which this content was created",
+      definition:
+        "A reference to a set of rules that were followed when the resource was constructed, and which must be understood when processing the content. Often, this is a reference to an implementation guide that defines the special rules along with other profiles etc.",
+      comment:
+        "Asserting this rule set restricts the content to be only understood by a limited set of trading partners. This inherently limits the usefulness of the data in the long term. However, the existing health eco-system is highly fractured, and not yet ready to define, collect, and exchange data in a generally computable sense. Wherever possible, implementers and/or specification writers should avoid using this element. Often, when used, the URL is a reference to an implementation guide that defines these special rules as part of it's narrative along with other profiles, value sets, etc.",
+      min: 0,
+      max: "1",
+      base: { path: "Resource.implicitRules", min: 0, max: "1" },
+      type: [{ code: "uri" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: true,
+      isModifierReason:
+        "This element is labeled as a modifier because the implicit rules may provide additional knowledge about the resource that modifies it's meaning or interpretation",
+      isSummary: true,
+    },
+    dataPath: "root.implicitRules",
+    parentDataPath: "root",
+    basePath: "root.implicitRules",
+    baseId: "Provenance.implicitRules",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Provenance.language",
+      path: "Provenance.language",
+      short: "Language of the resource content",
+      definition: "The base language in which the resource is written.",
+      comment:
+        "Language is provided to support indexing and accessibility (typically, services such as text to speech use the language tag). The html language tag in the narrative applies  to the narrative. The language tag on the resource may be used to specify the language of other presentations generated from the data in the resource. Not all the content has to be in the base language. The Resource.language should not be assumed to apply to the narrative automatically. If a language is specified, it should it also be specified on the div element in the html (see rules in HTML5 for information about the relationship between xml:lang and the html lang attribute).",
+      min: 0,
+      max: "1",
+      base: { path: "Resource.language", min: 0, max: "1" },
+      type: [{ code: "code" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      binding: {
+        extension: [
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet",
+            valueCanonical: "http://hl7.org/fhir/ValueSet/all-languages",
+          },
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+            valueString: "Language",
+          },
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-isCommonBinding",
+            valueBoolean: true,
+          },
+        ],
+        strength: "preferred",
+        description: "IETF language tag",
+        valueSet: "http://hl7.org/fhir/ValueSet/languages",
+      },
+    },
+    dataPath: "root.language",
+    parentDataPath: "root",
+    basePath: "root.language",
+    baseId: "Provenance.language",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+    bindingCodes: [
+      { code: "ar", display: "Arabic" },
+      { code: "bn", display: "Bengali" },
+      { code: "cs", display: "Czech" },
+      { code: "da", display: "Danish" },
+      { code: "de", display: "German" },
+      { code: "de-AT", display: "German (Austria)" },
+      { code: "de-CH", display: "German (Switzerland)" },
+      { code: "de-DE", display: "German (Germany)" },
+      { code: "el", display: "Greek" },
+      { code: "en", display: "English" },
+      { code: "en-AU", display: "English (Australia)" },
+      { code: "en-CA", display: "English (Canada)" },
+      { code: "en-GB", display: "English (Great Britain)" },
+      { code: "en-IN", display: "English (India)" },
+      { code: "en-NZ", display: "English (New Zeland)" },
+      { code: "en-SG", display: "English (Singapore)" },
+      { code: "en-US", display: "English (United States)" },
+      { code: "es", display: "Spanish" },
+      { code: "es-AR", display: "Spanish (Argentina)" },
+      { code: "es-ES", display: "Spanish (Spain)" },
+      { code: "es-UY", display: "Spanish (Uruguay)" },
+      { code: "fi", display: "Finnish" },
+      { code: "fr", display: "French" },
+      { code: "fr-BE", display: "French (Belgium)" },
+      { code: "fr-CH", display: "French (Switzerland)" },
+      { code: "fr-FR", display: "French (France)" },
+      { code: "fy", display: "Frysian" },
+      { code: "fy-NL", display: "Frysian (Netherlands)" },
+      { code: "hi", display: "Hindi" },
+      { code: "hr", display: "Croatian" },
+      { code: "it", display: "Italian" },
+      { code: "it-CH", display: "Italian (Switzerland)" },
+      { code: "it-IT", display: "Italian (Italy)" },
+      { code: "ja", display: "Japanese" },
+      { code: "ko", display: "Korean" },
+      { code: "nl", display: "Dutch" },
+      { code: "nl-BE", display: "Dutch (Belgium)" },
+      { code: "nl-NL", display: "Dutch (Netherlands)" },
+      { code: "no", display: "Norwegian" },
+      { code: "no-NO", display: "Norwegian (Norway)" },
+      { code: "pa", display: "Punjabi" },
+      { code: "pl", display: "Polish" },
+      { code: "pt", display: "Portuguese" },
+      { code: "pt-BR", display: "Portuguese (Brazil)" },
+      { code: "ru", display: "Russian" },
+      { code: "ru-RU", display: "Russian (Russia)" },
+      { code: "sr", display: "Serbian" },
+      { code: "sr-RS", display: "Serbian (Serbia)" },
+      { code: "sv", display: "Swedish" },
+      { code: "sv-SE", display: "Swedish (Sweden)" },
+      { code: "te", display: "Telegu" },
+      { code: "zh", display: "Chinese" },
+      { code: "zh-CN", display: "Chinese (China)" },
+      { code: "zh-HK", display: "Chinese (Hong Kong)" },
+      { code: "zh-SG", display: "Chinese (Singapore)" },
+      { code: "zh-TW", display: "Chinese (Taiwan)" },
+    ],
+  },
+  {
+    element: {
+      id: "Provenance.contained",
+      path: "Provenance.contained",
+      short: "Contained, inline Resources",
+      definition:
+        "These resources do not have an independent existence apart from the resource that contains them - they cannot be identified independently, and nor can they have their own independent transaction scope.",
+      comment:
+        "This should never be done when the content can be identified properly, as once identification is lost, it is extremely difficult (and context dependent) to restore it again. Contained resources may have profiles and tags In their meta elements, but SHALL NOT have security labels.",
+      alias: ["inline resources", "anonymous resources", "contained resources"],
+      min: 0,
+      max: "*",
+      base: { path: "DomainResource.contained", min: 0, max: "*" },
+      type: [{ code: "Resource" }],
+      constraint: [
+        {
+          key: "dom-r4b",
+          severity: "warning",
+          human:
+            "Containing new R4B resources within R4 resources may cause interoperability issues if instances are shared with R4 systems",
+          expression:
+            "($this is Citation or $this is Evidence or $this is EvidenceReport or $this is EvidenceVariable or $this is MedicinalProductDefinition or $this is PackagedProductDefinition or $this is AdministrableProductDefinition or $this is Ingredient or $this is ClinicalUseDefinition or $this is RegulatedAuthorization or $this is SubstanceDefinition or $this is SubscriptionStatus or $this is SubscriptionTopic) implies (%resource is Citation or %resource is Evidence or %resource is EvidenceReport or %resource is EvidenceVariable or %resource is MedicinalProductDefinition or %resource is PackagedProductDefinition or %resource is AdministrableProductDefinition or %resource is Ingredient or %resource is ClinicalUseDefinition or %resource is RegulatedAuthorization or %resource is SubstanceDefinition or %resource is SubscriptionStatus or %resource is SubscriptionTopic)",
+          xpath:
+            "not(f:Citation|f:Evidence|f:EvidenceReport|f:EvidenceVariable|f:MedicinalProductDefinition|f:PackagedProductDefinition|f:AdministrableProductDefinition|f:Ingredient|f:ClinicalUseDefinition|f:RegulatedAuthorization|f:SubstanceDefinition|f:SubscriptionStatus|f:SubscriptionTopic) or not(parent::f:Citation|parent::f:Evidence|parent::f:EvidenceReport|parent::f:EvidenceVariable|parent::f:MedicinalProductDefinition|parent::f:PackagedProductDefinition|parent::f:AdministrableProductDefinition|parent::f:Ingredient|parent::f:ClinicalUseDefinition|parent::f:RegulatedAuthorization|parent::f:SubstanceDefinition|f:SubscriptionStatus|f:SubscriptionTopic)",
+          source: "http://hl7.org/fhir/StructureDefinition/Provenance",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [{ identity: "rim", map: "N/A" }],
+    },
+    dataPath: "root.contained[0]",
+    parentDataPath: "root",
+    basePath: "root.contained",
+    baseId: "Provenance.contained",
+    isPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Provenance.occurred[x]",
+      path: "Provenance.occurred[x]",
+      short: "When the activity occurred",
+      definition: "The period during which the activity occurred.",
+      comment:
+        "The period can be a little arbitrary; where possible, the time should correspond to human assessment of the activity time.",
+      min: 0,
+      max: "1",
+      base: { path: "Provenance.occurred[x]", min: 0, max: "1" },
+      type: [{ code: "Period" }, { code: "dateTime" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [
+        { identity: "workflow", map: "Event.occurred[x]" },
+        { identity: "w5", map: "FiveWs.done[x]" },
+        { identity: "rim", map: "./effectiveTime[type=IVL_TS]" },
+        { identity: "w3c.prov", map: "Activity.startTime & Activity.endTime" },
+      ],
+    },
+    dataPath: "root.occurred[x]",
+    parentDataPath: "root",
+    basePath: "root.occurred[x]",
+    baseId: "Provenance.occurred[x]",
+    isPrimitive: false,
+    childPaths: [],
+    multiTypeType: "Period",
+    value: "",
+  },
+  {
+    element: {
+      id: "Provenance.recorded",
+      path: "Provenance.recorded",
+      short: "When the activity was recorded / updated",
+      definition: "The instant of time at which the activity was recorded.",
+      comment:
+        "This can be a little different from the time stamp on the resource if there is a delay between recording the event and updating the provenance and target resource.",
+      min: 1,
+      max: "1",
+      base: { path: "Provenance.recorded", min: 1, max: "1" },
+      type: [{ code: "instant" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: true,
+      mapping: [
+        { identity: "w5", map: "FiveWs.recorded" },
+        {
+          identity: "rim",
+          map: "unique(./participation[isNormalParticipation() and typeCode=AUT]/time[type=TS])",
+        },
+        { identity: "fhirauditevent", map: "AuditEvent.recorded" },
+        { identity: "w3c.prov", map: "Activity.when" },
+      ],
+    },
+    dataPath: "root.recorded",
+    parentDataPath: "root",
+    basePath: "root.recorded",
+    baseId: "Provenance.recorded",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Provenance.policy",
+      path: "Provenance.policy",
+      short: "Policy or plan the activity was defined by",
+      definition:
+        "Policy or plan the activity was defined by. Typically, a single activity may have multiple applicable policy documents, such as patient consent, guarantor funding, etc.",
+      comment:
+        "For example: Where an OAuth token authorizes, the unique identifier from the OAuth token is placed into the policy element Where a policy engine (e.g. XACML) holds policy logic, the unique policy identifier is placed into the policy element.",
+      min: 0,
+      max: "*",
+      base: { path: "Provenance.policy", min: 0, max: "*" },
+      type: [{ code: "uri" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [
+        {
+          identity: "rim",
+          map: "./inboundRelationship[isNormalActRelationship() and typeCode=\"SUBJ\"]/source[isNormalAct and subsumes(POLICY, classCode) and moodCode=EVN]/text[typeCode='ED'/tel",
+        },
+        { identity: "fhirauditevent", map: "AuditEvent.agent.policy" },
+      ],
+    },
+    dataPath: "root.policy[0]",
+    parentDataPath: "root",
+    basePath: "root.policy",
+    baseId: "Provenance.policy",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Provenance.reason",
+      path: "Provenance.reason",
+      short: "Reason the activity is occurring",
+      definition: "The reason that the activity was taking place.",
+      min: 0,
+      max: "*",
+      base: { path: "Provenance.reason", min: 0, max: "*" },
+      type: [{ code: "CodeableConcept" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      binding: {
+        extension: [
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+            valueString: "ProvenanceReason",
+          },
+        ],
+        strength: "extensible",
+        description: "The reason the activity took place.",
+        valueSet: "http://terminology.hl7.org/ValueSet/v3-PurposeOfUse",
+      },
+      mapping: [
+        { identity: "workflow", map: "Event.reasonCode" },
+        { identity: "w5", map: "FiveWs.why[x]" },
+        { identity: "rim", map: "unique(./reasonCode)" },
+        { identity: "fhirauditevent", map: "AuditEvent.purposeOfEvent" },
+        { identity: "w3c.prov", map: "Activity.Activity" },
+      ],
+    },
+    dataPath: "root.reason[0]",
+    parentDataPath: "root",
+    basePath: "root.reason",
+    baseId: "Provenance.reason",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+    bindingCodes: [
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActAccommodationReason",
+        display: "ActAccommodationReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActCoverageReason",
+        display: "ActCoverageReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActInformationManagementReason",
+        display: "ActInformationManagementReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActInvalidReason",
+        display: "ActInvalidReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActInvoiceCancelReason",
+        display: "ActInvoiceCancelReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActNoImmunizationReason",
+        display: "ActNoImmunizationReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActSupplyFulfillmentRefusalReason",
+        display: "ActSupplyFulfillmentRefusalReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ClinicalResearchEventReason",
+        display: "ClinicalResearchEventReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ClinicalResearchObservationReason",
+        display: "ClinicalResearchObservationReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_CombinedPharmacyOrderSuspendReasonCode",
+        display: "CombinedPharmacyOrderSuspendReasonCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ControlActNullificationReasonCode",
+        display: "ControlActNullificationReasonCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ControlActNullificationRefusalReasonType",
+        display: "ControlActNullificationRefusalReasonType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ControlActReason",
+        display: "ControlActReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_GenericUpdateReasonCode",
+        display: "GenericUpdateReasonCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_PatientProfileQueryReasonCode",
+        display: "patient profile query reason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_PharmacySupplyRequestFulfillerRevisionRefusalReasonCode",
+        display: "PharmacySupplyRequestFulfillerRevisionRefusalReasonCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_RefusalReasonCode",
+        display: "RefusalReasonCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_SchedulingActReason",
+        display: "SchedulingActReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_StatusRevisionRefusalReasonCode",
+        display: "StatusRevisionRefusalReasonCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_SubstanceAdministrationPermissionRefusalReasonCode",
+        display: "SubstanceAdministrationPermissionRefusalReasonCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_SubstanceAdminSubstitutionNotAllowedReason",
+        display: "SubstanceAdminSubstitutionNotAllowedReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_SubstanceAdminSubstitutionReason",
+        display: "SubstanceAdminSubstitutionReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_TransferActReason",
+        display: "TransferActReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActAdjudicationReason",
+        display: "ActAdjudicationReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActBillableServiceReason",
+        display: "ActBillableServiceReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActCoverageLevelRasonCode",
+        display: "ActCoverageLevelRasonCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActImmunizationReason",
+        display: "ActImmunizationReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ConrolActNullificationReasonCode",
+        display: "ConrolActNullificationReasonCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_NonPerformanceReasonCode",
+        display: "NonPerformanceReasonCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ReasonForNotEvaluatingDevice",
+        display: "ReasonForNotEvaluatingDevice",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ReferralReasonCode",
+        display: "ReferralReasonCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "BONUS",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CHD",
+        display: "Children only",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "DEP",
+        display: "Dependents only",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ECH",
+        display: "Employee and children",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "EDU",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "EMP",
+        display: "Employee only",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ESP",
+        display: "Employee and spouse",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FAM",
+        display: "Family",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "IND",
+        display: "Individual",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "INVOICE",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PROA",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "RECOV",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "RETRO",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "SPC",
+        display: "Spouse and children",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "SPO",
+        display: "Spouse only",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "TRAN",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ACCREQNA",
+        display: "Accommodation Requested Not Available",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FLRCNV",
+        display: "Floor Convenience",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "MEDNEC",
+        display: "Medical Necessity",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PAT",
+        display: "Patient request",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_MedicallyNecessaryDuplicateProcedureReason",
+        display: "MedicallyNecessaryDuplicateProcedureReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActBillableClinicalServiceReason",
+        display: "ActBillableClinicalServiceReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "OVRER",
+        display: "emergency treatment override",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "OVRINCOMP",
+        display: "incompetency override",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "OVRPJ",
+        display: "professional judgment override",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "OVRPS",
+        display: "public safety override",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "OVRTPS",
+        display: "third party safety override",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_EligibilityActReasonCode",
+        display: "EligibilityActReasonCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActCoverageProviderReason",
+        display: "ActCoverageProviderReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActCoverageServiceReason",
+        display: "ActCoverageServiceReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_CoverageExclusionReason",
+        display: "CoverageExclusionReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_CoverageFinancialParticipationReason",
+        display: "CoverageFinancialParticipationReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_CoverageLimitationReason",
+        display: "CoverageLimitationReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActConsentInformationAccessOverrideReason",
+        display: "ActConsentInformationAccessOverrideReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PurposeOfUse",
+        display: "purpose of use",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActHealthInformationPrivacyReason",
+        display: "ActHealthInformationPrivacyReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "COVSUS",
+        display: "coverage suspended",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "DECSD",
+        display: "deceased",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "REGERR",
+        display: "registered in error",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActHealthInformationManagementReason",
+        display: "ActHealthInformationManagementReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActInformationPrivacyReason",
+        display: "ActInformationPrivacyReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "MARKT",
+        display: "marketing",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "OPERAT",
+        display: "operations",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PAYMT",
+        display: "payment",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "RESCH",
+        display: "research",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "SRVC",
+        display: "service",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ADVSTORAGE",
+        display: "adverse storage condition",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "EXPLOT",
+        display: "expired lot",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "OUTSIDESCHED",
+        display: "administered outside recommended schedule or practice",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PRODRECALL",
+        display: "product recall",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "INCCOVPTY",
+        display: "incorrect covered party as patient",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "INCINVOICE",
+        display: "incorrect billing",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "INCPOLICY",
+        display: "incorrect policy",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "INCPROV",
+        display: "incorrect provider",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "IMMUNE",
+        display: "immunity",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "MEDPREC",
+        display: "medical precaution",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "OSTOCK",
+        display: "product out of stock",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PATOBJ",
+        display: "patient objection",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PHILISOP",
+        display: "philosophical objection",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "RELIG",
+        display: "religious objection",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "VACEFF",
+        display: "vaccine efficacy concerns",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "VACSAF",
+        display: "vaccine safety concerns",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FRR01",
+        display: "order stopped",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FRR02",
+        display: "stale-dated order",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FRR03",
+        display: "incomplete data",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FRR04",
+        display: "product unavailable",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FRR05",
+        display: "ethical/religious",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FRR06",
+        display: "unable to provide care",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "RET",
+        display: "retest",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "SCH",
+        display: "scheduled",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "TRM",
+        display: "termination",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "UNS",
+        display: "unscheduled",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NPT",
+        display: "non-protocol",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PPT",
+        display: "per protocol",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "UPT",
+        display: "per definition",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ALTCHOICE",
+        display: "try another treatment first",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CLARIF",
+        display: "prescription requires clarification",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "DRUGHIGH",
+        display: "drug level too high",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HOSPADM",
+        display: "admission to hospital",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "LABINT",
+        display: "lab interference issues",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NON-AVAIL",
+        display: "patient not-available",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PREG",
+        display: "parent is pregnant/breast feeding",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "SALG",
+        display: "allergy",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "SDDI",
+        display: "drug interacts with another drug",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "SDUPTHER",
+        display: "duplicate therapy",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "SINTOL",
+        display: "suspected intolerance",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "SURG",
+        display: "patient scheduled for surgery",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "WASHOUT",
+        display: "waiting for old drug to wash out",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ALTD",
+        display: "altered decision",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "EIE",
+        display: "entered in error",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NORECMTCH",
+        display: "no record match",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "INRQSTATE",
+        display: "in requested state",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOMATCH",
+        display: "no match",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOPERM",
+        display: "no permission",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "WRNGVER",
+        display: "wrong version",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_MedicationOrderAbortReasonCode",
+        display: "medication order abort reason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_MedicationOrderReleaseReasonCode",
+        display: "medication order release reason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ModifyPrescriptionReasonType",
+        display: "ModifyPrescriptionReasonType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_PharmacySupplyEventAbortReason",
+        display: "PharmacySupplyEventAbortReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_PharmacySupplyEventStockReasonCode",
+        display: "pharmacy supply event stock reason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_PharmacySupplyRequestRenewalRefusalReasonCode",
+        display: "pharmacy supply request renewal refusal reason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_SupplyOrderAbortReasonCode",
+        display: "supply order abort reason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ControlActReasonConditionNullify",
+        display: "ControlActReasonConditionNullify",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "AGE",
+        display: "age eligibility",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CRIME",
+        display: "crime victim",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "DIS",
+        display: "disability",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "EMPLOY",
+        display: "employment benefit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FINAN",
+        display: "financial eligibility",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HEALTH",
+        display: "health status",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "MULTI",
+        display: "multiple criteria eligibility",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PNC",
+        display: "property and casualty condition",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "STATUTORY",
+        display: "statutory eligibility",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "VEHIC",
+        display: "motor vehicle accident victim",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "WORK",
+        display: "work related",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_ActIneligibilityReason",
+        display: "ActIneligibilityReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "_CoverageEligibilityReason",
+        display: "CoverageEligibilityReason",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CHGDATA",
+        display: "information change",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FIXDATA",
+        display: "error correction",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "MDATA",
+        display: "merge data",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NEWDATA",
+        display: "new information",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "UMDATA",
+        display: "unmerge data",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "DISCONT",
+        display: "product discontinued",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "INEFFECT",
+        display: "ineffective",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "MONIT",
+        display: "response to monitoring",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOREQ",
+        display: "no longer required for treatment",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOTCOVER",
+        display: "not covered",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PREFUS",
+        display: "patient refuse",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "RECALL",
+        display: "product recalled",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "REPLACE",
+        display: "change in order",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "REPLACEFIX",
+        display: "error in order",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "UNABLE",
+        display: "unable to use",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HOLDDONE",
+        display: "suspend reason no longer applies",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HOLDINAP",
+        display: "suspend reason inappropriate",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ADMINERROR",
+        display: "administrative error in order",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CLINMOD",
+        display: "clinical modification",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ADMREV",
+        display: "administrative review",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "LEGAL",
+        display: "subpoena",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PATCAR",
+        display: "patient care",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PATREQ",
+        display: "patient request query",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PRCREV",
+        display: "practice review",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "REGUL",
+        display: "regulatory review",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "RSRCH",
+        display: "research",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "VALIDATION",
+        display: "validation review",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CONTRA",
+        display: "contraindication",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FOABORT",
+        display: "order aborted",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FOSUSP",
+        display: "order suspended",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOPICK",
+        display: "not picked up",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PATDEC",
+        display: "patient changed mind",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "QUANTCHG",
+        display: "change supply quantity",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FLRSTCK",
+        display: "floor stock",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "LTC",
+        display: "long term care use",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "OFFICE",
+        display: "office use",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PHARM",
+        display: "pharmacy transfer",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PROG",
+        display: "program use",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "LOCKED",
+        display: "locked",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOUSERPERM",
+        display: "no user permission",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "UNKWNTARGET",
+        display: "unknown target",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ALREADYRX",
+        display: "new prescription exists",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FAMPHYS",
+        display: "family physician must authorize further fills",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "MODIFY",
+        display: "modified prescription exists",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NEEDAPMT",
+        display: "patient must make appointment",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOTAVAIL",
+        display: "prescriber not available",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOTPAT",
+        display: "patient no longer in this practice",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ONHOLD",
+        display: "medication on hold",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PRNA",
+        display: "product not available",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "STOPMED",
+        display: "prescriber stopped medication for patient",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "TOOEARLY",
+        display: "too early",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "BLK",
+        display: "Unexpected Block (of Schedule)",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "DEC",
+        display: "Patient Deceased",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FIN",
+        display: "No Financial Backing",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "MED",
+        display: "Medical Status Altered",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "MTG",
+        display: "In an outside meeting",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PHY",
+        display: "Physician request",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FILLED",
+        display: "fully filled",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PATINELIG",
+        display: "patient not eligible",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PROTUNMET",
+        display: "protocol not met",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PROVUNAUTH",
+        display: "provider not authorized",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ALGINT",
+        display: "allergy intolerance",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "COMPCON",
+        display: "compliance concern",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "THERCHAR",
+        display: "therapeutic characteristics",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "TRIAL",
+        display: "clinical trial drug",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CT",
+        display: "continuing therapy",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FP",
+        display: "formulary policy",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "OS",
+        display: "out of stock",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "RR",
+        display: "regulatory requirement",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "IMPROV",
+        display: "condition improved",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "INTOL",
+        display: "intolerance",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NEWSTR",
+        display: "new strength",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NEWTHER",
+        display: "new therapy",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ER",
+        display: "Error",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "RQ",
+        display: "Request",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "COLDCHNBRK",
+        display: "cold chain break",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CLINTRCHNPC",
+        display: "clinical trial research without patient care",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CLINTRCHPC",
+        display: "clinical trial research with patient care",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PRECLINTRCH",
+        display: "preclinical trial research",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ELIGDTRM",
+        display: "eligibility determination",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ELIGVER",
+        display: "eligibility verification",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ENROLLM",
+        display: "enrollment",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "MILDCRG",
+        display: "military discharge",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "BTG",
+        display: "break the glass",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ERTREAT",
+        display: "emergency room treatment",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CAREMGT",
+        display: "care management",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "DONAT",
+        display: "donation",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FRAUD",
+        display: "fraud",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "GOV",
+        display: "government",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HACCRED",
+        display: "health accreditation",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HCOMPL",
+        display: "health compliance",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HDECD",
+        display: "decedent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HDIRECT",
+        display: "directory",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HDM",
+        display: "healthcare delivery management",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HLEGAL",
+        display: "legal",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HOUTCOMS",
+        display: "health outcome measure",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HPRGRP",
+        display: "health program reporting",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HQUALIMP",
+        display: "health quality improvement",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HSYSADMIN",
+        display: "health system administration",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "MEMADMIN",
+        display: "member administration",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "MILCDM",
+        display: "military command",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PATADMIN",
+        display: "patient administration",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PATSFTY",
+        display: "patient safety",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PERFMSR",
+        display: "performance measure",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "RECORDMGT",
+        display: "records management",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "SYSDEV",
+        display: "system development",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "TRAIN",
+        display: "training",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CLMATTCH",
+        display: "claim attachment",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "COVAUTH",
+        display: "coverage authorization",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "COVERAGE",
+        display: "coverage under policy or program",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "REMITADV",
+        display: "remittance advice",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "BIORCH",
+        display: "biomedical research",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CLINTRCH",
+        display: "clinical trial research",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "DSRCH",
+        display: "disease specific healthcare research",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "POARCH",
+        display: "population origins or ancestry healthcare research",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "TRANSRCH",
+        display: "translational healthcare research",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "LABELING",
+        display: "labeling",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "METAMGT",
+        display: "metadata management",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOPRODMTCH",
+        display: "no product match",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOSERMTCH",
+        display: "no service match",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOVERMTCH",
+        display: "no version match",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOAGNTPERM",
+        display: "no agent permission",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "NOUSRPERM",
+        display: "no user permission",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ACCRED",
+        display: "accreditation",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "COMPL",
+        display: "compliance",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ENADMIN",
+        display: "entity administration",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "OUTCOMS",
+        display: "outcome measure",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PRGRPT",
+        display: "program reporting",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "QUALIMP",
+        display: "quality improvement",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "SYSADMN",
+        display: "system administration",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "FAMRQT",
+        display: "family requested",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PWATRNY",
+        display: "power of attorney",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "SUPNWK",
+        display: "support network",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "DISASTER",
+        display: "disaster",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "THREAT",
+        display: "threat",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HMARKT",
+        display: "healthcare marketing",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HOPERAT",
+        display: "healthcare operations",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HPAYMT",
+        display: "healthcare payment",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HRESCH",
+        display: "healthcare research",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PATRQT",
+        display: "patient requested",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "PUBHLTH",
+        display: "public health",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "TREAT",
+        display: "treatment",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "DOSECHG",
+        display: "change in medication/dose",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "HTEST",
+        display: "test health data",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "CLINTRL",
+        display: "clinical trial",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "COC",
+        display: "coordination of care",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "ETREAT",
+        display: "Emergency Treatment",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ActReason",
+        code: "POPHLTH",
+        display: "population health",
+      },
+    ],
+  },
+  {
+    element: {
+      id: "Provenance.activity",
+      path: "Provenance.activity",
+      short: "Activity that occurred",
+      definition:
+        "An activity is something that occurs over a period of time and acts upon or with entities; it may include consuming, processing, transforming, modifying, relocating, using, or generating entities.",
+      min: 0,
+      max: "1",
+      base: { path: "Provenance.activity", min: 0, max: "1" },
+      type: [{ code: "CodeableConcept" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      binding: {
+        extension: [
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+            valueString: "ProvenanceActivity",
+          },
+        ],
+        strength: "extensible",
+        description: "The activity that took place.",
+        valueSet: "http://hl7.org/fhir/ValueSet/provenance-activity-type",
+      },
+      mapping: [
+        { identity: "workflow", map: "Event.code" },
+        { identity: "w5", map: "FiveWs.why[x]" },
+        { identity: "rim", map: "Act.code" },
+        { identity: "w3c.prov", map: "Activity.Activity" },
+      ],
+    },
+    dataPath: "root.activity",
+    parentDataPath: "root",
+    basePath: "root.activity",
+    baseId: "Provenance.activity",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+    bindingCodes: [
+      { code: "LA" },
+      { code: "ANONY" },
+      { code: "DEID" },
+      { code: "MASK" },
+      { code: "LABEL" },
+      { code: "PSEUD" },
+      { code: "CREATE" },
+      { code: "DELETE" },
+      { code: "UPDATE" },
+      { code: "APPEND" },
+      { code: "NULLIFY" },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "PART",
+        display: "Participation",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "_ParticipationAncillary",
+        display: "ParticipationAncillary",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "ADM",
+        display: "admitter",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "ATND",
+        display: "attender",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "CALLBCK",
+        display: "callback contact",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "CON",
+        display: "consultant",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "DIS",
+        display: "discharger",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "ESC",
+        display: "escort",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "REF",
+        display: "referrer",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "_ParticipationInformationGenerator",
+        display: "ParticipationInformationGenerator",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "AUT",
+        display: "author (originator)",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "INF",
+        display: "informant",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "TRANS",
+        display: "Transcriber",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "ENT",
+        display: "data entry person",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "WIT",
+        display: "witness",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "NOTARY",
+        display: "notary",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "CST",
+        display: "custodian",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "DIR",
+        display: "direct target",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "ALY",
+        display: "analyte",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "BBY",
+        display: "baby",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "CAT",
+        display: "catalyst",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "CSM",
+        display: "consumable",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "TPA",
+        display: "therapeutic agent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "DEV",
+        display: "device",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "NRD",
+        display: "non-reuseable device",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "RDV",
+        display: "reusable device",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "DON",
+        display: "donor",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "EXPAGNT",
+        display: "ExposureAgent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "EXPART",
+        display: "ExposureParticipation",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "EXPTRGT",
+        display: "ExposureTarget",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "EXSRC",
+        display: "ExposureSource",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "PRD",
+        display: "product",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "SBJ",
+        display: "subject",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "SPC",
+        display: "specimen",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "IND",
+        display: "indirect target",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "BEN",
+        display: "beneficiary",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "CAGNT",
+        display: "causative agent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "COV",
+        display: "coverage target",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "GUAR",
+        display: "guarantor party",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "HLD",
+        display: "holder",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "RCT",
+        display: "record target",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "RCV",
+        display: "receiver",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "IRCP",
+        display: "information recipient",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "NOT",
+        display: "ugent notification contact",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "PRCP",
+        display: "primary information recipient",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "REFB",
+        display: "Referred By",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "REFT",
+        display: "Referred to",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "TRC",
+        display: "tracker",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "LOC",
+        display: "location",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "DST",
+        display: "destination",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "ELOC",
+        display: "entry location",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "ORG",
+        display: "origin",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "RML",
+        display: "remote",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "VIA",
+        display: "via",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "PRF",
+        display: "performer",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "DIST",
+        display: "distributor",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "PPRF",
+        display: "primary performer",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "SPRF",
+        display: "secondary performer",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "RESP",
+        display: "responsible party",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "VRF",
+        display: "verifier",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "AUTHEN",
+        display: "authenticator",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+        code: "LA",
+        display: "legal authenticator",
+      },
+    ],
+  },
+  {
+    element: {
+      id: "Provenance.agent",
+      path: "Provenance.agent",
+      short: "Actor involved",
+      definition:
+        "An actor taking a role in an activity  for which it can be assigned some degree of responsibility for the activity taking place.",
+      comment:
+        "Several agents may be associated (i.e. has some responsibility for an activity) with an activity and vice-versa.",
+      requirements:
+        "An agent can be a person, an organization, software, device, or other entities that may be ascribed responsibility.",
+      min: 1,
+      max: "*",
+      base: { path: "Provenance.agent", min: 1, max: "*" },
+      type: [{ code: "BackboneElement" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human:
+            "All FHIR elements must have a @value or children unless an empty Parameters resource",
+          expression:
+            "hasValue() or (children().count() > id.count()) or $this is Parameters",
+          xpath: "@value|f:*|h:div|self::f:Parameters",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [
+        { identity: "workflow", map: "Event.performer" },
+        { identity: "w5", map: "FiveWs.who" },
+        {
+          identity: "rim",
+          map: "./participation[isNormalParticipation()]  OR  ./outboundRelationship[isNormalActRelationship() and typeCode='DRIV']",
+        },
+        { identity: "fhirauditevent", map: "AuditEvent.agent" },
+        { identity: "w3c.prov", map: "Agent" },
+      ],
+    },
+    dataPath: "root.agent[0]",
+    parentDataPath: "root",
+    basePath: "root.agent",
+    baseId: "Provenance.agent",
+    isPrimitive: false,
+    childPaths: [
+      "root.agent.type",
+      "root.agent.role[0]",
+      "root.agent.who",
+      "root.agent.onBehalfOf",
+    ],
+    value: "",
+  },
+  {
+    element: {
+      id: "Provenance.agent.type",
+      path: "Provenance.agent.type",
+      short: "How the agent participated",
+      definition:
+        "The participation the agent had with respect to the activity.",
+      comment: "For example: author, performer, enterer, attester, etc.",
+      min: 0,
+      max: "1",
+      base: { path: "Provenance.agent.type", min: 0, max: "1" },
+      type: [{ code: "CodeableConcept" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: true,
+      binding: {
+        extension: [
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+            valueString: "ProvenanceAgentType",
+          },
+        ],
+        strength: "extensible",
+        description:
+          "The type of participation that a provenance agent played with respect to the activity.",
+        valueSet: "http://hl7.org/fhir/ValueSet/provenance-agent-type",
+      },
+      mapping: [
+        { identity: "workflow", map: "Event.performer.function" },
+        { identity: "rim", map: ".role" },
+        { identity: "fhirauditevent", map: "AuditEvent.agent.type" },
+        { identity: "w3c.prov", map: "Agent.Attribution" },
+      ],
+    },
+    dataPath: "root.agent.type",
+    parentDataPath: "root.agent[0]",
+    basePath: "root.type",
+    baseId: "Provenance.agent.type",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+    bindingCodes: [
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+        code: "enterer",
+        display: "Enterer",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+        code: "performer",
+        display: "Performer",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+        code: "author",
+        display: "Author",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+        code: "verifier",
+        display: "Verifier",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+        code: "legal",
+        display: "Legal Authenticator",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+        code: "attester",
+        display: "Attester",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+        code: "informant",
+        display: "Informant",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+        code: "custodian",
+        display: "Custodian",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+        code: "assembler",
+        display: "Assembler",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+        code: "composer",
+        display: "Composer",
+      },
+    ],
+  },
+  {
+    element: {
+      id: "Provenance.agent.role",
+      path: "Provenance.agent.role",
+      short: "What the agents role was",
+      definition:
+        "The function of the agent with respect to the activity. The security role enabling the agent with respect to the activity.",
+      comment: "For example: doctor, nurse, clerk, etc.",
+      min: 0,
+      max: "*",
+      base: { path: "Provenance.agent.role", min: 0, max: "*" },
+      type: [{ code: "CodeableConcept" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      binding: {
+        extension: [
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+            valueString: "ProvenanceAgentRole",
+          },
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-isCommonBinding",
+            valueBoolean: true,
+          },
+        ],
+        strength: "example",
+        description:
+          "The role that a provenance agent played with respect to the activity.",
+        valueSet: "http://hl7.org/fhir/ValueSet/security-role-type",
+      },
+      mapping: [
+        { identity: "rim", map: ".typecode" },
+        { identity: "fhirauditevent", map: "AuditEvent.agent.role" },
+      ],
+    },
+    dataPath: "root.agent.role[0]",
+    parentDataPath: "root.agent[0]",
+    basePath: "root.role",
+    baseId: "Provenance.agent.role",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+    bindingCodes: [
+      { code: "AMENDER" },
+      { code: "COAUTH" },
+      { code: "CONT" },
+      { code: "EVTWIT" },
+      { code: "PRIMAUTH" },
+      { code: "REVIEWER" },
+      { code: "SOURCE" },
+      { code: "TRANS" },
+      { code: "VALID" },
+      { code: "VERF" },
+      { code: "AFFL" },
+      { code: "AGNT" },
+      { code: "ASSIGNED" },
+      { code: "CLAIM" },
+      { code: "COVPTY" },
+      { code: "DEPEN" },
+      { code: "ECON" },
+      { code: "EMP" },
+      { code: "GUARD" },
+      { code: "INVSBJ" },
+      { code: "NAMED" },
+      { code: "NOK" },
+      { code: "PAT" },
+      { code: "PROV" },
+      { code: "NOT" },
+      { code: "CLASSIFIER" },
+      { code: "CONSENTER" },
+      { code: "CONSWIT" },
+      { code: "COPART" },
+      { code: "DECLASSIFIER" },
+      { code: "DELEGATEE" },
+      { code: "DELEGATOR" },
+      { code: "DOWNGRDER" },
+      { code: "DPOWATT" },
+      { code: "EXCEST" },
+      { code: "GRANTEE" },
+      { code: "GRANTOR" },
+      { code: "GT" },
+      { code: "GUADLTM" },
+      { code: "HPOWATT" },
+      { code: "INTPRTER" },
+      { code: "POWATT" },
+      { code: "RESPRSN" },
+      { code: "SPOWATT" },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_AffiliationRoleType",
+        display: "AffiliationRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_AssignedRoleType",
+        display: "AssignedRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_CertifiedEntityType",
+        display: "CertifiedEntityType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_CitizenRoleType",
+        display: "CitizenRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_ContactRoleType",
+        display: "ContactRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_IdentifiedEntityType",
+        display: "IdentifiedEntityType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_LivingSubjectProductionClass",
+        display: "LivingSubjectProductionClass",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_MedicationGeneralizationRoleType",
+        display: "MedicationGeneralizationRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_MemberRoleType",
+        display: "MemberRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_PersonalRelationshipRoleType",
+        display: "PersonalRelationshipRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_PolicyOrProgramCoverageRoleType",
+        display: "PolicyOrProgramCoverageRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_ResearchSubjectRoleBasis",
+        display: "ResearchSubjectRoleBasis",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_ServiceDeliveryLocationRoleType",
+        display: "ServiceDeliveryLocationRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_SpecimenRoleType",
+        display: "SpecimenRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CLAIM",
+        display: "claimant",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "communityLaboratory",
+        display: "Community Laboratory",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GT",
+        display: "Guarantor",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "homeHealth",
+        display: "Home Health",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "laboratory",
+        display: "Laboratory",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "pathologist",
+        display: "Pathologist",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PH",
+        display: "Policy Holder",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "phlebotomist",
+        display: "Phlebotomist",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PROG",
+        display: "program eligible",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PT",
+        display: "Patient",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "subject",
+        display: "Self",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "thirdParty",
+        display: "Third Party",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_AdministrativeLocationRoleType",
+        display: "AdministrativeLocationRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_ClinicalOrganizationRoleType",
+        display: "ClinicalOrganizationRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_CommissioningPartyRoleType",
+        display: "CommissioningPartyRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_DeviceOperatorType",
+        display: "DeviceOperatorType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_EmployeeRoleType",
+        display: "EmployeeRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_HealthcareProviderRoleType",
+        display: "HealthcareProviderRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_LicensedRoleType",
+        display: "LicensedRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_NDCRelatedDrugEntityType",
+        display: "NDCRelatedDrugEntityType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_OrganizationPartRoleType",
+        display: "OrganizationPartRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_ProductProcessingOrganizationRoleType",
+        display: "ProductProcessingOrganizationRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_ProductSafetyReportPartyRoleType",
+        display: "ProductSafetyReportPartyRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_QualifiedRoleType",
+        display: "QualifiedRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DEP",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DEPEN",
+        display: "dependent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FM",
+        display: "Family Member",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "INDIV",
+        display: "individual",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NAMED",
+        display: "named insured",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PSYCHCF",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SUBSCR",
+        display: "subscriber",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "BILL",
+        display: "Billing Contact",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ORG",
+        display: "organizational contact",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PAYOR",
+        display: "Payor Contact",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_AgentRoleType",
+        display: "AgentRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_CoverageSponsorRoleType",
+        display: "CoverageSponsorRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_PayorRoleType",
+        display: "PayorRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RESPRSN",
+        display: "responsible party",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "AMENDER",
+        display: "amender",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CLASSIFIER",
+        display: "classifier",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CONSENTER",
+        display: "consenter",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CONSWIT",
+        display: "consent witness",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "COPART",
+        display: "co-participant",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DECLASSIFIER",
+        display: "declassifier",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DELEGATEE",
+        display: "delegatee",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DELEGATOR",
+        display: "delegator",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DOWNGRDER",
+        display: "downgrader",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DRIVCLASSIFIER",
+        display: "derivative classifier",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GRANTEE",
+        display: "grantee",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GRANTOR",
+        display: "grantor",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "INTPRTER",
+        display: "interpreter",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "REVIEWER",
+        display: "reviewer",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "UPGRDER",
+        display: "upgrader",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "VALIDATOR",
+        display: "validator",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ASSIST",
+        display: "Assistive non-person living subject",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "BIOTH",
+        display: "Biotherapeutic non-person living subject",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CCO",
+        display: "Clinical Companion",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SEE",
+        display: "Seeing",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SNIFF",
+        display: "Sniffing",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_AssignedNonPersonLivingSubjectRoleType",
+        display: "AssignedNonPersonLivingSubjectRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_PractitionerCertifiedEntityType",
+        display: "PractitionerCertifiedEntityType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CAS",
+        display: "asylum seeker",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CN",
+        display: "national",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CNRP",
+        display: "non-country member without residence permit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CPCA",
+        display: "permit card applicant",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CRP",
+        display: "non-country member with residence permit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CRIMEVIC",
+        display: "crime victim",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "INJWKR",
+        display: "injured worker",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_AdministrativeContactRoleType",
+        display: "AdministrativeContactRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ECON",
+        display: "emergency contact",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NOK",
+        display: "next of kin",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FAMDEP",
+        display: "family dependent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HANDIC",
+        display: "handicapped dependent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "INJ",
+        display: "injured plaintiff",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SELF",
+        display: "self",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SPON",
+        display: "sponsored dependent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "STUD",
+        display: "student",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ADOPT",
+        display: "adopted child",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GCHILD",
+        display: "grandchild",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GPARNT",
+        display: "grandparent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NAT",
+        display: "natural child",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NIENE",
+        display: "niece/nephew",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PARNT",
+        display: "parent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SPSE",
+        display: "spouse",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "STEP",
+        display: "step child",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FULLINS",
+        display: "Fully insured coverage sponsor",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SELFINS",
+        display: "Self insured coverage sponsor",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_ClaimantCoveredPartyRoleType",
+        display: "ClaimantCoveredPartyRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_DependentCoveredPartyRoleType",
+        display: "DependentCoveredPartyRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_IndividualInsuredPartyRoleType",
+        display: "IndividualInsuredPartyRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_ProgramEligiblePartyRoleType",
+        display: "ProgramEligiblePartyRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_SubscriberCoveredPartyRoleType",
+        display: "SubscriberCoveredPartyRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DX",
+        display: "Diagnostics or therapeutics unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HOSP",
+        display: "Hospital",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HU",
+        display: "Hospital unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NCCF",
+        display: "Nursing or custodial care facility",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "OF",
+        display: "Outpatient facility",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RTF",
+        display: "Residential treatment facility",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DADDR",
+        display: "Delivery Address",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MOBL",
+        display: "Mobile Unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PHARM",
+        display: "Pharmacy",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_DedicatedClinicalLocationRoleType",
+        display: "DedicatedClinicalLocationRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_DedicatedNonClinicalLocationRoleType",
+        display: "DedicatedNonClinicalLocationRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "COCBEN",
+        display: "continuity of coverage beneficiary",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DIFFABL",
+        display: "differently abled",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "WARD",
+        display: "ward",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_LocationIdentifiedEntityRoleCode",
+        display: "LocationIdentifiedEntityRoleCode",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ACC",
+        display: "accident site",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "COMM",
+        display: "Community Location",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PTRES",
+        display: "Patient's Residence",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SCHOOL",
+        display: "school",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "UPC",
+        display: "underage protection center",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "WORK",
+        display: "work site",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RETIREE",
+        display: "retiree",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "BF",
+        display: "Beef",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "BL",
+        display: "Broiler",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "BR",
+        display: "Breeder",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CO",
+        display: "Companion",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DA",
+        display: "Dairy",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DR",
+        display: "Draft",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DU",
+        display: "Dual",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FI",
+        display: "Fiber",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "LY",
+        display: "Layer",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MT",
+        display: "Meat",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MU",
+        display: "Multiplier",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PL",
+        display: "Pleasure",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RC",
+        display: "Racing",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SH",
+        display: "Show",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "VL",
+        display: "Veal",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "WL",
+        display: "Wool",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "WO",
+        display: "Working",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ACHFID",
+        display: "accreditation location identifier",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "JURID",
+        display: "jurisdiction location identifier",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "LOCHFID",
+        display: "local location identifier",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DC",
+        display: "therapeutic class",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GD",
+        display: "generic drug",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MGDSF",
+        display: "manufactured drug strength form",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "TRB",
+        display: "Tribal Member",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ENROLBKR",
+        display: "Enrollment Broker",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "TPA",
+        display: "Third party administrator",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "UMO",
+        display: "Utilization management organization",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FAMMEMB",
+        display: "family member",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FRND",
+        display: "unrelated friend",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NBOR",
+        display: "neighbor",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ONESELF",
+        display: "self",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ROOM",
+        display: "Roommate",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_CoverageRoleType",
+        display: "CoverageRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_CoveredPartyRoleType",
+        display: "covered party role type",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "INDIG",
+        display: "member of an indigenous people",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MIL",
+        display: "military",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ERL",
+        display: "enrollment",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SCN",
+        display: "screening",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_DedicatedServiceDeliveryLocationRoleType",
+        display: "DedicatedServiceDeliveryLocationRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "_IncidentalServiceDeliveryLocationRoleType",
+        display: "IncidentalServiceDeliveryLocationRoleType",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "C",
+        display: "Calibrator",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "G",
+        display: "Group",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "L",
+        display: "Pool",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "P",
+        display: "Patient",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "Q",
+        display: "Quality Control",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "R",
+        display: "Replicate",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ADOPTF",
+        display: "adoptive father",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ADOPTM",
+        display: "adoptive mother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MAUNT",
+        display: "maternal aunt",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PAUNT",
+        display: "paternal aunt",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ANTIBIOT",
+        display: "Antibiotic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DEBR",
+        display: "Debridement",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HBRO",
+        display: "half-brother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NBRO",
+        display: "natural brother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "STPBRO",
+        display: "stepbrother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PEDCARD",
+        display: "Pediatric cardiology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CASM",
+        display: "single minor asylum seeker",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CHLDADOPT",
+        display: "adopted child",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CHLDFOST",
+        display: "foster child",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DAUC",
+        display: "daughter",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NCHILD",
+        display: "natural child",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SONC",
+        display: "son",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "STPCHLD",
+        display: "step child",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DAUADOPT",
+        display: "adopted daughter",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SONADOPT",
+        display: "adopted son",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DAUFOST",
+        display: "foster daughter",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SONFOST",
+        display: "foster son",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DAUINLAW",
+        display: "daughter in-law",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SONINLAW",
+        display: "son in-law",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CNRPM",
+        display: "non-country member minor without residence permit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CSC",
+        display: "community service center",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MCOUSN",
+        display: "maternal cousin",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PCOUSN",
+        display: "paternal cousin",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CRPM",
+        display: "non-country member minor with residence permit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CATH",
+        display: "Cardiac catheterization lab",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ECHO",
+        display: "Echocardiography lab",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DAU",
+        display: "natural daughter",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "STPDAU",
+        display: "stepdaughter",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CVDX",
+        display: "Cardiovascular diagnostics or therapeutics unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GIDX",
+        display: "Gastroenterology diagnostics or therapeutics lab",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RADDX",
+        display: "Radiology diagnostics or therapeutics unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PEDE",
+        display: "Pediatric endocrinology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ETU",
+        display: "Emergency trauma unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "AUNT",
+        display: "aunt",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "COUSN",
+        display: "cousin",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GGRPRN",
+        display: "great grandparent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GRNDCHILD",
+        display: "grandchild",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GRPRN",
+        display: "grandparent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "INLAW",
+        display: "inlaw",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NIENEPH",
+        display: "niece/nephew",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "UNCLE",
+        display: "uncle",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CHILD",
+        display: "child",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "EXT",
+        display: "extended family member",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PRN",
+        display: "parent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SIB",
+        display: "sibling",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SIGOTHR",
+        display: "significant other",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FTHFOST",
+        display: "foster father",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NFTH",
+        display: "natural father",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "STPFTH",
+        display: "stepfather",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FTWINBRO",
+        display: "fraternal twin brother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FTWINSIS",
+        display: "fraternal twin sister",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GDF",
+        display: "generic drug form",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GDS",
+        display: "generic drug strength",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GDSF",
+        display: "generic drug strength form",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MGGRFTH",
+        display: "maternal great-grandfather",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PGGRFTH",
+        display: "paternal great-grandfather",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MGGRMTH",
+        display: "maternal great-grandmother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PGGRMTH",
+        display: "paternal great-grandmother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GGRFTH",
+        display: "great grandfather",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GGRMTH",
+        display: "great grandmother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MGGRPRN",
+        display: "maternal great-grandparent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PGGRPRN",
+        display: "paternal great-grandparent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PEDGI",
+        display: "Pediatric gastroenterology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ENDOS",
+        display: "Endoscopy lab",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MGRFTH",
+        display: "maternal grandfather",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PGRFTH",
+        display: "paternal grandfather",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MGRMTH",
+        display: "maternal grandmother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PGRMTH",
+        display: "paternal grandmother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GRNDDAU",
+        display: "granddaughter",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GRNDSON",
+        display: "grandson",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GRFTH",
+        display: "grandfather",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GRMTH",
+        display: "grandmother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MGRPRN",
+        display: "maternal grandparent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PGRPRN",
+        display: "paternal grandparent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PEDHEM",
+        display: "Pediatric hematology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "INLAB",
+        display: "inpatient laboratory",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "OUTLAB",
+        display: "outpatient laboratory",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CHR",
+        display: "Chronic Care Facility",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GACH",
+        display: "Hospitals; General Acute Care Hospital",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MHSP",
+        display: "Military Hospital",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PSYCHF",
+        display: "Psychatric Care Facility",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RH",
+        display: "Rehabilitation hospital",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HSIS",
+        display: "half-sister",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "BMTU",
+        display: "Bone marrow transplant unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CCU",
+        display: "Coronary care unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CHEST",
+        display: "Chest unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "EPIL",
+        display: "Epilepsy unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ER",
+        display: "Emergency room",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HD",
+        display: "Hemodialysis unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HLAB",
+        display: "hospital laboratory",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HRAD",
+        display: "radiology unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HUSCS",
+        display: "specimen collection site",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ICU",
+        display: "Intensive care unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "INPHARM",
+        display: "inpatient pharmacy",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MBL",
+        display: "medical laboratory",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NCCS",
+        display: "Neurology critical care and stroke unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NS",
+        display: "Neurosurgery unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "OUTPHARM",
+        display: "outpatient pharmacy",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PEDU",
+        display: "Pediatric unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PHU",
+        display: "Psychiatric hospital unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RHU",
+        display: "Rehabilitation hospital unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SLEEP",
+        display: "Sleep disorders unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PEDICU",
+        display: "Pediatric intensive care unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PEDID",
+        display: "Pediatric infectious disease clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CHLDINLAW",
+        display: "child-in-law",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PRNINLAW",
+        display: "parent in-law",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SIBINLAW",
+        display: "sibling in-law",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ITWINBRO",
+        display: "identical twin brother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ITWINSIS",
+        display: "identical twin sister",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ACTMIL",
+        display: "active duty military",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RETMIL",
+        display: "retired military",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "VET",
+        display: "veteran",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "AMB",
+        display: "Ambulance",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GESTM",
+        display: "gestational mother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MTHFOST",
+        display: "foster mother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NMTH",
+        display: "natural mother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "STPMTH",
+        display: "stepmother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "TWINBRO",
+        display: "twin brother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SNF",
+        display: "Skilled nursing facility",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SON",
+        display: "natural son",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PEDNEPH",
+        display: "Pediatric nephrology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NFTHF",
+        display: "natural father of fetus",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NEPHEW",
+        display: "nephew",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NIECE",
+        display: "niece",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NMTHF",
+        display: "natural mother of fetus",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NSIS",
+        display: "natural sister",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "TWIN",
+        display: "twin",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "TWINSIS",
+        display: "twin sister",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ALL",
+        display: "Allergy clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "AMPUT",
+        display: "Amputee clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "BMTC",
+        display: "Bone marrow transplant clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "BREAST",
+        display: "Breast clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CANC",
+        display: "Child and adolescent neurology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CAPC",
+        display: "Child and adolescent psychiatry clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CARD",
+        display:
+          "Ambulatory Health Care Facilities; Clinic/Center; Rehabilitation: Cardiac Facilities",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "COAG",
+        display: "Coagulation clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CRS",
+        display: "Colon and rectal surgery clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DERM",
+        display: "Dermatology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ENDO",
+        display: "Endocrinology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ENT",
+        display: "Otorhinolaryngology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FMC",
+        display: "Family medicine clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GI",
+        display: "Gastroenterology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GIM",
+        display: "General internal medicine clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GYN",
+        display: "Gynecology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HEM",
+        display: "Hematology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HTN",
+        display: "Hypertension clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "IEC",
+        display: "Impairment evaluation center",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "INFD",
+        display: "Infectious disease clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "INV",
+        display: "Infertility clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "LYMPH",
+        display: "Lympedema clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MGEN",
+        display: "Medical genetics clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NEPH",
+        display: "Nephrology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NEUR",
+        display: "Neurology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "OB",
+        display: "Obstetrics clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "OMS",
+        display: "Oral and maxillofacial surgery clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ONCL",
+        display: "Medical oncology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "OPH",
+        display: "Opthalmology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "OPTC",
+        display: "optometry clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ORTHO",
+        display: "Orthopedics clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PAINCL",
+        display: "Pain clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PC",
+        display: "Primary care clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PEDC",
+        display: "Pediatrics clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "POD",
+        display: "Podiatry clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PREV",
+        display: "Preventive medicine clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PROCTO",
+        display: "Proctology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PROFF",
+        display: "Provider's Office",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PROS",
+        display: "Prosthodontics clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PSI",
+        display: "Psychology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PSY",
+        display: "Psychiatry clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RHEUM",
+        display: "Rheumatology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SPMED",
+        display: "Sports medicine clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SU",
+        display: "Surgery clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "TR",
+        display: "Transplant clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "TRAVEL",
+        display: "Travel and geographic medicine clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "WND",
+        display: "Wound clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PEDHO",
+        display: "Pediatric oncology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HAND",
+        display: "Hand clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PEDRHEUM",
+        display: "Pediatric rheumatology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PEDNICU",
+        display: "Pediatric neonatal intensive care unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DPOWATT",
+        display: "durable power of attorney",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HPOWATT",
+        display: "healthcare power of attorney",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SPOWATT",
+        display: "special power of attorney",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ADOPTP",
+        display: "adoptive parent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FTH",
+        display: "father",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MTH",
+        display: "mother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NPRN",
+        display: "natural parent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PRNFOST",
+        display: "foster parent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "STPPRN",
+        display: "step parent",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FTHINLAW",
+        display: "father-in-law",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MTHINLAW",
+        display: "mother-in-law",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MTHINLOAW",
+        display: "mother-in-law",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "B",
+        display: "Blind",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "E",
+        display: "Electronic QC",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "F",
+        display: "Filler Proficiency",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "O",
+        display: "Operator Proficiency",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "V",
+        display: "Verifying",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RADO",
+        display: "Radiation oncology unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RNEU",
+        display: "Neuroradiology unit",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "EXCEST",
+        display: "executor of estate",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GUADLTM",
+        display: "guardian ad lidem",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "GUARD",
+        display: "guardian",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "POWATT",
+        display: "power of attorney",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RHAT",
+        display: "addiction treatment center",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RHII",
+        display: "intellectual impairment center",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RHMAD",
+        display: "parents with adjustment difficulties center",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RHPI",
+        display: "physical impairment center",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RHYAD",
+        display: "youths with adjustment difficulties center",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RHPIH",
+        display: "physical impairment - hearing center",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RHPIMS",
+        display: "physical impairment - motor skills center",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "RHPIVS",
+        display: "physical impairment - visual skills center",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PRC",
+        display: "Pain rehabilitation center",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SURF",
+        display: "Substance use rehabilitation facility",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "BRO",
+        display: "brother",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HSIB",
+        display: "half-sibling",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "NSIB",
+        display: "natural sibling",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SIS",
+        display: "sister",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "STPSIB",
+        display: "step sibling",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "BROINLAW",
+        display: "brother-in-law",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SISINLAW",
+        display: "sister-in-law",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SISLINLAW",
+        display: "sister-in-law",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "DOMPART",
+        display: "domestic partner",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FMRSPS",
+        display: "former spouse",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "SPS",
+        display: "spouse",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "STPSIS",
+        display: "stepsister",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "STPSON",
+        display: "stepson",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "HUSB",
+        display: "husband",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "WIFE",
+        display: "wife",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FSTUD",
+        display: "full-time student",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PSTUD",
+        display: "part-time student",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PLS",
+        display: "Plastic surgery clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "URO",
+        display: "Urology clinic",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "FTWIN",
+        display: "fraternal twin",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "ITWIN",
+        display: "identical twin",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "MUNCLE",
+        display: "maternal uncle",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PUNCLE",
+        display: "paternal uncle",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "AUCG",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "AULR",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "AUTM",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "AUWA",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "PROMSK",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "AUT",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "CST",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "INF",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "IRCP",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "LA",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "IRCP",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "TRC",
+      },
+      {
+        system: "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        code: "WIT",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/extra-security-role-type",
+        code: "authserver",
+        display: "Authorization Server",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/extra-security-role-type",
+        code: "datacollector",
+        display: "Data Collector",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/extra-security-role-type",
+        code: "dataprocessor",
+        display: "Data Processor",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/extra-security-role-type",
+        code: "datasubject",
+        display: "Data Subject",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/extra-security-role-type",
+        code: "humanuser",
+        display: "Human User",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/extra-security-role-type",
+        code: "110150",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/extra-security-role-type",
+        code: "110151",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/extra-security-role-type",
+        code: "110152",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/extra-security-role-type",
+        code: "110153",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/extra-security-role-type",
+        code: "110154",
+      },
+      {
+        system:
+          "http://terminology.hl7.org/CodeSystem/extra-security-role-type",
+        code: "110155",
+      },
+    ],
+  },
+  {
+    element: {
+      id: "Provenance.agent.onBehalfOf",
+      path: "Provenance.agent.onBehalfOf",
+      short: "Who the agent is representing",
+      definition:
+        "The individual, device, or organization for whom the change was made.",
+      comment:
+        "onBehalfOfIdentity should be used when the agent is not a Resource type.",
+      min: 0,
+      max: "1",
+      base: { path: "Provenance.agent.onBehalfOf", min: 0, max: "1" },
+      type: [
+        {
+          code: "Reference",
+          targetProfile: [
+            "http://hl7.org/fhir/StructureDefinition/Practitioner",
+            "http://hl7.org/fhir/StructureDefinition/PractitionerRole",
+            "http://hl7.org/fhir/StructureDefinition/RelatedPerson",
+            "http://hl7.org/fhir/StructureDefinition/Patient",
+            "http://hl7.org/fhir/StructureDefinition/Device",
+            "http://hl7.org/fhir/StructureDefinition/Organization",
+          ],
+        },
+      ],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [
+        {
+          identity: "rim",
+          map: "Person, Practitioner, Organization, Device :* .role [classCode = RoleClassMutualRelationship; role.code and * .scopes[Role](classCode=IDENT) and *.plays [Role.Code]",
+        },
+      ],
+    },
+    dataPath: "root.agent.onBehalfOf",
+    parentDataPath: "root.agent[0]",
+    basePath: "root.onBehalfOf",
+    baseId: "Provenance.agent.onBehalfOf",
+    isPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Provenance.entity",
+      path: "Provenance.entity",
+      short: "An entity used in this activity",
+      definition: "An entity used in this activity.",
+      min: 0,
+      max: "*",
+      base: { path: "Provenance.entity", min: 0, max: "*" },
+      type: [{ code: "BackboneElement" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human:
+            "All FHIR elements must have a @value or children unless an empty Parameters resource",
+          expression:
+            "hasValue() or (children().count() > id.count()) or $this is Parameters",
+          xpath: "@value|f:*|h:div|self::f:Parameters",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [
+        { identity: "rim", map: "./subjectOf" },
+        { identity: "fhirauditevent", map: "AuditEvent.entity" },
+        { identity: "w3c.prov", map: "Entity" },
+      ],
+    },
+    dataPath: "root.entity[0]",
+    parentDataPath: "root",
+    basePath: "root.entity",
+    baseId: "Provenance.entity",
+    isPrimitive: false,
+    childPaths: [
+      "root.entity.role",
+      "root.entity.what",
+      "root.entity.agent[0]",
+    ],
+    value: "",
+  },
+  {
+    element: {
+      id: "Provenance.entity.role",
+      path: "Provenance.entity.role",
+      short: "derivation | revision | quotation | source | removal",
+      definition: "How the entity was used during the activity.",
+      min: 1,
+      max: "1",
+      base: { path: "Provenance.entity.role", min: 1, max: "1" },
+      type: [{ code: "code" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: true,
+      binding: {
+        extension: [
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+            valueString: "ProvenanceEntityRole",
+          },
+        ],
+        strength: "required",
+        description: "How an entity was used in an activity.",
+        valueSet: "http://hl7.org/fhir/ValueSet/provenance-entity-role|4.3.0",
+      },
+      mapping: [
+        { identity: "rim", map: "./typeCode" },
+        { identity: "fhirauditevent", map: "AuditEvent.entity.lifecycle" },
+        { identity: "w3c.prov", map: "Entity.role" },
+      ],
+    },
+    dataPath: "root.entity.role",
+    parentDataPath: "root.entity[0]",
+    basePath: "root.role",
+    baseId: "Provenance.entity.role",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+    bindingCodes: [
+      {
+        system: "http://hl7.org/fhir/provenance-entity-role",
+        code: "derivation",
+        display: "Derivation",
+      },
+      {
+        system: "http://hl7.org/fhir/provenance-entity-role",
+        code: "revision",
+        display: "Revision",
+      },
+      {
+        system: "http://hl7.org/fhir/provenance-entity-role",
+        code: "quotation",
+        display: "Quotation",
+      },
+      {
+        system: "http://hl7.org/fhir/provenance-entity-role",
+        code: "source",
+        display: "Source",
+      },
+      {
+        system: "http://hl7.org/fhir/provenance-entity-role",
+        code: "removal",
+        display: "Removal",
+      },
+    ],
+  },
+  {
+    element: {
+      id: "Provenance.entity.agent",
+      path: "Provenance.entity.agent",
+      short: "Entity is attributed to this agent",
+      definition:
+        "The entity is attributed to an agent to express the agent's responsibility for that entity, possibly along with other agents. This description can be understood as shorthand for saying that the agent was responsible for the activity which generated the entity.",
+      comment:
+        "A usecase where one Provenance.entity.agent is used where the Entity that was used in the creation/updating of the Target, is not in the context of the same custodianship as the Target, and thus the meaning of Provenance.entity.agent is to say that the entity referenced is managed elsewhere and that this Agent provided access to it.  This would be similar to where the Entity being referenced is managed outside FHIR, such as through HL7 v2, v3, or XDS. This might be where the Entity being referenced is managed in another FHIR resource server. Thus it explains the Provenance of that Entity's use in the context of this Provenance activity.",
+      min: 0,
+      max: "*",
+      base: { path: "Provenance.entity.agent", min: 0, max: "*" },
+      contentReference: "#Provenance.agent",
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [{ identity: "rim", map: "./author/role" }],
+    },
+    dataPath: "root.entity.agent[0]",
+    parentDataPath: "root.entity[0]",
+    basePath: "root.agent",
+    baseId: "Provenance.entity.agent",
+    isPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Provenance",
+      path: "Provenance",
+      short: "Who, What, When for a set of resources",
+      definition:
+        "Provenance of a resource is a record that describes entities and processes involved in producing and delivering or otherwise influencing that resource. Provenance provides a critical foundation for assessing authenticity, enabling trust, and allowing reproducibility. Provenance assertions are a form of contextual metadata and can themselves become important records with their own provenance. Provenance statement indicates clinical significance in terms of confidence in authenticity, reliability, and trustworthiness, integrity, and stage in lifecycle (e.g. Document Completion - has the artifact been legally authenticated), all of which may impact security, privacy, and trust policies.",
+      comment:
+        "Some parties may be duplicated between the target resource and its provenance.  For instance, the prescriber is usually (but not always) the author of the prescription resource. This resource is defined with close consideration for W3C Provenance.",
+      alias: ["History", "Event", "Activity"],
+      min: 0,
+      max: "*",
+      base: { path: "Provenance", min: 0, max: "*" },
+      constraint: [
+        {
+          key: "dom-2",
+          severity: "error",
+          human:
+            "If the resource is contained in another resource, it SHALL NOT contain nested Resources",
+          expression: "contained.contained.empty()",
+          xpath: "not(parent::f:contained and f:contained)",
+          source: "http://hl7.org/fhir/StructureDefinition/DomainResource",
+        },
+        {
+          key: "dom-3",
+          severity: "error",
+          human:
+            "If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource",
+          expression:
+            "contained.where(((id.exists() and ('#'+id in (%resource.descendants().reference | %resource.descendants().as(canonical) | %resource.descendants().as(uri) | %resource.descendants().as(url)))) or descendants().where(reference = '#').exists() or descendants().where(as(canonical) = '#').exists() or descendants().where(as(uri) = '#').exists()).not()).trace('unmatched', id).empty()",
+          xpath:
+            "not(exists(for $contained in f:contained return $contained[not(exists(parent::*/descendant::f:reference/@value=concat('#', $contained/*/f:id/@value)) or exists(descendant::f:reference[@value='#']))]))",
+          source: "http://hl7.org/fhir/StructureDefinition/DomainResource",
+        },
+        {
+          key: "dom-4",
+          severity: "error",
+          human:
+            "If a resource is contained in another resource, it SHALL NOT have a meta.versionId or a meta.lastUpdated",
+          expression:
+            "contained.meta.versionId.empty() and contained.meta.lastUpdated.empty()",
+          xpath:
+            "not(exists(f:contained/*/f:meta/f:versionId)) and not(exists(f:contained/*/f:meta/f:lastUpdated))",
+          source: "http://hl7.org/fhir/StructureDefinition/DomainResource",
+        },
+        {
+          key: "dom-5",
+          severity: "error",
+          human:
+            "If a resource is contained in another resource, it SHALL NOT have a security label",
+          expression: "contained.meta.security.empty()",
+          xpath: "not(exists(f:contained/*/f:meta/f:security))",
+          source: "http://hl7.org/fhir/StructureDefinition/DomainResource",
+        },
+        {
+          extension: [
+            {
+              url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bestpractice",
+              valueBoolean: true,
+            },
+            {
+              url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bestpractice-explanation",
+              valueMarkdown:
+                "When a resource has no narrative, only systems that fully understand the data can display the resource to a human safely. Including a human readable representation in the resource makes for a much more robust eco-system and cheaper handling of resources by intermediary systems. Some ecosystems restrict distribution of resources to only those systems that do fully understand the resources, and as a consequence implementers may believe that the narrative is superfluous. However experience shows that such eco-systems often open up to new participants over time.",
+            },
+          ],
+          key: "dom-6",
+          severity: "warning",
+          human: "A resource should have narrative for robust management",
+          expression: "text.`div`.exists()",
+          xpath: "exists(f:text/h:div)",
+          source: "http://hl7.org/fhir/StructureDefinition/DomainResource",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [
+        { identity: "rim", map: "Entity. Role, or Act" },
+        { identity: "workflow", map: "Event" },
+        {
+          identity: "rim",
+          map: "ControlAct[isNormalAct() and subsumes(CACT, classCode) and moodCode=EVN]",
+        },
+        { identity: "w3c.prov", map: "Activity" },
+        { identity: "w5", map: "infrastructure.information" },
+      ],
+    },
+    dataPath: "root",
+    parentDataPath: "",
+    basePath: "root",
+    baseId: "Provenance",
+    isPrimitive: false,
+    isRoot: true,
+    childPaths: [],
+    value: "",
+  },
+];
+export default data;

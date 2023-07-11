@@ -1,0 +1,915 @@
+const data = [
+  {
+    element: {
+      id: "QuestionnaireResponse.meta",
+      path: "QuestionnaireResponse.meta",
+      short: "Metadata about the resource",
+      definition:
+        "The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource.",
+      min: 0,
+      max: "1",
+      base: { path: "Resource.meta", min: 0, max: "1" },
+      type: [{ code: "Meta" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: true,
+    },
+    dataPath: "root.meta",
+    parentDataPath: "root",
+    basePath: "root.meta",
+    baseId: "QuestionnaireResponse.meta",
+    isPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.implicitRules",
+      path: "QuestionnaireResponse.implicitRules",
+      short: "A set of rules under which this content was created",
+      definition:
+        "A reference to a set of rules that were followed when the resource was constructed, and which must be understood when processing the content. Often, this is a reference to an implementation guide that defines the special rules along with other profiles etc.",
+      comment:
+        "Asserting this rule set restricts the content to be only understood by a limited set of trading partners. This inherently limits the usefulness of the data in the long term. However, the existing health eco-system is highly fractured, and not yet ready to define, collect, and exchange data in a generally computable sense. Wherever possible, implementers and/or specification writers should avoid using this element. Often, when used, the URL is a reference to an implementation guide that defines these special rules as part of it's narrative along with other profiles, value sets, etc.",
+      min: 0,
+      max: "1",
+      base: { path: "Resource.implicitRules", min: 0, max: "1" },
+      type: [{ code: "uri" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: true,
+      isModifierReason:
+        "This element is labeled as a modifier because the implicit rules may provide additional knowledge about the resource that modifies it's meaning or interpretation",
+      isSummary: true,
+    },
+    dataPath: "root.implicitRules",
+    parentDataPath: "root",
+    basePath: "root.implicitRules",
+    baseId: "QuestionnaireResponse.implicitRules",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.language",
+      path: "QuestionnaireResponse.language",
+      short: "Language of the resource content",
+      definition: "The base language in which the resource is written.",
+      comment:
+        "Language is provided to support indexing and accessibility (typically, services such as text to speech use the language tag). The html language tag in the narrative applies  to the narrative. The language tag on the resource may be used to specify the language of other presentations generated from the data in the resource. Not all the content has to be in the base language. The Resource.language should not be assumed to apply to the narrative automatically. If a language is specified, it should it also be specified on the div element in the html (see rules in HTML5 for information about the relationship between xml:lang and the html lang attribute).",
+      min: 0,
+      max: "1",
+      base: { path: "Resource.language", min: 0, max: "1" },
+      type: [{ code: "code" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      binding: {
+        extension: [
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet",
+            valueCanonical: "http://hl7.org/fhir/ValueSet/all-languages",
+          },
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+            valueString: "Language",
+          },
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-isCommonBinding",
+            valueBoolean: true,
+          },
+        ],
+        strength: "preferred",
+        description: "IETF language tag",
+        valueSet: "http://hl7.org/fhir/ValueSet/languages",
+      },
+    },
+    dataPath: "root.language",
+    parentDataPath: "root",
+    basePath: "root.language",
+    baseId: "QuestionnaireResponse.language",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+    bindingCodes: [
+      { code: "ar", display: "Arabic" },
+      { code: "bn", display: "Bengali" },
+      { code: "cs", display: "Czech" },
+      { code: "da", display: "Danish" },
+      { code: "de", display: "German" },
+      { code: "de-AT", display: "German (Austria)" },
+      { code: "de-CH", display: "German (Switzerland)" },
+      { code: "de-DE", display: "German (Germany)" },
+      { code: "el", display: "Greek" },
+      { code: "en", display: "English" },
+      { code: "en-AU", display: "English (Australia)" },
+      { code: "en-CA", display: "English (Canada)" },
+      { code: "en-GB", display: "English (Great Britain)" },
+      { code: "en-IN", display: "English (India)" },
+      { code: "en-NZ", display: "English (New Zeland)" },
+      { code: "en-SG", display: "English (Singapore)" },
+      { code: "en-US", display: "English (United States)" },
+      { code: "es", display: "Spanish" },
+      { code: "es-AR", display: "Spanish (Argentina)" },
+      { code: "es-ES", display: "Spanish (Spain)" },
+      { code: "es-UY", display: "Spanish (Uruguay)" },
+      { code: "fi", display: "Finnish" },
+      { code: "fr", display: "French" },
+      { code: "fr-BE", display: "French (Belgium)" },
+      { code: "fr-CH", display: "French (Switzerland)" },
+      { code: "fr-FR", display: "French (France)" },
+      { code: "fy", display: "Frysian" },
+      { code: "fy-NL", display: "Frysian (Netherlands)" },
+      { code: "hi", display: "Hindi" },
+      { code: "hr", display: "Croatian" },
+      { code: "it", display: "Italian" },
+      { code: "it-CH", display: "Italian (Switzerland)" },
+      { code: "it-IT", display: "Italian (Italy)" },
+      { code: "ja", display: "Japanese" },
+      { code: "ko", display: "Korean" },
+      { code: "nl", display: "Dutch" },
+      { code: "nl-BE", display: "Dutch (Belgium)" },
+      { code: "nl-NL", display: "Dutch (Netherlands)" },
+      { code: "no", display: "Norwegian" },
+      { code: "no-NO", display: "Norwegian (Norway)" },
+      { code: "pa", display: "Punjabi" },
+      { code: "pl", display: "Polish" },
+      { code: "pt", display: "Portuguese" },
+      { code: "pt-BR", display: "Portuguese (Brazil)" },
+      { code: "ru", display: "Russian" },
+      { code: "ru-RU", display: "Russian (Russia)" },
+      { code: "sr", display: "Serbian" },
+      { code: "sr-RS", display: "Serbian (Serbia)" },
+      { code: "sv", display: "Swedish" },
+      { code: "sv-SE", display: "Swedish (Sweden)" },
+      { code: "te", display: "Telegu" },
+      { code: "zh", display: "Chinese" },
+      { code: "zh-CN", display: "Chinese (China)" },
+      { code: "zh-HK", display: "Chinese (Hong Kong)" },
+      { code: "zh-SG", display: "Chinese (Singapore)" },
+      { code: "zh-TW", display: "Chinese (Taiwan)" },
+    ],
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.contained",
+      path: "QuestionnaireResponse.contained",
+      short: "Contained, inline Resources",
+      definition:
+        "These resources do not have an independent existence apart from the resource that contains them - they cannot be identified independently, and nor can they have their own independent transaction scope.",
+      comment:
+        "This should never be done when the content can be identified properly, as once identification is lost, it is extremely difficult (and context dependent) to restore it again. Contained resources may have profiles and tags In their meta elements, but SHALL NOT have security labels.",
+      alias: ["inline resources", "anonymous resources", "contained resources"],
+      min: 0,
+      max: "*",
+      base: { path: "DomainResource.contained", min: 0, max: "*" },
+      type: [{ code: "Resource" }],
+      constraint: [
+        {
+          key: "dom-r4b",
+          severity: "warning",
+          human:
+            "Containing new R4B resources within R4 resources may cause interoperability issues if instances are shared with R4 systems",
+          expression:
+            "($this is Citation or $this is Evidence or $this is EvidenceReport or $this is EvidenceVariable or $this is MedicinalProductDefinition or $this is PackagedProductDefinition or $this is AdministrableProductDefinition or $this is Ingredient or $this is ClinicalUseDefinition or $this is RegulatedAuthorization or $this is SubstanceDefinition or $this is SubscriptionStatus or $this is SubscriptionTopic) implies (%resource is Citation or %resource is Evidence or %resource is EvidenceReport or %resource is EvidenceVariable or %resource is MedicinalProductDefinition or %resource is PackagedProductDefinition or %resource is AdministrableProductDefinition or %resource is Ingredient or %resource is ClinicalUseDefinition or %resource is RegulatedAuthorization or %resource is SubstanceDefinition or %resource is SubscriptionStatus or %resource is SubscriptionTopic)",
+          xpath:
+            "not(f:Citation|f:Evidence|f:EvidenceReport|f:EvidenceVariable|f:MedicinalProductDefinition|f:PackagedProductDefinition|f:AdministrableProductDefinition|f:Ingredient|f:ClinicalUseDefinition|f:RegulatedAuthorization|f:SubstanceDefinition|f:SubscriptionStatus|f:SubscriptionTopic) or not(parent::f:Citation|parent::f:Evidence|parent::f:EvidenceReport|parent::f:EvidenceVariable|parent::f:MedicinalProductDefinition|parent::f:PackagedProductDefinition|parent::f:AdministrableProductDefinition|parent::f:Ingredient|parent::f:ClinicalUseDefinition|parent::f:RegulatedAuthorization|parent::f:SubstanceDefinition|f:SubscriptionStatus|f:SubscriptionTopic)",
+          source:
+            "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [{ identity: "rim", map: "N/A" }],
+    },
+    dataPath: "root.contained[0]",
+    parentDataPath: "root",
+    basePath: "root.contained",
+    baseId: "QuestionnaireResponse.contained",
+    isPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.basedOn",
+      path: "QuestionnaireResponse.basedOn",
+      short: "Request fulfilled by this QuestionnaireResponse",
+      definition:
+        "The order, proposal or plan that is fulfilled in whole or in part by this QuestionnaireResponse.  For example, a ServiceRequest seeking an intake assessment or a decision support recommendation to assess for post-partum depression.",
+      requirements:
+        "Supports traceability of responsibility for the action and allows linkage of an action to the recommendations acted upon.",
+      alias: ["order"],
+      min: 0,
+      max: "*",
+      base: { path: "QuestionnaireResponse.basedOn", min: 0, max: "*" },
+      type: [
+        {
+          code: "Reference",
+          targetProfile: [
+            "http://hl7.org/fhir/StructureDefinition/CarePlan",
+            "http://hl7.org/fhir/StructureDefinition/ServiceRequest",
+          ],
+        },
+      ],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: true,
+      mapping: [
+        { identity: "workflow", map: "Event.basedOn" },
+        { identity: "rim", map: ".outboundRelationship[typeCode=FLFS].target" },
+      ],
+    },
+    dataPath: "root.basedOn[0]",
+    parentDataPath: "root",
+    basePath: "root.basedOn",
+    baseId: "QuestionnaireResponse.basedOn",
+    isPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.questionnaire",
+      path: "QuestionnaireResponse.questionnaire",
+      short: "Form being answered",
+      definition:
+        "The Questionnaire that defines and organizes the questions for which answers are being provided.",
+      comment:
+        "If a QuestionnaireResponse references a Questionnaire, then the QuestionnaireResponse structure must be consistent with the Questionnaire (i.e. questions must be organized into the same groups, nested questions must still be nested, etc.).",
+      requirements:
+        "Needed to allow editing of the questionnaire response in a manner that enforces the constraints of the original form.",
+      alias: ["Form"],
+      min: 0,
+      max: "1",
+      base: { path: "QuestionnaireResponse.questionnaire", min: 0, max: "1" },
+      type: [
+        {
+          code: "canonical",
+          targetProfile: [
+            "http://hl7.org/fhir/StructureDefinition/Questionnaire",
+          ],
+        },
+      ],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: true,
+      mapping: [
+        { identity: "workflow", map: "Event.instantiates" },
+        {
+          identity: "rim",
+          map: "./outboundRelationship[typeCode=INST]/target[classCode=OBS, moodCode=DEFN]",
+        },
+      ],
+    },
+    dataPath: "root.questionnaire",
+    parentDataPath: "root",
+    basePath: "root.questionnaire",
+    baseId: "QuestionnaireResponse.questionnaire",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.status",
+      path: "QuestionnaireResponse.status",
+      short: "in-progress | completed | amended | entered-in-error | stopped",
+      definition:
+        "The position of the questionnaire response within its overall lifecycle.",
+      comment:
+        "This element is labeled as a modifier because the status contains codes that mark the resource as not currently valid.",
+      requirements:
+        "The information on Questionnaire resources  may possibly be gathered during multiple sessions and altered after considered being finished.",
+      min: 1,
+      max: "1",
+      base: { path: "QuestionnaireResponse.status", min: 1, max: "1" },
+      type: [{ code: "code" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: true,
+      isModifierReason:
+        "This element is labelled as a modifier because it is a status element that contains status entered-in-error which means that the resource should not be treated as valid",
+      isSummary: true,
+      binding: {
+        extension: [
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+            valueString: "QuestionnaireResponseStatus",
+          },
+        ],
+        strength: "required",
+        description: "Lifecycle status of the questionnaire response.",
+        valueSet:
+          "http://hl7.org/fhir/ValueSet/questionnaire-answers-status|4.3.0",
+      },
+      mapping: [
+        { identity: "workflow", map: "Event.status" },
+        { identity: "w5", map: "FiveWs.status" },
+        {
+          identity: "rim",
+          map: '.statusCode (also whether there\'s a revisionControlAct - and possibly mood to distinguish "in-progress" from "published)',
+        },
+      ],
+    },
+    dataPath: "root.status",
+    parentDataPath: "root",
+    basePath: "root.status",
+    baseId: "QuestionnaireResponse.status",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+    bindingCodes: [
+      {
+        system: "http://hl7.org/fhir/questionnaire-answers-status",
+        code: "in-progress",
+        display: "In Progress",
+      },
+      {
+        system: "http://hl7.org/fhir/questionnaire-answers-status",
+        code: "completed",
+        display: "Completed",
+      },
+      {
+        system: "http://hl7.org/fhir/questionnaire-answers-status",
+        code: "amended",
+        display: "Amended",
+      },
+      {
+        system: "http://hl7.org/fhir/questionnaire-answers-status",
+        code: "entered-in-error",
+        display: "Entered in Error",
+      },
+      {
+        system: "http://hl7.org/fhir/questionnaire-answers-status",
+        code: "stopped",
+        display: "Stopped",
+      },
+    ],
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.encounter",
+      path: "QuestionnaireResponse.encounter",
+      short: "Encounter created as part of",
+      definition:
+        "The Encounter during which this questionnaire response was created or to which the creation of this record is tightly associated.",
+      comment:
+        "This will typically be the encounter the event occurred within, but some activities may be initiated prior to or after the official completion of an encounter but still be tied to the context of the encounter. A questionnaire that was initiated during an encounter but not fully completed during the encounter would still generally be associated with the encounter.",
+      requirements:
+        "Provides context for the information that was captured.  May also affect access control.",
+      min: 0,
+      max: "1",
+      base: { path: "QuestionnaireResponse.encounter", min: 0, max: "1" },
+      type: [
+        {
+          code: "Reference",
+          targetProfile: ["http://hl7.org/fhir/StructureDefinition/Encounter"],
+        },
+      ],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: true,
+      mapping: [
+        { identity: "workflow", map: "Event.encounter" },
+        { identity: "w5", map: "FiveWs.context" },
+        {
+          identity: "rim",
+          map: ".inboundRelationship(typeCode=COMP].source[classCode<=PCPR, moodCode=EVN]",
+        },
+      ],
+    },
+    dataPath: "root.encounter",
+    parentDataPath: "root",
+    basePath: "root.encounter",
+    baseId: "QuestionnaireResponse.encounter",
+    isPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.authored",
+      path: "QuestionnaireResponse.authored",
+      short: "Date the answers were gathered",
+      definition:
+        "The date and/or time that this set of answers were last changed.",
+      comment:
+        "May be different from the lastUpdateTime of the resource itself, because that reflects when the data was known to the server, not when the data was captured.\n\nThis element is optional to allow for systems that might not know the value, however it SHOULD be populated if possible.",
+      requirements:
+        "Clinicians need to be able to check the date that the information in the questionnaire was collected, to derive the context of the answers.",
+      alias: ["Date Created", "Date published", "Date Issued", "Date updated"],
+      min: 0,
+      max: "1",
+      base: { path: "QuestionnaireResponse.authored", min: 0, max: "1" },
+      type: [{ code: "dateTime" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: true,
+      mapping: [
+        { identity: "workflow", map: "Event.occurrence[x]" },
+        { identity: "w5", map: "FiveWs.recorded" },
+        { identity: "rim", map: ".participation[typeCode=AUT].time" },
+      ],
+    },
+    dataPath: "root.authored",
+    parentDataPath: "root",
+    basePath: "root.authored",
+    baseId: "QuestionnaireResponse.authored",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.source",
+      path: "QuestionnaireResponse.source",
+      short: "The person who answered the questions",
+      definition: "The person who answered the questions about the subject.",
+      comment:
+        "If not specified, no inference can be made about who provided the data.",
+      requirements:
+        "When answering questions about a subject that is minor, incapable of answering or an animal, another human source may answer the questions.",
+      min: 0,
+      max: "1",
+      base: { path: "QuestionnaireResponse.source", min: 0, max: "1" },
+      type: [
+        {
+          code: "Reference",
+          targetProfile: [
+            "http://hl7.org/fhir/StructureDefinition/Patient",
+            "http://hl7.org/fhir/StructureDefinition/Practitioner",
+            "http://hl7.org/fhir/StructureDefinition/PractitionerRole",
+            "http://hl7.org/fhir/StructureDefinition/RelatedPerson",
+          ],
+        },
+      ],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: true,
+      mapping: [
+        { identity: "w5", map: "FiveWs.source" },
+        { identity: "rim", map: ".participation[typeCode=INF].role" },
+      ],
+    },
+    dataPath: "root.source",
+    parentDataPath: "root",
+    basePath: "root.source",
+    baseId: "QuestionnaireResponse.source",
+    isPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.item",
+      path: "QuestionnaireResponse.item",
+      short: "Groups and questions",
+      definition:
+        "A group or question item from the original questionnaire for which answers are provided.",
+      comment:
+        "Groups cannot have answers and therefore must nest directly within item. When dealing with questions, nesting must occur within each answer because some questions may have multiple answers (and the nesting occurs for each answer).",
+      min: 0,
+      max: "*",
+      base: { path: "QuestionnaireResponse.item", min: 0, max: "*" },
+      type: [{ code: "BackboneElement" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human:
+            "All FHIR elements must have a @value or children unless an empty Parameters resource",
+          expression:
+            "hasValue() or (children().count() > id.count()) or $this is Parameters",
+          xpath: "@value|f:*|h:div|self::f:Parameters",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+        {
+          key: "qrs-1",
+          severity: "error",
+          human: "Nested item can't be beneath both item and answer",
+          expression: "(answer.exists() and item.exists()).not()",
+          xpath: "not(exists(f:answer) and exists(f:item))",
+          source:
+            "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [
+        {
+          identity: "rim",
+          map: ".outboundRelationship[typeCode=COMP].target[classCode=OBS, moodCode=EVN]",
+        },
+      ],
+    },
+    dataPath: "root.item[0]",
+    parentDataPath: "root",
+    basePath: "root.item",
+    baseId: "QuestionnaireResponse.item",
+    isPrimitive: false,
+    childPaths: [
+      "root.item.linkId",
+      "root.item.definition",
+      "root.item.text",
+      "root.item.answer[0]",
+      "root.item.item[0]",
+    ],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.item.linkId",
+      path: "QuestionnaireResponse.item.linkId",
+      short: "Pointer to specific item from Questionnaire",
+      definition:
+        "The item from the Questionnaire that corresponds to this item in the QuestionnaireResponse resource.",
+      requirements:
+        "Items can repeat in the answers, so a direct 1..1 correspondence by position might not exist - requiring correspondence by identifier.",
+      min: 1,
+      max: "1",
+      base: { path: "QuestionnaireResponse.item.linkId", min: 1, max: "1" },
+      type: [{ code: "string" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [
+        {
+          identity: "rim",
+          map: ".outboundRelationship[typeCode=DEFN].target[classCode=OBS, moodCode=DEFN].id",
+        },
+      ],
+    },
+    dataPath: "root.item.linkId",
+    parentDataPath: "root.item[0]",
+    basePath: "root.linkId",
+    baseId: "QuestionnaireResponse.item.linkId",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.item.definition",
+      path: "QuestionnaireResponse.item.definition",
+      short: "ElementDefinition - details for the item",
+      definition:
+        "A reference to an [ElementDefinition](elementdefinition.html) that provides the details for the item.",
+      comment:
+        "The ElementDefinition must be in a [StructureDefinition](structuredefinition.html#), and must have a fragment identifier that identifies the specific data element by its id (Element.id). E.g. http://hl7.org/fhir/StructureDefinition/Observation#Observation.value[x].\n\nThere is no need for this element if the item pointed to by the linkId has a definition listed.",
+      requirements:
+        "A common pattern is to define a set of data elements, and then build multiple different questionnaires for different circumstances to gather the data. This element provides traceability to the common definition.",
+      min: 0,
+      max: "1",
+      base: { path: "QuestionnaireResponse.item.definition", min: 0, max: "1" },
+      type: [{ code: "uri" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [
+        {
+          identity: "rim",
+          map: ".outboundRelationship[typeCode=DEFN].target[classCode=OBS, moodCode=DEFN].code",
+        },
+      ],
+    },
+    dataPath: "root.item.definition",
+    parentDataPath: "root.item[0]",
+    basePath: "root.definition",
+    baseId: "QuestionnaireResponse.item.definition",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.item.text",
+      path: "QuestionnaireResponse.item.text",
+      short: "Name for group or question text",
+      definition:
+        "Text that is displayed above the contents of the group or as the text of the question being answered.",
+      requirements:
+        "Allows the questionnaire response to be read without access to the questionnaire.",
+      min: 0,
+      max: "1",
+      base: { path: "QuestionnaireResponse.item.text", min: 0, max: "1" },
+      type: [{ code: "string" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [{ identity: "rim", map: ".text" }],
+    },
+    dataPath: "root.item.text",
+    parentDataPath: "root.item[0]",
+    basePath: "root.text",
+    baseId: "QuestionnaireResponse.item.text",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.item.answer",
+      path: "QuestionnaireResponse.item.answer",
+      short: "The response(s) to the question",
+      definition: "The respondent's answer(s) to the question.",
+      comment:
+        "The value is nested because we cannot have a repeating structure that has variable type.",
+      min: 0,
+      max: "*",
+      base: { path: "QuestionnaireResponse.item.answer", min: 0, max: "*" },
+      type: [{ code: "BackboneElement" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human:
+            "All FHIR elements must have a @value or children unless an empty Parameters resource",
+          expression:
+            "hasValue() or (children().count() > id.count()) or $this is Parameters",
+          xpath: "@value|f:*|h:div|self::f:Parameters",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [{ identity: "rim", map: ".value[type=LIST_ANY]" }],
+    },
+    dataPath: "root.item.answer[0]",
+    parentDataPath: "root.item[0]",
+    basePath: "root.answer",
+    baseId: "QuestionnaireResponse.item.answer",
+    isPrimitive: false,
+    childPaths: ["root.item.answer.value[x]", "root.item.answer.item[0]"],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse.item.answer.item",
+      path: "QuestionnaireResponse.item.answer.item",
+      short: "Nested groups and questions",
+      definition:
+        "Nested groups and/or questions found within this particular answer.",
+      requirements:
+        'It is useful to have "sub-questions", questions which normally appear when certain answers are given and which collect additional details.',
+      min: 0,
+      max: "*",
+      base: {
+        path: "QuestionnaireResponse.item.answer.item",
+        min: 0,
+        max: "*",
+      },
+      contentReference: "#QuestionnaireResponse.item",
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [
+        {
+          identity: "rim",
+          map: ".outboundRelationship[typeCode=COMP].target[classCode=OBS, moodCode=EVN]",
+        },
+      ],
+    },
+    dataPath: "root.item.answer.item[0]",
+    parentDataPath: "root.item.answer[0]",
+    basePath: "root.item",
+    baseId: "QuestionnaireResponse.item.answer.item",
+    isPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "QuestionnaireResponse",
+      path: "QuestionnaireResponse",
+      short: "A structured set of questions and their answers",
+      definition:
+        "A structured set of questions and their answers. The questions are ordered and grouped into coherent subsets, corresponding to the structure of the grouping of the questionnaire being responded to.",
+      comment:
+        "The QuestionnaireResponse contains enough information about the questions asked and their organization that it can be interpreted somewhat independently from the Questionnaire it is based on.  I.e. You don't need access to the Questionnaire in order to extract basic information from a QuestionnaireResponse.",
+      alias: ["Form", "QuestionnaireAnswers"],
+      min: 0,
+      max: "*",
+      base: { path: "QuestionnaireResponse", min: 0, max: "*" },
+      constraint: [
+        {
+          key: "dom-2",
+          severity: "error",
+          human:
+            "If the resource is contained in another resource, it SHALL NOT contain nested Resources",
+          expression: "contained.contained.empty()",
+          xpath: "not(parent::f:contained and f:contained)",
+          source: "http://hl7.org/fhir/StructureDefinition/DomainResource",
+        },
+        {
+          key: "dom-3",
+          severity: "error",
+          human:
+            "If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource",
+          expression:
+            "contained.where(((id.exists() and ('#'+id in (%resource.descendants().reference | %resource.descendants().as(canonical) | %resource.descendants().as(uri) | %resource.descendants().as(url)))) or descendants().where(reference = '#').exists() or descendants().where(as(canonical) = '#').exists() or descendants().where(as(uri) = '#').exists()).not()).trace('unmatched', id).empty()",
+          xpath:
+            "not(exists(for $contained in f:contained return $contained[not(exists(parent::*/descendant::f:reference/@value=concat('#', $contained/*/f:id/@value)) or exists(descendant::f:reference[@value='#']))]))",
+          source: "http://hl7.org/fhir/StructureDefinition/DomainResource",
+        },
+        {
+          key: "dom-4",
+          severity: "error",
+          human:
+            "If a resource is contained in another resource, it SHALL NOT have a meta.versionId or a meta.lastUpdated",
+          expression:
+            "contained.meta.versionId.empty() and contained.meta.lastUpdated.empty()",
+          xpath:
+            "not(exists(f:contained/*/f:meta/f:versionId)) and not(exists(f:contained/*/f:meta/f:lastUpdated))",
+          source: "http://hl7.org/fhir/StructureDefinition/DomainResource",
+        },
+        {
+          key: "dom-5",
+          severity: "error",
+          human:
+            "If a resource is contained in another resource, it SHALL NOT have a security label",
+          expression: "contained.meta.security.empty()",
+          xpath: "not(exists(f:contained/*/f:meta/f:security))",
+          source: "http://hl7.org/fhir/StructureDefinition/DomainResource",
+        },
+        {
+          extension: [
+            {
+              url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bestpractice",
+              valueBoolean: true,
+            },
+            {
+              url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bestpractice-explanation",
+              valueMarkdown:
+                "When a resource has no narrative, only systems that fully understand the data can display the resource to a human safely. Including a human readable representation in the resource makes for a much more robust eco-system and cheaper handling of resources by intermediary systems. Some ecosystems restrict distribution of resources to only those systems that do fully understand the resources, and as a consequence implementers may believe that the narrative is superfluous. However experience shows that such eco-systems often open up to new participants over time.",
+            },
+          ],
+          key: "dom-6",
+          severity: "warning",
+          human: "A resource should have narrative for robust management",
+          expression: "text.`div`.exists()",
+          xpath: "exists(f:text/h:div)",
+          source: "http://hl7.org/fhir/StructureDefinition/DomainResource",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: false,
+      mapping: [
+        { identity: "rim", map: "Entity. Role, or Act" },
+        { identity: "workflow", map: "Event" },
+        { identity: "rim", map: "Observation[moodCode=EVN]" },
+        { identity: "w5", map: "infrastructure.information" },
+      ],
+    },
+    dataPath: "root",
+    parentDataPath: "",
+    basePath: "root",
+    baseId: "QuestionnaireResponse",
+    isPrimitive: false,
+    isRoot: true,
+    childPaths: [],
+    value: "",
+  },
+];
+export default data;
