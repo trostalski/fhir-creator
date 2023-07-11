@@ -1,7 +1,7 @@
 import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { rootName } from "./constants";
 import { getPathLength } from "./path_utils";
-import { getBranchId, logWithCopy } from "./utils";
+import { getBranchId } from "./utils";
 
 export function extractDirectChildrenPaths(
   parentPath: string,
@@ -178,7 +178,16 @@ export function duplicateBranch(
   return profileTree;
 }
 
-export function copyNode() {}
+export function getFirstChildren(profileTree: ProfileTree) {
+  let firstChildren: ProfileTreeNode[] = [];
+  profileTree.forEach((node) => {
+    // find nodes one level below the root node
+    if (node.dataPath.split(".").length == 2) {
+      firstChildren.push(node);
+    }
+  });
+  return firstChildren;
+}
 
 export function deleteBranch(profileTree: ProfileTree, node: ProfileTreeNode) {
   const parentNode = getNodeByDataPath(profileTree, node.parentDataPath);
@@ -195,4 +204,49 @@ export function deleteBranch(profileTree: ProfileTree, node: ProfileTreeNode) {
   const index = profileTree.indexOf(node);
   profileTree.splice(index, 1);
   return profileTree;
+}
+
+function nodeOrChildWasModified(
+  profileTree: ProfileTree,
+  node: ProfileTreeNode
+) {
+  if (node.value !== "") {
+    return true;
+  }
+  const children = getChildNodes(profileTree, node);
+  for (const child of children) {
+    if (nodeOrChildWasModified(profileTree, child)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function getExpansionBgColour(
+  profileTree: ProfileTree,
+  pathsWithInvalidCardinality: string[],
+  hastConstraintIssues: boolean,
+  node: ProfileTreeNode
+) {
+  if (nodeOrChildWasModified(profileTree, node)) {
+    return "bg-green-500";
+  } else if (pathsWithInvalidCardinality.includes(node.dataPath)) {
+    return "bg-red-400";
+  } else if (hastConstraintIssues) {
+    return "bg-pink-800";
+  } else if (node.element.sliceName) {
+    return "bg-violet-300";
+  } else {
+    return "bg-blue-300";
+  }
+}
+
+export function nodeIsType(node: ProfileTreeNode, type: string) {
+  if (node.multiTypeType) {
+    return node.multiTypeType === type;
+  } else if (!node.element.type) {
+    return false;
+  } else {
+    return node.element.type[0].code === type;
+  }
 }

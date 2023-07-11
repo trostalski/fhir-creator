@@ -1,6 +1,7 @@
 import { useStore } from "@/stores/useStore";
 import { ProfileTreeNode, ProfileTree } from "@/utils/buildTree";
-import React from "react";
+import { nodeIsType } from "@/utils/tree_utils";
+import React, { useState } from "react";
 import Select from "react-select";
 
 interface BindingCodeInputProps {
@@ -34,13 +35,23 @@ const BindingCodeInput = (props: BindingCodeInputProps) => {
     const nodeIndex = newProfileTree.findIndex(
       (node) => node.dataPath === props.node.dataPath
     );
-    newProfileTree[nodeIndex].value = code;
+    if (nodeIsType(props.node, "CodeableConcept")) {
+      newProfileTree[nodeIndex].value = code;
+    } else {
+      newProfileTree[nodeIndex].value = code!.code;
+    }
     updateProfileTree(newProfileTree);
   };
 
   return (
     <>
-      <Select options={getOptions()} onChange={handleOnChange} />
+      <Select
+        options={getOptions()}
+        onChange={(e) => handleOnChange(e)}
+        value={getOptions().find(
+          (option) => option.value === props.node.value.code
+        )}
+      />
     </>
   );
 };

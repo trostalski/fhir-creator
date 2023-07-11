@@ -24,6 +24,26 @@ export async function getResource(id: string) {
   }
 }
 
+export async function getResources(ids: string[]) {
+  try {
+    const resources = await db.resources.bulkGet(ids);
+    return resources as Resource[];
+  } catch (error) {
+    console.log(`Failed to get resources with ids ${ids}`);
+  }
+}
+
+export async function deleteResources(ids: string[]) {
+  try {
+    await db.resources.bulkDelete(ids);
+    await db.resourcesPathRepr.bulkDelete(ids);
+    return true;
+  } catch (error) {
+    console.log(`Failed to delete resources with ids ${ids}`);
+    return false;
+  }
+}
+
 export async function addResource(resource: Resource) {
   try {
     await db.resources.add(resource);
@@ -40,6 +60,16 @@ export async function addProfile(profile: StructureDefinition) {
     return true;
   } catch (error) {
     console.log(`Failed to add profile`);
+    return false;
+  }
+}
+
+export async function deleteProfiles(urls: string[]) {
+  try {
+    await db.profiles.bulkDelete(urls);
+    return true;
+  } catch (error) {
+    console.log(`Failed to delete profiles with urls ${urls}`);
     return false;
   }
 }
@@ -90,12 +120,31 @@ export async function addBundle(bundle: Bundle) {
   }
 }
 
+export async function deleteBundles(ids: string[]) {
+  try {
+    await db.bundles.bulkDelete(ids);
+    return true;
+  } catch (error) {
+    console.log(`Failed to delete bundles with ids ${ids}`);
+    return false;
+  }
+}
+
 export async function getBundle(id: string) {
   try {
     const bundle = await db.bundles.get(id);
     return bundle;
   } catch (error) {
     console.log(`Failed to get bundle with id ${id}`);
+  }
+}
+
+export async function getBundles(ids: string[]) {
+  try {
+    const bundles = await db.bundles.bulkGet(ids);
+    return bundles as Bundle[];
+  } catch (error) {
+    console.log(`Failed to get bundles with ids ${ids}`);
   }
 }
 

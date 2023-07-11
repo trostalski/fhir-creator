@@ -3,14 +3,18 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import React, { useState } from "react";
 import { useStore } from "@/stores/useStore";
 
-interface ProfileCheckboxesProps {
-  setCheckedBranchIds: React.Dispatch<React.SetStateAction<string[]>>;
-  branchIds: string[];
-  checkedBranchIds: string[];
-}
-
-export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
+export const BranchIdsCheckboxes = () => {
   const [searchInput, setSearchInput] = React.useState<string | null>(null);
+
+  const { setCheckedBranchIds, checkedBranchIds, branchIds } = useStore(
+    (state) => {
+      return {
+        setCheckedBranchIds: state.setCheckedBranchIds,
+        checkedBranchIds: state.checkedBranchIds,
+        branchIds: state.branchIds,
+      };
+    }
+  );
 
   return (
     <div className="flex flex-col gap-1 p-2">
@@ -25,10 +29,10 @@ export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
         <button
           className="text-blue-600 font-bold text-xs"
           onClick={(e) => {
-            if (props.branchIds.length > props.checkedBranchIds?.length) {
-              props.setCheckedBranchIds(props.branchIds);
+            if (branchIds.length > checkedBranchIds?.length) {
+              setCheckedBranchIds(branchIds);
             } else {
-              props.setCheckedBranchIds([]);
+              setCheckedBranchIds([]);
             }
           }}
         >
@@ -37,18 +41,16 @@ export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
         <button
           className="text-gray-500 font-bold text-xs"
           onClick={(e) =>
-            props.setCheckedBranchIds(
-              props.branchIds.filter((id) => idIsImportant(id))
-            )
+            setCheckedBranchIds(branchIds.filter((id) => idIsImportant(id)))
           }
         >
           reset
         </button>
       </div>
 
-      {!props.branchIds
+      {!branchIds
         ? null
-        : props.branchIds
+        : branchIds
             .filter((id) => {
               if (searchInput) {
                 return id.toLowerCase().includes(searchInput.toLowerCase());
@@ -61,17 +63,20 @@ export const BranchIdsCheckboxes = (props: ProfileCheckboxesProps) => {
                 <input
                   id="default-checkbox"
                   type="checkbox"
-                  checked={props.checkedBranchIds.includes(id)}
+                  checked={checkedBranchIds.includes(id)}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      props.setCheckedBranchIds((prev) => [...prev, id]);
+                      setCheckedBranchIds([
+                        ...useStore.getState().checkedBranchIds,
+                        id,
+                      ]);
                     } else {
-                      props.setCheckedBranchIds(
-                        props.checkedBranchIds.filter((i) => i !== id)
+                      setCheckedBranchIds(
+                        checkedBranchIds.filter((i) => i !== id)
                       );
                     }
                   }}
-                  className="w-max-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-max-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 hover:cursor-pointer dark:hover:bg-gray-600 dark:hover:border-gray-500 dark:hover:text-white dark:hover:ring-offset-gray-800 dark:hover:ring-2"
                 />
                 <label
                   htmlFor="default-checkbox"
@@ -103,8 +108,8 @@ const RightSidebar = (props: { children: React.ReactNode }) => {
 
   return (
     <div
-      className={`relative shadow-md h-full overflow-scroll ${
-        isOpen ? "w-72" : "w-12"
+      className={`relative shadow-md h-full overflow-scroll flex-shrink-0 ${
+        isOpen ? "w-48" : "w-12"
       }
       `}
     >
