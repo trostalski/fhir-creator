@@ -8,8 +8,11 @@ import { StructureDefinition } from "fhir/r4";
 import React from "react";
 import { MdOutlineClear } from "react-icons/md";
 import { useStore } from "@/stores/useStore";
+import { AiOutlineEye } from "react-icons/ai";
 
 interface ResourceListProps {
+  setPreviewOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setPreviewPathRepr: React.Dispatch<React.SetStateAction<ResourcePathRepr>>;
   setCheckedResources: (checkedResources: string[]) => void;
   checkedResources: string[];
 }
@@ -72,20 +75,31 @@ const ResourceList = (props: ResourceListProps) => {
                 resourcePathRepr.id}
             </span>
           </button>
-          <input
-            type="checkbox"
-            checked={props.checkedResources.includes(resourcePathRepr.id)}
-            className="ml-2 cursor-pointer"
-            onChange={(e) => {
-              props.setCheckedResources(
-                props.checkedResources.includes(resourcePathRepr.id)
-                  ? props.checkedResources.filter(
-                      (id) => id !== resourcePathRepr.id
-                    )
-                  : [...props.checkedResources, resourcePathRepr.id]
-              );
-            }}
-          />
+          <div className="flex flex-row items-center">
+            <button
+              className="hover:scale-105"
+              onClick={() => {
+                props.setPreviewOpen(true);
+                props.setPreviewPathRepr(resourcePathRepr);
+              }}
+            >
+              <AiOutlineEye size={15} className="ml-2" />
+            </button>
+            <input
+              type="checkbox"
+              checked={props.checkedResources.includes(resourcePathRepr.id)}
+              className="ml-2 cursor-pointer"
+              onChange={(e) => {
+                props.setCheckedResources(
+                  props.checkedResources.includes(resourcePathRepr.id)
+                    ? props.checkedResources.filter(
+                        (id) => id !== resourcePathRepr.id
+                      )
+                    : [...props.checkedResources, resourcePathRepr.id]
+                );
+              }}
+            />
+          </div>
         </div>
       ))}
     </div>
