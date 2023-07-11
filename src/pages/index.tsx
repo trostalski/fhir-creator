@@ -16,12 +16,7 @@ const Home = () => {
   const [pathsWithInvalidCardinality, setPathsWithInvalidCardinality] =
     useState<string[]>([]);
 
-  const {
-    setProfileTree,
-    profileTree,
-    profile,
-    mode,
-    setMode } = useStore(
+  const { setProfileTree, profileTree, profile, mode, setMode } = useStore(
     (state) => {
       return {
         setProfileTree: state.setProfileTree,
@@ -44,7 +39,7 @@ const Home = () => {
         <div className="flex flex-row items-center gap-2 bg-white p-2">
           <Select
             instanceId={"baseprofile-select"}
-            className="w-1/3"
+            className="w-96"
             options={resourceOptions}
             placeholder="Select Base Profile"
             onChange={(e) => {
@@ -69,7 +64,7 @@ const Home = () => {
         </div>
       </div>
       <RightSidebar>
-        <BranchIdsCheckboxes/>
+        <BranchIdsCheckboxes />
       </RightSidebar>
       {checkoutModalOpen && (
         <ExportModal

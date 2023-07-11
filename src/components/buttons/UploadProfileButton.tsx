@@ -52,7 +52,7 @@ const UploadProfileButton = (props: UploadProfileButtonProps) => {
         </label>
       </div>
     );
-  } else {
+  } else if (props.style == "sidebar") {
     return (
       <div className="flex flex-row gap-2">
         <label
@@ -70,6 +70,8 @@ const UploadProfileButton = (props: UploadProfileButtonProps) => {
         </label>
       </div>
     );
+  } else {
+    return null;
   }
 };
 

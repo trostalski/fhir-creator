@@ -1,13 +1,13 @@
 import { db } from "@/db/db";
 import { useStore } from "@/stores/useStore";
-import { PathItem } from "@/types";
 import { Modes } from "@/utils/constants";
 import { useLiveQuery } from "dexie-react-hooks";
-import { StructureDefinition } from "fhir/r4";
 import React from "react";
-import { MdOutlineClear } from "react-icons/md";
 
-interface ProfilesListProps {}
+interface ProfilesListProps {
+  setCheckedProfiles: (checkedProfiles: string[]) => void;
+  checkedProfiles: string[];
+}
 
 const ProfilesList = (props: ProfilesListProps) => {
   const profiles = useLiveQuery(() => db.profiles.toArray());
@@ -43,12 +43,17 @@ const ProfilesList = (props: ProfilesListProps) => {
           >
             <span className="text-xs">{profile.name}</span>
           </button>
-          <button
-            className="hover:scale-105"
-            onClick={() => deleteProfile(profile.url)}
-          >
-            <MdOutlineClear size={20} className="ml-2" />
-          </button>
+          <input
+            type="checkbox"
+            className="ml-2 cursor-pointer"
+            onChange={(e) => {
+              props.setCheckedProfiles(
+                props.checkedProfiles.includes(profile.id!)
+                  ? props.checkedProfiles.filter((id) => id !== profile.id)
+                  : [...props.checkedProfiles, profile.id!]
+              );
+            }}
+          />
         </div>
       ))}
     </div>

@@ -79,7 +79,7 @@ export const BranchIdsCheckboxes = () => {
                       );
                     }
                   }}
-                  className="w-max-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-max-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 hover:cursor-pointer dark:hover:bg-gray-600 dark:hover:border-gray-500 dark:hover:text-white dark:hover:ring-offset-gray-800 dark:hover:ring-2"
                 />
                 <label
                   htmlFor="default-checkbox"
@@ -111,8 +111,8 @@ const RightSidebar = (props: { children: React.ReactNode }) => {
 
   return (
     <div
-      className={`relative shadow-md h-full overflow-scroll ${
-        isOpen ? "w-72" : "w-12"
+      className={`relative shadow-md h-full overflow-scroll flex-shrink-0 ${
+        isOpen ? "w-48" : "w-12"
       }
       `}
     >

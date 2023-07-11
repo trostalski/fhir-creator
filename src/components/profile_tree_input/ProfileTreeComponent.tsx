@@ -6,6 +6,12 @@ import "react-tooltip/dist/react-tooltip.css";
 import RootPrimitive from "./RootPrimitive";
 import RootParent from "./RootParent";
 import { useStore } from "@/stores/useStore";
+import { useValResultStore } from "@/stores/useStore";
+import { defaultProfileTreeNode } from "@/utils/constants";
+import { has } from "lodash";
+import { ConstraintComponent } from "./ConstraintComponent";
+import { GUIConstraintResolver } from "@/utils/constraint_utils";
+import { stat } from "fs";
 
 interface ProfileTreeComponentProps {
   pathsWithInvalidCardinality: string[];
@@ -17,13 +23,23 @@ interface ProfileTreeComponentProps {
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   props: ProfileTreeComponentProps
 ) => {
-  const { profileTree, profile, updateProfileTree, checkedBranchIds, clearProfileTree } = useStore((state) => {
+  const {
+    profileTree,
+    profile,
+    updateProfileTree,
+    checkedBranchIds,
+    orderedConstraintResults,
+    setOrderedConstraintResults,
+    clearProfileTree,
+  } = useStore((state) => {
     return {
       profileTree: state.activeProfileTree,
       profile: state.activeProfile,
       updateProfileTree: state.updateProfileTree,
       checkedBranchIds: state.checkedBranchIds,
-      clearProfileTree: state.clearProfileTree
+      clearProfileTree: state.clearProfileTree,
+      orderedConstraintResults: state.orderedConstraintResults,
+      setOrderedConstraintResults: state.setOrderedConstraintResults,
     };
   });
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
@@ -63,10 +79,18 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     }
   };
 
+  const dummyRootNode = { ...defaultProfileTreeNode, dataPath: "root" };
+  let guiConstraintResolver;
+  if (orderedConstraintResults) {
+    guiConstraintResolver = new GUIConstraintResolver({
+      node: dummyRootNode,
+      orderedConstraintResults,
+    });
+  }
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col mb-4 gap-2">
-        <div className="flex flex-rowp gap-4 items-center">
+        <div className="flex flex-row gap-4 items-center">
           <span className="text-gray-500 text-xs">Profile URL:</span>
           <span className="text-sm">{profile!.url}</span>
         </div>
@@ -99,11 +123,14 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
               props.setPathsWithInvalidCardinality([]);
               setExpandedNodes([]);
               clearProfileTree();
+              updateProfileTree(undefined);
+              setOrderedConstraintResults(undefined);
             }}
           >
             Clear
           </button>
         </div>
+        <ConstraintComponent resolver={guiConstraintResolver} />
       </div>
       <div className="flex flex-col gap-4">
         {profileTree!
