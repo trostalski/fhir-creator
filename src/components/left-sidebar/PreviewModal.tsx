@@ -27,7 +27,7 @@ export function PreviewModal(props: PreviewModalProps) {
 
   return (
     <ModalWrapper setShow={props.setIsOpen}>
-      <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
+      <div className="h-[calc(100vh-200px)] overflow-y-auto">
         {resource && <JsonView src={resource} />}
       </div>
       <div className="flex flex-row gap-4">

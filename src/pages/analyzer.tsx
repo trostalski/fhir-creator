@@ -3,7 +3,7 @@ import CsvFeatureInput from "@/components/analyzer/csv_export/CsvFeatureInput";
 import PatSimFeatureInput from "@/components/analyzer/patient_similarity/PatSimFeatureInput";
 import { db } from "@/db/db";
 import { getBundles, getResources } from "@/db/utils";
-import { toastError } from "@/toasts";
+import { toastError, toastPromise } from "@/toasts";
 import { CsvExportFeature, PatSimFeature } from "@/types";
 import { fetchCsvExportData, fetchPatSimData } from "@/utils/api";
 import {
@@ -97,7 +97,8 @@ const Analyzer = () => {
       resources = [...resources, ...bundleResources];
     }
     if (resources.length === 0) {
-      toastError("No resources selected. Please select at least one resource.");
+      toastError("No resources selected.");
+      return;
     }
     if (analysisMethod === patSimMethod) {
       const targetResources = patSimFeatures
@@ -110,7 +111,13 @@ const Analyzer = () => {
         targetResources.includes(resource.resourceType)
       );
       const reqFeatures = parsePatSimFeaturesForRequest(patSimFeatures);
-      const patSimResponse = await fetchPatSimData(resources, reqFeatures);
+      // const patSimResponse = await fetchPatSimData(resources, reqFeatures);
+      const patSimResponse = await toastPromise<Response>(
+        fetchPatSimData(resources, reqFeatures),
+        "Fetching data...",
+        "Data fetched successfully.",
+        "Failed to fetch data."
+      );
       if (!patSimResponse.ok) {
         toastError("Request failed.");
         return;
@@ -128,7 +135,12 @@ const Analyzer = () => {
         targetResources.includes(resource.resourceType)
       );
       const reqFeatures = parseCsvFeaturesForRequest(csvExportFeatures);
-      const csvResponse = await fetchCsvExportData(resources, reqFeatures);
+      const csvResponse = await toastPromise<Response>(
+        fetchCsvExportData(resources, reqFeatures),
+        "Fetching data...",
+        "Data fetched successfully.",
+        "Failed to fetch data."
+      );
       if (!csvResponse.ok) {
         toastError("Request failed.");
         return;
