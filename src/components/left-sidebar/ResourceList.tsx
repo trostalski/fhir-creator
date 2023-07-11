@@ -75,7 +75,7 @@ const ResourceList = (props: ResourceListProps) => {
                 resourcePathRepr.id}
             </span>
           </button>
-          <div className="text-right">
+          <div className="flex flex-row items-center">
             <button
               className="hover:scale-105"
               onClick={() => {
@@ -85,21 +85,21 @@ const ResourceList = (props: ResourceListProps) => {
             >
               <AiOutlineEye size={15} className="ml-2" />
             </button>
+            <input
+              type="checkbox"
+              checked={props.checkedResources.includes(resourcePathRepr.id)}
+              className="ml-2 cursor-pointer"
+              onChange={(e) => {
+                props.setCheckedResources(
+                  props.checkedResources.includes(resourcePathRepr.id)
+                    ? props.checkedResources.filter(
+                        (id) => id !== resourcePathRepr.id
+                      )
+                    : [...props.checkedResources, resourcePathRepr.id]
+                );
+              }}
+            />
           </div>
-          <input
-            type="checkbox"
-            checked={props.checkedResources.includes(resourcePathRepr.id)}
-            className="ml-2 cursor-pointer"
-            onChange={(e) => {
-              props.setCheckedResources(
-                props.checkedResources.includes(resourcePathRepr.id)
-                  ? props.checkedResources.filter(
-                      (id) => id !== resourcePathRepr.id
-                    )
-                  : [...props.checkedResources, resourcePathRepr.id]
-              );
-            }}
-          />
         </div>
       ))}
     </div>

@@ -27,7 +27,7 @@ const RightPart = (props: RightPartProps) => {
 
   const [showImportMenu, setShowImportMenu] = useState<boolean>(false);
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
-  const [showPreviewModal, setShowPreviewModal] = useState<boolean>(true);
+  const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false);
   const [previewPathRepr, setPreviewPathRepr] = useState<ResourcePathRepr>({
     id: "",
     data: [],
