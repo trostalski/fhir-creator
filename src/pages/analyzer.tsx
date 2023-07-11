@@ -5,7 +5,7 @@ import { db } from "@/db/db";
 import { getBundles, getResources } from "@/db/utils";
 import { toastError } from "@/toasts";
 import { CsvExportFeature, PatSimFeature } from "@/types";
-import { postCsvExportData, postPatSimData } from "@/utils/api";
+import { fetchCsvExportData, fetchPatSimData } from "@/utils/api";
 import {
   _categoricalString,
   _csvExport,
@@ -17,7 +17,7 @@ import {
 } from "@/utils/constants";
 import { getResourcesFromBundles } from "@/utils/fhir_utils";
 import {
-  downloadFileFromResponse,
+  downloadBlob,
   parseCsvFeaturesForRequest,
   parsePatSimFeaturesForRequest,
 } from "@/utils/patsim_utils";
@@ -25,6 +25,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import React, { useEffect, useState } from "react";
 
 const Analyzer = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const bundles = useLiveQuery(() => db.bundles.toArray());
   const resources = useLiveQuery(() => db.resources.toArray());
   const [analysisMethod, setAnalysisMethod] = React.useState<
@@ -109,11 +110,13 @@ const Analyzer = () => {
         targetResources.includes(resource.resourceType)
       );
       const reqFeatures = parsePatSimFeaturesForRequest(patSimFeatures);
-      const patSimResponse = await postPatSimData(resources, reqFeatures);
-      await downloadFileFromResponse(
-        patSimResponse,
-        `patsim_${new Date().toISOString()}.zip`
-      );
+      const patSimResponse = await fetchPatSimData(resources, reqFeatures);
+      if (!patSimResponse.ok) {
+        toastError("Request failed.");
+        return;
+      }
+      const blob = await patSimResponse.blob();
+      await downloadBlob(blob, `patsim_${new Date().toISOString()}.zip`);
     } else if (analysisMethod === csvExportMethod) {
       const targetResources = csvExportFeatures
         .map((feature) => feature.targetResources)
@@ -125,13 +128,23 @@ const Analyzer = () => {
         targetResources.includes(resource.resourceType)
       );
       const reqFeatures = parseCsvFeaturesForRequest(csvExportFeatures);
-      const csvResponse = await postCsvExportData(resources, reqFeatures);
-      await downloadFileFromResponse(
-        csvResponse,
-        `csvexport_${new Date().toISOString()}.csv`
-      );
+      const csvResponse = await fetchCsvExportData(resources, reqFeatures);
+      if (!csvResponse.ok) {
+        toastError("Request failed.");
+        return;
+      }
+      const blob = await csvResponse.blob();
+      await downloadBlob(blob, `csvexport_${new Date().toISOString()}.csv`);
     }
   };
+
+  useEffect(() => {
+    if (isLoading) {
+      document.body.style.cursor = "wait";
+    } else {
+      document.body.style.cursor = "default";
+    }
+  }, [isLoading]);
 
   return (
     <div>
@@ -298,7 +311,6 @@ const Analyzer = () => {
                 // reset to default features
                 setPatSimFeatures([{ ...defaultCategoricalStringInput }]);
                 setCsvExportFeatures([{ ...defaultCsvExportFeature }]);
-                console.log(patSimFeatures);
               }}
             >
               Reset

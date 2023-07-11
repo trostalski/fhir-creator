@@ -99,16 +99,11 @@ export function parsePatSimFeaturesForRequest(patSimFeatures: PatSimFeature[]) {
   };
 }
 
-export async function downloadFileFromResponse(
-  responseObj: Response,
-  fileName: string
-) {
-  const blob = await responseObj.blob();
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.setAttribute("download", fileName);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+export async function downloadBlob(blob: Blob, fileName: string) {
+  console.log("Downloading blob: ", blob, fileName);
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  a.click();
 }
