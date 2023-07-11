@@ -25,12 +25,12 @@ export const toastInfo = (message: string) => {
   });
 };
 
-export const toastPromise = (
+export function toastPromise<T>(
   promise: Promise<any>,
   pendingMessage?: string,
   successMessage?: string,
   errorMessage?: string
-) => {
+): Promise<T> {
   const pending = pendingMessage || "Loading...";
   const success = successMessage || "Success!";
   const error = errorMessage || "Error!";
@@ -44,4 +44,4 @@ export const toastPromise = (
     },
     { position: toast.POSITION.BOTTOM_LEFT }
   );
-};
+}

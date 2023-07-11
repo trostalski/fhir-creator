@@ -25,7 +25,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     profile,
     checkedBranchIds,
     orderedConstraintResults,
-    updateProfileTree,
     setOrderedConstraintResults,
     clearProfileTree,
   } = useStore((state) => {

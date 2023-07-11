@@ -370,4 +370,8 @@ export class GUIConstraintResolver {
     })?.constraints;
     return guidelines;
   }
+
+  reset() {
+    this.orderedConstraintResults = { ...defaultOrderedConstraintResults };
+  }
 }
