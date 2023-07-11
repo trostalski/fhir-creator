@@ -26,19 +26,19 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   const {
     profileTree,
     profile,
-    updateProfileTree,
     checkedBranchIds,
     orderedConstraintResults,
+    updateProfileTree,
     setOrderedConstraintResults,
     clearProfileTree,
   } = useStore((state) => {
     return {
       profileTree: state.activeProfileTree,
       profile: state.activeProfile,
-      updateProfileTree: state.updateProfileTree,
-      checkedBranchIds: state.checkedBranchIds,
-      clearProfileTree: state.clearProfileTree,
       orderedConstraintResults: state.orderedConstraintResults,
+      checkedBranchIds: state.checkedBranchIds,
+      updateProfileTree: state.updateProfileTree,
+      clearProfileTree: state.clearProfileTree,
       setOrderedConstraintResults: state.setOrderedConstraintResults,
     };
   });
@@ -122,9 +122,8 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
             onClick={() => {
               props.setPathsWithInvalidCardinality([]);
               setExpandedNodes([]);
-              clearProfileTree();
-              updateProfileTree(undefined);
               setOrderedConstraintResults(undefined);
+              clearProfileTree();
             }}
           >
             Clear

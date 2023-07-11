@@ -16,17 +16,15 @@ const Home = () => {
   const [pathsWithInvalidCardinality, setPathsWithInvalidCardinality] =
     useState<string[]>([]);
 
-  const { setProfileTree, profileTree, profile, mode, setMode } = useStore(
-    (state) => {
-      return {
-        setProfileTree: state.setProfileTree,
-        profileTree: state.activeProfileTree,
-        profile: state.activeProfile,
-        mode: state.mode,
-        setMode: state.setMode,
-      };
-    }
-  );
+  const { setProfileTree, profileTree, setMode } = useStore((state) => {
+    return {
+      setProfileTree: state.setProfileTree,
+      profileTree: state.activeProfileTree,
+      profile: state.activeProfile,
+      mode: state.mode,
+      setMode: state.setMode,
+    };
+  });
 
   const handleSelectBaseProfile = async (value: string) => {
     const profile = await getBaseProfile(value);

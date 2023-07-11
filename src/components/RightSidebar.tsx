@@ -6,16 +6,12 @@ import { useStore } from "@/stores/useStore";
 export const BranchIdsCheckboxes = () => {
   const [searchInput, setSearchInput] = React.useState<string | null>(null);
 
-
-  const {
-    setCheckedBranchIds,
-    checkedBranchIds,
-    branchIds } = useStore(
+  const { setCheckedBranchIds, checkedBranchIds, branchIds } = useStore(
     (state) => {
       return {
         setCheckedBranchIds: state.setCheckedBranchIds,
         checkedBranchIds: state.checkedBranchIds,
-        branchIds: state.branchIds
+        branchIds: state.branchIds,
       };
     }
   );
@@ -45,9 +41,7 @@ export const BranchIdsCheckboxes = () => {
         <button
           className="text-gray-500 font-bold text-xs"
           onClick={(e) =>
-            setCheckedBranchIds(
-              branchIds.filter((id) => idIsImportant(id))
-            )
+            setCheckedBranchIds(branchIds.filter((id) => idIsImportant(id)))
           }
         >
           reset
@@ -72,7 +66,10 @@ export const BranchIdsCheckboxes = () => {
                   checked={checkedBranchIds.includes(id)}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      setCheckedBranchIds([...useStore.getState().checkedBranchIds, id]);
+                      setCheckedBranchIds([
+                        ...useStore.getState().checkedBranchIds,
+                        id,
+                      ]);
                     } else {
                       setCheckedBranchIds(
                         checkedBranchIds.filter((i) => i !== id)

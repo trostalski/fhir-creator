@@ -4,7 +4,6 @@ import { ProfileTree } from "@/utils/buildTree";
 import { Modes } from "@/utils/constants";
 import { getBranchIds } from "@/utils/tree_utils";
 import { getResourceTypeFromProfile, idIsImportant } from "@/utils/utils";
-import { profile } from "console";
 import { OrderedConstraintResults } from "@/utils/constraint_utils";
 import { Bundle, Resource, StructureDefinition } from "fhir/r4";
 import { uniq } from "lodash";
@@ -63,7 +62,7 @@ export const useStore = create<Store>((set, get) => ({
     const profile = get().activeProfile;
     if (profile) {
       const profileTree = await fetchProfileTree(profile);
-      set({ activeProfileTree: profileTree });
+      set({ activeProfileTree: undefined });
     }
   },
   branchIds: [],
