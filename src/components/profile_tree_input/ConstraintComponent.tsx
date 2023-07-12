@@ -1,8 +1,5 @@
-import { useValResultStore } from "@/stores/useStore";
-import { ProfileTreeNode } from "@/utils/buildTree";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
 import { ElementDefinitionConstraint } from "fhir/r4";
-import { useState } from "react";
 
 export interface WarningComponentProps {
   resolver?: GUIConstraintResolver;

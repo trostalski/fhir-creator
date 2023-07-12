@@ -6,7 +6,6 @@ import { getResourceTypeFromUrl, isBaseUrl } from "@/utils/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { StructureDefinition } from "fhir/r4";
 import React from "react";
-import { MdOutlineClear } from "react-icons/md";
 import { useStore } from "@/stores/useStore";
 import { AiOutlineEye } from "react-icons/ai";
 

@@ -104,11 +104,18 @@ export class ConstraintResolver {
       if (constraints) {
         let failedConstraints: ElementDefinitionConstraint[] = [];
         constraints.forEach((constraint) => {
-          const expression = [node.element.id, constraint.expression].join(".");
+          let id = this.handleDiv(node.element.id);
+          const expression = [id, constraint.expression].join(".");
           if (expression) {
-            const result = fhirpath.evaluate(this.resource, expression);
-            if (!result[0]) {
-              failedConstraints.push(constraint);
+            try {
+              const result = fhirpath.evaluate(this.resource, expression);
+              if (!result[0]) {
+                failedConstraints.push(constraint);
+              }
+            } catch (err) {
+              window.confirm(
+                `There has been an issue while evaluating the constraints: ${err}`
+              );
             }
           }
         });
@@ -120,6 +127,18 @@ export class ConstraintResolver {
         }
       }
     });
+  }
+
+  private handleDiv(id: string | undefined) {
+    // the word div can be an element id but is also a reserved keyword in fhirpath
+    // therefore when an element id and in an expression it needs to be escaped with backticks `div`
+    if (id) {
+      let idCheck = id;
+      if (id.includes("div")) {
+        idCheck = idCheck.replace("div", "`div`");
+      }
+      return idCheck;
+    }
   }
 
   private addRootNode() {

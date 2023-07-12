@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Select from "react-select";
 import { Modes, resourceOptions } from "../utils/constants";
 import "react-tooltip/dist/react-tooltip.css";
