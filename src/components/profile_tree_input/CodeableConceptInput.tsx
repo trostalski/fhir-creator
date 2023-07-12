@@ -1,7 +1,7 @@
 import { useStore } from "@/stores/useStore";
-import { ProfileTreeNode, ProfileTree } from "@/utils/buildTree";
+import { ProfileTreeNode } from "@/utils/buildTree";
 import { nodeIsType } from "@/utils/tree_utils";
-import React, { useState } from "react";
+import React from "react";
 import Select from "react-select";
 
 interface BindingCodeInputProps {

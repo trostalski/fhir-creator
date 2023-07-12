@@ -7,7 +7,6 @@ import {
   multiTypeString,
 } from "./constants";
 import { getFirstChildren, getNodeByDataPath } from "./tree_utils";
-import { toastError } from "@/toasts";
 
 export interface ConstraintEvaluationResult {
   node: ProfileTreeNode;
@@ -108,14 +107,16 @@ export class ConstraintResolver {
           let id = this.handleDiv(node.element.id);
           const expression = [id, constraint.expression].join(".");
           if (expression) {
-            try{
-             const result = fhirpath.evaluate(this.resource, expression);
-             if (!result[0]) {
-               failedConstraints.push(constraint);
-             }
-           } catch(err){
-            window.confirm(`There has been an issue while evaluating the constraints: ${err}`);
-           }
+            try {
+              const result = fhirpath.evaluate(this.resource, expression);
+              if (!result[0]) {
+                failedConstraints.push(constraint);
+              }
+            } catch (err) {
+              window.confirm(
+                `There has been an issue while evaluating the constraints: ${err}`
+              );
+            }
           }
         });
         if (failedConstraints.length > 0) {
@@ -128,12 +129,12 @@ export class ConstraintResolver {
     });
   }
 
-  private handleDiv(id: string | undefined){
+  private handleDiv(id: string | undefined) {
     // the word div can be an element id but is also a reserved keyword in fhirpath
     // therefore when an element id and in an expression it needs to be escaped with backticks `div`
-    if (id){
+    if (id) {
       let idCheck = id;
-      if(id.includes("div")){
+      if (id.includes("div")) {
         idCheck = idCheck.replace("div", "`div`");
       }
       return idCheck;

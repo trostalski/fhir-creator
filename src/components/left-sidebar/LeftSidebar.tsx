@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import useResize from "@/hooks/useResize";
 import { BsPersonAdd } from "react-icons/bs";
 import { TbTransform } from "react-icons/tb";
-import { TbDeviceAnalytics } from "react-icons/tb";
 import RightPart from "./RightPart";
 import { useRouter } from "next/router";
 import { TbDatabase } from "react-icons/tb";

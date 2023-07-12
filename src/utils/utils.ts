@@ -10,10 +10,6 @@ import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { getSliceNames, removeNPathPartsFromStart } from "./path_utils";
 import { getNodeByDataPath } from "./tree_utils";
 import uniq from "lodash/uniq";
-import { ResourcePathRepr } from "@/db/db";
-import { getBaseProfile } from "@/db/utils";
-import { toastError } from "@/toasts";
-import { useStore } from "zustand";
 
 export const containsDot = (str: string) => {
   return str.includes(".");
@@ -498,6 +494,3 @@ export function checkCardinalities(
     pathsWithInvalidCardinality: uniq(pathsWithInvalidCardinality),
   };
 }
-
-
-
