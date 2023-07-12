@@ -21,7 +21,14 @@ const loadProfileTree = async (
 ) => {
   let profileTree: ProfileTree = [];
   if (containsSnapshot(profile) && profile.snapshot) {
-    profileTree = await buildProfileTree(profile);
+    if (isBaseUrl(profile.url)) {
+      const profileTreeModule = await import(
+        `../../fhir/profiletrees/${getResourceTypeFromUrl(profile.url)}`
+      );
+      profileTree = profileTreeModule.default;
+    } else {
+      profileTree = await buildProfileTree(profile);
+    }
   } else if (containsDifferential(profile) && profile.differential) {
     const baseUrl = getBaseUrl(profile);
     if (!baseUrl || !isBaseUrl(baseUrl)) {
