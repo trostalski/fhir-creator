@@ -159,7 +159,7 @@ function isValidElement(element: ElementDefinition) {
   return result;
 }
 
-function replaceWrongParentPaths(profileTree: ProfileTree) {
+export function replaceWrongParentPaths(profileTree: ProfileTree) {
   for (const node of profileTree) {
     if (getPathLength(node.parentDataPath) < getPathLength(node.dataPath) - 1) {
       const childPathStem = removeNPathPartsFromEnd(node.dataPath, 1);
@@ -174,7 +174,7 @@ function replaceWrongParentPaths(profileTree: ProfileTree) {
   }
 }
 
-function addMissingChildren(profileTree: ProfileTree) {
+export function addMissingChildren(profileTree: ProfileTree) {
   for (const node of profileTree) {
     const { parentDataPath: parentPath } = node;
     const parent = profileTree.find((node) => node.dataPath === parentPath);
@@ -184,7 +184,7 @@ function addMissingChildren(profileTree: ProfileTree) {
   }
 }
 
-function removeNonePrimmitiveWithoutChildren(profileTree: ProfileTree) {
+export function removeNonePrimmitiveWithoutChildren(profileTree: ProfileTree) {
   // removes all none primitive elements without children
   // this is needed for some backbone children e.g. Observation.component.referenceRange
   for (const node of profileTree) {
@@ -217,7 +217,7 @@ const tryGetBindingCodes = async (element: ElementDefinition) => {
   return codes;
 };
 
-function addRootNode(
+export function addRootNode(
   profileTree: ProfileTreeNode[],
   elements: ElementDefinition[]
 ) {
