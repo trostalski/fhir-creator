@@ -1,6 +1,42 @@
 const data = [
   {
     element: {
+      id: "Resource.id",
+      path: "Resource.id",
+      short: "Logical id of this artifact",
+      definition:
+        "The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes.",
+      comment:
+        "The only time that a resource does not have an id is when it is being submitted to the server using a create operation.",
+      min: 0,
+      max: "1",
+      base: { path: "Resource.id", min: 0, max: "1" },
+      type: [
+        {
+          extension: [
+            {
+              url: "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+              valueUrl: "id",
+            },
+          ],
+          code: "http://hl7.org/fhirpath/System.String",
+        },
+      ],
+      mustSupport: false,
+      isModifier: false,
+      isSummary: true,
+    },
+    dataPath: "root.id",
+    parentDataPath: "root",
+    basePath: "root.id",
+    baseId: "Resource.id",
+    isPrimitive: true,
+    isRootPrimitive: true,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
       id: "Resource.meta",
       path: "Resource.meta",
       short: "Metadata about the resource",
@@ -29,8 +65,512 @@ const data = [
     basePath: "root.meta",
     baseId: "Resource.meta",
     isPrimitive: false,
+    childPaths: [
+      "root.meta.versionId",
+      "root.meta.lastUpdated",
+      "root.meta.source",
+      "root.meta.profile[0]",
+      "root.meta.security[0]",
+      "root.meta.tag[0]",
+    ],
+    value: "",
+  },
+  {
+    element: {
+      id: "Meta.versionId",
+      path: "Meta.versionId",
+      short: "Version specific identifier",
+      definition:
+        "The version specific identifier, as it appears in the version portion of the URL. This value changes when the resource is created, updated, or deleted.",
+      comment:
+        "The server assigns this value, and ignores what the client specifies, except in the case that the server is imposing version integrity on updates/deletes.",
+      min: 0,
+      max: "1",
+      base: { path: "Meta.versionId", min: 0, max: "1" },
+      type: [{ code: "id" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      isModifier: false,
+      isSummary: true,
+    },
+    dataPath: "root.meta.versionId",
+    parentDataPath: "root.meta",
+    basePath: "root.meta.versionId",
+    baseId: "Meta.versionId",
+    isPrimitive: true,
+    isRootPrimitive: false,
     childPaths: [],
     value: "",
+  },
+  {
+    element: {
+      id: "Meta.lastUpdated",
+      path: "Meta.lastUpdated",
+      short: "When the resource version last changed",
+      definition:
+        "When the resource last changed - e.g. when the version changed.",
+      comment:
+        "This value is always populated except when the resource is first being created. The server / resource manager sets this value; what a client provides is irrelevant. This is equivalent to the HTTP Last-Modified and SHOULD have the same value on a [read](http.html#read) interaction.",
+      min: 0,
+      max: "1",
+      base: { path: "Meta.lastUpdated", min: 0, max: "1" },
+      type: [{ code: "instant" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      isModifier: false,
+      isSummary: true,
+    },
+    dataPath: "root.meta.lastUpdated",
+    parentDataPath: "root.meta",
+    basePath: "root.meta.lastUpdated",
+    baseId: "Meta.lastUpdated",
+    isPrimitive: true,
+    isRootPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Meta.source",
+      path: "Meta.source",
+      short: "Identifies where the resource comes from",
+      definition:
+        "A uri that identifies the source system of the resource. This provides a minimal amount of [Provenance](provenance.html#) information that can be used to track or differentiate the source of information in the resource. The source may identify another FHIR server, document, message, database, etc.",
+      comment:
+        "In the provenance resource, this corresponds to Provenance.entity.what[x]. The exact use of the source (and the implied Provenance.entity.role) is left to implementer discretion. Only one nominated source is allowed; for additional provenance details, a full Provenance resource should be used.  This element can be used to indicate where the current master source of a resource that has a canonical URL if the resource is no longer hosted at the canonical URL.",
+      min: 0,
+      max: "1",
+      base: { path: "Meta.source", min: 0, max: "1" },
+      type: [{ code: "uri" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      isModifier: false,
+      isSummary: true,
+    },
+    dataPath: "root.meta.source",
+    parentDataPath: "root.meta",
+    basePath: "root.meta.source",
+    baseId: "Meta.source",
+    isPrimitive: true,
+    isRootPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Meta.profile",
+      path: "Meta.profile",
+      short: "Profiles this resource claims to conform to",
+      definition:
+        "A list of profiles (references to [StructureDefinition](structuredefinition.html#) resources) that this resource claims to conform to. The URL is a reference to [StructureDefinition.url](structuredefinition-definitions.html#StructureDefinition.url).",
+      comment:
+        "It is up to the server and/or other infrastructure of policy to determine whether/how these claims are verified and/or updated over time.  The list of profile URLs is a set.",
+      min: 0,
+      max: "*",
+      base: { path: "Meta.profile", min: 0, max: "*" },
+      type: [
+        {
+          code: "canonical",
+          targetProfile: [
+            "http://hl7.org/fhir/StructureDefinition/StructureDefinition",
+          ],
+        },
+      ],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      isModifier: false,
+      isSummary: true,
+    },
+    dataPath: "root.meta.profile[0]",
+    parentDataPath: "root.meta",
+    basePath: "root.meta.profile",
+    baseId: "Meta.profile",
+    isPrimitive: true,
+    isRootPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Meta.security",
+      path: "Meta.security",
+      short: "Security Labels applied to this resource",
+      definition:
+        "Security labels applied to this resource. These tags connect specific resources to the overall security policy and infrastructure.",
+      comment:
+        "The security labels can be updated without changing the stated version of the resource. The list of security labels is a set. Uniqueness is based the system/code, and version and display are ignored.",
+      min: 0,
+      max: "*",
+      base: { path: "Meta.security", min: 0, max: "*" },
+      type: [{ code: "Coding" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      isModifier: false,
+      isSummary: true,
+      binding: {
+        extension: [
+          {
+            url: "http://hl7.org/fhir/build/StructureDefinition/binding-definition",
+            valueString:
+              "Security Labels from the Healthcare Privacy and Security Classification System.",
+          },
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+            valueString: "SecurityLabels",
+          },
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-isCommonBinding",
+            valueBoolean: true,
+          },
+        ],
+        strength: "extensible",
+        valueSet: "http://hl7.org/fhir/ValueSet/security-labels",
+      },
+    },
+    dataPath: "root.meta.security[0]",
+    parentDataPath: "root.meta",
+    basePath: "root.meta.security",
+    baseId: "Meta.security",
+    isPrimitive: false,
+    childPaths: [
+      "root.meta.security[0].system",
+      "root.meta.security[0].version",
+      "root.meta.security[0].code",
+      "root.meta.security[0].display",
+      "root.meta.security[0].userSelected",
+    ],
+    value: "",
+  },
+  {
+    element: {
+      id: "Coding.system",
+      path: "Coding.system",
+      short: "Identity of the terminology system",
+      definition:
+        "The identification of the code system that defines the meaning of the symbol in the code.",
+      comment:
+        "The URI may be an OID (urn:oid:...) or a UUID (urn:uuid:...).  OIDs and UUIDs SHALL be references to the HL7 OID registry. Otherwise, the URI should come from HL7's list of FHIR defined special URIs or it should reference to some definition that establishes the system clearly and unambiguously.",
+      requirements:
+        "Need to be unambiguous about the source of the definition of the symbol.",
+      min: 0,
+      max: "1",
+      base: { path: "Coding.system", min: 0, max: "1" },
+      type: [{ code: "uri" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      isModifier: false,
+      isSummary: true,
+      mapping: [
+        { identity: "v2", map: "C*E.3" },
+        { identity: "rim", map: "./codeSystem" },
+        {
+          identity: "orim",
+          map: "fhir:Coding.system rdfs:subPropertyOf dt:CDCoding.codeSystem",
+        },
+      ],
+    },
+    dataPath: "root.meta.security[0].system",
+    parentDataPath: "root.meta.security[0]",
+    basePath: "root.meta.security.system",
+    baseId: "Coding.system",
+    isPrimitive: true,
+    isRootPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Coding.version",
+      path: "Coding.version",
+      short: "Version of the system - if relevant",
+      definition:
+        "The version of the code system which was used when choosing this code. Note that a well-maintained code system does not need the version reported, because the meaning of codes is consistent across versions. However this cannot consistently be assured, and when the meaning is not guaranteed to be consistent, the version SHOULD be exchanged.",
+      comment:
+        "Where the terminology does not clearly define what string should be used to identify code system versions, the recommendation is to use the date (expressed in FHIR date format) on which that version was officially published as the version date.",
+      min: 0,
+      max: "1",
+      base: { path: "Coding.version", min: 0, max: "1" },
+      type: [{ code: "string" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      isModifier: false,
+      isSummary: true,
+      mapping: [
+        { identity: "v2", map: "C*E.7" },
+        { identity: "rim", map: "./codeSystemVersion" },
+        {
+          identity: "orim",
+          map: "fhir:Coding.version rdfs:subPropertyOf dt:CDCoding.codeSystemVersion",
+        },
+      ],
+    },
+    dataPath: "root.meta.security[0].version",
+    parentDataPath: "root.meta.security[0]",
+    basePath: "root.meta.security.version",
+    baseId: "Coding.version",
+    isPrimitive: true,
+    isRootPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Coding.code",
+      extension: [
+        {
+          url: "http://hl7.org/fhir/build/StructureDefinition/no-binding",
+          valueBoolean: true,
+        },
+      ],
+      path: "Coding.code",
+      short: "Symbol in syntax defined by the system",
+      definition:
+        "A symbol in syntax defined by the system. The symbol may be a predefined code or an expression in a syntax defined by the coding system (e.g. post-coordination).",
+      requirements: "Need to refer to a particular code in the system.",
+      min: 0,
+      max: "1",
+      base: { path: "Coding.code", min: 0, max: "1" },
+      type: [{ code: "code" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      isModifier: false,
+      isSummary: true,
+      mapping: [
+        { identity: "v2", map: "C*E.1" },
+        { identity: "rim", map: "./code" },
+        {
+          identity: "orim",
+          map: "fhir:Coding.code rdfs:subPropertyOf dt:CDCoding.code",
+        },
+      ],
+    },
+    dataPath: "root.meta.security[0].code",
+    parentDataPath: "root.meta.security[0]",
+    basePath: "root.meta.security.code",
+    baseId: "Coding.code",
+    isPrimitive: true,
+    isRootPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Coding.display",
+      extension: [
+        {
+          url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-translatable",
+          valueBoolean: true,
+        },
+        {
+          url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-translatable",
+          valueBoolean: true,
+        },
+      ],
+      path: "Coding.display",
+      short: "Representation defined by the system",
+      definition:
+        "A representation of the meaning of the code in the system, following the rules of the system.",
+      requirements:
+        "Need to be able to carry a human-readable meaning of the code for readers that do not know  the system.",
+      min: 0,
+      max: "1",
+      base: { path: "Coding.display", min: 0, max: "1" },
+      type: [{ code: "string" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      isModifier: false,
+      isSummary: true,
+      mapping: [
+        { identity: "v2", map: "C*E.2 - but note this is not well followed" },
+        { identity: "rim", map: "CV.displayName" },
+        {
+          identity: "orim",
+          map: "fhir:Coding.display rdfs:subPropertyOf dt:CDCoding.displayName",
+        },
+      ],
+    },
+    dataPath: "root.meta.security[0].display",
+    parentDataPath: "root.meta.security[0]",
+    basePath: "root.meta.security.display",
+    baseId: "Coding.display",
+    isPrimitive: true,
+    isRootPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Coding.userSelected",
+      path: "Coding.userSelected",
+      short: "If this coding was chosen directly by the user",
+      definition:
+        "Indicates that this coding was chosen by a user directly - e.g. off a pick list of available items (codes or displays).",
+      comment:
+        "Amongst a set of alternatives, a directly chosen code is the most appropriate starting point for new translations. There is some ambiguity about what exactly 'directly chosen' implies, and trading partner agreement may be needed to clarify the use of this element and its consequences more completely.",
+      requirements:
+        "This has been identified as a clinical safety criterium - that this exact system/code pair was chosen explicitly, rather than inferred by the system based on some rules or language processing.",
+      min: 0,
+      max: "1",
+      base: { path: "Coding.userSelected", min: 0, max: "1" },
+      type: [{ code: "boolean" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      isModifier: false,
+      isSummary: true,
+      mapping: [
+        { identity: "v2", map: "Sometimes implied by being first" },
+        { identity: "rim", map: "CD.codingRationale" },
+        {
+          identity: "orim",
+          map: 'fhir:Coding.userSelected fhir:mapsTo dt:CDCoding.codingRationale. fhir:Coding.userSelected fhir:hasMap fhir:Coding.userSelected.map. fhir:Coding.userSelected.map a fhir:Map;   fhir:target dt:CDCoding.codingRationale. fhir:Coding.userSelected#true a [     fhir:source "true";     fhir:target dt:CDCoding.codingRationale#O   ]',
+        },
+      ],
+    },
+    dataPath: "root.meta.security[0].userSelected",
+    parentDataPath: "root.meta.security[0]",
+    basePath: "root.meta.security.userSelected",
+    baseId: "Coding.userSelected",
+    isPrimitive: true,
+    isRootPrimitive: false,
+    childPaths: [],
+    value: "",
+  },
+  {
+    element: {
+      id: "Meta.tag",
+      path: "Meta.tag",
+      short: "Tags applied to this resource",
+      definition:
+        "Tags applied to this resource. Tags are intended to be used to identify and relate resources to process and workflow, and applications are not required to consider the tags when interpreting the meaning of a resource.",
+      comment:
+        "The tags can be updated without changing the stated version of the resource. The list of tags is a set. Uniqueness is based the system/code, and version and display are ignored.",
+      min: 0,
+      max: "*",
+      base: { path: "Meta.tag", min: 0, max: "*" },
+      type: [{ code: "Coding" }],
+      constraint: [
+        {
+          key: "ele-1",
+          severity: "error",
+          human: "All FHIR elements must have a @value or children",
+          expression: "hasValue() or (children().count() > id.count())",
+          xpath: "@value|f:*|h:div",
+          source: "http://hl7.org/fhir/StructureDefinition/Element",
+        },
+      ],
+      isModifier: false,
+      isSummary: true,
+      binding: {
+        extension: [
+          {
+            url: "http://hl7.org/fhir/build/StructureDefinition/binding-definition",
+            valueString:
+              'Codes that represent various types of tags, commonly workflow-related; e.g. "Needs review by Dr. Jones".',
+          },
+          {
+            url: "http://hl7.org/fhir/StructureDefinition/elementdefinition-bindingName",
+            valueString: "Tags",
+          },
+        ],
+        strength: "example",
+        valueSet: "http://hl7.org/fhir/ValueSet/common-tags",
+      },
+    },
+    dataPath: "root.meta.tag[0]",
+    parentDataPath: "root.meta",
+    basePath: "root.meta.tag",
+    baseId: "Meta.tag",
+    isPrimitive: true,
+    isRootPrimitive: false,
+    childPaths: [],
+    value: "",
+    bindingCodes: [
+      {
+        system: "http://terminology.hl7.org/CodeSystem/common-tags",
+        code: "actionable",
+        display: "Actionable",
+      },
+    ],
   },
   {
     element: {

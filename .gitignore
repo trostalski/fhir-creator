@@ -41,3 +41,6 @@ venv
 
 # local large data
 simplifier
+
+# for local scripts
+localBuild
