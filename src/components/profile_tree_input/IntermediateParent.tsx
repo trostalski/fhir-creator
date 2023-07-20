@@ -59,7 +59,6 @@ const IntermediateParent = (props: IntermediateParentProps) => {
           <PrimitveInput
             node={node}
             pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
-            profileTreeNode={node}
           />
         </div>
       );

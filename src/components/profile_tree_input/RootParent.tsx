@@ -59,7 +59,7 @@ const RootParent = (props: RootParentProps) => {
         <div key={node.dataPath} className="w-full pb-2">
           <PrimitveInput
             node={node}
-            profileTreeNode={node}
+            node={node}
             pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
           />
         </div>

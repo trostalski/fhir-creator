@@ -1,23 +1,18 @@
 import { ProfileTreeNode } from "@/utils/buildTree";
 import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
-import BindingCodeInput from "./CodeableConceptInput";
+import BindingCodeInput from "./BindingCodeInput";
 import { useStore } from "@/stores/useStore";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { Tooltip } from "react-tooltip";
 import { tooltipStyles } from "@/utils/styles";
 import { ConstraintComponent } from "./ConstraintComponent";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
-
-interface PrimitveInputProps {
-  node: ProfileTreeNode;
-  profileTreeNode: ProfileTreeNode;
-  pathsWithInvalidCardinality: string[];
-}
+import CodingInput from "./CodingInput";
 
 interface InputFromTypeProps {
   type: string;
-  profileTreeNode: ProfileTreeNode;
+  node: ProfileTreeNode;
 }
 
 const InputFromType = (props: InputFromTypeProps) => {
@@ -33,29 +28,25 @@ const InputFromType = (props: InputFromTypeProps) => {
   ) => {
     const newProfileTree = [...profileTree!];
     const nodeIndex = newProfileTree!.findIndex(
-      (node: ProfileTreeNode) =>
-        node.dataPath === props.profileTreeNode.dataPath
+      (node: ProfileTreeNode) => node.dataPath === props.node.dataPath
     );
     newProfileTree[nodeIndex].value = e.target.value;
     updateProfileTree(newProfileTree);
   };
 
-  if (
-    props.profileTreeNode.bindingCodes &&
-    props.profileTreeNode.bindingCodes.length > 0
-  ) {
-    return <BindingCodeInput node={props.profileTreeNode} />;
+  if (props.node.bindingCodes && props.node.bindingCodes.length > 0) {
+    return <BindingCodeInput node={props.node} />;
   }
 
   switch (props.type) {
-    //for each primitve type return its own component
+    case "Coding":
+      <CodingInput node={props.node} />;
     case "boolean":
       return (
-        // boolean select with yes and no options
         <select
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           onChange={handleChange}
-          value={props.profileTreeNode.value}
+          value={props.node.value}
         >
           <option value={undefined}>{}</option>
           <option value="true">true</option>
@@ -75,7 +66,7 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="text"
-          value={props.profileTreeNode.value}
+          value={props.node.value}
           onChange={handleChange}
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
@@ -90,7 +81,7 @@ const InputFromType = (props: InputFromTypeProps) => {
           type="number"
           onChange={handleChange}
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          value={props.profileTreeNode.value}
+          value={props.node.value}
         />
       );
     case "dateTime":
@@ -99,7 +90,7 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="datetime-local"
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          value={props.profileTreeNode.value}
+          value={props.node.value}
           onChange={handleChange}
         />
       );
@@ -108,7 +99,7 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="date"
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          value={props.profileTreeNode.value}
+          value={props.node.value}
           onChange={handleChange}
         />
       );
@@ -117,7 +108,7 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="time"
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          value={props.profileTreeNode.value}
+          value={props.node.value}
           onChange={handleChange}
         />
       );
@@ -126,12 +117,17 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="text"
           className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          value={props.profileTreeNode.value}
+          value={props.node.value}
           onChange={handleChange}
         />
       );
   }
 };
+
+interface PrimitveInputProps {
+  node: ProfileTreeNode;
+  pathsWithInvalidCardinality: string[];
+}
 
 const PrimitveInput = (props: PrimitveInputProps) => {
   const { orderedConstraintResults } = useStore((state) => {
@@ -150,7 +146,7 @@ const PrimitveInput = (props: PrimitveInputProps) => {
     <div
       className={`
     ${
-      props.pathsWithInvalidCardinality.includes(props.profileTreeNode.dataPath)
+      props.pathsWithInvalidCardinality.includes(props.node.dataPath)
         ? "border-solid border-2 border-red-600"
         : guiConstraintResolver?.hasConstraintIssue()
         ? "bg-pink-800"
@@ -192,7 +188,7 @@ const PrimitveInput = (props: PrimitveInputProps) => {
       </div>
       <InputFromType
         type={props.node.element.type![0].code}
-        profileTreeNode={props.profileTreeNode}
+        node={props.node}
       />
     </div>
   );
