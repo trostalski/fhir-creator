@@ -22,10 +22,11 @@ const loadProfileTree = async (
   let profileTree: ProfileTree = [];
   if (containsSnapshot(profile) && profile.snapshot) {
     if (isBaseUrl(profile.url)) {
-      const profileTreeModule = await import(
-        `../../fhir/profiletrees/${getResourceTypeFromUrl(profile.url)}`
-      );
-      profileTree = profileTreeModule.default;
+      // const profileTreeModule = await import(
+      //   `../../fhir/profiletrees/${getResourceTypeFromUrl(profile.url)}`
+      // );
+      // profileTree = profileTreeModule.default;
+      profileTree = await buildProfileTree(profile);
     } else {
       profileTree = await buildProfileTree(profile);
     }

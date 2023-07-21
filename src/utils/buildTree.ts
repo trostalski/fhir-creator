@@ -101,8 +101,6 @@ function isPrimitiveType(profile: StructureDefinition) {
   let result = false;
   if (profile.kind === "primitive-type") {
     result = true;
-  } else if (profile.id === "Coding") {
-    result = true;
   }
   return result;
 }

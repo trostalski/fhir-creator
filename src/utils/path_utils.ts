@@ -59,6 +59,9 @@ export function getNthPartOfPath(path: string, n: number) {
 }
 
 export function getDisplayPath(node: ProfileTreeNode) {
+  if (node.element.id === "Coding.userSelected") {
+    return "CodeSystem";
+  }
   let display = getPathSuffix(node.dataPath);
   display = display.replace(display + ".", "").replace(/\[.\]/g, "");
   return display;

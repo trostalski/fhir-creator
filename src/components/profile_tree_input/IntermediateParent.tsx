@@ -27,6 +27,7 @@ import PrimitveInput from "./PrimitveInput";
 import { useStore } from "@/stores/useStore";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
 import { ConstraintComponent } from "./ConstraintComponent";
+import CodingInput from "./CodingInput";
 
 interface IntermediateParentProps {
   node: ProfileTreeNode;
@@ -53,7 +54,14 @@ const IntermediateParent = (props: IntermediateParentProps) => {
     });
 
   const renderNode = (node: ProfileTreeNode) => {
-    if (node.isPrimitive) {
+    if (node.baseId.startsWith("Coding")) {
+      return (
+        <CodingInput
+          node={node}
+          pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
+        />
+      );
+    } else if (node.isPrimitive) {
       return (
         <div key={node.dataPath} className="w-full pb-2">
           <PrimitveInput

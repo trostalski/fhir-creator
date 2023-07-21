@@ -13,7 +13,6 @@ import {
   _codedConcept,
   _codedNumerical,
   _numerical,
-  availablePatSimTypes,
   detaSpaceUrl,
 } from "./constants";
 

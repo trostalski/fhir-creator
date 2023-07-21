@@ -9,6 +9,7 @@ import { tooltipStyles } from "@/utils/styles";
 import { ConstraintComponent } from "./ConstraintComponent";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
 import CodingInput from "./CodingInput";
+import InputWrapper from "./InputWrapper";
 
 interface InputFromTypeProps {
   type: string;
@@ -39,8 +40,6 @@ const InputFromType = (props: InputFromTypeProps) => {
   }
 
   switch (props.type) {
-    case "Coding":
-      <CodingInput node={props.node} />;
     case "boolean":
       return (
         <select
@@ -130,67 +129,18 @@ interface PrimitveInputProps {
 }
 
 const PrimitveInput = (props: PrimitveInputProps) => {
-  const { orderedConstraintResults } = useStore((state) => {
-    return {
-      orderedConstraintResults: state.orderedConstraintResults,
-    };
-  });
-  let guiConstraintResolver;
-  if (orderedConstraintResults) {
-    guiConstraintResolver = new GUIConstraintResolver({
-      node: props.node,
-      orderedConstraintResults,
-    });
-  }
   return (
-    <div
-      className={`
-    ${
-      props.pathsWithInvalidCardinality.includes(props.node.dataPath)
-        ? "border-solid border-2 border-red-600"
-        : guiConstraintResolver?.hasConstraintIssue()
-        ? "bg-pink-800"
-        : ""
-    }
-    `}
+    <InputWrapper
+      title={getDisplayPath(props.node)}
+      helpText={props.node.element.short}
+      node={props.node}
+      pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
     >
-      <div className="flex flex-row w-full gap-2">
-        <div
-          className={`flex flex-row text-xs font-bold ${
-            props.node.element.min! > 0
-              ? "after:text-red-600 after:content-['*']"
-              : ""
-          }`}
-        >
-          <span>{getDisplayPath(props.node)}</span>
-          <span className="text-gray-400 font-normal text-md">
-            {props.node.element.type
-              ? " (" + props.node.element.type[0].code + ")"
-              : null}
-          </span>{" "}
-          <ConstraintComponent resolver={guiConstraintResolver} />
-        </div>
-        {props.node.element.short && (
-          <>
-            <div
-              data-tooltip-id={props.node.dataPath}
-              data-tooltip-content={props.node.element.short}
-            >
-              <AiOutlineQuestionCircle />{" "}
-            </div>
-            <Tooltip
-              id={props.node.dataPath}
-              place="right"
-              style={tooltipStyles}
-            />
-          </>
-        )}
-      </div>
       <InputFromType
         type={props.node.element.type![0].code}
         node={props.node}
       />
-    </div>
+    </InputWrapper>
   );
 };
 
