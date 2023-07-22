@@ -8,8 +8,9 @@ describe('Header', () => {
         const header = screen.getByText(/FHIR Creator/i);
         expect(header).toBeInTheDocument();
     })
-    // it('contains the github link', ()=>{
-    //     render(<Header/>)
-    //     const github = screen.getByRole()
-    // })
+    it('contains the github link and the homepage link', ()=>{
+        render(<Header/>)
+        const links = screen.getAllByRole("link");
+        expect(links.length).toBe(2);
+    })
 })
