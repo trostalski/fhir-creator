@@ -103,12 +103,5 @@ export const fetchSnomedFts = async (searchTerm: string, limit = 10) => {
   const data = (await response.json()) as SnomedFTSResponse;
   console.log("data: ", data);
 
-  const dataOptions = data.coded_terms.map((item) => {
-    return {
-      value: item.term + "," + item.code,
-      label: item.term + " | " + item.code,
-    };
-  });
-
-  return dataOptions;
+  return data;
 };

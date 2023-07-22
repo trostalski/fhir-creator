@@ -32,7 +32,7 @@ const CodingInput = (props: CodingInputProps) => {
 
   console.log(isCustomSystem());
 
-  const loadFTSOptions = async (
+  const loadFTSOptions: any = async (
     input: string,
     callback: (input: OptionType[]) => void
   ) => {
