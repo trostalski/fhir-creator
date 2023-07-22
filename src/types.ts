@@ -1,3 +1,4 @@
+import { ProfileTreeNode } from "./utils/buildTree";
 import { resourceList } from "./utils/constants";
 
 export interface PathItem {
@@ -121,4 +122,21 @@ export interface ConstraintItem {
   severity: string;
   source: string;
   xpath: string;
+}
+
+export interface CodingChildren {
+  systemNode: ProfileTreeNode;
+  codeNode: ProfileTreeNode;
+  displayNode: ProfileTreeNode;
+  versionNode: ProfileTreeNode;
+  userSelectedNode: ProfileTreeNode;
+}
+
+export interface CodedTerm {
+  term: string;
+  code: string;
+}
+
+export interface SnomedFTSResponse {
+  coded_terms: CodedTerm[];
 }

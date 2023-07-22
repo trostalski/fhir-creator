@@ -10,6 +10,7 @@ import { tooltipStyles } from "@/utils/styles";
 import {
   deleteBranch,
   duplicateBranch,
+  getCodingChildren,
   getExpansionBgColour,
   getLastDescendant,
   insertAfterNode,
@@ -54,14 +55,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
     });
 
   const renderNode = (node: ProfileTreeNode) => {
-    if (node.baseId.startsWith("Coding")) {
-      return (
-        <CodingInput
-          node={node}
-          pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
-        />
-      );
-    } else if (node.isPrimitive) {
+    if (node.isPrimitive) {
       return (
         <div key={node.dataPath} className="w-full pb-2">
           <PrimitveInput
@@ -89,6 +83,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
       orderedConstraintResults,
     });
   }
+  console.log("props.node: ", props.node);
 
   return (
     <div
@@ -235,21 +230,32 @@ const IntermediateParent = (props: IntermediateParentProps) => {
           </div>
           {props.expandedNodes.includes(props.node.dataPath) && (
             <div className="flex flex-row flex-wrap gap-1 pl-32 py-2">
-              {props.node.childPaths.map((childPath: string) => {
-                let childNode = profileTree!.find(
-                  (n: ProfileTreeNode) => n.dataPath === childPath
-                );
-                if (props.node.multiTypeType) {
-                  // multiype node with select input for type selection
-                  // the following code filters the child nodes to only show the ones that match the selected type
-                  childNode = childNode?.dataPath
-                    .toLowerCase()
-                    .includes(props.node.multiTypeType.toLowerCase())
-                    ? childNode
-                    : undefined;
-                }
-                return childNode && renderNode(childNode);
-              })}
+              {props.node.element.id?.endsWith("coding") ? (
+                <CodingInput
+                  key={props.node.dataPath}
+                  codingChildren={getCodingChildren(profileTree!, props.node)}
+                  pathsWithInvalidCardinality={
+                    props.pathsWithInvalidCardinality
+                  }
+                />
+              ) : (
+                props.node.childPaths.map((childPath: string) => {
+                  let childNode = profileTree!.find(
+                    (n: ProfileTreeNode) => n.dataPath === childPath
+                  );
+                  if (props.node.multiTypeType) {
+                    // multiype node with select input for type selection
+                    // the following code filters the child nodes to only show the ones that match the selected type
+                    childNode = childNode?.dataPath
+                      .toLowerCase()
+                      .includes(props.node.multiTypeType.toLowerCase())
+                      ? childNode
+                      : undefined;
+                  }
+
+                  return childNode && renderNode(childNode);
+                })
+              )}
             </div>
           )}
         </div>

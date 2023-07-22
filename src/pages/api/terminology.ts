@@ -2,14 +2,14 @@ import { StructureDefinition } from "fhir/r4";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { termWhipUrl } from "@/utils/constants";
 
-async function snomed_fts(searchTerm: string) {
+async function snomed_fts(searchTerm: string, limit: string) {
   const response = await fetch(
-    `${termWhipUrl}/api/v1/snomed_fts?search_term=${searchTerm}`
+    `${termWhipUrl}/snomed/fts?search_term=${searchTerm}&limit=${limit}`
   );
+
   if (!response.ok) {
     throw new Error(response.statusText);
   }
-  console.log("TERMWHIP response: ", response);
   const data = await response.json();
   return data;
 }
@@ -23,8 +23,11 @@ export default async function handler(
   } else if (req.method === "GET") {
     const { method } = req.query;
     if (method === "snomed_fts") {
-      const { searchTerm } = req.query as { searchTerm: string };
-      const fts_result = await snomed_fts(searchTerm);
+      const { search_term: searchTerm, limit } = req.query as {
+        search_term: string;
+        limit: string;
+      };
+      const fts_result = await snomed_fts(searchTerm, limit);
       res.status(200).json(fts_result);
     }
   }
