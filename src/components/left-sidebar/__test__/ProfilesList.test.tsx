@@ -28,7 +28,7 @@ jest.mock('@/stores/useStore', () => ({
     useStore: jest.fn(() => 
     ({
         setProfileTree: mockSetProfileTree,
-        setMode: mockSetMode
+        setMode: mockSetMode,
     }))
 }))
 

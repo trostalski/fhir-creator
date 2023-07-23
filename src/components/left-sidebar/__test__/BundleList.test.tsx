@@ -1,18 +1,29 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import BundleList from '../BundleList';
-import { useStore } from '@/stores/useStore';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { getBaseProfile } from "@/db/utils";
+import { StructureDefinition } from 'fhir/r4';
 
+// module mocks
+const mockSetProfileTree = jest.fn();
+const mockSetMode = jest.fn();
+jest.mock('@/stores/useStore', () => ({
+    useStore: jest.fn(() => 
+    ({
+        setProfileTree: mockSetProfileTree,
+        setMode: mockSetMode,
+    }))
+}))
 
-// what do I want to test here?
-// if no bundles then no bundles is rendered
-// click checkbox
-// if expand is clicked resources are shown
+jest.mock('dexie-react-hooks', () => ({
+    useLiveQuery: jest.fn(),
+}));
 
-// mock:
-// bundles
-// sample bundles for testing purposes
+jest.mock('@/db/utils', () => ({
+    getBaseProfile: jest.fn(),
+}));
+
+// sample data
 const sampleBundles = [
     {
         id: '1',
@@ -51,41 +62,38 @@ const sampleBundles = [
         ]
     }
 ];
-// store: same as Profiles List
-
-const mockSetProfileTree = jest.fn();
-const mockSetMode = jest.fn();
-
-jest.mock('@/stores/useStore', () => ({
-    useStore: jest.fn(() => 
-    ({
-        setProfileTree: mockSetProfileTree,
-        setMode: mockSetMode
-    }))
-}))
-jest.mock('dexie-react-hooks', () => ({
-    useLiveQuery: jest.fn(() => sampleBundles)
-}));
-
-// sample profile
-const sampleProfile = {
+const sampleProfile: StructureDefinition = {
     id: '1',
     url: 'https://example.com/profile/1',
-    name: 'Profile 1'
+    name: 'Profile 1',
+    resourceType: 'StructureDefinition',
+    abstract: false,
+    kind: 'resource',
+    status: 'active',
+    type: 'Condition'
 };
 
+// mock implementations
+useLiveQuery.mockImplementation(() => sampleBundles);
+getBaseProfile.mockResolvedValue(sampleProfile)
 
-// const mockGetBaseProfile = jest.fn(() => sampleProfile);
-// jest.mock('@/db/utils', () => ({
-//     getBaseProfile: mockGetBaseProfile
-// }));
 
-// checked bundles
-
+// Tests
 describe('<BundleList/>', ()=> {
+    
+    beforeEach(() => {
+        jest.clearAllMocks();
+    })
+
+    it('should render the default message if no bundles are provided', () => {
+        const setCheckedBundlesMock = jest.fn();
+        useLiveQuery.mockImplementationOnce(() => [])
+        render(<BundleList checkedBundles={[]} setCheckedBundles={setCheckedBundlesMock} />)
+        expect(screen.getByText('No bundles')).toBeInTheDocument();
+
+    })
     it('should render the bundle list with bundles provided', ()=>{
         const setCheckedBundlesMock = jest.fn();
-
         render(<BundleList checkedBundles={[]} setCheckedBundles={setCheckedBundlesMock} />)
 
         expect(screen.getByText('Bundle/1')).toBeInTheDocument();
@@ -93,7 +101,6 @@ describe('<BundleList/>', ()=> {
     })
     it('should expand and show the resources provided', ()=>{
         const setCheckedBundlesMock = jest.fn();
-
         render(<BundleList checkedBundles={[]} setCheckedBundles={setCheckedBundlesMock} />)
 
         const expandButton = screen.getByTestId("expand-1");
@@ -101,14 +108,12 @@ describe('<BundleList/>', ()=> {
         expect(screen.getByText("Condition/1")).toBeInTheDocument();
         expect(screen.getByText("Medication/2")).toBeInTheDocument();
     })
-//     it('should set the bundle profile tree when clicked', ()=> {
-//         const setCheckedBundlesMock = jest.fn();
-//         render(<BundleList checkedBundles={[]} setCheckedBundles={setCheckedBundlesMock} />)
+    it('should set the bundle profile tree when clicked', async ()=> {
+        const setCheckedBundlesMock = jest.fn();
+        render(<BundleList checkedBundles={[]} setCheckedBundles={setCheckedBundlesMock} />)
 
-//         fireEvent.click(screen.getByText('Bundle/1'));
-//         // expect(mockGetBaseProfile).toHaveBeenCalled();
-//         // expect(mockSetProfileTree).toHaveBeenCalled();
-
-//     })
+        fireEvent.click(screen.getByText('Bundle/1'));
+        await waitFor(() =>expect(mockSetProfileTree).toHaveBeenCalled());
+    })
 })
 
