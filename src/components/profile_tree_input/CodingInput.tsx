@@ -36,7 +36,8 @@ const CodingInput = (props: CodingInputProps) => {
     input: string,
     callback: (input: OptionType[]) => void
   ) => {
-    const data = await fetchSnomedFts(input, 10);
+    input = input.trim().replace(" ", " <-> ");
+    const data = await fetchSnomedFts(input, 20);
     const dataOptions = data.coded_terms.map((item) => {
       return {
         value: item.term + "," + item.code,
