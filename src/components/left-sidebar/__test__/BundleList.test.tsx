@@ -95,7 +95,6 @@ describe('<BundleList/>', ()=> {
     it('should render the bundle list with bundles provided', ()=>{
         const setCheckedBundlesMock = jest.fn();
         render(<BundleList checkedBundles={[]} setCheckedBundles={setCheckedBundlesMock} />)
-
         expect(screen.getByText('Bundle/1')).toBeInTheDocument();
         expect(screen.getByText('Bundle/2')).toBeInTheDocument();
     })
