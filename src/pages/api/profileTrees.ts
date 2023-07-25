@@ -14,20 +14,21 @@ import {
   getResourceTypeFromUrl,
   getUid,
 } from "@/utils/utils";
+import { some } from "lodash";
+import { fetchProfileTree } from "@/utils/api";
 
-function findElementWithValue(profileTree: ProfileTree):ProfileTree {
+function findElementWithValue(profileTree: ProfileTree): ProfileTree {
   const newProfileTree: ProfileTree = [];
   // find all element with value
   profileTree.forEach((node) => {
     if (node.value) {
       newProfileTree.push(node);
     }
-  }
-  );
-  return newProfileTree;   
+  });
+  return newProfileTree;
 }
 
-function createPathItemArray(profileTree:ProfileTree): PathItem[] {
+function createPathItemArray(profileTree: ProfileTree): PathItem[] {
   const pathItemArray: PathItem[] = [];
   profileTree.forEach((node) => {
     if (node.value) {
@@ -39,15 +40,14 @@ function createPathItemArray(profileTree:ProfileTree): PathItem[] {
     }
   });
   return pathItemArray;
-};
-
+}
 
 const loadProfileTree = async (
   profile: StructureDefinition,
   inputData?: PathItem[]
 ) => {
-  if(inputData){
-    console.log('inputData:')
+  if (inputData) {
+    console.log("inputData:");
     console.log(inputData);
   }
   let profileTree: ProfileTree = [];
@@ -56,15 +56,14 @@ const loadProfileTree = async (
   if (containsSnapshot(profile) && profile.snapshot) {
     console.log("getting profileTree here 1");
     if (isBaseUrl(profile.url)) {
-    console.log("getting profileTree here 2");
       const profileTreeModule = await import(
         `../../fhir/profiletrees/${getResourceTypeFromUrl(profile.url)}`
       );
-      console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß");
-      console.log("profileTreeModule:");
       console.log(createPathItemArray(profileTreeModule.default));
-      console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß");
       profileTree = profileTreeModule.default;
+      if (some(profileTree, (node) => node.value)) {
+        profileTree = await buildProfileTree(profile);
+      }
       console.log("profileTree after build");
       console.log(createPathItemArray(profileTree));
       console.log("###########################################");
@@ -101,7 +100,7 @@ const loadProfileTree = async (
     console.log(inputData);
     console.log("profileTree before population:");
     console.log(createPathItemArray(profileTree));
-    console.log("+++++++++++++++++++++++++++++++++++++++++++");  
+    console.log("+++++++++++++++++++++++++++++++++++++++++++");
     profileTree = profileTree.map((n) => {
       const valueDataForNode = inputData.find(
         (e) => e.path === removeNPathPartsFromStart(n.dataPath, 1)
