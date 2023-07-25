@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import ProfilesList from '../ProfilesList';
-import { useStore } from '@/stores/useStore';
 
 // sample profiles for testing purposes
 const sampleProfiles = [

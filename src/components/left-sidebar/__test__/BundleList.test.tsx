@@ -1,9 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import BundleList from '../BundleList';
-import { useStore } from '@/stores/useStore';
-import { useLiveQuery } from 'dexie-react-hooks';
-import { getBaseProfile } from "@/db/utils";
-
 
 // what do I want to test here?
 // if no bundles then no bundles is rendered
@@ -51,8 +47,8 @@ const sampleBundles = [
         ]
     }
 ];
-// store: same as Profiles List
 
+// store: same as Profiles List
 const mockSetProfileTree = jest.fn();
 const mockSetMode = jest.fn();
 
