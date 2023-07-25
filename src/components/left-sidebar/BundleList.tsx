@@ -31,7 +31,7 @@ const BundleList = (props: BundleListProps) => {
             <div className="flex flex-row gap-2 items-center grow overflow-hidden">
               <button
                 className=""
-                data-testid = {"expand-"+bundle.id}
+                data-testid={"expand-" + bundle.id}
                 onClick={() => {
                   if (openBundles.includes(bundle.id!)) {
                     setOpenBundles(
