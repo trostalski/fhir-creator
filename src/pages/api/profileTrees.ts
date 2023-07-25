@@ -15,21 +15,65 @@ import {
   getUid,
 } from "@/utils/utils";
 
+function findElementWithValue(profileTree: ProfileTree):ProfileTree {
+  const newProfileTree: ProfileTree = [];
+  // find all element with value
+  profileTree.forEach((node) => {
+    if (node.value) {
+      newProfileTree.push(node);
+    }
+  }
+  );
+  return newProfileTree;   
+}
+
+function createPathItemArray(profileTree:ProfileTree): PathItem[] {
+  const pathItemArray: PathItem[] = [];
+  profileTree.forEach((node) => {
+    if (node.value) {
+      const pathItem: PathItem = {
+        path: node.dataPath,
+        value: node.value,
+      };
+      pathItemArray.push(pathItem);
+    }
+  });
+  return pathItemArray;
+};
+
+
 const loadProfileTree = async (
   profile: StructureDefinition,
   inputData?: PathItem[]
 ) => {
+  if(inputData){
+    console.log('inputData:')
+    console.log(inputData);
+  }
   let profileTree: ProfileTree = [];
+  console.log("Profile tree after initialization:");
+  console.log(profileTree);
   if (containsSnapshot(profile) && profile.snapshot) {
+    console.log("getting profileTree here 1");
     if (isBaseUrl(profile.url)) {
+    console.log("getting profileTree here 2");
       const profileTreeModule = await import(
         `../../fhir/profiletrees/${getResourceTypeFromUrl(profile.url)}`
       );
+      console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß");
+      console.log("profileTreeModule:");
+      console.log(createPathItemArray(profileTreeModule.default));
+      console.log("ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß");
       profileTree = profileTreeModule.default;
+      console.log("profileTree after build");
+      console.log(createPathItemArray(profileTree));
+      console.log("###########################################");
     } else {
+      console.log("getting profileTree here 3");
       profileTree = await buildProfileTree(profile);
     }
   } else if (containsDifferential(profile) && profile.differential) {
+    console.log("getting profileTree here 4");
     const baseUrl = getBaseUrl(profile);
     if (!baseUrl || !isBaseUrl(baseUrl)) {
       throw new Error("No base url found in profile");
@@ -53,6 +97,11 @@ const loadProfileTree = async (
     return [];
   }
   if (inputData) {
+    console.log("inputData from inside population:");
+    console.log(inputData);
+    console.log("profileTree before population:");
+    console.log(createPathItemArray(profileTree));
+    console.log("+++++++++++++++++++++++++++++++++++++++++++");  
     profileTree = profileTree.map((n) => {
       const valueDataForNode = inputData.find(
         (e) => e.path === removeNPathPartsFromStart(n.dataPath, 1)
@@ -62,6 +111,8 @@ const loadProfileTree = async (
       }
       return n;
     });
+    console.log("profileTree:");
+    console.log(createPathItemArray(profileTree));
   } else {
     profileTree = profileTree = profileTree.map((node) => {
       const path = removeNPathPartsFromStart(node.dataPath, 1);
@@ -75,6 +126,9 @@ const loadProfileTree = async (
       return node;
     });
   }
+  // console.log("profileTree:");
+  // console.log(createPathItemArray(profileTree));
+  console.log("--------------------------------------------------------");
   return profileTree;
 };
 
