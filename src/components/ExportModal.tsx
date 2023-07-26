@@ -26,8 +26,8 @@ const ExportModal = (props: ExportModalProps) => {
   );
   return (
     <ModalWrapper setShow={props.setIsOpen}>
-      <div className="flex flex-col h-96">
-        <div>
+      <div className="flex flex-col h-3/4">
+        <div className="overflow-scroll">
           {!resources && !bundles ? (
             <span>No resources added</span>
           ) : (

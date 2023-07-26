@@ -36,7 +36,14 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
     });
 
   if (!profileTree) {
-    return null;
+    return (
+      <button
+        disabled
+        className="bg-green-600 flex-shrink-0 w-36  text-white py-1 px-4 rounded bg-opacity-50 cursor-not-allowed"
+      >
+        Save Resource
+      </button>
+    );
   }
 
   const addResourceTypeToInputData = (inputData: PathItem[]) => {
@@ -53,7 +60,7 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
     return (
       <button
         disabled={profileTree.length === 0}
-        className={`bg-green-600 w-36  text-white py-1 px-4 rounded  ${
+        className={`bg-green-600 flex-shrink-0 w-36  text-white py-1 px-4 rounded  ${
           profileTree.length === 0
             ? "bg-opacity-50 cursor-not-allowed"
             : "hover:bg-green-800"
