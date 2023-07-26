@@ -10,13 +10,13 @@ interface ModalWrapperProps {
 const ModalWrapper = (props: ModalWrapperProps) => {
   return (
     <div
-      className="fixed flex justify-center items-center top-0 left-0 bg-black bg-opacity-40 w-screen h-screen z-50"
+      className="fixed flex justify-center items-center top-0 left-0 bg-black bg-opacity-40 w-screen h-screen z-50 overflow-scroll"
       onClick={() => {
         props.setShow(false);
       }}
     >
       <div
-        className={`bg-white rounded-xl overflow-visible ${
+        className={`bg-white rounded-xl ${
           props.height ? props.height : "auto"
         } ${
           props.size == "sm"

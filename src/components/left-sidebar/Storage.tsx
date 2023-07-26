@@ -16,7 +16,7 @@ interface RightPartProps {
   closeRightPart: () => void;
 }
 
-const RightPart = (props: RightPartProps) => {
+const Storage = (props: RightPartProps) => {
   const [checkedResources, setCheckedResources] = useState<string[]>([]);
   const [checkedBundles, setCheckedBundles] = useState<string[]>([]);
   const [checkedProfiles, setCheckedProfiles] = useState<string[]>([]);
@@ -247,4 +247,4 @@ const RightPart = (props: RightPartProps) => {
   );
 };
 
-export default RightPart;
+export default Storage;
