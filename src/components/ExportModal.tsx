@@ -1,9 +1,9 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import ModalWrapper from "./ModalWrapper";
 import { db } from "@/db/db";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Bundle, Resource } from "fhir/r4";
-import { checkoutBundle } from "@/db/utils";
+import { checkoutBundle, checkoutResources } from "@/db/utils";
 import { toastError } from "@/toasts";
 
 interface ExportModalProps {
@@ -14,22 +14,19 @@ interface ExportModalProps {
 const ExportModal = (props: ExportModalProps) => {
   const resources = useLiveQuery(() => db.resources.toArray());
   const bundles = useLiveQuery(() => db.bundles.toArray());
+
   const [bundleOuptut, setBundleOutput] = useState<boolean>(true);
-  const [selectedResources, setSelectedResources] = useState<Resource[]>(
-    resources || []
-  );
-  const [selectedBundles, setSelectedBundles] = useState<Bundle[]>(
-    bundles || []
-  );
-  useEffect(() => {
-    if (resources) {
-      setSelectedResources(resources);
-    }
-  }, [resources]);
+  const [bundleIndividually, setBundleIndividually] = useState<boolean>(false);
+
+  const [selectedResources, setSelectedResources] = useState<Resource[]>([]);
+  const [selectedBundles, setSelectedBundles] = useState<Bundle[]>([]);
+  console.log("sel resources: ", selectedResources);
+  console.log("sel bundles: ", selectedBundles);
+
   return (
     <ModalWrapper setShow={props.setIsOpen}>
-      <div className="flex flex-col h-96">
-        <div>
+      <div className="flex flex-col h-3/4">
+        <div className="overflow-scroll">
           {!resources && !bundles ? (
             <span>No resources added</span>
           ) : (
@@ -137,8 +134,11 @@ const ExportModal = (props: ExportModalProps) => {
               if (!selectedResources || selectedResources.length === 0) {
                 toastError("No resources selected");
                 return;
+              } else if (!bundleOuptut) {
+                checkoutResources(selectedResources);
+              } else {
+                checkoutBundle(selectedResources, selectedBundles);
               }
-              checkoutBundle(selectedResources, selectedBundles);
             }}
           >
             Export

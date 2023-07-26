@@ -11,6 +11,10 @@ import { getSliceNames, removeNPathPartsFromStart } from "./path_utils";
 import { getNodeByDataPath } from "./tree_utils";
 import uniq from "lodash/uniq";
 
+export const isProd = () => {
+  return process.env.NEXT_PUBLIC_ENV === "prod";
+}
+
 export const containsDot = (str: string) => {
   return str.includes(".");
 };
