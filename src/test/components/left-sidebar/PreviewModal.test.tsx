@@ -5,7 +5,7 @@ import { toastError } from "@/toasts";
 import { getResourceTypeFromUrl, isBaseUrl } from "@/utils/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import JsonView from "react18-json-view";
-import sampleResource from "@/testResources/sampleResource.json";
+import sampleResource from "@/test/testResources/sampleResource.json";
 // import samplePathRepr from "@/testResources/samplePathRepr.json";
 import Condition from "@/../data/base-profiles/Condition.json"
 import { screen, fireEvent, waitFor, render } from "@testing-library/react";
