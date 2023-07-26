@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Select from "react-select";
 import { Modes, resourceOptions } from "../utils/constants";
 import "react-tooltip/dist/react-tooltip.css";
@@ -10,6 +10,7 @@ import UploadProfileButton from "@/components/buttons/UploadProfileButton";
 import AddResourceButton from "@/components/buttons/AddResourceButton";
 import { useStore } from "@/stores/useStore";
 import Layout from "@/components/Layout";
+import { toastPromise } from "@/toasts";
 
 const Home = () => {
   const [checkoutModalOpen, setCheckoutModalOpen] = useState<boolean>(false);
@@ -28,7 +29,12 @@ const Home = () => {
 
   const handleSelectBaseProfile = async (value: string) => {
     const profile = await getBaseProfile(value);
-    setProfileTree(profile);
+    await toastPromise(
+      setProfileTree(profile),
+      "loading profile tree...",
+      "success!",
+      "failed to load profile tree."
+    );
   };
 
   return (

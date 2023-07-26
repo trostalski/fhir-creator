@@ -1,5 +1,6 @@
 import { addProfile } from "@/db/utils";
 import { useStore } from "@/stores/useStore";
+import { toastPromise } from "@/toasts";
 import React from "react";
 
 export type UploadProfileButtonStyle = "topbar" | "sidebar";
@@ -19,11 +20,16 @@ const UploadProfileButton = (props: UploadProfileButtonProps) => {
       for (let i = 0; i < numFiles; i++) {
         const file = e.target.files[i];
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
           if (e.target) {
             const profile = JSON.parse(e.target.result as string);
-            if (numFiles == 1) {
-              setProfileTree(profile);
+            if (numFiles === 1) {
+              await toastPromise(
+                setProfileTree(profile),
+                "loading profile tree...",
+                "success!",
+                "failed to load profile tree."
+              );
             }
             addProfile(profile);
           }

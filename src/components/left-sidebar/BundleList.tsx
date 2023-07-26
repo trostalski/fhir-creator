@@ -5,7 +5,7 @@ import { convertObjectToPathArray } from "@/utils/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import React from "react";
 import omit from "lodash/omit";
-import { MdExpandLess, MdExpandMore, MdOutlineClear } from "react-icons/md";
+import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { StructureDefinition } from "fhir/r4";
 
 interface BundleListProps {

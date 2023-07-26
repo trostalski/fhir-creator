@@ -6,12 +6,9 @@ import "react-tooltip/dist/react-tooltip.css";
 import RootPrimitive from "./RootPrimitive";
 import RootParent from "./RootParent";
 import { useStore } from "@/stores/useStore";
-import { useValResultStore } from "@/stores/useStore";
 import { defaultProfileTreeNode } from "@/utils/constants";
-import { has } from "lodash";
 import { ConstraintComponent } from "./ConstraintComponent";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
-import { stat } from "fs";
 
 interface ProfileTreeComponentProps {
   pathsWithInvalidCardinality: string[];
@@ -28,7 +25,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     profile,
     checkedBranchIds,
     orderedConstraintResults,
-    updateProfileTree,
     setOrderedConstraintResults,
     clearProfileTree,
   } = useStore((state) => {
