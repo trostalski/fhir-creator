@@ -24,7 +24,7 @@ const ModalWrapper = (props: ModalWrapperProps) => {
             : props.size == "md"
             ? "h-auto w-1/3"
             : "h-auto w-1/2"
-        } mb-16 p-4`}
+        } mb-8 p-4`}
         onClick={(e) => {
           e.stopPropagation();
         }}

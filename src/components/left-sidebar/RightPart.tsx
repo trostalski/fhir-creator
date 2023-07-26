@@ -7,7 +7,8 @@ import ExportModal from "../ExportModal";
 import BundleList from "./BundleList";
 import ExpandAccordinoToggle from "../shared/ExpandAccordinoToggle";
 import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "@/db/db";
+import { ResourcePathRepr, db } from "@/db/db";
+import { PreviewModal } from "./PreviewModal";
 import { deleteResources, deleteBundles, deleteProfiles } from "@/db/utils";
 
 interface RightPartProps {
@@ -26,6 +27,11 @@ const RightPart = (props: RightPartProps) => {
 
   const [showImportMenu, setShowImportMenu] = useState<boolean>(false);
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
+  const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false);
+  const [previewPathRepr, setPreviewPathRepr] = useState<ResourcePathRepr>({
+    id: "",
+    data: [],
+  });
 
   const profiles = useLiveQuery(() => db.profiles.toArray());
   const resources = useLiveQuery(() => db.resources.toArray());
@@ -140,8 +146,10 @@ const RightPart = (props: RightPartProps) => {
               </div>
               {showResources ? (
                 <ResourceList
-                  setCheckedResources={setCheckedResources}
                   checkedResources={checkedResources}
+                  setCheckedResources={setCheckedResources}
+                  setPreviewOpen={setShowPreviewModal}
+                  setPreviewPathRepr={setPreviewPathRepr}
                 />
               ) : null}
               <hr />
@@ -219,6 +227,13 @@ const RightPart = (props: RightPartProps) => {
               <ExportModal
                 isOpen={showExportModal}
                 setIsOpen={setShowExportModal}
+              />
+            )}
+            {showPreviewModal && (
+              <PreviewModal
+                pathRepr={previewPathRepr}
+                isOpen={showPreviewModal}
+                setIsOpen={setShowPreviewModal}
               />
             )}
           </div>

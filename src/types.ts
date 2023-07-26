@@ -1,4 +1,4 @@
-import { availablePatSimTypes, resourceList } from "./utils/constants";
+import { resourceList } from "./utils/constants";
 
 export interface PathItem {
   path: string;

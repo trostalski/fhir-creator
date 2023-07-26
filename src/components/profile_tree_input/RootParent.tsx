@@ -1,5 +1,5 @@
 import { usePathCounter } from "@/hooks/usePathCounter";
-import { ProfileTree, ProfileTreeNode } from "@/utils/buildTree";
+import { ProfileTreeNode } from "@/utils/buildTree";
 import {
   extractIndex,
   getDisplayPath,
@@ -25,7 +25,7 @@ import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { Tooltip } from "react-tooltip";
 import PrimitveInput from "./PrimitveInput";
 import IntermediateParent from "./IntermediateParent";
-import { useStore, useValResultStore } from "@/stores/useStore";
+import { useStore } from "@/stores/useStore";
 import { ConstraintComponent } from "./ConstraintComponent";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
 

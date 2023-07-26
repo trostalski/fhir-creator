@@ -25,7 +25,6 @@ import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { Tooltip } from "react-tooltip";
 import PrimitveInput from "./PrimitveInput";
 import { useStore } from "@/stores/useStore";
-import { useValResultStore } from "@/stores/useStore";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
 import { ConstraintComponent } from "./ConstraintComponent";
 
