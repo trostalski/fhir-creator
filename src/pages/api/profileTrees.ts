@@ -14,6 +14,7 @@ import {
   getResourceTypeFromUrl,
   getUid,
 } from "@/utils/utils";
+import { some } from "lodash";
 
 const loadProfileTree = async (
   profile: StructureDefinition,
@@ -26,6 +27,9 @@ const loadProfileTree = async (
         `../../fhir/profiletrees/${getResourceTypeFromUrl(profile.url)}`
       );
       profileTree = profileTreeModule.default;
+      if (some(profileTree, (node) => node.value)) {
+        profileTree = await buildProfileTree(profile);
+      }
     } else {
       profileTree = await buildProfileTree(profile);
     }
