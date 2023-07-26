@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import BundleList from "../BundleList";
+import BundleList from "@/components/left-sidebar/BundleList";
 import { useLiveQuery } from "dexie-react-hooks";
 import { getBaseProfile } from "@/db/utils";
 import { StructureDefinition } from "fhir/r4";

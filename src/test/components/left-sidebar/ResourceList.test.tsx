@@ -35,12 +35,8 @@ jest.mock('@/db/db', () => {
 import React, { use } from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import ResourceList  from "../ResourceList"; // adjust the import path accordingly
-import { db } from '@/db/db';
-import { toastError } from '@/toasts';
+import ResourceList  from '@/components/left-sidebar/ResourceList';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { getBaseProfile } from "@/db/utils";
-import { getResourceTypeFromUrl, isBaseUrl } from "@/utils/utils";
 
 
 // Mocking required dependencies

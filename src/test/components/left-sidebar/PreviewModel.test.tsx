@@ -1,11 +1,10 @@
-import { PreviewModal } from "../PreviewModal";
+import { PreviewModal } from "@/components/left-sidebar/PreviewModal";
 import { ResourcePathRepr, db } from "@/db/db";
 import { getBaseProfile } from "@/db/utils";
 import { toastError } from "@/toasts";
 import { getResourceTypeFromUrl, isBaseUrl } from "@/utils/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import JsonView from "react18-json-view";
-import { useStore } from "@/stores/useStore";
 import sampleResource from "@/testResources/sampleResource.json";
 // import samplePathRepr from "@/testResources/samplePathRepr.json";
 import Condition from "@/../data/base-profiles/Condition.json"
