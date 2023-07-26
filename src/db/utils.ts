@@ -192,7 +192,8 @@ export async function checkoutBundle(
   //convert to a url
   const url = URL.createObjectURL(blob);
   //download the file
-  const filename = "export.json";
+  const filename = "Bundle_" + new Date().toISOString() + ".json";
+
   fetch(url)
     .then((response) => response.blob())
     .then((blob) => {
@@ -205,15 +206,13 @@ export async function checkoutBundle(
     });
 }
 
-export async function checkoutResources(
-  resources?: Resource[]
-) {
-  if(resources){
-    resources.forEach(resource => {
+export async function checkoutResources(resources?: Resource[]) {
+  if (resources) {
+    resources.forEach((resource) => {
       const resource_string = JSON.stringify(resource, null, 2);
-      const blob = new Blob([resource_string], {type:"application/json"});
+      const blob = new Blob([resource_string], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-      const filename = "export.json";
+      const filename = resource.resourceType + "_" + resource.id + ".json";
       fetch(url)
         .then((response) => response.blob())
         .then((blob) => {
@@ -223,7 +222,7 @@ export async function checkoutResources(
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-        })
-    })
+        });
+    });
   }
 }

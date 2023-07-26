@@ -1,7 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import ModalWrapper from "./ModalWrapper";
 import { db } from "@/db/db";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Bundle, Resource } from "fhir/r4";
 import { checkoutBundle, checkoutResources } from "@/db/utils";
 import { toastError } from "@/toasts";
@@ -18,12 +18,11 @@ const ExportModal = (props: ExportModalProps) => {
   const [bundleOuptut, setBundleOutput] = useState<boolean>(true);
   const [bundleIndividually, setBundleIndividually] = useState<boolean>(false);
 
-  const [selectedResources, setSelectedResources] = useState<Resource[]>(
-    resources || []
-  );
-  const [selectedBundles, setSelectedBundles] = useState<Bundle[]>(
-    bundles || []
-  );
+  const [selectedResources, setSelectedResources] = useState<Resource[]>([]);
+  const [selectedBundles, setSelectedBundles] = useState<Bundle[]>([]);
+  console.log("sel resources: ", selectedResources);
+  console.log("sel bundles: ", selectedBundles);
+
   return (
     <ModalWrapper setShow={props.setIsOpen}>
       <div className="flex flex-col h-3/4">
@@ -119,26 +118,6 @@ const ExportModal = (props: ExportModalProps) => {
             <label htmlFor="bundle-output-checkbox" className="text-sm">
               Bundle Output
             </label>
-            {bundleOuptut && (
-              <>
-                {/* might need some rework for bundle checkout */}
-                <input
-                  id="bundle-individually-checkbox"
-                  type="checkbox"
-                  checked={bundleIndividually}
-                  className="border-gray-300 border-2 cursor-pointer"
-                  onChange={(e) => {
-                    setBundleIndividually(e.target.checked);
-                  }}
-                />
-                <label
-                  htmlFor="bundle-individually-checkbox"
-                  className="text-sm"
-                >
-                  Bundle Individually
-                </label>
-              </>
-            )}
           </div>
           <span className="flex-grow" />
           <button
@@ -157,10 +136,6 @@ const ExportModal = (props: ExportModalProps) => {
                 return;
               } else if (!bundleOuptut) {
                 checkoutResources(selectedResources);
-              } else if (bundleIndividually) {
-                selectedResources.forEach((resource) => {
-                  checkoutBundle([resource], selectedBundles);
-                });
               } else {
                 checkoutBundle(selectedResources, selectedBundles);
               }

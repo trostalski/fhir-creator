@@ -1,9 +1,6 @@
 import React, { useRef } from "react";
 import useResize from "@/hooks/useResize";
-import { BsPersonAdd } from "react-icons/bs";
-import { TbTransform } from "react-icons/tb";
 import Storage from "./Storage";
-import { useRouter } from "next/router";
 import { TbDatabase } from "react-icons/tb";
 
 interface LeftSidebarProps {
@@ -26,13 +23,13 @@ const LeftSidebar = (props: LeftSidebarProps) => {
   const closeRightPart = () => {
     setResizeWidth(minWidth);
   };
-  const router = useRouter();
-  console.log("resizeWidth", resizeWidth);
 
   return (
     <div
       ref={resizeRef}
-      className={`flex flex-row relative h-full flex-shrink-0 ${!rightPartIsOpen && "mr-12"}`}
+      className={`flex flex-row relative h-full flex-shrink-0 ${
+        !rightPartIsOpen && "mr-12"
+      }`}
       style={{
         flexBasis: `${resizeWidth}px`,
         minWidth: `${minWidth}px`,
