@@ -3,6 +3,8 @@ import InputWrapper from "./InputWrapper";
 import { CodingChildren, OptionType } from "@/types";
 import AsyncSelect from "react-select/async";
 import { fetchSnomedFts } from "@/utils/api";
+import { useStore } from "@/stores/useStore";
+import { ProfileTreeNode } from "@/utils/buildTree";
 
 interface CodingInputProps {
   pathsWithInvalidCardinality: string[];
@@ -11,8 +13,16 @@ interface CodingInputProps {
 
 const CodingInput = (props: CodingInputProps) => {
   const [systemName, setSystemName] = React.useState<string>("Custom");
-  const [systemValue, setSystemValue] = React.useState<string>("");
-  const [ftsInput, setFtsInput] = React.useState<string>("");
+  const { profileTree, updateProfileTree } = useStore((state) => {
+    return {
+      setProfileTree: state.setProfileTree,
+      profileTree: state.activeProfileTree,
+      updateProfileTree: state.updateProfileTree,
+    };
+  });
+  const [selectDisplayValue, setSelectDisplayValue] =
+    React.useState<OptionType | null>(null);
+
   const { systemNode, codeNode, displayNode, userSelectedNode, versionNode } =
     props.codingChildren;
   const availableSystems = [
@@ -26,17 +36,17 @@ const CodingInput = (props: CodingInputProps) => {
     },
   ];
 
-  const [conceptOptions, setConceptOptions] = React.useState<OptionType[]>([]);
-
   const isCustomSystem = () => systemName === "Custom";
-
-  console.log(isCustomSystem());
 
   const loadFTSOptions: any = async (
     input: string,
     callback: (input: OptionType[]) => void
   ) => {
     input = input.trim().replace(" ", " <-> ");
+    if (input.length < 3) {
+      callback([]);
+      return;
+    }
     const data = await fetchSnomedFts(input, 20);
     const dataOptions = data.coded_terms.map((item) => {
       return {
@@ -46,6 +56,15 @@ const CodingInput = (props: CodingInputProps) => {
     });
 
     callback(dataOptions);
+  };
+
+  const handleChange = (value: string, nodeIn: ProfileTreeNode) => {
+    const newProfileTree = [...profileTree!];
+    const nodeIndex = newProfileTree!.findIndex(
+      (node: ProfileTreeNode) => node.dataPath === nodeIn.dataPath
+    );
+    newProfileTree[nodeIndex].value = value;
+    updateProfileTree(newProfileTree);
   };
 
   return (
@@ -61,13 +80,12 @@ const CodingInput = (props: CodingInputProps) => {
           <select
             className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             onChange={(e) => {
-              console.log(e.target.value);
-              setSystemName(e.target.value);
-              setSystemValue(
-                availableSystems.find(
-                  (system) => system.name === e.target.value
-                )?.value || ""
-              );
+              const systemName = e.target.value;
+              setSystemName(systemName);
+              const system = availableSystems.find(
+                (system) => system.name === systemName
+              )?.value;
+              handleChange(system!, systemNode);
             }}
           >
             {availableSystems.map((system) => (
@@ -86,10 +104,10 @@ const CodingInput = (props: CodingInputProps) => {
         >
           <input
             type="select"
-            value={systemValue}
+            value={systemNode.value}
             className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             onChange={(e) => {
-              setSystemValue(e.target.value);
+              handleChange(e.target.value, systemNode);
             }}
           ></input>
         </InputWrapper>
@@ -105,21 +123,31 @@ const CodingInput = (props: CodingInputProps) => {
           {isCustomSystem() ? (
             <input
               type="text"
+              value={displayNode.value}
               className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
-                codeNode.value = e.target.value;
+                setSelectDisplayValue(null);
+                handleChange(e.target.value, displayNode);
               }}
             />
           ) : (
             <div className="flex flex-row w-full gap-4">
               <AsyncSelect
-                placeholder="Start Typing"
-                value={ftsInput}
+                placeholder="Start Typing 3 Characters..."
+                value={{
+                  label: selectDisplayValue || "Start Typing 3 Characters...",
+                  value: null,
+                }}
                 className="grow"
                 isClearable={true}
-                // options={conceptOptions}
                 loadOptions={loadFTSOptions}
-                onChange={async (e: any) => {}}
+                onChange={async (e: any) => {
+                  // string has form "display | code"
+                  const [display, code] = e.value.split(",");
+                  setSelectDisplayValue(e.value.replace(",", " | "));
+                  handleChange(display, displayNode);
+                  handleChange(code, codeNode);
+                }}
               />
               <button className="text-blue-600 p-2">Search</button>
             </div>
@@ -138,7 +166,8 @@ const CodingInput = (props: CodingInputProps) => {
               value={codeNode.value}
               className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={(e) => {
-                codeNode.value = e.target.value;
+                handleChange(e.target.value, codeNode);
+                setSelectDisplayValue(null);
               }}
             />
           </InputWrapper>

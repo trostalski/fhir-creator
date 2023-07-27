@@ -84,8 +84,6 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     });
   }
 
-  console.log("rendering profile tree: ", profileTree);
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col mb-4 gap-2">

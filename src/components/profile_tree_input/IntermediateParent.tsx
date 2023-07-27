@@ -83,7 +83,6 @@ const IntermediateParent = (props: IntermediateParentProps) => {
       orderedConstraintResults,
     });
   }
-  console.log("props.node: ", props.node);
 
   return (
     <div

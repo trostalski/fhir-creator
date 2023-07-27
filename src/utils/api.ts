@@ -101,7 +101,6 @@ export const fetchSnomedFts = async (searchTerm: string, limit = 10) => {
     throw new Error(response.statusText);
   }
   const data = (await response.json()) as SnomedFTSResponse;
-  console.log("data: ", data);
 
   return data;
 };

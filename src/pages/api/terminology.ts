@@ -1,10 +1,10 @@
+import { awsUrl } from "@/utils/constants";
 import { StructureDefinition } from "fhir/r4";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { termWhipUrl } from "@/utils/constants";
 
 async function snomed_fts(searchTerm: string, limit: string) {
   const response = await fetch(
-    `${termWhipUrl}/snomed/fts?search_term=${searchTerm}&limit=${limit}`
+    `${awsUrl}/api/v1/snomed/fts?search_term=${searchTerm}&limit=${limit}`
   );
 
   if (!response.ok) {

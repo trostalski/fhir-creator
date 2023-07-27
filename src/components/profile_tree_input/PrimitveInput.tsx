@@ -3,12 +3,6 @@ import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
 import BindingCodeInput from "./BindingCodeInput";
 import { useStore } from "@/stores/useStore";
-import { AiOutlineQuestionCircle } from "react-icons/ai";
-import { Tooltip } from "react-tooltip";
-import { tooltipStyles } from "@/utils/styles";
-import { ConstraintComponent } from "./ConstraintComponent";
-import { GUIConstraintResolver } from "@/utils/constraint_utils";
-import CodingInput from "./CodingInput";
 import InputWrapper from "./InputWrapper";
 
 interface InputFromTypeProps {

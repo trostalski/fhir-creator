@@ -16,12 +16,9 @@ const ExportModal = (props: ExportModalProps) => {
   const bundles = useLiveQuery(() => db.bundles.toArray());
 
   const [bundleOuptut, setBundleOutput] = useState<boolean>(true);
-  const [bundleIndividually, setBundleIndividually] = useState<boolean>(false);
 
   const [selectedResources, setSelectedResources] = useState<Resource[]>([]);
   const [selectedBundles, setSelectedBundles] = useState<Bundle[]>([]);
-  console.log("sel resources: ", selectedResources);
-  console.log("sel bundles: ", selectedBundles);
 
   return (
     <ModalWrapper setShow={props.setIsOpen}>
