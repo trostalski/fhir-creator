@@ -1,16 +1,21 @@
 # Currently working on
 - Terminology support for codes
-- constraint checking
-- enable upload of bundles
-
-# Short-Term
-- enable editing of uploaded bundles
+- Bundle Editor
+  - enable editing of uploaded bundles
   - enable editing of resources contained in the bundle
   - remove resources present in the bundle
   - add resources based on profiles
+- Export Modal -> Individual and Bundle Export
+
+# Short-Term
+- Remove far Left Tab-Bar
+- Include csv export in export modal
+- Turn app into single view (-> editor) app
+- create bundle overview environment
 
 # Mid-Term
 - Analysis Overview for Resources
+- Resource csv import
 - Analysis Overview for Bundles -> Whipple
 - bundle high level overview
   - oriented on whipple
@@ -18,7 +23,6 @@
     - editing from timeline
   - charts (pie, bar)
   - statistics
-- create bundle overview environment
   - display all resources contained
   - removal of resources (allow)
   - addition of resources (allow)
@@ -34,5 +38,4 @@
   - should enable editing of resources of multiple bundles
   - bundle affiliation color coded
 - profile-to-profile mapping
-- resource csv import
 - Create Data through generation

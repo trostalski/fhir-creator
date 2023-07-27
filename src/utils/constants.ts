@@ -7,16 +7,21 @@ import {
   OptionType,
 } from "../types";
 
-export const detaSpaceUrl = "https://fhircreator-1-q8790833.deta.app";
-export const termWhipUrl = "http://localhost:8000/api/v1";
+export const detaSpaceUrl = isProd()
+  ? process.env.NEXT_PUBLIC_DETA_URL
+  : process.env.NEXT_PUBLIC_DETA_URL;
 
-// export const detaSpaceUrl = "http://localhost:8000";
+export const awsUrl = isProd()
+  ? process.env.NEXT_PUBLIC_AWS_URL
+  : "http://localhost:8000";
+
 import { ElementDefinitionConstraint } from "fhir/r4";
 import { ProfileTreeNode } from "./buildTree";
 import {
   ConstraintEvaluationResult,
   OrderedConstraintResults,
 } from "./constraint_utils";
+import { isProd } from "./utils";
 
 export const rootName = "root";
 export const pathDelimiter = ".";

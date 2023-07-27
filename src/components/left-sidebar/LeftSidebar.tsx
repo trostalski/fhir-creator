@@ -1,9 +1,6 @@
 import React, { useRef } from "react";
 import useResize from "@/hooks/useResize";
-import { BsPersonAdd } from "react-icons/bs";
-import { TbTransform } from "react-icons/tb";
-import RightPart from "./RightPart";
-import { useRouter } from "next/router";
+import Storage from "./Storage";
 import { TbDatabase } from "react-icons/tb";
 
 interface LeftSidebarProps {
@@ -12,25 +9,27 @@ interface LeftSidebarProps {
 
 const LeftSidebar = (props: LeftSidebarProps) => {
   const resizeRef = useRef<HTMLInputElement>(null);
-  const minWidth = 75;
-  const maxWidth = 350;
+  const minWidth = 10;
+  const startWidth = 300;
+  const maxWidth = 600;
 
   const { resizeWidth, startResizing, setResizeWidth } = useResize(
     resizeRef,
-    minWidth
+    startWidth
   );
+
   const rightPartIsOpen = !resizeWidth ? false : resizeWidth > minWidth + 5;
 
   const closeRightPart = () => {
     setResizeWidth(minWidth);
   };
-  const router = useRouter();
-  const routerPath = router.route;
 
   return (
     <div
       ref={resizeRef}
-      className={"flex flex-row relative h-full flex-shrink-0 w-80"}
+      className={`flex flex-row relative h-full flex-shrink-0 ${
+        !rightPartIsOpen && "mr-12"
+      }`}
       style={{
         flexBasis: `${resizeWidth}px`,
         minWidth: `${minWidth}px`,
@@ -38,42 +37,19 @@ const LeftSidebar = (props: LeftSidebarProps) => {
       }}
       onMouseDown={(e) => e.preventDefault()}
     >
-      <div className="flex flex-col h-full w-16 pt-20 gap-4 items-center flex-shrink-0 shadow-md">
-        <button
-          className={`p-4 rounded-md hover:bg-slate-300 ${
-            routerPath === "/" ? "bg-slate-300" : ""
-          }`}
-          title="Resource Editor"
-          onClick={() => {
-            router.push("/");
-          }}
-        >
-          <BsPersonAdd size={20} className="hover:scale-105" />
-        </button>
-        <button
-          className={`p-4 rounded-md hover:bg-slate-300 ${
-            routerPath.includes("analyzer") ? "bg-slate-300" : ""
-          }`}
-          title="Data Transformer"
-          onClick={() => {
-            router.push("/analyzer");
-          }}
-        >
-          <TbTransform size={20} className="hover:scale-105" />
-        </button>
-      </div>
-      <RightPart
-        startResizing={startResizing}
-        closeRightPart={closeRightPart}
-      />
-      {rightPartIsOpen ? null : (
+      {rightPartIsOpen ? (
+        <Storage
+          startResizing={startResizing}
+          closeRightPart={closeRightPart}
+        />
+      ) : (
         <div
-          className="absolute content-center bg-white left-12 top-4 p-3 rounded-md cursor-pointer shadow-xl hover:border-gray-400 hover:border-2"
+          className="absolute content-center bg-white left-2 top-4 p-3 rounded-md cursor-pointer shadow-xl hover:border-gray-400 hover:border-2"
           onClick={() => {
-            setResizeWidth(maxWidth);
+            setResizeWidth(startWidth);
           }}
         >
-          <TbDatabase size={24} className="m-auto" />
+          <TbDatabase size={24} />
         </div>
       )}
     </div>
