@@ -77,7 +77,6 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
             <div key={props.node.dataPath} className="flex-grow py-2  pl-40">
               <PrimitveInput
                 node={props.node}
-                profileTreeNode={props.node}
                 pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
               />
             </div>

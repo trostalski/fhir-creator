@@ -4,16 +4,15 @@ import {
   CodedNumericalReqParam,
   CsvExportReqParam,
   NumericalReqParam,
-  PatSimFeature,
   PathItem,
+  SnomedFTSResponse,
 } from "@/types";
-import { Bundle, Resource, StructureDefinition } from "fhir/r4";
+import { Resource, StructureDefinition } from "fhir/r4";
 import {
   _categoricalString,
   _codedConcept,
   _codedNumerical,
   _numerical,
-  availablePatSimTypes,
   detaSpaceUrl,
 } from "./constants";
 
@@ -91,4 +90,17 @@ export const fetchCsvExportData = async (
     throw new Error("Error fetching patient similarity results.");
   }
   return csvExportResponse;
+};
+
+export const fetchSnomedFts = async (searchTerm: string, limit = 10) => {
+  const response = await fetch(
+    `api/terminology/?method=snomed_fts&search_term=${searchTerm}&limit=${limit}`
+  );
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+  const data = (await response.json()) as SnomedFTSResponse;
+
+  return data;
 };

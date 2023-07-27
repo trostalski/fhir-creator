@@ -1,7 +1,49 @@
+import { CodingChildren } from "@/types";
 import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { rootName } from "./constants";
 import { getPathLength } from "./path_utils";
 import { getBranchId } from "./utils";
+
+export function getAllChidlren(
+  profileTree: ProfileTree,
+  node: ProfileTreeNode
+) {
+  const children = [];
+  for (const childPath of node.childPaths) {
+    const childNode = getNodeByDataPath(profileTree, childPath);
+    if (childNode) {
+      children.push(childNode);
+    }
+  }
+  return children;
+}
+
+export function getCodingChildren(
+  profileTree: ProfileTree,
+  node: ProfileTreeNode
+): CodingChildren {
+  const children = getAllChidlren(profileTree, node);
+  const systemNode = children.find((child) =>
+    child.baseId.endsWith(".system")
+  )!;
+  const codeNode = children.find((child) => child.baseId.endsWith(".code"))!;
+  const displayNode = children.find((child) =>
+    child.baseId.endsWith(".display")
+  )!;
+  const versionNode = children.find((child) =>
+    child.baseId.endsWith(".version")
+  )!;
+  const userSelectedNode = children.find((child) =>
+    child.baseId.endsWith(".userSelected")
+  )!;
+  return {
+    systemNode,
+    codeNode,
+    displayNode,
+    versionNode,
+    userSelectedNode,
+  };
+}
 
 export function extractDirectChildrenPaths(
   parentPath: string,

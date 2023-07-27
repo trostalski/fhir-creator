@@ -13,7 +13,7 @@ export const detaSpaceUrl = isProd()
 
 export const awsUrl = isProd()
   ? process.env.NEXT_PUBLIC_AWS_URL
-  : process.env.NEXT_PUBLIC_AWS_URL;
+  : "http://localhost:8000";
 
 import { ElementDefinitionConstraint } from "fhir/r4";
 import { ProfileTreeNode } from "./buildTree";
