@@ -28,6 +28,11 @@ export const pathDelimiter = ".";
 export const multiTypeString = "[x]";
 export const sliceDelimiter = ":";
 
+export const snomedTerminologySystem = "http://snomed.info/sct";
+export const loincTerminologySystem = "http://loinc.org";
+export const icd10TerminologySystem = "http://hl7.org/fhir/sid/icd-10";
+export const icd9TerminologySystem = "http://hl7.org/fhir/sid/icd-9-cm";
+
 export enum Modes {
   EDIT = "edit",
   CREATE = "create",
