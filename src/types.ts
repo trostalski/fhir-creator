@@ -137,6 +137,6 @@ export interface CodedTerm {
   code: string;
 }
 
-export interface SnomedFTSResponse {
+export interface FTSResponse {
   coded_terms: CodedTerm[];
 }
