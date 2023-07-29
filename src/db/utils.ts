@@ -1,7 +1,7 @@
 import { PathItem } from "@/types";
 import { toastError } from "@/toasts";
 import { Bundle, Resource, StructureDefinition } from "fhir/r4";
-import { db } from "./db";
+import { BundleFolder, db } from "./db";
 import { FhirResource } from "fhir/r4";
 
 export const getBaseProfile = async (resourceType: string) => {
@@ -119,6 +119,78 @@ export async function addBundle(bundle: Bundle) {
     return false;
   }
 }
+
+// export async function parseBundle(bundle: Bundle){
+//   // create bundle folder
+//   const bundleId = bundle.id!;
+//   const resources = bundle.entry?.map((resource) =>resource.resource);
+//   const resourceIds = resources?.map((resource) =>{
+//     return resource?.id;
+//   })
+//   // to safe some space i don't want to store the entries twice
+//   const metaInfo: Bundle = {...bundle, entry :[]};
+//   // add resources
+//   const bundleFolder:  BundleFolder = {
+//     id: bundleId,
+//     resourceIds: resourceIds,
+//     meta: metaInfo,
+//   }
+//   await db.transaction('rw', db.bundleFolders, db.resources, async ()=>{
+//     await db.bundleFolders.add(bundleFolder);
+//     if(resources){
+//       await db.resources.bulkAdd(resources);
+//     }
+//   }).then(()=>{
+//     return true;
+//   }).catch((error)=>{
+//     console.log(error);
+//     console.log(`Failed to parse bundle`);
+//     return false;
+//   })
+// }
+
+export async function parseBundle(bundle: Bundle) {
+  // Ensure bundle has an ID
+  if (!bundle.id) {
+    console.error('Bundle does not have an ID.');
+    return false;
+  }
+
+  // Extract resources and their IDs from the bundle
+  const resources = (bundle.entry || []).map(entry => entry.resource).filter((resource)=>{
+    if(resource?.id){
+      return true;
+    } else {
+      return false;
+    }
+  }) as FhirResource[];
+  const resourceIds = resources.map(resource => resource.id);
+
+  // Create the metaInfo object
+  const metaInfo: Bundle = { ...bundle, entry: [] };
+
+  // Create the bundleFolder object
+  const bundleFolder: BundleFolder = {
+    id: bundle.id,
+    resourceIds: resourceIds,
+    meta: metaInfo,
+  };
+
+  // Transaction for adding to database
+  try {
+    await db.transaction('rw', db.bundleFolders, db.resources, async () => {
+      await db.bundleFolders.add(bundleFolder);
+      if(resources.length > 0){
+        await db.resources.bulkAdd(resources);
+      }
+    });
+    return true;
+  } catch (error) {
+    console.error('Failed to parse bundle:', error);
+    return false;
+  }
+}
+
 
 export async function deleteBundles(ids: string[]) {
   try {

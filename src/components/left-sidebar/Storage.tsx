@@ -10,6 +10,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { ResourcePathRepr, db } from "@/db/db";
 import { PreviewModal } from "./PreviewModal";
 import { deleteResources, deleteBundles, deleteProfiles } from "@/db/utils";
+import StorageList from "./StorageList";
 
 interface RightPartProps {
   startResizing: () => void;
@@ -116,6 +117,8 @@ const Storage = (props: RightPartProps) => {
                 </button>
               </div>
             </div>
+      <StorageList/>
+
             <div className="flex flex-col gap-2">
               <div className="flex flex-row w-full items-center">
                 <div
