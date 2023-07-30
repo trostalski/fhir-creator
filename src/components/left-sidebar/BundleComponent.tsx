@@ -11,7 +11,6 @@ interface BundleComponentProps {
 
 const BundleComponent = (props: BundleComponentProps) => {
   const [showResources, setShowResources] = useState<boolean>(true);
-
   const BundleId = props.bundleFolder.id;
   const resourceIds = props.bundleFolder.resourceIds;
   return (

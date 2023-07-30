@@ -1,11 +1,12 @@
 import BundleComponent from "./BundleComponent";
 import testBundle from "@/../data/temp/export(30).json";
-import { FolderReference, db } from "@/db/db";
+import { BundleFolder, FolderReference, db } from "@/db/db";
 import { parseBundle } from "@/db/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Bundle } from "fhir/r4";
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { v4 as uuidv4 } from "uuid";
 const DynamicContextMenu = dynamic(
   () => import("./contextMenu/ContextMenuComponent"),
   {
@@ -77,14 +78,14 @@ const StorageList = () => {
                 (id) => !pooledRef.resourceIds.includes(id)
               ),
             });
-          await db.resources.bulkDelete(resourceIds);
         }
+        await db.resources.bulkDelete(resourceIds);
         // delete folder refs
         await db.folderReferences.bulkDelete(
           folderReferences.map((ref) => ref.resourceId)
         );
       }
-    );
+    ).catch((err) => console.log(err));
   };
 
   const deleteFolder = async (checkedFolders: string[]) => {
@@ -114,7 +115,7 @@ const StorageList = () => {
         // delete folders
         await db.bundleFolders.bulkDelete(folderIds);
       }
-    );
+    ).catch((err) => console.log(err));
   };
 
   const handleDelete = async () => {
@@ -131,7 +132,7 @@ const StorageList = () => {
           await deleteFolder(checkedFolders);
         }
       }
-    );
+    ).catch((err) => console.log(err));
   };
 
   const handleEdit = () => {
@@ -140,6 +141,22 @@ const StorageList = () => {
 
   const handleExport = () => {
     console.log("export");
+  };
+
+  const handleAddFolder = async () => {
+    const folder: BundleFolder = {
+      id: uuidv4(),
+      resourceIds: [],
+      meta: {
+        resourceType: "Bundle",
+        type: "collection",
+        timestamp: new Date().toISOString(),
+        meta: {
+          lastUpdated: new Date().toISOString(),
+        },
+      },
+    };
+    await db.bundleFolders.add(folder);
   };
 
   return (
@@ -151,6 +168,14 @@ const StorageList = () => {
         console.log(points);
       }}
     >
+      <button
+        className="border-2 rounded"
+        onClick={() => {
+          handleAddFolder();
+        }}
+      >
+        Add Folder
+      </button>
       <button
         className="border-2 rounded"
         onClick={() => {

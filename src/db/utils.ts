@@ -3,6 +3,7 @@ import { toastError } from "@/toasts";
 import { Bundle, Resource, StructureDefinition } from "fhir/r4";
 import { BundleFolder, db } from "./db";
 import { FhirResource } from "fhir/r4";
+import { v4 as uuidv4 } from "uuid";
 
 export const getBaseProfile = async (resourceType: string) => {
   try {
@@ -123,8 +124,7 @@ export async function addBundle(bundle: Bundle) {
 export async function parseBundle(bundle: Bundle) {
   // Ensure bundle has an ID
   if (!bundle.id) {
-    console.error('Bundle does not have an ID.');
-    return false;
+    bundle.id = uuidv4();
   }
 
   // Extract resources and their IDs from the bundle
@@ -159,7 +159,7 @@ export async function parseBundle(bundle: Bundle) {
       await db.bundleFolders.add(bundleFolder);
       if(resources.length > 0){
         await db.resources.bulkAdd(resources);
-        // await db.folderReferences.bulkAdd(folderReferences);
+        await db.folderReferences.bulkAdd(folderReferences);
       }
     });
     return true;
