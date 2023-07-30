@@ -11,8 +11,8 @@ export interface ResourcePathRepr {
 export interface BundleFolder {
   id: string;
   name?: string;
-  meta?: Bundle;
-  resourceIds?: string[]
+  meta: Bundle;
+  resourceIds: string[]
 }
 export interface FolderReference{
   resourceId: string,
@@ -41,6 +41,13 @@ export class MySubClassedDexie extends Dexie {
       profiles: "url",
       bundles: "id",
     });
+    this.on("populate", ()=>{
+      db.bundleFolders.add({
+        id:"Pool",
+        name: "Pool",
+        resourceIds: []
+      })
+    })
   }
 }
 

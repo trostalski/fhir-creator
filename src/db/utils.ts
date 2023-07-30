@@ -4,6 +4,7 @@ import { Bundle, Resource, StructureDefinition } from "fhir/r4";
 import { BundleFolder, db } from "./db";
 import { FhirResource } from "fhir/r4";
 import { v4 as uuidv4 } from "uuid";
+import { error } from "console";
 
 export const getBaseProfile = async (resourceType: string) => {
   try {
@@ -46,13 +47,13 @@ export async function deleteResources(ids: string[]) {
 }
 
 export async function addResource(resource: Resource) {
-  try {
-    await db.resources.add(resource);
-    return true;
-  } catch (error) {
-    console.log(`Failed to add resource`);
-    return false;
-  }
+  db.transaction('rw', db.resources, db.folderReferences, db.bundleFolders, async ()=>{
+    db.resources.add(resource);
+    db.bundleFolders.where("id").equals("Pool").modify((folder)=>{
+      folder.resourceIds = [...folder.resourceIds, resource.id!]
+    })
+    db.folderReferences.add({folderId:"Pool", resourceId:resource.id!})
+  }).catch(error => console.log(error));
 }
 
 export async function addProfile(profile: StructureDefinition) {
