@@ -14,23 +14,26 @@ export interface BundleFolder {
   meta?: Bundle;
   resourceIds?: string[]
 }
+export interface FolderReference{
+  resourceId: string,
+  folderId: string
+}
 
 export class MySubClassedDexie extends Dexie {
-  // 'friends' is added by dexie when declaring the stores()
-  // We just tell the typing system this is the case
   resources!: Table<Resource>;
   bundles!: Table<Bundle>;
   resourcesPathRepr!: Table<ResourcePathRepr>;
   profiles!: Table<StructureDefinition>;
-  bundleFolders!: Table<BundleFolder>
+  bundleFolders!: Table<BundleFolder>;
+  folderReferences!: Table<FolderReference>
 
   constructor() {
     super("fhir-creator-db");
+    this.version(3).stores({
+      folderReferences: "resourceId, folderId"
+    })
     this.version(2).stores({
-      // resources: "id",
-      // resourcesPathRepr : "id",
-      // profiles: "url",
-      bundleFolders: "id, name"
+      bundleFolders: "id, name",
     })
     this.version(1).stores({
       resources: "id", // Primary key and indexed props

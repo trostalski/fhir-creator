@@ -120,35 +120,6 @@ export async function addBundle(bundle: Bundle) {
   }
 }
 
-// export async function parseBundle(bundle: Bundle){
-//   // create bundle folder
-//   const bundleId = bundle.id!;
-//   const resources = bundle.entry?.map((resource) =>resource.resource);
-//   const resourceIds = resources?.map((resource) =>{
-//     return resource?.id;
-//   })
-//   // to safe some space i don't want to store the entries twice
-//   const metaInfo: Bundle = {...bundle, entry :[]};
-//   // add resources
-//   const bundleFolder:  BundleFolder = {
-//     id: bundleId,
-//     resourceIds: resourceIds,
-//     meta: metaInfo,
-//   }
-//   await db.transaction('rw', db.bundleFolders, db.resources, async ()=>{
-//     await db.bundleFolders.add(bundleFolder);
-//     if(resources){
-//       await db.resources.bulkAdd(resources);
-//     }
-//   }).then(()=>{
-//     return true;
-//   }).catch((error)=>{
-//     console.log(error);
-//     console.log(`Failed to parse bundle`);
-//     return false;
-//   })
-// }
-
 export async function parseBundle(bundle: Bundle) {
   // Ensure bundle has an ID
   if (!bundle.id) {
@@ -164,7 +135,7 @@ export async function parseBundle(bundle: Bundle) {
       return false;
     }
   }) as FhirResource[];
-  const resourceIds = resources.map(resource => resource.id);
+  const resourceIds = resources.map(resource => resource.id!);
 
   // Create the metaInfo object
   const metaInfo: Bundle = { ...bundle, entry: [] };
@@ -175,13 +146,20 @@ export async function parseBundle(bundle: Bundle) {
     resourceIds: resourceIds,
     meta: metaInfo,
   };
+  const folderReferences = resourceIds.map((resourceId)=>(
+    {
+      resourceId: resourceId,
+      folderId: bundle.id!
+    }
+  ))
 
   // Transaction for adding to database
   try {
-    await db.transaction('rw', db.bundleFolders, db.resources, async () => {
+    await db.transaction('rw', db.bundleFolders, db.resources, db.folderReferences, async () => {
       await db.bundleFolders.add(bundleFolder);
       if(resources.length > 0){
         await db.resources.bulkAdd(resources);
+        // await db.folderReferences.bulkAdd(folderReferences);
       }
     });
     return true;
