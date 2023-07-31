@@ -3,10 +3,11 @@ import testBundle from "@/../data/temp/export(30).json";
 import { BundleFolder, FolderReference, db } from "@/db/db";
 import { parseBundle } from "@/db/utils";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Bundle } from "fhir/r4";
+import { Bundle, Resource } from "fhir/r4";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { v4 as uuidv4 } from "uuid";
+import { error } from "console";
 const DynamicContextMenu = dynamic(
   () => import("./contextMenu/ContextMenuComponent"),
   {
@@ -26,8 +27,30 @@ const StorageList = () => {
   });
   const testBundled = JSON.parse(JSON.stringify(testBundle)) as Bundle;
 
-  const handleCopy = () => {
-    console.log("copy");
+  const handleCopy = async () => {
+    // first handle marked resources
+    // pool resource by folder they belong to to reduce database accesses
+    if (checkedResources.length > 0) {
+      let folderReferences: FolderReference[] = (
+        await db.folderReferences.bulkGet(checkedResources)
+      ).filter(
+        (ref) => typeof ref !== "undefined" // bulkGet would return undefined if no corresponding element
+      ) as unknown as FolderReference[];
+      if (folderReferences) {
+        const pooledRefs = poolRefs(folderReferences);
+        db.transaction(
+          "rw",
+          db.folderReferences,
+          db.bundleFolders,
+          db.resources,
+          async () => {
+            for (const ref of pooledRefs) {
+              await copyResources(ref.resourceIds, ref.folderId);
+            }
+          }
+        ).catch((error) => console.log(error));
+      }
+    }
   };
 
   const handleCut = () => {
@@ -55,6 +78,48 @@ const StorageList = () => {
     }
     return pooledRefs;
   };
+
+  const copyResources = async (
+    resourceIds: string[],
+    destinationFolder: string
+  ) => {
+    db.transaction(
+      "rw",
+      db.resources,
+      db.folderReferences,
+      db.bundleFolders,
+      async () => {
+        const resources = (await db.resources.bulkGet(resourceIds)).filter(
+          (resource) => typeof resource !== "undefined"
+        ) as unknown as Resource[];
+        // create copied instance
+        const copiedResources: Resource[] = [];
+        for (const resource of resources) {
+          let copiedResource = JSON.parse(JSON.stringify(resource)) as Resource;
+          copiedResource = { ...copiedResource, id: uuidv4() }; // ensure no duplicate resources
+          copiedResources.push(copiedResource);
+        }
+        // push to database and attach to folder
+        await db.resources.bulkAdd(copiedResources);
+        await db.bundleFolders
+          .where("id")
+          .equals(destinationFolder)
+          .modify((folder) => {
+            folder.resourceIds = [
+              ...folder.resourceIds,
+              ...copiedResources.map((resource) => resource.id!),
+            ];
+          });
+        await db.folderReferences.bulkAdd(
+          copiedResources.map((resource) => {
+            return { folderId: destinationFolder, resourceId: resource.id! };
+          })
+        );
+      }
+    ).catch((error) => console.log(error));
+  };
+
+  const copyFolders = async (checkedFolders: string[]) => {};
 
   const deleteResources = async (resourceIds: string[]) => {
     db.transaction(

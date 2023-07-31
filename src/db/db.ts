@@ -45,7 +45,15 @@ export class MySubClassedDexie extends Dexie {
       db.bundleFolders.add({
         id:"Pool",
         name: "Pool",
-        resourceIds: []
+        resourceIds: [],
+        meta: {
+          resourceType: "Bundle",
+          type: "collection",
+          timestamp: new Date().toISOString(),
+          meta: {
+            lastUpdated: new Date().toISOString(),
+            }
+          }
       })
     })
   }
