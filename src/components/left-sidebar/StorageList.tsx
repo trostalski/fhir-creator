@@ -51,6 +51,10 @@ const StorageList = () => {
         ).catch((error) => console.log(error));
       }
     }
+    // handle folders
+    if (checkedFolders.length > 0) {
+      await copyFolders(checkedFolders);
+    }
   };
 
   const handleCut = () => {
@@ -119,7 +123,35 @@ const StorageList = () => {
     ).catch((error) => console.log(error));
   };
 
-  const copyFolders = async (checkedFolders: string[]) => {};
+  const copyFolders = async (checkedFolders: string[]) => {
+    db.transaction(
+      "rw",
+      db.folderReferences,
+      db.resources,
+      db.bundleFolders,
+      async () => {
+        const originalFolders = (
+          await db.bundleFolders.bulkGet(checkedFolders)
+        ).filter(
+          (folder) => typeof folder !== "undefined"
+        ) as unknown as BundleFolder[];
+        if (originalFolders.length !== checkedFolders.length) {
+          throw new Error("A Folder could not be copied");
+          // for the following steps it is important that copied and original folders share the same index
+        }
+        let copiedFolders = originalFolders.map((folder) => {
+          return { ...folder, id: uuidv4(), resourceIds: [] }; // reset resource IDs in order to reuse copyResources
+        }) as unknown as BundleFolder[];
+        for (let i = 0; i < copiedFolders.length; i++) {
+          await db.bundleFolders.bulkAdd(copiedFolders);
+          await copyResources(
+            originalFolders[i].resourceIds,
+            copiedFolders[i].id
+          );
+        }
+      }
+    ).catch((error) => console.log(error));
+  };
 
   const deleteResources = async (resourceIds: string[]) => {
     db.transaction(
