@@ -16,15 +16,13 @@ interface RootPrimitiveProps {
 }
 
 const RootPrimitive = (props: RootPrimitiveProps) => {
-  const { setProfileTree, orderedConstraintResults, profileTree } = useStore(
-    (state) => {
-      return {
-        setProfileTree: state.setProfileTree,
-        orderedConstraintResults: state.orderedConstraintResults,
-        profileTree: state.activeProfileTree,
-      };
-    }
-  );
+  const { orderedConstraintResults, profileTree } = useStore((state) => {
+    return {
+      setProfileTree: state.setProfileTree,
+      orderedConstraintResults: state.orderedConstraintResults,
+      profileTree: state.activeProfileTree,
+    };
+  });
   let guiConstraintResolver;
   if (orderedConstraintResults) {
     guiConstraintResolver = new GUIConstraintResolver({
