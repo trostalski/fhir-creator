@@ -60,7 +60,6 @@ const StorageList = () => {
 
   const handleCut = () => {
     setResToBeCut(checkedResources);
-    console.log(resToBeCut);
   };
 
   interface pooledRef {
@@ -244,7 +243,6 @@ const StorageList = () => {
 
   const handlePaste = async () => {
     if (resToBeCut.length > 0 && checkedFolders.length === 1) {
-      console.log("pasting");
       await pasteResources(resToBeCut, checkedFolders[0]);
       setResToBeCut([]);
     }
@@ -260,12 +258,30 @@ const StorageList = () => {
       db.bundleFolders,
       db.resources,
       async () => {
+        const refs = await db.folderReferences
+          .where("resourceId")
+          .anyOf(resourcestoBeCut)
+          .toArray();
+        const pooledRefs = poolRefs(refs);
+        // change original folder
+        for (const ref of pooledRefs) {
+          await db.bundleFolders
+            .where("id")
+            .equals(ref.folderId)
+            .modify((folder) => {
+              folder.resourceIds = folder.resourceIds.filter((resId) => {
+                return !ref.resourceIds.includes(resId);
+              });
+            });
+        }
+        // update references
         await db.folderReferences
           .where("resourceId")
           .anyOf(resourcestoBeCut)
           .modify((ref) => {
             ref.folderId = destinationFolder;
           });
+        // add to new folder
         await db.bundleFolders
           .where("id")
           .equals(destinationFolder)
