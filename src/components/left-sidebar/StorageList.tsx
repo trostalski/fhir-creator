@@ -4,7 +4,7 @@ import { BundleFolder, FolderReference, db } from "@/db/db";
 import { parseBundle } from "@/db/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Bundle, Resource } from "fhir/r4";
-import { useState } from "react";
+import { use, useState } from "react";
 import dynamic from "next/dynamic";
 import { v4 as uuidv4 } from "uuid";
 import { error } from "console";
@@ -17,6 +17,7 @@ const DynamicContextMenu = dynamic(
 const StorageList = () => {
   const [checkedResources, setCheckedResources] = useState<string[]>([]);
   const [checkedFolders, setCheckedFolders] = useState<string[]>([]);
+  const [resToBeCut, setResToBeCut] = useState<string[]>([]);
 
   const [points, setPoints] = useState({
     x: 99,
@@ -58,7 +59,8 @@ const StorageList = () => {
   };
 
   const handleCut = () => {
-    console.log("cut");
+    setResToBeCut(checkedResources);
+    console.log(resToBeCut);
   };
 
   interface pooledRef {
@@ -141,7 +143,7 @@ const StorageList = () => {
         }
         let copiedFolders = originalFolders.map((folder) => {
           return { ...folder, id: uuidv4(), resourceIds: [] }; // reset resource IDs in order to reuse copyResources
-        }) as unknown as BundleFolder[];
+        });
         for (let i = 0; i < copiedFolders.length; i++) {
           await db.bundleFolders.bulkAdd(copiedFolders);
           await copyResources(
@@ -240,6 +242,40 @@ const StorageList = () => {
     console.log("export");
   };
 
+  const handlePaste = async () => {
+    if (resToBeCut.length > 0 && checkedFolders.length === 1) {
+      console.log("pasting");
+      await pasteResources(resToBeCut, checkedFolders[0]);
+      setResToBeCut([]);
+    }
+  };
+
+  const pasteResources = async (
+    resourcestoBeCut: string[],
+    destinationFolder: string
+  ) => {
+    db.transaction(
+      "rw",
+      db.folderReferences,
+      db.bundleFolders,
+      db.resources,
+      async () => {
+        await db.folderReferences
+          .where("resourceId")
+          .anyOf(resourcestoBeCut)
+          .modify((ref) => {
+            ref.folderId = destinationFolder;
+          });
+        await db.bundleFolders
+          .where("id")
+          .equals(destinationFolder)
+          .modify((folder) => {
+            folder.resourceIds = [...folder.resourceIds, ...resourcestoBeCut];
+          });
+      }
+    );
+  };
+
   const handleAddFolder = async () => {
     const folder: BundleFolder = {
       id: uuidv4(),
@@ -312,6 +348,14 @@ const StorageList = () => {
         }}
       >
         Export
+      </button>
+      <button
+        className="border-2 rounded"
+        onClick={() => {
+          handlePaste();
+        }}
+      >
+        Paste
       </button>
       <button
         onClick={async () => {
