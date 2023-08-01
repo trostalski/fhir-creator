@@ -44,15 +44,16 @@ const IntermediateParent = (props: IntermediateParentProps) => {
     evaluateRenderAddButton,
   } = usePathCounter();
 
-  const { profileTree, profile, updateProfileTree, orderedConstraintResults } =
-    useStore((state) => {
+  const { profileTree, updateProfileTree, orderedConstraintResults } = useStore(
+    (state) => {
       return {
         profileTree: state.activeProfileTree,
         profile: state.activeProfile,
         updateProfileTree: state.updateProfileTree,
         orderedConstraintResults: state.orderedConstraintResults,
       };
-    });
+    }
+  );
 
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {

@@ -49,7 +49,9 @@ const BindingCodeInput = (props: BindingCodeInputProps) => {
         options={getOptions()}
         onChange={(e) => handleOnChange(e)}
         value={getOptions().find(
-          (option) => option.value === props.node.value.code
+          (option) =>
+            option.value === props.node.value.code ||
+            option.value === props.node.value
         )}
       />
     </>

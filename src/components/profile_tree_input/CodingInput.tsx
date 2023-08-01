@@ -18,7 +18,6 @@ interface CodingInputProps {
 }
 
 const CodingInput = (props: CodingInputProps) => {
-  const [systemName, setSystemName] = React.useState<string>("Custom");
   const { profileTree, updateProfileTree } = useStore((state) => {
     return {
       setProfileTree: state.setProfileTree,
@@ -26,11 +25,17 @@ const CodingInput = (props: CodingInputProps) => {
       updateProfileTree: state.updateProfileTree,
     };
   });
-  const [selectDisplayValue, setSelectDisplayValue] =
-    React.useState<OptionType | null>(null);
-
   const { systemNode, codeNode, displayNode, userSelectedNode, versionNode } =
     props.codingChildren;
+  const [selectDisplayValue, setSelectDisplayValue] =
+    React.useState<OptionType | null>(
+      displayNode.value && codeNode.value
+        ? {
+            value: displayNode.value + "," + codeNode.value,
+            label: displayNode.value + " | " + codeNode.value,
+          }
+        : null
+    );
   const availableSystems = [
     {
       name: "Custom",
@@ -44,6 +49,12 @@ const CodingInput = (props: CodingInputProps) => {
     { name: "ICD-10", value: icd10TerminologySystem },
     { name: "ICD-9", value: icd9TerminologySystem },
   ];
+
+  const [systemName, setSystemName] = React.useState<string>(
+    systemNode.value
+      ? availableSystems.find((item) => item.value === systemNode.value)!.name
+      : "Custom"
+  );
 
   const isCustomSystem = () => systemName === "Custom";
 
@@ -89,6 +100,7 @@ const CodingInput = (props: CodingInputProps) => {
         >
           <select
             className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            value={systemName}
             onChange={(e) => {
               const systemName = e.target.value;
               setSystemName(systemName);
@@ -96,6 +108,8 @@ const CodingInput = (props: CodingInputProps) => {
                 (system) => system.name === systemName
               )?.value;
               handleChange(system!, systemNode);
+              handleChange("", codeNode);
+              handleChange("", displayNode);
             }}
           >
             {availableSystems.map((system) => (
@@ -145,14 +159,13 @@ const CodingInput = (props: CodingInputProps) => {
               <AsyncSelect
                 placeholder="Start Typing 3 Characters..."
                 value={{
-                  label: selectDisplayValue || "Start Typing...",
+                  label: displayNode.value || "Start Typing...",
                   value: null,
                 }}
                 className="grow"
                 isClearable={true}
                 loadOptions={loadFTSOptions}
                 onChange={async (e: any) => {
-                  // string has form "display | code"
                   const [display, code] = e.value.split(",");
                   setSelectDisplayValue(e.value.replace(",", " | "));
                   handleChange(display, displayNode);
