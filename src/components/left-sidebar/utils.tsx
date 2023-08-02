@@ -39,6 +39,7 @@ export const handleCopy = async (
     ) as unknown as FolderReference[];
     if (folderReferences) {
       const pooledRefs = poolRefs(folderReferences);
+      console.log(folderReferences);
       db.transaction(
         "rw",
         db.folderReferences,

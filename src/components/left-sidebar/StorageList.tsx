@@ -35,86 +35,88 @@ const StorageList = () => {
   const testBundled = JSON.parse(JSON.stringify(testBundle)) as Bundle;
 
   return (
-    <div
-      onContextMenu={(e) => {
-        e.preventDefault();
-        console.log("context menu clicked");
-        setPoints({ x: e.pageX, y: e.pageY });
-        console.log(points);
-      }}
-    >
-      <button
-        className="border-2 rounded"
-        onClick={() => {
-          handleAddFolder();
+    <>
+      <div
+        onContextMenu={(e) => {
+          e.preventDefault();
+          console.log("context menu clicked");
+          setPoints({ x: e.pageX, y: e.pageY });
+          console.log(points);
         }}
       >
-        Add Folder
-      </button>
-      <button
-        className="border-2 rounded"
-        onClick={() => {
-          handleCopy(checkedResources, checkedFolders);
-        }}
-      >
-        Copy
-      </button>
-      <button
-        className="border-2 rounded"
-        onClick={() => {
-          handleDelete(checkedResources, checkedFolders);
-        }}
-      >
-        Delete
-      </button>
-      <button
-        className="border-2 rounded"
-        onClick={() => {
-          handleCut(checkedResources, setResToBeCut);
-        }}
-      >
-        Cut
-      </button>
-      <button
-        className="border-2 rounded"
-        onClick={() => {
-          handleEdit();
-        }}
-      >
-        Edit
-      </button>
-      <button
-        className="border-2 rounded"
-        onClick={() => {
-          handleExport();
-        }}
-      >
-        Export
-      </button>
-      <button
-        className="border-2 rounded"
-        onClick={() => {
-          handlePaste(resToBeCut, checkedFolders, setResToBeCut);
-        }}
-      >
-        Paste
-      </button>
-      {bundleFolderz &&
-        bundleFolderz.map((bundle) => {
-          return (
-            <div key={bundle.id}>
-              <BundleComponent
-                bundleFolder={bundle}
-                checkedFolders={checkedFolders}
-                checkedResources={checkedResources}
-                setCheckedFolders={setCheckedFolders}
-                setCheckedResources={setCheckedResources}
-              />
-            </div>
-          );
-        })}
-      <DynamicContextMenu x={points.x} y={points.y} />
-    </div>
+        <button
+          className="border-2 rounded"
+          onClick={() => {
+            handleAddFolder();
+          }}
+        >
+          Add Folder
+        </button>
+        <button
+          className="border-2 rounded"
+          onClick={async () => {
+            await handleCopy(checkedResources, checkedFolders);
+          }}
+        >
+          Copy
+        </button>
+        <button
+          className="border-2 rounded"
+          onClick={() => {
+            handleDelete(checkedResources, checkedFolders);
+          }}
+        >
+          Delete
+        </button>
+        <button
+          className="border-2 rounded"
+          onClick={() => {
+            handleCut(checkedResources, setResToBeCut);
+          }}
+        >
+          Cut
+        </button>
+        <button
+          className="border-2 rounded"
+          onClick={() => {
+            handleEdit();
+          }}
+        >
+          Edit
+        </button>
+        <button
+          className="border-2 rounded"
+          onClick={() => {
+            handleExport();
+          }}
+        >
+          Export
+        </button>
+        <button
+          className="border-2 rounded"
+          onClick={() => {
+            handlePaste(resToBeCut, checkedFolders, setResToBeCut);
+          }}
+        >
+          Paste
+        </button>
+        {bundleFolderz &&
+          bundleFolderz.map((bundle) => {
+            return (
+              <div key={bundle.id}>
+                <BundleComponent
+                  bundleFolder={bundle}
+                  checkedFolders={checkedFolders}
+                  checkedResources={checkedResources}
+                  setCheckedFolders={setCheckedFolders}
+                  setCheckedResources={setCheckedResources}
+                />
+              </div>
+            );
+          })}
+        <DynamicContextMenu x={points.x} y={points.y} />
+      </div>
+    </>
   );
 };
 
