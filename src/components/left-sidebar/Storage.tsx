@@ -65,7 +65,7 @@ const Storage = (props: RightPartProps) => {
           <div
             className="h-full flex flex-col gap-4 overflow-y-scroll overflow-x-hidden p-2"
             onClick={(e) => {
-              e.stopPropagation();
+              // e.stopPropagation(); not sure if this is neccessary? It breaks contextMenu disappearance
               setShowImportMenu(false);
             }}
           >

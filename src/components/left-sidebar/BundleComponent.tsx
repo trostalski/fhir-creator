@@ -39,11 +39,35 @@ const BundleComponent = (props: BundleComponentProps) => {
     }
   };
 
+  const handleRightClick = (
+    e: React.MouseEvent,
+    itemId: string,
+    selectedArr: string[],
+    setterFunc: (data: string[]) => void,
+    otherSetterFunc: (data: string[]) => void
+  ) => {
+    otherSetterFunc([]);
+    setterFunc(
+      selectedArr.includes(itemId) && selectedArr.length > 1
+        ? selectedArr
+        : [itemId]
+    );
+  };
+
   return (
     <div>
       <button
         onClick={(e) =>
           handleClickResFol(
+            e,
+            BundleId,
+            props.checkedFolders,
+            props.setCheckedFolders,
+            props.setCheckedResources
+          )
+        }
+        onContextMenu={(e) =>
+          handleRightClick(
             e,
             BundleId,
             props.checkedFolders,
@@ -71,6 +95,15 @@ const BundleComponent = (props: BundleComponentProps) => {
                 }`}
                 onClick={(e) =>
                   handleClickResFol(
+                    e,
+                    resourceId,
+                    props.checkedResources,
+                    props.setCheckedResources,
+                    props.setCheckedFolders
+                  )
+                }
+                onContextMenu={(e) =>
+                  handleRightClick(
                     e,
                     resourceId,
                     props.checkedResources,

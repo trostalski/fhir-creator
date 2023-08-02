@@ -1,18 +1,21 @@
-import { createPortal } from "react-dom";
 interface ContextMenuProps {
   x: number;
   y: number;
 }
 
 export default function ContextMenuComponent(props: ContextMenuProps) {
-  // return createPortal(
   return (
     <div
-      className={`rounded border-2 absolute left-[${props.x}px] top-[${props.y}px] z-50`}
+      className={`flex flex-col align-start rounded text-white border-2-black fixed bg-slate-500`}
+      style={{ left: props.x, top: props.y }}
     >
-      Context menu
+      <button>Copy</button>
+      <button>Cut</button>
+      <button>Paste</button>
+      <button>Edit</button>
+      <button>Rename</button>
+      <button>Export</button>
+      <button>Delete</button>
     </div>
-    // document.body
-    // );
   );
 }

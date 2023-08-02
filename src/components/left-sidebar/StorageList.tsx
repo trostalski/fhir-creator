@@ -1,9 +1,7 @@
 import BundleComponent from "./BundleComponent";
-import testBundle from "@/../data/temp/export(30).json";
 import { db } from "@/db/db";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Bundle } from "fhir/r4";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import {
   handleAddFolder,
@@ -14,16 +12,14 @@ import {
   handleExport,
   handlePaste,
 } from "./utils";
-const DynamicContextMenu = dynamic(
-  () => import("./contextMenu/ContextMenuComponent"),
-  {
-    ssr: false,
-  }
-);
+import ContextMenuComponent from "./contextMenu/ContextMenuComponent";
+
 const StorageList = () => {
   const [checkedResources, setCheckedResources] = useState<string[]>([]);
   const [checkedFolders, setCheckedFolders] = useState<string[]>([]);
   const [resToBeCut, setResToBeCut] = useState<string[]>([]);
+  const [resToCopy, setResToCopy] = useState<string[]>([]);
+  const [showContext, setShowContext] = useState<boolean>(false);
 
   const [points, setPoints] = useState({
     x: 99,
@@ -32,16 +28,22 @@ const StorageList = () => {
   const bundleFolderz = useLiveQuery(() => {
     return db.bundleFolders.toArray();
   });
-  const testBundled = JSON.parse(JSON.stringify(testBundle)) as Bundle;
+
+  useEffect(() => {
+    const handleClick = () => {
+      setShowContext(false);
+    };
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  });
 
   return (
     <>
       <div
         onContextMenu={(e) => {
           e.preventDefault();
-          console.log("context menu clicked");
+          setShowContext(true);
           setPoints({ x: e.pageX, y: e.pageY });
-          console.log(points);
         }}
       >
         <button
@@ -114,7 +116,7 @@ const StorageList = () => {
               </div>
             );
           })}
-        <DynamicContextMenu x={points.x} y={points.y} />
+        {showContext && <ContextMenuComponent x={points.x} y={points.y} />}
       </div>
     </>
   );
