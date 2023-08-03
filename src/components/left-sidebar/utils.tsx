@@ -1,4 +1,4 @@
-import { BundleFolder, FolderReference, ResourcePathRepr, db } from "@/db/db";
+import { BundleFolder, FolderReference, db } from "@/db/db";
 import { Resource } from "fhir/r4";
 import { v4 as uuidv4 } from "uuid";
 
@@ -99,17 +99,10 @@ export const copyResources = async (
     db.resources,
     db.folderReferences,
     db.bundleFolders,
-    db.resourcesPathRepr,
     async () => {
       const resources = (await db.resources.bulkGet(resourceIds)).filter(
         (resource) => typeof resource !== "undefined"
       ) as unknown as Resource[];
-      // const pathReprs = (
-      //   await db.resourcesPathRepr.bulkGet(resourceIds)
-      // ).filter((pathRep) => {
-      //   return typeof pathRep !== "undefined";
-      // }) as unknown as ResourcePathRepr[];
-      // create copied instance
       const copiedResources: Resource[] = [];
       for (const resource of resources) {
         let copiedResource = JSON.parse(JSON.stringify(resource)) as Resource;
@@ -190,7 +183,6 @@ const deleteResources = async (resourceIds: string[]) => {
           });
       }
       await db.resources.bulkDelete(resourceIds);
-      await db.resourcesPathRepr.bulkDelete(resourceIds);
       // delete folder refs
       await db.folderReferences.bulkDelete(
         folderReferences.map((ref) => ref.resourceId)

@@ -1,4 +1,4 @@
-import { executeCopy, executeCut, handleDelete } from "../utils";
+import { copyFolders, executeCopy, executeCut, handleDelete } from "../utils";
 
 interface ContextMenuProps {
   x: number;
@@ -60,7 +60,15 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
             Paste
           </button>
         )}
-      {props.checkedFolders.length > 0 && <button>Duplicate</button>}
+      {props.checkedFolders.length > 0 && (
+        <button
+          onClick={async () => {
+            await copyFolders(props.checkedFolders);
+          }}
+        >
+          Duplicate
+        </button>
+      )}
       {props.checkedResources.length === 1 && <button>Edit</button>}
       {props.checkedFolders.length === 1 ||
         (props.checkedResources.length === 1 && <button>Rename</button>)}
