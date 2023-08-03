@@ -288,37 +288,6 @@ export function removeNullValues(obj: any): any {
     }, {});
 }
 
-export function convertObjectToPathArray(obj: object): PathItem[] {
-  const result: PathItem[] = [];
-
-  function traverseObject(obj: object, currentPath: string = "") {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        const value = (obj as any)[key];
-        const newPath = currentPath ? `${currentPath}.${key}` : key;
-
-        if (Array.isArray(value)) {
-          value.forEach((item, index) => {
-            const arrayPath = `${newPath}[${index}]`;
-            if (typeof item === "object") {
-              traverseObject(item, arrayPath);
-            } else {
-              result.push({ path: arrayPath, value: item });
-            }
-          });
-        } else if (typeof value === "object") {
-          traverseObject(value, newPath);
-        } else {
-          result.push({ path: newPath, value });
-        }
-      }
-    }
-  }
-
-  traverseObject(obj);
-  return result;
-}
-
 export function createPathArrayFromJson(obj: any, currentPath: string = ""): PathItem[] {
   let result: PathItem[] = [];
 
