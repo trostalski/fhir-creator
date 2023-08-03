@@ -13,10 +13,12 @@ import { removeNPathPartsFromStart } from "@/utils/path_utils";
 import {
   checkCardinalities,
   createJsonFromPathArray,
+  createPathArrayFromJson,
   extractPathValuePairs,
   formatInputDataForResource,
 } from "@/utils/utils";
 import React from "react";
+import { isEqual } from "lodash";
 
 interface AddResourceButtonProps {
   setPathsWithInvalidCardinality: React.Dispatch<

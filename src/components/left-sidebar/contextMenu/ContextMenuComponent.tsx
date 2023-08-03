@@ -67,8 +67,6 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
       <button>Export</button>
       <button
         onClick={() => {
-          console.log(props.checkedResources);
-          console.log(props.checkedFolders);
           handleDelete(props.checkedResources, props.checkedFolders);
         }}
       >
