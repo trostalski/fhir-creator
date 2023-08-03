@@ -1,12 +1,7 @@
 import { db } from "@/db/db";
-import {
-  addBundle,
-  addResourcPathRepr,
-  addResource,
-  getBaseProfile,
-} from "@/db/utils";
+import { addBundle, addResource, getBaseProfile } from "@/db/utils";
 import { toastError, toastSuccess } from "@/toasts";
-import { convertObjectToPathArray, isBaseUrl } from "@/utils/utils";
+import { isBaseUrl } from "@/utils/utils";
 import { Bundle, Resource, StructureDefinition } from "fhir/r4";
 import React from "react";
 
@@ -45,10 +40,8 @@ const ImportResourceButton = (props: ImportResourceButtonProps) => {
               return;
             }
             const addResSuccess = await addResource(resource);
-            const addPathReprSuccess = await addResourcPathRepr(
-              convertObjectToPathArray(resource)
-            );
-            if (!addResSuccess || !addPathReprSuccess) {
+
+            if (!addResSuccess) {
               toastError("Could not import resource.");
               return;
             }
