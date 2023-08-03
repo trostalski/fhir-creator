@@ -7,6 +7,8 @@ interface BundleComponentProps {
   setCheckedResources: (checkedResources: string[]) => void;
   checkedFolders: string[];
   setCheckedFolders: (checkedFolders: string[]) => void;
+  resToBeCut: string[];
+  resToCopy: string[];
 }
 
 const BundleComponent = (props: BundleComponentProps) => {

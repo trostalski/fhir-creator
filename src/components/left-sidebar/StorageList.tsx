@@ -2,16 +2,7 @@ import BundleComponent from "./BundleComponent";
 import { db } from "@/db/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-import {
-  handleAddFolder,
-  handleCopy,
-  handleCut,
-  handleDelete,
-  handleEdit,
-  handleExport,
-  handlePaste,
-} from "./utils";
+import { handleAddFolder } from "./utils";
 import ContextMenuComponent from "./contextMenu/ContextMenuComponent";
 
 const StorageList = () => {
@@ -54,54 +45,6 @@ const StorageList = () => {
         >
           Add Folder
         </button>
-        <button
-          className="border-2 rounded"
-          onClick={async () => {
-            await handleCopy(checkedResources, checkedFolders);
-          }}
-        >
-          Copy
-        </button>
-        <button
-          className="border-2 rounded"
-          onClick={() => {
-            handleDelete(checkedResources, checkedFolders);
-          }}
-        >
-          Delete
-        </button>
-        <button
-          className="border-2 rounded"
-          onClick={() => {
-            handleCut(checkedResources, setResToBeCut);
-          }}
-        >
-          Cut
-        </button>
-        <button
-          className="border-2 rounded"
-          onClick={() => {
-            handleEdit();
-          }}
-        >
-          Edit
-        </button>
-        <button
-          className="border-2 rounded"
-          onClick={() => {
-            handleExport();
-          }}
-        >
-          Export
-        </button>
-        <button
-          className="border-2 rounded"
-          onClick={() => {
-            handlePaste(resToBeCut, checkedFolders, setResToBeCut);
-          }}
-        >
-          Paste
-        </button>
         {bundleFolderz &&
           bundleFolderz.map((bundle) => {
             return (
@@ -112,11 +55,25 @@ const StorageList = () => {
                   checkedResources={checkedResources}
                   setCheckedFolders={setCheckedFolders}
                   setCheckedResources={setCheckedResources}
+                  resToBeCut={resToBeCut}
+                  resToCopy={resToCopy}
                 />
               </div>
             );
           })}
-        {showContext && <ContextMenuComponent x={points.x} y={points.y} />}
+        {showContext && (
+          <ContextMenuComponent
+            x={points.x}
+            y={points.y}
+            checkedFolders={checkedFolders}
+            checkedResources={checkedResources}
+            resToBeCut={resToBeCut}
+            resToCopy={resToCopy}
+            setCheckedResources={setCheckedResources}
+            setResToCopy={setResToCopy}
+            setResToCut={setResToBeCut}
+          />
+        )}
       </div>
     </>
   );

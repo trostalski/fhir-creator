@@ -25,45 +25,22 @@ export const handleAddFolder = async () => {
   await db.bundleFolders.add(folder);
 };
 
-export const handleCopy = async (
-  checkedResources: string[],
-  checkedFolders: string[]
+export const executeCopy = async (
+  resToCopy: string[],
+  setResToCopy: (resToCopy: string[]) => void,
+  folderToPaste: string
 ) => {
-  // first handle marked resources
-  // pool resource by folder they belong to to reduce database accesses
-  if (checkedResources.length > 0) {
-    let folderReferences: FolderReference[] = (
-      await db.folderReferences.bulkGet(checkedResources)
-    ).filter(
-      (ref) => typeof ref !== "undefined" // bulkGet would return undefined if no corresponding element
-    ) as unknown as FolderReference[];
-    if (folderReferences) {
-      const pooledRefs = poolRefs(folderReferences);
-      console.log(folderReferences);
-      db.transaction(
-        "rw",
-        db.folderReferences,
-        db.bundleFolders,
-        db.resources,
-        async () => {
-          for (const ref of pooledRefs) {
-            await copyResources(ref.resourceIds, ref.folderId);
-          }
-        }
-      ).catch((error) => console.log(error));
-    }
-  }
-  // handle folders
-  if (checkedFolders.length > 0) {
-    await copyFolders(checkedFolders);
-  }
+  await copyResources(resToCopy, folderToPaste);
+  setResToCopy([]);
 };
 
-export const handleCut = (
-  checkedResources: string[],
-  setResToBeCut: (checkedResources: string[]) => void
+export const executeCut = async (
+  resToCut: string[],
+  setResToCut: (resToCut: string[]) => void,
+  folderToPaste: string
 ) => {
-  setResToBeCut(checkedResources);
+  await cutResources(resToCut, folderToPaste);
+  setResToCut([]);
 };
 
 export const handleDelete = async (
@@ -92,17 +69,6 @@ export const handleEdit = () => {
 
 export const handleExport = () => {
   console.log("export");
-};
-
-export const handlePaste = async (
-  resToBeCut: string[],
-  checkedFolders: string[],
-  setResToBeCut: (checkedResources: string[]) => void
-) => {
-  if (resToBeCut.length > 0 && checkedFolders.length === 1) {
-    await pasteResources(resToBeCut, checkedFolders[0]);
-    setResToBeCut([]);
-  }
 };
 
 // Storage List utility functions
@@ -207,14 +173,15 @@ const deleteResources = async (resourceIds: string[]) => {
         .anyOf(resourceIds)
         .toArray();
       const pooledRefs = poolRefs(folderReferences);
+      console.log(pooledRefs);
       for (const pooledRef of pooledRefs) {
         await db.bundleFolders
           .where("id")
           .equals(pooledRef.folderId)
-          .modify({
-            resourceIds: resourceIds.filter(
-              (id) => !pooledRef.resourceIds.includes(id)
-            ),
+          .modify((folder) => {
+            folder.resourceIds = folder.resourceIds.filter((id) => {
+              return !pooledRef.resourceIds.includes(id);
+            });
           });
       }
       await db.resources.bulkDelete(resourceIds);
@@ -256,7 +223,7 @@ const deleteFolder = async (checkedFolders: string[]) => {
   ).catch((err) => console.log(err));
 };
 
-export const pasteResources = async (
+export const cutResources = async (
   resourcestoBeCut: string[],
   destinationFolder: string
 ) => {
