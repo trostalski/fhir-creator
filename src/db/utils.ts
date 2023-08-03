@@ -215,7 +215,7 @@ export async function exportBundle(
   const bundle_string = JSON.stringify(bundle, null, 2);
   const blob = new Blob([bundle_string], {type: "application/json"});
   const url = URL.createObjectURL(blob);
-  const filename = bundleFolder.name ? `${bundleFolder.name}` : `Bundle_${bundleFolder.id}` + ".json"
+  const filename = `Bundle_${bundleFolder.id}` + ".json"
   fetch(url)
     .then((response) => response.blob())
     .then((blob)=>{
@@ -233,7 +233,7 @@ export async function createBundleFromFolder(bundleFolder: BundleFolder){
   const entries = resources.map((resource)=> {
     return {resource:resource};
   }) // way bundle.entry stores resources
-  const bundle: Bundle = {...bundleFolder.meta, entry: entries}
+  const bundle: Bundle = {...bundleFolder.meta, entry: entries, id: bundleFolder.id}
   return bundle;
 }
 

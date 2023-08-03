@@ -146,7 +146,11 @@ export const copyFolders = async (checkedFolders: string[]) => {
         // for the following steps it is important that copied and original folders share the same index
       }
       let copiedFolders = originalFolders.map((folder) => {
-        return { ...folder, id: uuidv4(), resourceIds: [] }; // reset resource IDs in order to reuse copyResources
+        return {
+          ...folder,
+          id: uuidv4(),
+          resourceIds: [],
+        }; // reset resource IDs in order to reuse copyResources
       });
       for (let i = 0; i < copiedFolders.length; i++) {
         await db.bundleFolders.bulkAdd(copiedFolders);
