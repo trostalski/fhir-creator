@@ -74,20 +74,6 @@ export async function deleteProfiles(urls: string[]) {
   }
 }
 
-export async function addResourcPathRepr(inputData: PathItem[]) {
-  try {
-    const id = inputData.find((data) => data.path === "id")?.value as string;
-    await db.resourcesPathRepr.add({
-      id: id,
-      data: inputData,
-    });
-    return true;
-  } catch (error) {
-    console.log(`Failed to add path representation of resource`);
-    return false;
-  }
-}
-
 export async function updateResource(resource: Resource) {
   try {
     await db.resources.update(resource.id!, resource);
@@ -95,18 +81,6 @@ export async function updateResource(resource: Resource) {
   } catch (error) {
     console.log(`Failed to update resource`);
     return false;
-  }
-}
-
-export async function updateResourcePathRepr(inputData: PathItem[]) {
-  try {
-    const id = inputData.find((data) => data.path === "id")?.value as string;
-    await db.resourcesPathRepr.update(id, {
-      id: id,
-      data: inputData,
-    });
-  } catch (error) {
-    console.log(`Failed to update path representation of resource`);
   }
 }
 
