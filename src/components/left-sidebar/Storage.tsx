@@ -118,7 +118,6 @@ const Storage = (props: RightPartProps) => {
               </div>
             </div>
             <StorageList />
-
             <div className="flex flex-col gap-2">
               <div className="flex flex-row w-full items-center">
                 <div

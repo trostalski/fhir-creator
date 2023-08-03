@@ -5,6 +5,8 @@ import { BundleFolder, db } from "./db";
 import { FhirResource } from "fhir/r4";
 import { v4 as uuidv4 } from "uuid";
 import { error } from "console";
+import { type } from "os";
+import { doc } from "prettier";
 
 export const getBaseProfile = async (resourceType: string) => {
   try {
@@ -198,6 +200,40 @@ function addBundlesToBundle(bundle: Bundle, bundles: Bundle[]) {
       bundle.entry!.push(resource);
     }
   });
+  return bundle;
+}
+
+export async function exportBundle(
+  bundleId: string
+){
+  const bundleFolder = await db.bundleFolders.get(bundleId);
+  if(!bundleFolder){
+    toastError("No bundle for export found")
+    return;
+  }
+  const bundle = await createBundleFromFolder(bundleFolder);
+  const bundle_string = JSON.stringify(bundle, null, 2);
+  const blob = new Blob([bundle_string], {type: "application/json"});
+  const url = URL.createObjectURL(blob);
+  const filename = bundleFolder.name ? `${bundleFolder.name}` : `Bundle_${bundleFolder.id}` + ".json"
+  fetch(url)
+    .then((response) => response.blob())
+    .then((blob)=>{
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    })
+}
+
+export async function createBundleFromFolder(bundleFolder: BundleFolder){
+  const resources = await db.resources.where('id').anyOf(bundleFolder.resourceIds).toArray() as unknown as FhirResource[];
+  const entries = resources.map((resource)=> {
+    return {resource:resource};
+  }) // way bundle.entry stores resources
+  const bundle: Bundle = {...bundleFolder.meta, entry: entries}
   return bundle;
 }
 

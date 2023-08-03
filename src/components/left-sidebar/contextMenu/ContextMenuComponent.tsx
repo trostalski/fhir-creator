@@ -1,7 +1,7 @@
 import { Resource, StructureDefinition } from "fhir/r4";
 import { copyFolders, executeCopy, executeCut, handleDelete } from "../utils";
 import { createPathArrayFromJson, isBaseUrl } from "@/utils/utils";
-import { getBaseProfile } from "@/db/utils";
+import { exportBundle, getBaseProfile } from "@/db/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
 import { toastError } from "@/toasts";
@@ -116,7 +116,17 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
       )}
       {props.checkedFolders.length === 1 ||
         (props.checkedResources.length === 1 && <button>Rename</button>)}
-      <button>Export</button>
+      <button
+        onClick={async () => {
+          if (props.checkedFolders.length > 0) {
+            for (const folder of props.checkedFolders) {
+              await exportBundle(folder);
+            }
+          }
+        }}
+      >
+        Export
+      </button>
       <button
         onClick={() => {
           handleDelete(props.checkedResources, props.checkedFolders);
