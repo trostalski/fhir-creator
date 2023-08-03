@@ -1,5 +1,8 @@
-import { BundleFolder, FolderReference, db } from "@/db/db";
-import { Resource } from "fhir/r4";
+import { BundleFolder, FolderReference, ResourcePathRepr, db } from "@/db/db";
+import { getBaseProfile } from "@/db/utils";
+import { toastError } from "@/toasts";
+import { createPathArrayFromJson, isBaseUrl } from "@/utils/utils";
+import { Resource, StructureDefinition } from "fhir/r4";
 import { v4 as uuidv4 } from "uuid";
 
 interface pooledRef {
@@ -63,10 +66,6 @@ export const handleDelete = async (
   ).catch((err) => console.log(err));
 };
 
-export const handleEdit = () => {
-  console.log("edit");
-};
-
 export const handleExport = () => {
   console.log("export");
 };
@@ -99,6 +98,7 @@ export const copyResources = async (
     db.resources,
     db.folderReferences,
     db.bundleFolders,
+    db.resourcesPathRepr,
     async () => {
       const resources = (await db.resources.bulkGet(resourceIds)).filter(
         (resource) => typeof resource !== "undefined"

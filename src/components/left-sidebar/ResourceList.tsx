@@ -22,7 +22,6 @@ interface ResourceListProps {
 
 const ResourceList = (props: ResourceListProps) => {
   const resources = useLiveQuery(() => db.resources.toArray());
-  const resourcesPathRepr = useLiveQuery(() => db.resourcesPathRepr.toArray());
   const { setProfileTree, setMode, setResource } = useStore((state) => {
     return {
       setProfileTree: state.setProfileTree,
@@ -31,12 +30,6 @@ const ResourceList = (props: ResourceListProps) => {
     };
   });
   const profiles = useLiveQuery(() => db.profiles.toArray());
-  const getResourceTypeFromPathRepr = (pathRepr: ResourcePathRepr) => {
-    const result = pathRepr.data.find(
-      (data) => data.path === "resourceType"
-    )?.value;
-    return result;
-  };
   return (
     <div>
       {resources?.length === 0 && (
@@ -52,9 +45,6 @@ const ResourceList = (props: ResourceListProps) => {
             title={resource.id}
             onClick={async () => {
               let profile: StructureDefinition | undefined;
-              // const profileUrl = resourcePathRepr.data.find(
-              //   (data) => data.path === "meta.profile[0]"
-              // )?.value;
               const resourcePathRepr = createPathArrayFromJson(resource);
               const profileUrl = resource.meta!.profile![0];
               if (profileUrl && isBaseUrl(profileUrl)) {
