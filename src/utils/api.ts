@@ -5,7 +5,7 @@ import {
   CsvExportReqParam,
   NumericalReqParam,
   PathItem,
-  SnomedFTSResponse,
+  FTSResponse,
 } from "@/types";
 import { Resource, StructureDefinition } from "fhir/r4";
 import {
@@ -14,6 +14,10 @@ import {
   _codedNumerical,
   _numerical,
   detaSpaceUrl,
+  icd10TerminologySystem,
+  icd9TerminologySystem,
+  loincTerminologySystem,
+  snomedTerminologySystem,
 } from "./constants";
 
 export const fetchProfileTree = async (
@@ -92,15 +96,30 @@ export const fetchCsvExportData = async (
   return csvExportResponse;
 };
 
-export const fetchSnomedFts = async (searchTerm: string, limit = 10) => {
+export const fetchTermFts = async (
+  terminologySystem: string,
+  searchTerm: string,
+  limit = 10
+) => {
+  let searchSystem;
+
+  if (terminologySystem === snomedTerminologySystem) {
+    searchSystem = "snomed";
+  } else if (terminologySystem === loincTerminologySystem) {
+    searchSystem = "loinc";
+  } else if (terminologySystem === icd10TerminologySystem) {
+    searchSystem = "icd10";
+  } else if (terminologySystem === icd9TerminologySystem) {
+    searchSystem = "icd9";
+  }
+
   const response = await fetch(
-    `api/terminology/?method=snomed_fts&search_term=${searchTerm}&limit=${limit}`
+    `api/terminology/?terminology_system=${searchSystem}&search_term=${searchTerm}&limit=${limit}`
   );
 
   if (!response.ok) {
     throw new Error(response.statusText);
   }
-  const data = (await response.json()) as SnomedFTSResponse;
-
+  const data = (await response.json()) as FTSResponse;
   return data;
 };

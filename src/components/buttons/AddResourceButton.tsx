@@ -1,9 +1,4 @@
-import {
-  addResourcPathRepr,
-  addResource,
-  updateResource,
-  updateResourcePathRepr,
-} from "@/db/utils";
+import { addResource, updateResource } from "@/db/utils";
 import { useStore } from "@/stores/useStore";
 import { toastError, toastSuccess } from "@/toasts";
 import { PathItem } from "@/types";
@@ -111,7 +106,6 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
             return;
           }
           addResource(resource);
-          addResourcPathRepr(formattedInputData);
           toastSuccess("Resource added");
         }}
       >
@@ -140,7 +134,6 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
           inputPathValuePairs = formatInputDataForResource(inputPathValuePairs);
           const resource = createJsonFromPathArray(inputPathValuePairs);
           updateResource(resource);
-          updateResourcePathRepr(inputPathValuePairs);
           toastSuccess("Resource updated");
         }}
       >

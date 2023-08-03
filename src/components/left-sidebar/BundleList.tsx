@@ -1,7 +1,7 @@
 import { db } from "@/db/db";
 import { getBaseProfile } from "@/db/utils";
 import { useStore } from "@/stores/useStore";
-import { convertObjectToPathArray } from "@/utils/utils";
+import { createPathArrayFromJson } from "@/utils/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import React from "react";
 import omit from "lodash/omit";
@@ -54,7 +54,7 @@ const BundleList = (props: BundleListProps) => {
                   const profile: StructureDefinition = await getBaseProfile(
                     "Bundle"
                   );
-                  const inputData = convertObjectToPathArray(
+                  const inputData = createPathArrayFromJson(
                     omit(bundle, "entry")
                   );
                   setProfileTree(profile, inputData);

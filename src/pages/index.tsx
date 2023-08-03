@@ -6,7 +6,6 @@ import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import { getBaseProfile } from "@/db/utils";
 import ProfileTreeComponent from "../components/profile_tree_input/ProfileTreeComponent";
 import ExportModal from "@/components/ExportModal";
-import UploadProfileButton from "@/components/buttons/UploadProfileButton";
 import AddResourceButton from "@/components/buttons/AddResourceButton";
 import { useStore } from "@/stores/useStore";
 import Layout from "@/components/Layout";
@@ -29,14 +28,10 @@ const Home = () => {
 
   const handleSelectBaseProfile = async (value: string) => {
     const profile = await getBaseProfile(value);
-    await toastPromise(
-      setProfileTree(profile),
-      "loading profile tree...",
-      "success!",
-      "failed to load profile tree."
-    );
+    setProfileTree(profile);
   };
 
+  console.log("profileTree", profileTree);
   return (
     <Layout>
       <div className="flex flex-col w-full pb-10 pt-4 overflow-scroll gap-2 px-8">
@@ -46,9 +41,14 @@ const Home = () => {
             className="w-[1000px] mx-auto"
             options={resourceOptions}
             placeholder="Select Base Profile"
-            onChange={(e) => {
+            onChange={async (e) => {
               setMode(Modes.CREATE);
-              handleSelectBaseProfile(e!.value);
+              await toastPromise(
+                handleSelectBaseProfile(e!.value),
+                "loading profile tree...",
+                "success!",
+                "failed to load profile tree."
+              );
             }}
           ></Select>
           <span className="flex-grow" />

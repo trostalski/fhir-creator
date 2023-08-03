@@ -288,34 +288,33 @@ export function removeNullValues(obj: any): any {
     }, {});
 }
 
-export function convertObjectToPathArray(obj: object): PathItem[] {
-  const result: PathItem[] = [];
+export function createPathArrayFromJson(obj: any, currentPath: string = ""): PathItem[] {
+  let result: PathItem[] = [];
 
-  function traverseObject(obj: object, currentPath: string = "") {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        const value = (obj as any)[key];
-        const newPath = currentPath ? `${currentPath}.${key}` : key;
-
-        if (Array.isArray(value)) {
-          value.forEach((item, index) => {
-            const arrayPath = `${newPath}[${index}]`;
-            if (typeof item === "object") {
-              traverseObject(item, arrayPath);
-            } else {
-              result.push({ path: arrayPath, value: item });
-            }
-          });
-        } else if (typeof value === "object") {
-          traverseObject(value, newPath);
+  for (const key in obj) {
+    if (Array.isArray(obj[key])) {
+      for (let i = 0; i < obj[key].length; i++) {
+        const newPath = `${currentPath}${currentPath ? "." : ""}${key}[${i}]`;
+        if (typeof obj[key][i] === 'object' && obj[key][i] !== null) {
+          result = result.concat(createPathArrayFromJson(obj[key][i], newPath));
         } else {
-          result.push({ path: newPath, value });
+          result.push({
+            path: newPath,
+            value: obj[key][i]
+          });
         }
       }
+    } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+      const newPath = `${currentPath}${currentPath ? "." : ""}${key}`;
+      result = result.concat(createPathArrayFromJson(obj[key], newPath));
+    } else {
+      result.push({
+        path: `${currentPath}${currentPath ? "." : ""}${key}`,
+        value: obj[key]
+      });
     }
   }
 
-  traverseObject(obj);
   return result;
 }
 
