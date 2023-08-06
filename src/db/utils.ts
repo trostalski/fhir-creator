@@ -50,13 +50,20 @@ export async function deleteResources(ids: string[]) {
 }
 
 export async function addResource(resource: Resource) {
-  db.transaction('rw', db.resources, db.folderReferences, db.bundleFolders, async ()=>{
-    db.resources.add(resource);
-    db.bundleFolders.where("id").equals("Pool").modify((folder)=>{
-      folder.resourceIds = [...folder.resourceIds, resource.id!]
+  
+  try{
+    db.transaction('rw', db.resources, db.folderReferences, db.bundleFolders, async ()=>{
+      db.resources.add(resource);
+      db.bundleFolders.where("id").equals("Pool").modify((folder)=>{
+        folder.resourceIds = [...folder.resourceIds, resource.id!]
+      })
+      db.folderReferences.add({folderId:"Pool", resourceId:resource.id!})
     })
-    db.folderReferences.add({folderId:"Pool", resourceId:resource.id!})
-  }).catch(error => console.log(error));
+    return true;
+  }catch(error){ 
+    console.log(error);
+    return false;
+  }
 }
 
 export async function addProfile(profile: StructureDefinition) {
