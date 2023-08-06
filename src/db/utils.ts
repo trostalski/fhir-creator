@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { error } from "console";
 import { type } from "os";
 import { doc } from "prettier";
+import { resolveProfileForResource } from "@/components/buttons/ImportResourceButton";
 
 export const getBaseProfile = async (resourceType: string) => {
   try {
@@ -135,6 +136,15 @@ export async function parseBundle(bundle: Bundle) {
     await db.transaction('rw', db.bundleFolders, db.resources, db.folderReferences, async () => {
       await db.bundleFolders.add(bundleFolder);
       if(resources.length > 0){
+        for (const resource of resources){
+          const profile = resolveProfileForResource(resource);
+          if (!profile) {
+            toastError(
+              "Could not find profile for resource. Please import a profile first."
+            );
+            return;
+          }
+        }
         await db.resources.bulkAdd(resources);
         await db.folderReferences.bulkAdd(folderReferences);
       }
