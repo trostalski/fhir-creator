@@ -118,7 +118,7 @@ const Storage = (props: RightPartProps) => {
               </div>
             </div>
             <StorageList />
-            <div className="flex flex-col gap-2">
+            {/* <div className="flex flex-col gap-2">
               <div className="flex flex-row w-full items-center">
                 <div
                   className="overflow-hidden items-center flex flex-row w-full cursor-pointer"
@@ -190,7 +190,7 @@ const Storage = (props: RightPartProps) => {
                 />
               ) : null}
               <hr />
-            </div>
+            </div> */}
             <div className="flex flex-col gap-2">
               <div className="flex flex-row w-full items-center">
                 <div
@@ -225,7 +225,7 @@ const Storage = (props: RightPartProps) => {
                 />
               ) : null}
             </div>
-            {showExportModal && (
+            {/* {showExportModal && (
               <ExportModal
                 isOpen={showExportModal}
                 setIsOpen={setShowExportModal}
@@ -237,7 +237,7 @@ const Storage = (props: RightPartProps) => {
                 isOpen={showPreviewModal}
                 setIsOpen={setShowPreviewModal}
               />
-            )}
+            )} */}
           </div>
         </div>
       </div>
