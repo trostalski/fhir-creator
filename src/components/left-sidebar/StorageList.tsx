@@ -6,6 +6,7 @@ import { handleAddFolder } from "./utils";
 import ContextMenuComponent from "./contextMenu/ContextMenuComponent";
 import { RenameModal } from "./contextMenu/RenameModal";
 import { PreviewModal } from "./PreviewModal";
+import { el } from "date-fns/locale";
 
 const StorageList = () => {
   const [checkedResources, setCheckedResources] = useState<string[]>([]);
@@ -88,8 +89,8 @@ const StorageList = () => {
         {showRename && (
           <RenameModal
             setShowRename={setShowRename}
-            renameFolder=""
-            renameResource=""
+            renameFolder={checkedFolders[0]}
+            renameResource={checkedResources[0]}
           />
         )}
         {showPreviewModal && (

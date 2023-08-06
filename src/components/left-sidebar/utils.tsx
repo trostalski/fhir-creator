@@ -12,19 +12,75 @@ interface pooledRef {
 
 // StorageList handles
 
-// export const handleRename = async (
-//   folderRename: string,
-//   resourceRename: string,
-//   rename: string
-// ) => {
+export const handleRename = async (
+  folderRename: string,
+  resourceRename: string,
+  rename: string
+) => {
+  if (folderRename?.length > 0) {
+    await db.transaction(
+      "rw",
+      db.folderReferences,
+      db.bundleFolders,
+      async () => {
+        await db.folderReferences
+          .where("folderId")
+          .equals(folderRename)
+          .modify((ref) => {
+            ref.folderId = rename;
+          });
 
-//     await db.bundleFolders
-//       .where("id")
-//       .equals(folder)
-//       .modify((folder) => {
-//         folder.id = "";
-//       });
-// };
+        await db.bundleFolders
+          .where("id")
+          .equals(folderRename)
+          .modify((folder) => {
+            folder.id = rename;
+          });
+      }
+    );
+  } else if (resourceRename?.length > 0) {
+    await db.transaction(
+      "rw",
+      db.resources,
+      db.folderReferences,
+      db.bundleFolders,
+      async () => {
+        const folder = await db.folderReferences.get(resourceRename);
+        if (folder) {
+          await db.bundleFolders
+            .where("id")
+            .equals(folder.folderId)
+            .modify((folder) => {
+              const index = folder.resourceIds.findIndex(
+                (e) => e === resourceRename
+              );
+              if (index !== -1) {
+                folder.resourceIds[index] = rename;
+              } else {
+                throw new Error(
+                  `could not find resource: ${resourceRename} in folder ${folder.id}`
+                );
+              }
+            });
+        } else {
+          throw new Error(`No folder found for resource: ${resourceRename}`);
+        }
+        await db.folderReferences
+          .where("resourceId")
+          .equals(resourceRename)
+          .modify((ref) => {
+            ref.resourceId = rename;
+          });
+        await db.resources
+          .where("id")
+          .equals(resourceRename)
+          .modify((resource) => {
+            resource.id = rename;
+          });
+      }
+    );
+  }
+};
 
 export const handleAddFolder = async () => {
   const folder: BundleFolder = {

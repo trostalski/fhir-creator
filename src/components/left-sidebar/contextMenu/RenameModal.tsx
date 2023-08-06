@@ -14,17 +14,12 @@ export const RenameModal = (props: RenameProps) => {
     <ModalWrapper setShow={props.setShowRename}>
       <div className="flex flex-row gap-8">
         <input
-          // className="grow"
+          className="grow"
           type="text"
-          // defaultValue={
-          //   props.renameFolder ? props.renameFolder : props.renameResource
-          // }
-          onChange={(e) => console.log("changing")}
-          onClick={(e) => {
-            if (document.activeElement !== e.target) {
-              (e.target as HTMLInputElement).focus();
-            }
-          }}
+          defaultValue={
+            props.renameFolder ? props.renameFolder : props.renameResource
+          }
+          onChange={(e) => setRename(e.target.value)}
         />
         <button
           onClick={async () => {

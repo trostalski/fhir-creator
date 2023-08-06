@@ -20,7 +20,7 @@ interface BundleComponentProps {
 }
 
 const BundleComponent = (props: BundleComponentProps) => {
-  const [showResources, setShowResources] = useState<boolean>(true);
+  const [showResources, setShowResources] = useState<boolean>(false);
   const BundleId = props.bundleFolder.id;
   const resourceIds = props.bundleFolder.resourceIds;
   const resources = useLiveQuery(() =>

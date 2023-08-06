@@ -116,16 +116,16 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
           Edit
         </button>
       )}
-      {props.checkedFolders.length === 1 ||
-        (props.checkedResources.length === 1 && (
-          <button
-            onClick={() => {
-              props.setShowRename(true);
-            }}
-          >
-            Rename
-          </button>
-        ))}
+      {(props.checkedFolders.length === 1 ||
+        props.checkedResources.length === 1) && (
+        <button
+          onClick={() => {
+            props.setShowRename(true);
+          }}
+        >
+          Rename
+        </button>
+      )}
       <button
         onClick={async () => {
           if (props.checkedFolders.length > 0) {
