@@ -7,6 +7,7 @@ import { db } from "@/db/db";
 import { toastError } from "@/toasts";
 import { useStore } from "@/stores/useStore";
 import { Modes } from "@/utils/constants";
+import { RenameModal } from "./RenameModal";
 
 interface ContextMenuProps {
   x: number;
@@ -18,6 +19,7 @@ interface ContextMenuProps {
   setResToCopy: (resToCopy: string[]) => void;
   setCheckedResources: (checkedResources: string[]) => void;
   setResToCut: (resToCut: string[]) => void;
+  setShowRename: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function ContextMenuComponent(props: ContextMenuProps) {
@@ -115,7 +117,15 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
         </button>
       )}
       {props.checkedFolders.length === 1 ||
-        (props.checkedResources.length === 1 && <button>Rename</button>)}
+        (props.checkedResources.length === 1 && (
+          <button
+            onClick={() => {
+              props.setShowRename(true);
+            }}
+          >
+            Rename
+          </button>
+        ))}
       <button
         onClick={async () => {
           if (props.checkedFolders.length > 0) {

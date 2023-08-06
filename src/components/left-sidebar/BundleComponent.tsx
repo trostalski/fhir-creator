@@ -1,5 +1,10 @@
-import { BundleFolder } from "@/db/db";
+import { BundleFolder, ResourcePathRepr } from "@/db/db";
+import { useLiveQuery } from "dexie-react-hooks";
 import { useState } from "react";
+import { db } from "@/db/db";
+import { RenameModal } from "./contextMenu/RenameModal";
+import { AiOutlineEye } from "react-icons/ai";
+import { createPathArrayFromJson } from "@/utils/utils";
 
 interface BundleComponentProps {
   bundleFolder: BundleFolder;
@@ -9,12 +14,17 @@ interface BundleComponentProps {
   setCheckedFolders: (checkedFolders: string[]) => void;
   resToBeCut: string[];
   resToCopy: string[];
+  setPreviewOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setPreviewPathRepr: React.Dispatch<React.SetStateAction<ResourcePathRepr>>;
 }
 
 const BundleComponent = (props: BundleComponentProps) => {
   const [showResources, setShowResources] = useState<boolean>(true);
   const BundleId = props.bundleFolder.id;
   const resourceIds = props.bundleFolder.resourceIds;
+  const resources = useLiveQuery(() =>
+    db.resources.where("id").anyOf(resourceIds).toArray()
+  );
 
   const handleClickResFol = (
     e: React.MouseEvent,
@@ -83,22 +93,22 @@ const BundleComponent = (props: BundleComponentProps) => {
             : "text-black"
         } font-bold`}
       >
-        Bundle: {BundleId}
+        Bundle/{BundleId}
       </button>{" "}
-      {resourceIds &&
-        resourceIds.map((resourceId) => {
+      {resources &&
+        resources.map((resource) => {
           return (
-            <div key={resourceId}>
+            <div key={resource.id} className="flex flex-row">
               <button
                 className={`${
-                  props.checkedResources.includes(resourceId)
+                  props.checkedResources.includes(resource.id!)
                     ? "text-slate-500"
                     : "text-black"
                 }`}
                 onClick={(e) =>
                   handleClickResFol(
                     e,
-                    resourceId,
+                    resource.id!,
                     props.checkedResources,
                     props.setCheckedResources,
                     props.setCheckedFolders
@@ -107,15 +117,28 @@ const BundleComponent = (props: BundleComponentProps) => {
                 onContextMenu={(e) =>
                   handleRightClick(
                     e,
-                    resourceId,
+                    resource.id!,
                     props.checkedResources,
                     props.setCheckedResources,
                     props.setCheckedFolders
                   )
                 }
               >
-                Resource: {resourceId}
+                {resource.resourceType + "/" + resource.id}
               </button>{" "}
+              <button
+                className="hover:scale-105"
+                onClick={() => {
+                  const resourcePathRepr = createPathArrayFromJson(resource);
+                  props.setPreviewOpen(true);
+                  props.setPreviewPathRepr({
+                    id: resource.id!,
+                    data: resourcePathRepr,
+                  });
+                }}
+              >
+                <AiOutlineEye size={15} className="ml-2" />
+              </button>
             </div>
           );
         })}

@@ -12,6 +12,20 @@ interface pooledRef {
 
 // StorageList handles
 
+// export const handleRename = async (
+//   folderRename: string,
+//   resourceRename: string,
+//   rename: string
+// ) => {
+
+//     await db.bundleFolders
+//       .where("id")
+//       .equals(folder)
+//       .modify((folder) => {
+//         folder.id = "";
+//       });
+// };
+
 export const handleAddFolder = async () => {
   const folder: BundleFolder = {
     id: uuidv4(),

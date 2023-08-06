@@ -1,9 +1,11 @@
 import BundleComponent from "./BundleComponent";
-import { db } from "@/db/db";
+import { ResourcePathRepr, db } from "@/db/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useEffect, useState } from "react";
 import { handleAddFolder } from "./utils";
 import ContextMenuComponent from "./contextMenu/ContextMenuComponent";
+import { RenameModal } from "./contextMenu/RenameModal";
+import { PreviewModal } from "./PreviewModal";
 
 const StorageList = () => {
   const [checkedResources, setCheckedResources] = useState<string[]>([]);
@@ -11,6 +13,12 @@ const StorageList = () => {
   const [resToBeCut, setResToBeCut] = useState<string[]>([]);
   const [resToCopy, setResToCopy] = useState<string[]>([]);
   const [showContext, setShowContext] = useState<boolean>(false);
+  const [showRename, setShowRename] = useState<boolean>(true);
+  const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false);
+  const [previewPathRepr, setPreviewPathRepr] = useState<ResourcePathRepr>({
+    id: "",
+    data: [],
+  });
 
   const [points, setPoints] = useState({
     x: 99,
@@ -57,6 +65,8 @@ const StorageList = () => {
                   setCheckedResources={setCheckedResources}
                   resToBeCut={resToBeCut}
                   resToCopy={resToCopy}
+                  setPreviewOpen={setShowPreviewModal}
+                  setPreviewPathRepr={setPreviewPathRepr}
                 />
               </div>
             );
@@ -72,6 +82,21 @@ const StorageList = () => {
             setCheckedResources={setCheckedResources}
             setResToCopy={setResToCopy}
             setResToCut={setResToBeCut}
+            setShowRename={setShowRename}
+          />
+        )}
+        {/* {showRename && (
+          <RenameModal
+            setShowRename={setShowRename}
+            renameFolder=""
+            renameResource=""
+          />
+        )} */}
+        {showPreviewModal && (
+          <PreviewModal
+            pathRepr={previewPathRepr}
+            isOpen={showPreviewModal}
+            setIsOpen={setShowPreviewModal}
           />
         )}
       </div>
