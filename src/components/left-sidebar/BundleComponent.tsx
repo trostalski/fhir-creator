@@ -5,6 +5,7 @@ import { db } from "@/db/db";
 import { RenameModal } from "./contextMenu/RenameModal";
 import { AiOutlineEye } from "react-icons/ai";
 import { createPathArrayFromJson } from "@/utils/utils";
+import ExpandAccordinoToggle from "../shared/ExpandAccordinoToggle";
 
 interface BundleComponentProps {
   bundleFolder: BundleFolder;
@@ -68,34 +69,41 @@ const BundleComponent = (props: BundleComponentProps) => {
 
   return (
     <div>
-      <button
-        onClick={(e) =>
-          handleClickResFol(
-            e,
-            BundleId,
-            props.checkedFolders,
-            props.setCheckedFolders,
-            props.setCheckedResources
-          )
-        }
-        onContextMenu={(e) =>
-          handleRightClick(
-            e,
-            BundleId,
-            props.checkedFolders,
-            props.setCheckedFolders,
-            props.setCheckedResources
-          )
-        }
-        className={`${
-          props.checkedFolders.includes(BundleId)
-            ? "text-slate-500"
-            : "text-black"
-        } font-bold`}
-      >
-        Bundle/{BundleId}
-      </button>{" "}
-      {resources &&
+      <div className="flex flex-row divide-y">
+        <ExpandAccordinoToggle
+          isOpen={showResources}
+          onClick={() => setShowResources(!showResources)}
+        />
+        <button
+          onClick={(e) =>
+            handleClickResFol(
+              e,
+              BundleId,
+              props.checkedFolders,
+              props.setCheckedFolders,
+              props.setCheckedResources
+            )
+          }
+          onContextMenu={(e) =>
+            handleRightClick(
+              e,
+              BundleId,
+              props.checkedFolders,
+              props.setCheckedFolders,
+              props.setCheckedResources
+            )
+          }
+          className={`${
+            props.checkedFolders.includes(BundleId)
+              ? "text-slate-500"
+              : "text-black"
+          } font-bold truncate`}
+        >
+          Bundle/{BundleId}
+        </button>{" "}
+      </div>
+      {showResources &&
+        resources &&
         resources.map((resource) => {
           return (
             <div key={resource.id} className="flex flex-row">
@@ -104,7 +112,7 @@ const BundleComponent = (props: BundleComponentProps) => {
                   props.checkedResources.includes(resource.id!)
                     ? "text-slate-500"
                     : "text-black"
-                }`}
+                } truncate`}
                 onClick={(e) =>
                   handleClickResFol(
                     e,
