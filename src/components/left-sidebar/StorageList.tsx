@@ -13,7 +13,7 @@ const StorageList = () => {
   const [resToBeCut, setResToBeCut] = useState<string[]>([]);
   const [resToCopy, setResToCopy] = useState<string[]>([]);
   const [showContext, setShowContext] = useState<boolean>(false);
-  const [showRename, setShowRename] = useState<boolean>(true);
+  const [showRename, setShowRename] = useState<boolean>(false);
   const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false);
   const [previewPathRepr, setPreviewPathRepr] = useState<ResourcePathRepr>({
     id: "",
@@ -85,13 +85,13 @@ const StorageList = () => {
             setShowRename={setShowRename}
           />
         )}
-        {/* {showRename && (
+        {showRename && (
           <RenameModal
             setShowRename={setShowRename}
             renameFolder=""
             renameResource=""
           />
-        )} */}
+        )}
         {showPreviewModal && (
           <PreviewModal
             pathRepr={previewPathRepr}

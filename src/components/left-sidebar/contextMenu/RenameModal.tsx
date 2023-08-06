@@ -33,11 +33,7 @@ export const RenameModal = (props: RenameProps) => {
         >
           Rename
         </button>
-        <button
-        // onClick={() => props.setShowRename(false)}
-        >
-          Cancel
-        </button>
+        <button onClick={() => props.setShowRename(false)}>Cancel</button>
       </div>
     </ModalWrapper>
   );
