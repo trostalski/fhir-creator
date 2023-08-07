@@ -1,4 +1,4 @@
-import { addResource, updateResource } from "@/db/utils";
+import { addResource, resourceExists, updateResource } from "@/db/utils";
 import { useStore } from "@/stores/useStore";
 import { toastError, toastSuccess } from "@/toasts";
 import { PathItem } from "@/types";
@@ -62,7 +62,7 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
             ? "bg-opacity-50 cursor-not-allowed"
             : "hover:bg-green-800"
         }}`}
-        onClick={() => {
+        onClick={async () => {
           if (profileTree.length === 0) {
             return;
           }
@@ -86,6 +86,10 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
           let formattedInputData = formatInputDataForResource(inputData);
           formattedInputData = addResourceTypeToInputData(formattedInputData);
           const resource = createJsonFromPathArray(formattedInputData);
+          if (await resourceExists(resource.id)) {
+            toastError("Resource with this id already exists.");
+            return;
+          }
           // Constraint check
           const constraintResolver = new ConstraintResolver(
             profileTree,
