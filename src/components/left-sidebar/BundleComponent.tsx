@@ -6,6 +6,7 @@ import { RenameModal } from "./contextMenu/RenameModal";
 import { AiOutlineEye } from "react-icons/ai";
 import { createPathArrayFromJson } from "@/utils/utils";
 import ExpandAccordinoToggle from "../shared/ExpandAccordinoToggle";
+import { Resource } from "fhir/r4";
 
 interface BundleComponentProps {
   bundleFolder: BundleFolder;
@@ -17,15 +18,16 @@ interface BundleComponentProps {
   resToCopy: string[];
   setPreviewOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setPreviewPathRepr: React.Dispatch<React.SetStateAction<ResourcePathRepr>>;
+  resources?: Resource[];
 }
 
 const BundleComponent = (props: BundleComponentProps) => {
   const [showResources, setShowResources] = useState<boolean>(false);
   const BundleId = props.bundleFolder.id;
   const resourceIds = props.bundleFolder.resourceIds;
-  const resources = useLiveQuery(() =>
-    db.resources.where("id").anyOf(resourceIds).toArray()
-  );
+  const resources = props.resources?.filter((resource) => {
+    return resourceIds.includes(resource.id!);
+  });
 
   const handleClickResFol = (
     e: React.MouseEvent,
@@ -99,7 +101,7 @@ const BundleComponent = (props: BundleComponentProps) => {
               : "text-black"
           } font-bold truncate`}
         >
-          Bundle/{BundleId}
+          {`${BundleId === "Pool" ? "ResourcePool" : "Bundle/" + BundleId}`}
         </button>{" "}
       </div>
       {showResources &&

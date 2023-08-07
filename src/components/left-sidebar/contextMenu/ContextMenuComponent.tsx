@@ -116,7 +116,8 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
           Edit
         </button>
       )}
-      {(props.checkedFolders.length === 1 ||
+      {((props.checkedFolders.length === 1 &&
+        !props.checkedFolders.includes("Pool")) ||
         props.checkedResources.length === 1) && (
         <button
           onClick={() => {
@@ -143,13 +144,15 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
       >
         Export
       </button>
-      <button
-        onClick={() => {
-          handleDelete(props.checkedResources, props.checkedFolders);
-        }}
-      >
-        Delete
-      </button>
+      {!props.checkedFolders.includes("Pool") && (
+        <button
+          onClick={() => {
+            handleDelete(props.checkedResources, props.checkedFolders);
+          }}
+        >
+          Delete
+        </button>
+      )}
     </div>
   );
 }
