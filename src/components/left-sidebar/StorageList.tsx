@@ -94,6 +94,7 @@ const StorageList = () => {
                     resToCopy={resToCopy}
                     setPreviewOpen={setShowPreviewModal}
                     setPreviewPathRepr={setPreviewPathRepr}
+                    resources={resources}
                   />
                 </div>
               );

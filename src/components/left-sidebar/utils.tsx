@@ -168,7 +168,6 @@ export const copyResources = async (
     db.resources,
     db.folderReferences,
     db.bundleFolders,
-    db.resourcesPathRepr,
     async () => {
       const resources = (await db.resources.bulkGet(resourceIds)).filter(
         (resource) => typeof resource !== "undefined"
