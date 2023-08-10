@@ -21,16 +21,19 @@ export interface FolderReference{
 
 export class MySubClassedDexie extends Dexie {
   resources!: Table<Resource>;
-  bundles!: Table<Bundle>;
-  resourcesPathRepr!: Table<ResourcePathRepr>;
   profiles!: Table<StructureDefinition>;
   bundleFolders!: Table<BundleFolder>;
   folderReferences!: Table<FolderReference>
+  // deprecated, not sure if can be deleted on dexie with ts
+  bundles!: Table<Bundle>;
+  resourcesPathRepr!: Table<ResourcePathRepr>;
 
   constructor() {
     super("fhir-creator-db");
     this.version(3).stores({
-      folderReferences: "resourceId, folderId"
+      folderReferences: "resourceId, folderId",
+      bundles: null,
+      resourcesPathRepr: null,
     })
     this.version(2).stores({
       bundleFolders: "id, name",
