@@ -9,7 +9,9 @@ interface RenameProps {
 }
 
 export const RenameModal = (props: RenameProps) => {
-  const [rename, setRename] = useState<string>("");
+  const [rename, setRename] = useState<string>(
+    props.renameFolder ? props.renameFolder : props.renameResource
+  );
   return (
     <ModalWrapper setShow={props.setShowRename}>
       <div className="flex flex-row gap-8">
@@ -23,7 +25,12 @@ export const RenameModal = (props: RenameProps) => {
         />
         <button
           onClick={async () => {
-            handleRename(props.renameFolder, props.renameResource, rename);
+            await handleRename(
+              props.renameFolder,
+              props.renameResource,
+              rename
+            );
+            props.setShowRename(false);
           }}
         >
           Rename

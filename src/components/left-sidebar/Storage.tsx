@@ -21,22 +21,11 @@ const Storage = (props: RightPartProps) => {
   const [checkedResources, setCheckedResources] = useState<string[]>([]);
   const [checkedBundles, setCheckedBundles] = useState<string[]>([]);
   const [checkedProfiles, setCheckedProfiles] = useState<string[]>([]);
-
-  const [showResources, setShowResources] = useState<boolean>(false);
-  const [showBundles, setShowBundles] = useState<boolean>(false);
   const [showProfiles, setShowProfiles] = useState<boolean>(false);
-
   const [showImportMenu, setShowImportMenu] = useState<boolean>(false);
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
-  const [showPreviewModal, setShowPreviewModal] = useState<boolean>(false);
-  const [previewPathRepr, setPreviewPathRepr] = useState<ResourcePathRepr>({
-    id: "",
-    data: [],
-  });
 
   const profiles = useLiveQuery(() => db.profiles.toArray());
-  const resources = useLiveQuery(() => db.resources.toArray());
-  const bundles = useLiveQuery(() => db.bundles.toArray());
 
   const itemsChecked =
     checkedResources.length + checkedBundles.length + checkedProfiles.length >
@@ -118,79 +107,6 @@ const Storage = (props: RightPartProps) => {
               </div>
             </div>
             <StorageList />
-            {/* <div className="flex flex-col gap-2">
-              <div className="flex flex-row w-full items-center">
-                <div
-                  className="overflow-hidden items-center flex flex-row w-full cursor-pointer"
-                  onClick={() => setShowResources(!showResources)}
-                >
-                  <ExpandAccordinoToggle isOpen={showResources} />
-                  <span className="mx-auto">
-                    Resources{" "}
-                    {"(" + !resources ? null : resources?.length + ")"}{" "}
-                  </span>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={
-                    checkedResources.length == resources?.length &&
-                    resources?.length > 0
-                  }
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setCheckedResources(resources!.map((r) => r.id!));
-                    } else {
-                      setCheckedResources([]);
-                    }
-                  }}
-                  className="cursor-pointer"
-                />
-              </div>
-              {showResources ? (
-                <ResourceList
-                  checkedResources={checkedResources}
-                  setCheckedResources={setCheckedResources}
-                  setPreviewOpen={setShowPreviewModal}
-                  setPreviewPathRepr={setPreviewPathRepr}
-                />
-              ) : null}
-              <hr />
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-row w-full items-center">
-                <div
-                  className="overflow-hidden items-center flex flex-row w-full cursor-pointer"
-                  onClick={() => setShowBundles(!showBundles)}
-                >
-                  <ExpandAccordinoToggle isOpen={showBundles} />
-                  <span className="mx-auto">
-                    Bundles {"(" + !bundles ? null : bundles?.length + ")"}{" "}
-                  </span>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={
-                    checkedBundles.length == bundles?.length &&
-                    bundles?.length > 0
-                  }
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setCheckedBundles(bundles!.map((b) => b.id!));
-                    } else {
-                      setCheckedBundles([]);
-                    }
-                  }}
-                  className="cursor-pointer"
-                />
-              </div>
-              {showBundles ? (
-                <BundleList
-                  checkedBundles={checkedBundles}
-                  setCheckedBundles={setCheckedBundles}
-                />
-              ) : null}
-              <hr />
-            </div> */}
             <div className="flex flex-col gap-2">
               <div className="flex flex-row w-full items-center">
                 <div
@@ -225,19 +141,6 @@ const Storage = (props: RightPartProps) => {
                 />
               ) : null}
             </div>
-            {/* {showExportModal && (
-              <ExportModal
-                isOpen={showExportModal}
-                setIsOpen={setShowExportModal}
-              />
-            )}
-            {showPreviewModal && (
-              <PreviewModal
-                pathRepr={previewPathRepr}
-                isOpen={showPreviewModal}
-                setIsOpen={setShowPreviewModal}
-              />
-            )} */}
           </div>
         </div>
       </div>

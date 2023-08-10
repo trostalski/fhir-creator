@@ -20,6 +20,9 @@ const StorageList = () => {
     id: "",
     data: [],
   });
+  const resources = useLiveQuery(() => {
+    return db.resources.toArray();
+  });
 
   const [points, setPoints] = useState({
     x: 99,
@@ -52,26 +55,50 @@ const StorageList = () => {
             handleAddFolder();
           }}
         >
-          Add Folder
+          Add Bundle
         </button>
         {bundleFolderz &&
-          bundleFolderz.map((bundle) => {
-            return (
-              <div key={bundle.id}>
-                <BundleComponent
-                  bundleFolder={bundle}
-                  checkedFolders={checkedFolders}
-                  checkedResources={checkedResources}
-                  setCheckedFolders={setCheckedFolders}
-                  setCheckedResources={setCheckedResources}
-                  resToBeCut={resToBeCut}
-                  resToCopy={resToCopy}
-                  setPreviewOpen={setShowPreviewModal}
-                  setPreviewPathRepr={setPreviewPathRepr}
-                />
-              </div>
-            );
-          })}
+          bundleFolderz // ensure that Pool is always rendered on top of the bundle list
+            .filter((folder) => folder.id === "Pool")
+            .map((bundle) => {
+              return (
+                <div key={bundle.id}>
+                  <BundleComponent
+                    bundleFolder={bundle}
+                    checkedFolders={checkedFolders}
+                    checkedResources={checkedResources}
+                    setCheckedFolders={setCheckedFolders}
+                    setCheckedResources={setCheckedResources}
+                    resToBeCut={resToBeCut}
+                    resToCopy={resToCopy}
+                    setPreviewOpen={setShowPreviewModal}
+                    setPreviewPathRepr={setPreviewPathRepr}
+                    resources={resources}
+                  />
+                </div>
+              );
+            })}
+        {bundleFolderz &&
+          bundleFolderz
+            .filter((folder) => folder.id !== "Pool")
+            .map((bundle) => {
+              return (
+                <div key={bundle.id}>
+                  <BundleComponent
+                    bundleFolder={bundle}
+                    checkedFolders={checkedFolders}
+                    checkedResources={checkedResources}
+                    setCheckedFolders={setCheckedFolders}
+                    setCheckedResources={setCheckedResources}
+                    resToBeCut={resToBeCut}
+                    resToCopy={resToCopy}
+                    setPreviewOpen={setShowPreviewModal}
+                    setPreviewPathRepr={setPreviewPathRepr}
+                    resources={resources}
+                  />
+                </div>
+              );
+            })}
         {showContext && (
           <ContextMenuComponent
             x={points.x}
