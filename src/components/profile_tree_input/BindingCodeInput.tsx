@@ -1,6 +1,6 @@
 import { useStore } from "@/stores/useStore";
 import { ProfileTreeNode } from "@/utils/buildTree";
-import { nodeIsType } from "@/utils/tree_utils";
+import { getNodeByDataPath, nodeIsType } from "@/utils/tree_utils";
 import React from "react";
 import Select from "react-select";
 
@@ -16,29 +16,55 @@ const BindingCodeInput = (props: BindingCodeInputProps) => {
     };
   });
   const getOptions = () => {
-    const codes = props.node.bindingCodes!;
-    const options = codes.map((code) => {
-      let label = "";
-      if (code.display) {
-        label = code.display;
-      } else if (code.code) {
-        label = code.code;
-      }
-      return { value: code.code, label: label };
-    });
+    // not the optimal handling, might be better to have a ResolveBinding class at some point
+    // own handling for references as they usually provid targetProfiles in the reference base node
+    let targetProfiles: string[] | undefined;
+    let options: { value: string | undefined; label: string }[] = [];
+    // special for references as they often provide targetProfiles in the reference base node
+    if (profileTree) {
+      const parentNode = getNodeByDataPath(
+        profileTree,
+        props.node.parentDataPath
+      );
+      targetProfiles = parentNode?.element.type?.find(
+        (item) => item.code === "Reference"
+      )?.targetProfile;
+    }
+
+    if (targetProfiles) {
+      targetProfiles.forEach((profile) => {
+        // split the profile string to get the last part of the url
+        const profileName = profile.split("/").pop();
+        options.push({ value: profile, label: profileName! });
+      });
+    } else {
+      const codes = props.node.bindingCodes!;
+      options = codes.map((code) => {
+        let label = "";
+        if (code.display) {
+          label = code.display;
+        } else if (code.code) {
+          label = code.code;
+        }
+        return { value: code.code, label: label };
+      });
+    }
+
     return options;
   };
 
   const handleOnChange = (e: any) => {
-    const code = props.node.bindingCodes!.find((code) => code.code === e.value);
     const newProfileTree = [...profileTree!];
     const nodeIndex = newProfileTree.findIndex(
       (node) => node.dataPath === props.node.dataPath
     );
     if (nodeIsType(props.node, "CodeableConcept")) {
+      const code = props.node.bindingCodes!.find(
+        (code) => code.code === e.value
+      );
       newProfileTree[nodeIndex].value = code;
     } else {
-      newProfileTree[nodeIndex].value = code!.code;
+      newProfileTree[nodeIndex].value = e.value;
     }
     updateProfileTree(newProfileTree);
   };
