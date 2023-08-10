@@ -8,12 +8,10 @@ import { removeNPathPartsFromStart } from "@/utils/path_utils";
 import {
   checkCardinalities,
   createJsonFromPathArray,
-  createPathArrayFromJson,
   extractPathValuePairs,
   formatInputDataForResource,
 } from "@/utils/utils";
 import React from "react";
-import { isEqual } from "lodash";
 
 interface AddResourceButtonProps {
   setPathsWithInvalidCardinality: React.Dispatch<
@@ -42,7 +40,6 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
       </button>
     );
   }
-
   const addResourceTypeToInputData = (inputData: PathItem[]) => {
     return [
       ...inputData,
@@ -57,7 +54,7 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
     return (
       <button
         disabled={profileTree.length === 0}
-        className={`bg-green-600 flex-shrink-0 w-36  text-white py-1 px-4 rounded  ${
+        className={`bg-green-600 shrink-0 w-36 text-white py-1 px-4 rounded  ${
           profileTree.length === 0
             ? "bg-opacity-50 cursor-not-allowed"
             : "hover:bg-green-800"
@@ -119,7 +116,7 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
   } else if (mode == Modes.EDIT) {
     return (
       <button
-        className={`bg-green-600 w-36  text-white py-1 px-4 rounded  ${
+        className={`bg-green-600 w-36 shrink-0 text-white py-1 px-4 rounded  ${
           profileTree.length === 0
             ? "bg-opacity-50 cursor-not-allowed"
             : "hover:bg-green-800"

@@ -13,7 +13,7 @@ import uniq from "lodash/uniq";
 
 export const isProd = () => {
   return process.env.NEXT_PUBLIC_ENV === "prod";
-}
+};
 
 export const containsDot = (str: string) => {
   return str.includes(".");
@@ -288,36 +288,38 @@ export function removeNullValues(obj: any): any {
     }, {});
 }
 
-export function createPathArrayFromJson(obj: any, currentPath: string = ""): PathItem[] {
+export function createPathArrayFromJson(
+  obj: any,
+  currentPath: string = ""
+): PathItem[] {
   let result: PathItem[] = [];
 
   for (const key in obj) {
     if (Array.isArray(obj[key])) {
       for (let i = 0; i < obj[key].length; i++) {
         const newPath = `${currentPath}${currentPath ? "." : ""}${key}[${i}]`;
-        if (typeof obj[key][i] === 'object' && obj[key][i] !== null) {
+        if (typeof obj[key][i] === "object" && obj[key][i] !== null) {
           result = result.concat(createPathArrayFromJson(obj[key][i], newPath));
         } else {
           result.push({
             path: newPath,
-            value: obj[key][i]
+            value: obj[key][i],
           });
         }
       }
-    } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+    } else if (typeof obj[key] === "object" && obj[key] !== null) {
       const newPath = `${currentPath}${currentPath ? "." : ""}${key}`;
       result = result.concat(createPathArrayFromJson(obj[key], newPath));
     } else {
       result.push({
         path: `${currentPath}${currentPath ? "." : ""}${key}`,
-        value: obj[key]
+        value: obj[key],
       });
     }
   }
 
   return result;
 }
-
 
 // currently in use
 export function createJsonFromPathArray(pathArray: PathItem[]): any {

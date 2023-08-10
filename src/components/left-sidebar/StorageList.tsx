@@ -6,9 +6,11 @@ import { handleAddFolder } from "./utils";
 import ContextMenuComponent from "./contextMenu/ContextMenuComponent";
 import { RenameModal } from "./contextMenu/RenameModal";
 import { PreviewModal } from "./PreviewModal";
-import { el } from "date-fns/locale";
+import { MdAdd } from "react-icons/md";
+import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
 
 const StorageList = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(true);
   const [checkedResources, setCheckedResources] = useState<string[]>([]);
   const [checkedFolders, setCheckedFolders] = useState<string[]>([]);
   const [resToBeCut, setResToBeCut] = useState<string[]>([]);
@@ -41,23 +43,37 @@ const StorageList = () => {
   });
 
   return (
-    <>
-      <div
-        onContextMenu={(e) => {
-          e.preventDefault();
-          setShowContext(true);
-          setPoints({ x: e.pageX, y: e.pageY });
-        }}
-      >
+    <div
+      onContextMenu={(e) => {
+        e.preventDefault();
+        setShowContext(true);
+        setPoints({ x: e.pageX, y: e.pageY });
+      }}
+    >
+      <div className="overflow-hidden py-1 items-center flex flex-row w-full">
+        <div
+          className="flex flex-row items-center cursor-pointer w-full"
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
+        >
+          <ExpandAccordionToggle isOpen={isOpen} />
+          <span className="mx-auto">
+            {"Bundles " + "(" + bundleFolderz?.length + ")"}
+          </span>
+        </div>
         <button
-          className="border-2 rounded"
+          className="bg-blue-500 text-white rounded-md hover:bg-blue-600"
           onClick={() => {
             handleAddFolder();
           }}
         >
-          Add Bundle
+          <MdAdd size={24} />
         </button>
+      </div>
+      <div className="flex flex-col gap-1">
         {bundleFolderz &&
+          isOpen &&
           bundleFolderz // ensure that Pool is always rendered on top of the bundle list
             .filter((folder) => folder.id === "Pool")
             .map((bundle) => {
@@ -79,6 +95,7 @@ const StorageList = () => {
               );
             })}
         {bundleFolderz &&
+          isOpen &&
           bundleFolderz
             .filter((folder) => folder.id !== "Pool")
             .map((bundle) => {
@@ -99,36 +116,36 @@ const StorageList = () => {
                 </div>
               );
             })}
-        {showContext && (
-          <ContextMenuComponent
-            x={points.x}
-            y={points.y}
-            checkedFolders={checkedFolders}
-            checkedResources={checkedResources}
-            resToBeCut={resToBeCut}
-            resToCopy={resToCopy}
-            setCheckedResources={setCheckedResources}
-            setResToCopy={setResToCopy}
-            setResToCut={setResToBeCut}
-            setShowRename={setShowRename}
-          />
-        )}
-        {showRename && (
-          <RenameModal
-            setShowRename={setShowRename}
-            renameFolder={checkedFolders[0]}
-            renameResource={checkedResources[0]}
-          />
-        )}
-        {showPreviewModal && (
-          <PreviewModal
-            pathRepr={previewPathRepr}
-            isOpen={showPreviewModal}
-            setIsOpen={setShowPreviewModal}
-          />
-        )}
       </div>
-    </>
+      {showContext && (
+        <ContextMenuComponent
+          x={points.x}
+          y={points.y}
+          checkedFolders={checkedFolders}
+          checkedResources={checkedResources}
+          resToBeCut={resToBeCut}
+          resToCopy={resToCopy}
+          setCheckedResources={setCheckedResources}
+          setResToCopy={setResToCopy}
+          setResToCut={setResToBeCut}
+          setShowRename={setShowRename}
+        />
+      )}
+      {showRename && (
+        <RenameModal
+          setShowRename={setShowRename}
+          renameFolder={checkedFolders[0]}
+          renameResource={checkedResources[0]}
+        />
+      )}
+      {showPreviewModal && (
+        <PreviewModal
+          pathRepr={previewPathRepr}
+          isOpen={showPreviewModal}
+          setIsOpen={setShowPreviewModal}
+        />
+      )}
+    </div>
   );
 };
 

@@ -5,12 +5,14 @@ import ResourceList from "./ResourceList";
 import ImportMenu from "./ImportMenu";
 import ExportModal from "../ExportModal";
 import BundleList from "./BundleList";
-import ExpandAccordinoToggle from "../shared/ExpandAccordinoToggle";
+import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
 import { useLiveQuery } from "dexie-react-hooks";
 import { ResourcePathRepr, db } from "@/db/db";
 import { PreviewModal } from "./PreviewModal";
 import { deleteResources, deleteBundles, deleteProfiles } from "@/db/utils";
 import StorageList from "./StorageList";
+import { MdAdd } from "react-icons/md";
+import { useProfileUpload } from "@/hooks/useProfileUpload";
 
 interface RightPartProps {
   startResizing: () => void;
@@ -26,6 +28,7 @@ const Storage = (props: RightPartProps) => {
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
 
   const profiles = useLiveQuery(() => db.profiles.toArray());
+  const { handleProfileUpload } = useProfileUpload();
 
   const itemsChecked =
     checkedResources.length + checkedBundles.length + checkedProfiles.length >
@@ -113,26 +116,23 @@ const Storage = (props: RightPartProps) => {
                   className="overflow-hidden items-center flex flex-row w-full cursor-pointer"
                   onClick={() => setShowProfiles(!showProfiles)}
                 >
-                  <ExpandAccordinoToggle isOpen={showProfiles} />
+                  <ExpandAccordionToggle isOpen={showProfiles} />
                   <span className="mx-auto">
-                    Profiles {"(" + !profiles ? null : profiles?.length + ")"}{" "}
+                    {"Profiles " + "(" + profiles?.length + ")"}
                   </span>
                 </div>
-                <input
-                  type="checkbox"
-                  checked={
-                    checkedProfiles.length == profiles?.length &&
-                    profiles?.length > 0
-                  }
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setCheckedProfiles(profiles!.map((p) => p.id!));
-                    } else {
-                      setCheckedProfiles([]);
-                    }
-                  }}
-                  className="cursor-pointer"
-                />
+                <label
+                  className="bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600"
+                  onClick={() => {}}
+                >
+                  <MdAdd size={24} />
+                  <input
+                    hidden
+                    multiple
+                    type="file"
+                    onChange={handleProfileUpload}
+                  />
+                </label>
               </div>
               {showProfiles ? (
                 <ProfilesList

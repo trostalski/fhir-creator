@@ -32,7 +32,8 @@ export const fetchProfileTree = async (
     }),
   });
   if (!profileTreeResponse.ok) {
-    throw new Error("Error fetching profile tree");
+    console.log("Error fetching profile tree");
+    return false;
   }
   const profileTreeJson = await profileTreeResponse.json();
   return profileTreeJson;

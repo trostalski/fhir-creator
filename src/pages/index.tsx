@@ -10,21 +10,24 @@ import AddResourceButton from "@/components/buttons/AddResourceButton";
 import { useStore } from "@/stores/useStore";
 import Layout from "@/components/Layout";
 import { toastPromise } from "@/toasts";
+import { getResourceTypeFromProfile } from "@/utils/utils";
 
 const Home = () => {
   const [checkoutModalOpen, setCheckoutModalOpen] = useState<boolean>(false);
   const [pathsWithInvalidCardinality, setPathsWithInvalidCardinality] =
     useState<string[]>([]);
 
-  const { setProfileTree, profileTree, setMode } = useStore((state) => {
-    return {
-      setProfileTree: state.setProfileTree,
-      profileTree: state.activeProfileTree,
-      profile: state.activeProfile,
-      mode: state.mode,
-      setMode: state.setMode,
-    };
-  });
+  const { setProfileTree, profileTree, profile, setMode } = useStore(
+    (state) => {
+      return {
+        setProfileTree: state.setProfileTree,
+        profileTree: state.activeProfileTree,
+        profile: state.activeProfile,
+        mode: state.mode,
+        setMode: state.setMode,
+      };
+    }
+  );
 
   const handleSelectBaseProfile = async (value: string) => {
     const profile = await getBaseProfile(value);
@@ -38,6 +41,14 @@ const Home = () => {
           <Select
             instanceId={"baseprofile-select"}
             className="w-[1000px] mx-auto"
+            value={
+              profile
+                ? resourceOptions.find(
+                    (option) =>
+                      getResourceTypeFromProfile(profile) === option.value
+                  )
+                : null
+            }
             options={resourceOptions}
             placeholder="Select Base Profile"
             onChange={async (e) => {

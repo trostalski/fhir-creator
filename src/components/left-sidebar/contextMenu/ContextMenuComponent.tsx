@@ -1,13 +1,11 @@
-import { Resource, StructureDefinition } from "fhir/r4";
 import { copyFolders, executeCopy, executeCut, handleDelete } from "../utils";
-import { createPathArrayFromJson, isBaseUrl } from "@/utils/utils";
-import { checkoutResources, exportBundle, getBaseProfile } from "@/db/utils";
-import { useLiveQuery } from "dexie-react-hooks";
+import { createPathArrayFromJson } from "@/utils/utils";
+import { checkoutResources, exportBundle } from "@/db/utils";
 import { db } from "@/db/db";
 import { toastError } from "@/toasts";
 import { useStore } from "@/stores/useStore";
 import { Modes } from "@/utils/constants";
-import { RenameModal } from "./RenameModal";
+import { resolveProfileForResource } from "@/components/buttons/ImportResourceButton";
 
 interface ContextMenuProps {
   x: number;
@@ -30,7 +28,6 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
       setResource: state.setResource,
     };
   });
-  const profiles = useLiveQuery(() => db.profiles.toArray());
 
   const handleEdit = async (resourceId: string) => {
     const resource = await db.resources.get(resourceId);
@@ -38,15 +35,8 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
       toastError("No resource found");
       return;
     }
-    let profile: StructureDefinition | undefined;
+    const profile = await resolveProfileForResource(resource);
     const resourcePathRepr = createPathArrayFromJson(resource);
-    const profileUrl = resource.meta!.profile![0];
-    if (profileUrl && isBaseUrl(profileUrl)) {
-      const resourceType = resource.resourceType;
-      profile = await getBaseProfile(resourceType);
-    } else if (profileUrl) {
-      profile = profiles?.find((profile) => profile.url === profileUrl);
-    }
     if (!profile) {
       toastError("No profile found for this resource");
       return;
@@ -57,11 +47,12 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
   };
   return (
     <div
-      className={`flex flex-col align-start rounded text-white border-2-black fixed bg-slate-500`}
+      className={`flex flex-col gap-1 rounded-md text-white border-2-black fixed bg-slate-400 px-2`}
       style={{ left: props.x, top: props.y }}
     >
       {props.checkedResources.length > 0 && (
         <button
+          className="hover:underline"
           onClick={() => {
             props.setResToCopy(props.checkedResources);
             props.setCheckedResources([]);
@@ -72,6 +63,7 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
       )}
       {props.checkedResources.length > 0 && (
         <button
+          className="hover:underline"
           onClick={() => {
             props.setResToCut(props.checkedResources);
             props.setCheckedResources([]);
@@ -83,6 +75,7 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
       {props.checkedFolders.length === 1 &&
         (props.resToBeCut.length > 0 || props.resToCopy.length > 0) && (
           <button
+            className="hover:underline"
             onClick={async () => {
               if (props.resToBeCut.length > 0) {
                 await executeCut(
@@ -104,6 +97,7 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
         )}
       {props.checkedFolders.length > 0 && (
         <button
+          className="hover:underline"
           onClick={async () => {
             await copyFolders(props.checkedFolders);
           }}
@@ -112,7 +106,10 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
         </button>
       )}
       {props.checkedResources.length === 1 && (
-        <button onClick={async () => handleEdit(props.checkedResources[0])}>
+        <button
+          onClick={async () => handleEdit(props.checkedResources[0])}
+          className="hover:underline"
+        >
           Edit
         </button>
       )}
@@ -120,6 +117,7 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
         !props.checkedFolders.includes("Pool")) ||
         props.checkedResources.length === 1) && (
         <button
+          className="hover:underline"
           onClick={() => {
             props.setShowRename(true);
           }}
@@ -128,6 +126,7 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
         </button>
       )}
       <button
+        className="hover:underline"
         onClick={async () => {
           if (props.checkedFolders.length > 0) {
             for (const folder of props.checkedFolders) {
@@ -146,6 +145,7 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
       </button>
       {!props.checkedFolders.includes("Pool") && (
         <button
+          className="hover:underline"
           onClick={() => {
             handleDelete(props.checkedResources, props.checkedFolders);
           }}

@@ -1,11 +1,8 @@
 import { BundleFolder, ResourcePathRepr } from "@/db/db";
-import { useLiveQuery } from "dexie-react-hooks";
 import { useState } from "react";
-import { db } from "@/db/db";
-import { RenameModal } from "./contextMenu/RenameModal";
 import { AiOutlineEye } from "react-icons/ai";
 import { createPathArrayFromJson } from "@/utils/utils";
-import ExpandAccordinoToggle from "../shared/ExpandAccordinoToggle";
+import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
 import { Resource } from "fhir/r4";
 
 interface BundleComponentProps {
@@ -70,9 +67,9 @@ const BundleComponent = (props: BundleComponentProps) => {
   };
 
   return (
-    <div>
-      <div className="flex flex-row divide-y">
-        <ExpandAccordinoToggle
+    <div className="border border-gray-300 rounded-md p-1">
+      <div className="flex flex-row items-center gap-2 hover:underline">
+        <ExpandAccordionToggle
           isOpen={showResources}
           onClick={() => setShowResources(!showResources)}
         />
@@ -99,16 +96,19 @@ const BundleComponent = (props: BundleComponentProps) => {
             props.checkedFolders.includes(BundleId)
               ? "text-slate-500"
               : "text-black"
-          } font-bold truncate`}
+          } font-light truncate hover:underline`}
         >
-          {`${BundleId === "Pool" ? "ResourcePool" : "Bundle/" + BundleId}`}
+          {`${BundleId === "Pool" ? "Resource Pool" : "Bundle/" + BundleId}`}
         </button>{" "}
       </div>
       {showResources &&
         resources &&
         resources.map((resource) => {
           return (
-            <div key={resource.id} className="flex flex-row">
+            <div
+              key={resource.id}
+              className="flex flex-row pl-2 items-center justify-between text-xs hover:underline"
+            >
               <button
                 className={`${
                   props.checkedResources.includes(resource.id!)

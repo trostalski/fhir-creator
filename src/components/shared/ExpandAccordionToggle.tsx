@@ -7,19 +7,19 @@ interface ExpandAccordinoToggleProps {
   size?: number;
 }
 
-const ExpandAccordinoToggle = (props: ExpandAccordinoToggleProps) => {
+const ExpandAccordionToggle = (props: ExpandAccordinoToggleProps) => {
   return (
     <>
       {props.isOpen ? (
         <MdExpandLess
           size={props.size || 20}
-          className="cursor-pointer"
+          className="cursor-pointer shrink-0"
           onClick={props.onClick}
         />
       ) : (
         <MdExpandMore
           size={props.size || 20}
-          className="cursor-pointer"
+          className="cursor-pointer shrink-0"
           onClick={props.onClick}
         />
       )}
@@ -27,4 +27,4 @@ const ExpandAccordinoToggle = (props: ExpandAccordinoToggleProps) => {
   );
 };
 
-export default ExpandAccordinoToggle;
+export default ExpandAccordionToggle;
