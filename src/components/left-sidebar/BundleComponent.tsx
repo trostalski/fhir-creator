@@ -34,7 +34,7 @@ const BundleComponent = (props: BundleComponentProps) => {
     otherSetterFunc: (data: string[]) => void
   ) => {
     otherSetterFunc([]); // to prevent unexpected behaviour, only let either resources or folders be selected at the same time
-    if (e.ctrlKey) {
+    if (e.ctrlKey || e.metaKey) {
       setterFunc(
         selectedArr.includes(itemId)
           ? selectedArr.filter((item) => item !== itemId)
