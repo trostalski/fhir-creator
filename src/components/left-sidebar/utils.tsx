@@ -17,7 +17,15 @@ export const handleRename = async (
   resourceRename: string,
   rename: string
 ) => {
+  console.log("handleRename");
   if (folderRename?.length > 0) {
+    // check if folder with requested id does exist already
+    const checkExists = await db.bundleFolders.get(rename);
+    console.log(checkExists);
+    if (checkExists) {
+      toastError("A Bundle with this id does already exist in Store");
+      return;
+    }
     await db.transaction(
       "rw",
       db.folderReferences,
@@ -39,6 +47,12 @@ export const handleRename = async (
       }
     );
   } else if (resourceRename?.length > 0) {
+    // check if resource with requested id does exist already
+    const checkExists = await db.resources.get(rename);
+    if (checkExists) {
+      toastError("A Resource with this id does already exist in Store");
+      return;
+    }
     await db.transaction(
       "rw",
       db.resources,
