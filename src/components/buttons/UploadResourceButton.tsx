@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
 
 const UploadResourceButton = () => {
-  return (
-    <div>UploadResourceButton</div>
-  )
-}
+  return <div>UploadResourceButton</div>;
+};
 
-export default UploadResourceButton
+// Is this used anywhere? can be removed?
+
+export default UploadResourceButton;

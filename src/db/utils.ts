@@ -1,8 +1,9 @@
-import { PathItem } from "@/types";
 import { toastError } from "@/toasts";
 import { Bundle, Resource, StructureDefinition } from "fhir/r4";
-import { db } from "./db";
+import { BundleFolder, db } from "./db";
 import { FhirResource } from "fhir/r4";
+import { v4 as uuidv4 } from "uuid";
+import { resolveProfileForResource } from "@/components/buttons/ImportResourceButton";
 
 export const getBaseProfile = async (resourceType: string) => {
   try {
@@ -21,6 +22,16 @@ export async function getResource(id: string) {
     return resource;
   } catch (error) {
     console.log(`Failed to get resource with id ${id}`);
+  }
+}
+
+export async function resourceExists(id: string) {
+  try {
+    const resource = await db.resources.get(id);
+    return resource !== undefined;
+  } catch (error) {
+    console.log(`Failed to get resource with id ${id}`);
+    return false;
   }
 }
 
@@ -46,10 +57,25 @@ export async function deleteResources(ids: string[]) {
 
 export async function addResource(resource: Resource) {
   try {
-    await db.resources.add(resource);
+    db.transaction(
+      "rw",
+      db.resources,
+      db.folderReferences,
+      db.bundleFolders,
+      async () => {
+        db.resources.add(resource);
+        db.bundleFolders
+          .where("id")
+          .equals("Pool")
+          .modify((folder) => {
+            folder.resourceIds = [...folder.resourceIds, resource.id!];
+          });
+        db.folderReferences.add({ folderId: "Pool", resourceId: resource.id! });
+      }
+    );
     return true;
   } catch (error) {
-    console.log(`Failed to add resource`);
+    console.log(error);
     return false;
   }
 }
@@ -90,6 +116,69 @@ export async function addBundle(bundle: Bundle) {
     return true;
   } catch (error) {
     console.log(`Failed to add bundle`);
+    return false;
+  }
+}
+
+export async function parseBundle(bundle: Bundle) {
+  // Ensure bundle has an ID
+  if (!bundle.id) {
+    bundle.id = uuidv4();
+  }
+
+  // Extract resources and their IDs from the bundle
+  const resources = (bundle.entry || [])
+    .map((entry) => entry.resource)
+    .filter((resource) => {
+      if (resource?.id) {
+        return true;
+      } else {
+        return false;
+      }
+    }) as FhirResource[];
+  const resourceIds = resources.map((resource) => resource.id!);
+
+  // Create the metaInfo object
+  const metaInfo: Bundle = { ...bundle, entry: [] };
+
+  // Create the bundleFolder object
+  const bundleFolder: BundleFolder = {
+    id: bundle.id,
+    resourceIds: resourceIds,
+    meta: metaInfo,
+  };
+  const folderReferences = resourceIds.map((resourceId) => ({
+    resourceId: resourceId,
+    folderId: bundle.id!,
+  }));
+
+  // Transaction for adding to database
+  try {
+    await db.transaction(
+      "rw",
+      db.bundleFolders,
+      db.resources,
+      db.folderReferences,
+      async () => {
+        await db.bundleFolders.add(bundleFolder);
+        if (resources.length > 0) {
+          for (const resource of resources) {
+            const profile = resolveProfileForResource(resource);
+            if (!profile) {
+              toastError(
+                "Could not find profile for resource. Please import a profile first."
+              );
+              return;
+            }
+          }
+          await db.resources.bulkAdd(resources);
+          await db.folderReferences.bulkAdd(folderReferences);
+        }
+      }
+    );
+    return true;
+  } catch (error) {
+    console.error("Failed to parse bundle:", error);
     return false;
   }
 }
@@ -147,6 +236,45 @@ function addBundlesToBundle(bundle: Bundle, bundles: Bundle[]) {
       bundle.entry!.push(resource);
     }
   });
+  return bundle;
+}
+
+export async function exportBundle(bundleId: string) {
+  const bundleFolder = await db.bundleFolders.get(bundleId);
+  if (!bundleFolder) {
+    toastError("No bundle for export found");
+    return;
+  }
+  const bundle = await createBundleFromFolder(bundleFolder);
+  const bundle_string = JSON.stringify(bundle, null, 2);
+  const blob = new Blob([bundle_string], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const filename = `Bundle_${bundleFolder.id}` + ".json";
+  fetch(url)
+    .then((response) => response.blob())
+    .then((blob) => {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+}
+
+export async function createBundleFromFolder(bundleFolder: BundleFolder) {
+  const resources = (await db.resources
+    .where("id")
+    .anyOf(bundleFolder.resourceIds)
+    .toArray()) as unknown as FhirResource[];
+  const entries = resources.map((resource) => {
+    return { resource: resource };
+  }); // way bundle.entry stores resources
+  const bundle: Bundle = {
+    ...bundleFolder.meta,
+    entry: entries,
+    id: bundleFolder.id,
+  };
   return bundle;
 }
 

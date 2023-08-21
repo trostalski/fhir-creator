@@ -1,4 +1,4 @@
-import { addResource, updateResource } from "@/db/utils";
+import { addResource, resourceExists, updateResource } from "@/db/utils";
 import { useStore } from "@/stores/useStore";
 import { toastError, toastSuccess } from "@/toasts";
 import { PathItem } from "@/types";
@@ -40,7 +40,6 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
       </button>
     );
   }
-
   const addResourceTypeToInputData = (inputData: PathItem[]) => {
     return [
       ...inputData,
@@ -55,12 +54,12 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
     return (
       <button
         disabled={profileTree.length === 0}
-        className={`bg-green-600 flex-shrink-0 w-36  text-white py-1 px-4 rounded  ${
+        className={`bg-green-600 shrink-0 w-36 text-white py-1 px-4 rounded  ${
           profileTree.length === 0
             ? "bg-opacity-50 cursor-not-allowed"
             : "hover:bg-green-800"
         }}`}
-        onClick={() => {
+        onClick={async () => {
           if (profileTree.length === 0) {
             return;
           }
@@ -84,6 +83,10 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
           let formattedInputData = formatInputDataForResource(inputData);
           formattedInputData = addResourceTypeToInputData(formattedInputData);
           const resource = createJsonFromPathArray(formattedInputData);
+          if (await resourceExists(resource.id)) {
+            toastError("Resource with this id already exists.");
+            return;
+          }
           // Constraint check
           const constraintResolver = new ConstraintResolver(
             profileTree,
@@ -113,7 +116,7 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
   } else if (mode == Modes.EDIT) {
     return (
       <button
-        className={`bg-green-600 w-36  text-white py-1 px-4 rounded  ${
+        className={`bg-green-600 w-36 shrink-0 text-white py-1 px-4 rounded  ${
           profileTree.length === 0
             ? "bg-opacity-50 cursor-not-allowed"
             : "hover:bg-green-800"

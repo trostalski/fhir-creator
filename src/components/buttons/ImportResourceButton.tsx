@@ -1,5 +1,5 @@
 import { db } from "@/db/db";
-import { addBundle, addResource, getBaseProfile } from "@/db/utils";
+import { addResource, getBaseProfile, parseBundle } from "@/db/utils";
 import { toastError, toastSuccess } from "@/toasts";
 import { isBaseUrl } from "@/utils/utils";
 import { Bundle, Resource, StructureDefinition } from "fhir/r4";
@@ -68,22 +68,7 @@ const ImportResourceButton = (props: ImportResourceButtonProps) => {
               toastError("File is not a bundle.");
               return;
             }
-            if (!bundle.id) {
-              bundle.id = Math.random().toString(36).substring(7);
-            }
-            for (const entry of bundle.entry) {
-              const resource = entry.resource as Resource;
-              const profile = resolveProfileForResource(resource);
-              if (!profile) {
-                toastError(
-                  `Could not find profile for resource ${
-                    resource.resourceType + "/" + resource.id
-                  }. Please import a profile first.`
-                );
-                return;
-              }
-            }
-            const addBundleSuccess = await addBundle(bundle);
+            const addBundleSuccess = await parseBundle(bundle);
             if (!addBundleSuccess) {
               toastError("Could not import bundle.");
               return;

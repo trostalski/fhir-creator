@@ -13,9 +13,9 @@ interface InputFromTypeProps {
 const InputFromType = (props: InputFromTypeProps) => {
   const { profileTree, updateProfileTree } = useStore((state) => {
     return {
-      setProfileTree: state.setProfileTree,
       profileTree: state.activeProfileTree,
       updateProfileTree: state.updateProfileTree,
+      setMode: state.setMode,
     };
   });
   const handleChange = (
