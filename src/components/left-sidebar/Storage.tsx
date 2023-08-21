@@ -1,14 +1,10 @@
 import React, { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import ProfilesList from "./ProfilesList";
-import ResourceList from "./ResourceList";
 import ImportMenu from "./ImportMenu";
-import ExportModal from "../ExportModal";
-import BundleList from "./BundleList";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
 import { useLiveQuery } from "dexie-react-hooks";
-import { ResourcePathRepr, db } from "@/db/db";
-import { PreviewModal } from "./PreviewModal";
+import { db } from "@/db/db";
 import { deleteResources, deleteBundles, deleteProfiles } from "@/db/utils";
 import StorageList from "./StorageList";
 import { MdAdd } from "react-icons/md";

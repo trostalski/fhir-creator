@@ -1,5 +1,5 @@
 import ModalWrapper from "@/components/ModalWrapper";
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import { handleRename } from "../utils";
 
 interface RenameProps {
