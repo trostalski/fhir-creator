@@ -140,3 +140,34 @@ export interface CodedTerm {
 export interface FTSResponse {
   coded_terms: CodedTerm[];
 }
+
+export interface TextDisplayProps {
+  text: string;
+  outline?: Outline;
+  setText: (text: string) => void;
+}
+
+export interface TextInputProps {
+  text: string;
+  setText: (text: string) => void;
+  setOutline: (outline: Outline) => void;
+}
+
+export interface ValueState {
+  start: number;
+  end: number;
+  tag: string;
+}
+
+export interface OutlineItem {
+  item: string;
+  matches?: [number, number][];
+}
+
+export interface Outline {
+  [key: string]: OutlineItem[];
+}
+
+export interface OldOutline {
+  [key: string]: string[];
+}
