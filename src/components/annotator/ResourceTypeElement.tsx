@@ -17,6 +17,7 @@ const ResourceTypeElement = (props: ResourceTypeElementProps) => {
             outline={props.outline}
             setOutline={props.setOutline}
             entity={entity}
+            resourceType={props.resourceType}
             key={entity.item}
           />
         );
