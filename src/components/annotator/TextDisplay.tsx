@@ -12,7 +12,7 @@ export function TextDisplay(props: TextDisplayProps) {
   }
 
   return (
-    <div>
+    <div className="overflow-y-auto h-3/4">
       <TextAnnotator
         content={props.text}
         onChange={(value) => {

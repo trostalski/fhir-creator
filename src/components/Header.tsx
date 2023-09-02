@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { AiFillGithub } from "react-icons/ai";
 import { RiAncientGateFill } from "react-icons/ri";
@@ -9,6 +10,7 @@ const Header = () => {
         <h1> FHIR Creator</h1>
         <span className="flex-grow"></span>
         <div className="flex flex-row gap-4">
+          <Link href={"/"}>Home</Link>
           <a href="https://github.com/trostalski/fhir-creator" target="_blank">
             <AiFillGithub size={32} style={{ color: "white" }} />
           </a>

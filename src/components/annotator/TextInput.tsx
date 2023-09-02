@@ -41,24 +41,34 @@ export function TextInput(props: TextInputProps) {
   }
 
   return (
-    <div>
+    <div className="flex flex-col h-[25vh] w-1/2">
       <textarea
+        className="h-full w-full"
         name="input"
         id=""
-        cols={100}
-        rows={20}
-        placeholder={"Enter your text here"}
+        placeholder={"Copy your text here"}
         onChange={(e) => {
           onChange(e);
         }}
       ></textarea>
       <button
+        className="bg-blue-500 text-white text-lg font-semibold py-4 rounded-lg hover:bg-blue-700"
         onClick={() => {
-          handleParse();
+          props.setText(tempText);
         }}
       >
-        Parse
+        Start Annotation
       </button>
     </div>
   );
+}
+
+{
+  /* <button
+  onClick={() => {
+    handleParse();
+  }}
+>
+  Parse
+</button> */
 }
