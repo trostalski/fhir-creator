@@ -41,6 +41,7 @@ const Annotator = () => {
       setOutline(matchedOutline);
     }
   }
+  console.log(outline);
   return (
     <Layout>
       <div className="flex flex-row pt-4 w-full gap-5">
@@ -88,7 +89,9 @@ const Annotator = () => {
           </div>
           <TextDisplay text={text} setText={setText} outline={outline} />
         </div>
-        <BundleOutline />
+        <div className="w-1/5 overflow-auto">
+          <BundleOutline outline={outline} setOutline={setOutline} />
+        </div>
       </div>
     </Layout>
   );
