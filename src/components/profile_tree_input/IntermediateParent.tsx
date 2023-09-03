@@ -29,7 +29,7 @@ import { useStore } from "@/stores/useStore";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
 import { ConstraintComponent } from "./ConstraintComponent";
 import CodingInput from "./CodingInput";
-import { textInputStyle } from "@/styles/inputStyles";
+import { selectInputStyle, textInputStyle } from "@/styles/inputStyles";
 
 interface IntermediateParentProps {
   node: ProfileTreeNode;
@@ -59,7 +59,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
   const renderNode = (node: ProfileTreeNode) => {
     if (node.isPrimitive) {
       return (
-        <div key={node.dataPath} className="w-full pb-2">
+        <div key={node.dataPath} className="w-full">
           <PrimitveInput
             node={node}
             pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
@@ -87,34 +87,10 @@ const IntermediateParent = (props: IntermediateParentProps) => {
   }
 
   return (
-    <div
-      className="w-full rounded-md border-gray-200"
-      key={props.node.dataPath}
-    >
+    <div className="w-full rounded-md" key={props.node.dataPath}>
       <div className="flex flex-row">
-        <div
-          className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
-            profileTree!,
-            props.pathsWithInvalidCardinality,
-            guiConstraintResolver?.hasConstraintIssue() || false,
-            props.node
-          )}`}
-        >
-          <button
-            className="flex flex-row items-center h-full"
-            onClick={() => {
-              props.toggleNodeExpansion(props.node.dataPath);
-            }}
-          >
-            {props.expandedNodes.includes(props.node.dataPath) ? (
-              <MdExpandLess size={16} />
-            ) : (
-              <MdExpandMore size={16} />
-            )}
-          </button>
-        </div>
-        <div className="flex flex-col w-full pl-2">
-          <div className="flex flex-row items-center">
+        <div className="flex flex-row items-start justify-start">
+          <div className="flex flex-row items-center gap-2">
             <div className="flex flex-row items-center gap-2">
               <h2
                 className={`text-sm font-bold ${
@@ -132,6 +108,31 @@ const IntermediateParent = (props: IntermediateParentProps) => {
               </span> */}
               <ConstraintComponent resolver={guiConstraintResolver} />
             </div>
+            <div
+              className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
+                profileTree!,
+                props.pathsWithInvalidCardinality,
+                guiConstraintResolver?.hasConstraintIssue() || false,
+                props.node
+              )}`}
+            >
+              <button
+                className="flex flex-row items-center h-full"
+                onClick={() => {
+                  props.toggleNodeExpansion(props.node.dataPath);
+                }}
+              >
+                {props.expandedNodes.includes(props.node.dataPath) ? (
+                  <MdExpandLess size={16} />
+                ) : (
+                  <MdExpandMore size={16} />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col w-full pl-2">
+          <div className="flex flex-row items-center">
             <span className="flex-grow" />
             <div className="flex flex-row items-center gap-2">
               {props.node.element.sliceName && (
@@ -142,7 +143,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
                 <select
                   id="element-type"
                   placeholder="Type"
-                  className={textInputStyle}
+                  className={selectInputStyle}
                   value={props.node.multiTypeType}
                   onChange={(e) => {
                     const newProfileTree = [...profileTree!];
@@ -230,7 +231,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
             </div>
           </div>
           {props.expandedNodes.includes(props.node.dataPath) && (
-            <div className="flex flex-row flex-wrap gap-1 pl-12 py-2">
+            <div className="flex flex-row flex-wrap pl-2">
               {props.node.element.id?.endsWith("coding") ? (
                 <CodingInput
                   key={props.node.dataPath}
@@ -261,7 +262,7 @@ const IntermediateParent = (props: IntermediateParentProps) => {
           )}
         </div>
       </div>
-      <hr className="mt-2" />
+      {/* <hr className="mt-2" /> */}
     </div>
   );
 };

@@ -4,6 +4,8 @@ export const reactSelectStyles = {
     minHeight: 24,
     borderRadius: 2,
     borderColor: "#9ca3af",
+    // inner shadow
+    boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
   }),
   valueContainer: (base: any) => ({
     ...base,

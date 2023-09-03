@@ -270,10 +270,10 @@ export function getExpansionBgColour(
   hastConstraintIssues: boolean,
   node: ProfileTreeNode
 ) {
-  if (nodeOrChildWasModified(profileTree, node)) {
-    return "bg-green-500";
-  } else if (pathsWithInvalidCardinality.includes(node.dataPath)) {
+  if (pathsWithInvalidCardinality.includes(node.dataPath)) {
     return "bg-red-400";
+  } else if (nodeOrChildWasModified(profileTree, node)) {
+    return "bg-green-500";
   } else if (hastConstraintIssues) {
     return "bg-pink-800";
   } else if (node.element.sliceName) {

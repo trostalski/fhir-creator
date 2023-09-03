@@ -28,6 +28,7 @@ import IntermediateParent from "./IntermediateParent";
 import { useStore } from "@/stores/useStore";
 import { ConstraintComponent } from "./ConstraintComponent";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
+import { selectInputStyle } from "@/styles/inputStyles";
 
 interface RootParentProps {
   node: ProfileTreeNode;
@@ -85,13 +86,13 @@ const RootParent = (props: RootParentProps) => {
   }
   return (
     <div
-      className="w-full rounded-md border-gray-200"
+      className="w-full my-0.5 bg-sky-100 rounded-md p-2"
       key={props.node.dataPath}
     >
       <div className="flex flex-row">
-        <div className="flex flex-col pl-1 w-full">
+        <div className="flex flex-col w-full">
           <div className="flex flex-row items-center">
-            <div className="flex flex-row w-32 justify-end gap-2">
+            <div className="flex items-center flex-row w-40 justify-end gap-2">
               <div className="flex flex-row items-center gap-2">
                 <h2
                   className={`text-sm font-bold ${
@@ -110,7 +111,7 @@ const RootParent = (props: RootParentProps) => {
                 <ConstraintComponent resolver={guiConstraintResolver} />
               </div>
               <div
-                className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
+                className={`flex text-xs rounded-md transition-colors duration-300 ease-in-out cursor-pointer hover:bg-blue-100 ${getExpansionBgColour(
                   profileTree!,
                   props.pathsWithInvalidCardinality,
                   guiConstraintResolver?.hasConstraintIssue() || false,
@@ -139,7 +140,7 @@ const RootParent = (props: RootParentProps) => {
                 <select
                   id="element-type"
                   placeholder="Type"
-                  className="bg-white px-1 py-0 h-6 w-40 border border-gray-300 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  className={selectInputStyle}
                   value={props.node.multiTypeType}
                   onChange={(e) => {
                     const newProfileTree = [...profileTree!];
@@ -227,7 +228,7 @@ const RootParent = (props: RootParentProps) => {
             </div>
           </div>
           {props.expandedNodes.includes(props.node.dataPath) && (
-            <div className="flex flex-row flex-wrap pl-32">
+            <div className="flex flex-row flex-wrap pl-44">
               {props.node.childPaths.map((childPath: string) => {
                 let childNode = profileTree!.find(
                   (n: ProfileTreeNode) => n.dataPath === childPath

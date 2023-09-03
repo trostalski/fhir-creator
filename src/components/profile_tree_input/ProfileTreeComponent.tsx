@@ -85,7 +85,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   }
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col mb-4 gap-2">
+      <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-4 items-center">
           <span className="text-gray-500 text-xs">Profile URL:</span>
           <span className="text-sm">{profile!.url}</span>

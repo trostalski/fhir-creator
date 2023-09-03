@@ -11,7 +11,7 @@ import {
   snomedTerminologySystem,
 } from "@/utils/constants";
 import { fetchTermFts } from "@/utils/api";
-import { textInputStyle } from "@/styles/inputStyles";
+import { selectInputStyle, textInputStyle } from "@/styles/inputStyles";
 import { reactSelectStyles } from "@/styles/reactSelectStyles";
 
 interface CodingInputProps {
@@ -91,8 +91,8 @@ const CodingInput = (props: CodingInputProps) => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-2">
-      <div className="flex flex-row w-full gap-4">
+    <div className="w-full flex flex-col">
+      <div className="flex flex-row w-full gap-2">
         <InputWrapper
           node={userSelectedNode}
           pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
@@ -101,7 +101,7 @@ const CodingInput = (props: CodingInputProps) => {
           type="string"
         >
           <select
-            className={textInputStyle}
+            className={selectInputStyle + " w-full"}
             value={systemName}
             onChange={(e) => {
               const systemName = e.target.value;
@@ -138,7 +138,7 @@ const CodingInput = (props: CodingInputProps) => {
           ></input>
         </InputWrapper>
       </div>
-      <div className="w-full flex flex-col gap-2">
+      <div className="w-full flex flex-col">
         <InputWrapper
           node={displayNode}
           pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
