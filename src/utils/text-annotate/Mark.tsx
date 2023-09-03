@@ -12,7 +12,8 @@ export interface MarkProps {
 
 const Mark: FC<MarkProps> = (props) => (
   <mark
-    style={{ backgroundColor: props.color || "#84d2ff", padding: "0 4px" }}
+    className="bg-[#84d2ff] rounded-md p-1"
+    // style={{ backgroundColor: props.color || "#84d2ff", padding: "0 4px" }}
     data-start={props.start}
     data-end={props.end}
     onClick={() => props.onClick({ start: props.start, end: props.end })}

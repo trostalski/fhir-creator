@@ -74,40 +74,17 @@ export const TextAnnotator = <T extends Span>(props: TextAnnotatorProps<T>) => {
     }
   };
 
-  // const handleMouseUp = () => {
-  //   if (!props.onChange) return
-
-  //   const selection = window.getSelection()
-
-  //   if (!selection || selectionIsEmpty(selection)) return
-
-  //   let start =
-  //     parseInt(selection.anchorNode.parentElement.getAttribute('data-start'), 10) +
-  //     selection.anchorOffset
-  //   let end =
-  //     parseInt(selection.focusNode.parentElement.getAttribute('data-start'), 10) +
-  //     selection.focusOffset
-
-  //   if (selectionIsBackwards(selection)) {
-  //     ;[start, end] = [end, start]
-  //   }
-
-  //   props.onChange([...props.value, getSpan({start, end, text: content.slice(start, end)})])
-
-  //   window.getSelection()!.empty()
-  // }
-
   const handleSplitClick = ({ start, end }: { start: number; end: number }) => {
     // Find and remove the matching split.
-    const splitIndex = props.value.findIndex(
-      (s) => s.start === start && s.end === end
-    );
-    if (splitIndex >= 0) {
-      props.onChange([
-        ...props.value.slice(0, splitIndex),
-        ...props.value.slice(splitIndex + 1),
-      ]);
-    }
+    // const splitIndex = props.value.findIndex(
+    //   (s) => s.start === start && s.end === end
+    // );
+    // if (splitIndex >= 0) {
+    //   props.onChange([
+    //     ...props.value.slice(0, splitIndex),
+    //     ...props.value.slice(splitIndex + 1),
+    //   ]);
+    // }
   };
 
   const { content, value, style } = props;
