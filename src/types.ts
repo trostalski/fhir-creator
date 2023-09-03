@@ -145,6 +145,8 @@ export interface TextDisplayProps {
   text: string;
   outline?: Outline;
   setText: (text: string) => void;
+  setOutline: (outline:Outline)=> void
+  activeResourceType?: OptionType
 }
 
 export interface TextInputProps {

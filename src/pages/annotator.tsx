@@ -5,7 +5,11 @@ import { TextDisplay } from "@/components/annotator/TextDisplay";
 import { TextInput } from "@/components/annotator/TextInput";
 import { toastError } from "@/toasts";
 import { OptionType, Outline } from "@/types";
-import { addMatches, transformOutline } from "@/utils/annotator_utils";
+import {
+  addMatches,
+  removeKey,
+  transformOutline,
+} from "@/utils/annotator_utils";
 import { chains } from "@/utils/langchain_utils";
 import React from "react";
 import { useState } from "react";
@@ -15,6 +19,8 @@ const Annotator = () => {
   const [text, setText] = useState("");
   const [outline, setOutline] = React.useState<Outline>();
   const [focusResources, setFocusResources] = React.useState<OptionType[]>([]);
+  const [activeResourceType, setActiveResourceType] =
+    React.useState<OptionType>();
 
   async function handleLLMAssist() {
     if (text.length === 0) {
@@ -41,7 +47,19 @@ const Annotator = () => {
       setOutline(matchedOutline);
     }
   }
-  console.log(outline);
+
+  const checkActive = (focusResource: OptionType) => {
+    if (activeResourceType) {
+      if (activeResourceType.value === focusResource.value) {
+        return "bg-blue-500";
+      } else {
+        return "bg-blue-400";
+      }
+    } else {
+      return "bg-blue-400";
+    }
+  };
+
   return (
     <Layout>
       <div className="flex flex-row pt-4 w-full gap-5">
@@ -52,6 +70,8 @@ const Annotator = () => {
               <FocusSelector
                 focusResources={focusResources}
                 setFocusResources={setFocusResources}
+                outline={outline}
+                setOutline={setOutline}
               />
               <div className="flex flex-row flex-wrap overflow-scroll h-full">
                 {focusResources &&
@@ -59,9 +79,16 @@ const Annotator = () => {
                     return (
                       <div
                         key={focusResource.label}
-                        className="bg-blue-400 text-white m-1 flex flex-row h-min rounded-md hover:bg-blue-500 hover:scale-105"
+                        className={`${checkActive(
+                          focusResource
+                        )} text-white m-1 flex flex-row h-min rounded-md hover:bg-blue-500 hover:scale-105`}
                       >
-                        <button className="p-1">{focusResource.value}</button>
+                        <button
+                          className="p-1"
+                          onClick={() => setActiveResourceType(focusResource)}
+                        >
+                          {focusResource.value}
+                        </button>
                         <TiDelete
                           className="hover:scale-110"
                           onClick={() => {
@@ -70,6 +97,11 @@ const Annotator = () => {
                                 return item.value !== focusResource.value;
                               })
                             );
+                            const {
+                              [focusResource.value]: deletedKey,
+                              ...otherKeys
+                            } = outline!;
+                            setOutline(otherKeys);
                           }}
                         />
                       </div>
@@ -87,7 +119,13 @@ const Annotator = () => {
               {/* Focus selection and LLM Assist button */}
             </div>
           </div>
-          <TextDisplay text={text} setText={setText} outline={outline} />
+          <TextDisplay
+            text={text}
+            setText={setText}
+            outline={outline}
+            setOutline={setOutline}
+            activeResourceType={activeResourceType}
+          />
         </div>
         <div className="w-1/5 overflow-auto">
           <BundleOutline outline={outline} setOutline={setOutline} />

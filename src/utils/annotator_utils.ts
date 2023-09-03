@@ -52,3 +52,11 @@ export function llmJsonToAnnotatorFormat(llmJson: Outline) {
   
     return newOutline;
   };
+
+  export function removeKey<T extends object>(obj: T, key: PropertyKey): Partial<T> {
+    if (key in obj) {
+      const { [key]: deletedKey, ...otherKeys } = obj;
+      return otherKeys;
+    }
+    return obj;
+  }

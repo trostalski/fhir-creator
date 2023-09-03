@@ -2,11 +2,13 @@ import { useStore } from "@/stores/useStore";
 import Select from "react-select";
 import { resourceOptions } from "@/utils/constants";
 import { getResourceTypeFromProfile } from "@/utils/utils";
-import { OptionType } from "@/types";
+import { OptionType, Outline } from "@/types";
 
 interface FocusSelectorProps {
   focusResources: OptionType[];
   setFocusResources: (focusResources: OptionType[]) => void;
+  outline?: Outline;
+  setOutline: (outline: Outline) => void;
 }
 
 const FocusSelector = (props: FocusSelectorProps) => {
@@ -34,6 +36,11 @@ const FocusSelector = (props: FocusSelectorProps) => {
           if (e) {
             if (!props.focusResources.includes(e)) {
               props.setFocusResources([...props.focusResources, e]);
+              if (!props.outline) {
+                props.setOutline({ [e.value]: [] });
+              } else {
+                props.setOutline({ ...props.outline, [e.value]: [] });
+              }
             }
           }
         }}
