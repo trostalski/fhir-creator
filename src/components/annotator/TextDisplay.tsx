@@ -1,5 +1,5 @@
 // import TestOutline from "../data/20.json";
-import { TextAnnotator } from "react-text-annotate";
+import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
 import React from "react";
 import { llmJsonToAnnotatorFormat } from "@/utils/annotator_utils";
 import { OutlineItem, TextDisplayProps, ValueState } from "@/types";
