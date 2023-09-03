@@ -4,13 +4,14 @@ import React from "react";
 import BindingCodeInput from "./BindingCodeInput";
 import { useStore } from "@/stores/useStore";
 import InputWrapper from "./InputWrapper";
+import { textInputStyle } from "@/styles/inputStyles";
 
 interface InputFromTypeProps {
   type: string;
   node: ProfileTreeNode;
 }
 
-const InputFromType = (props: InputFromTypeProps) => {
+export const InputFromType = (props: InputFromTypeProps) => {
   const { profileTree, updateProfileTree } = useStore((state) => {
     return {
       profileTree: state.activeProfileTree,
@@ -37,7 +38,7 @@ const InputFromType = (props: InputFromTypeProps) => {
     case "boolean":
       return (
         <select
-          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={textInputStyle}
           onChange={handleChange}
           value={props.node.value}
         >
@@ -61,7 +62,7 @@ const InputFromType = (props: InputFromTypeProps) => {
           type="text"
           value={props.node.value}
           onChange={handleChange}
-          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={textInputStyle}
         />
       );
     case "decimal":
@@ -73,7 +74,7 @@ const InputFromType = (props: InputFromTypeProps) => {
         <input
           type="number"
           onChange={handleChange}
-          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={textInputStyle}
           value={props.node.value}
         />
       );
@@ -82,7 +83,7 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="datetime-local"
-          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={textInputStyle}
           value={props.node.value}
           onChange={handleChange}
         />
@@ -91,7 +92,7 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="date"
-          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={textInputStyle}
           value={props.node.value}
           onChange={handleChange}
         />
@@ -100,7 +101,7 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="time"
-          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={textInputStyle}
           value={props.node.value}
           onChange={handleChange}
         />
@@ -109,7 +110,7 @@ const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="text"
-          className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={textInputStyle}
           value={props.node.value}
           onChange={handleChange}
         />

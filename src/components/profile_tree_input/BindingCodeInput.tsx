@@ -1,4 +1,5 @@
 import { useStore } from "@/stores/useStore";
+import { reactSelectStyles } from "@/styles/reactSelectStyles";
 import { ProfileTreeNode } from "@/utils/buildTree";
 import { getNodeByDataPath, nodeIsType } from "@/utils/tree_utils";
 import React from "react";
@@ -74,11 +75,13 @@ const BindingCodeInput = (props: BindingCodeInputProps) => {
       <Select
         options={getOptions()}
         onChange={(e) => handleOnChange(e)}
+        className="w-full"
         value={getOptions().find(
           (option) =>
             option.value === props.node.value.code ||
             option.value === props.node.value
         )}
+        styles={reactSelectStyles}
       />
     </>
   );

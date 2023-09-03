@@ -11,6 +11,8 @@ import {
   snomedTerminologySystem,
 } from "@/utils/constants";
 import { fetchTermFts } from "@/utils/api";
+import { textInputStyle } from "@/styles/inputStyles";
+import { reactSelectStyles } from "@/styles/reactSelectStyles";
 
 interface CodingInputProps {
   pathsWithInvalidCardinality: string[];
@@ -99,7 +101,7 @@ const CodingInput = (props: CodingInputProps) => {
           type="string"
         >
           <select
-            className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className={textInputStyle}
             value={systemName}
             onChange={(e) => {
               const systemName = e.target.value;
@@ -129,7 +131,7 @@ const CodingInput = (props: CodingInputProps) => {
           <input
             type="select"
             value={systemNode.value}
-            className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className={textInputStyle}
             onChange={(e) => {
               handleChange(e.target.value, systemNode);
             }}
@@ -148,7 +150,7 @@ const CodingInput = (props: CodingInputProps) => {
             <input
               type="text"
               value={displayNode.value}
-              className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className={textInputStyle}
               onChange={(e) => {
                 setSelectDisplayValue(null);
                 handleChange(e.target.value, displayNode);
@@ -171,6 +173,7 @@ const CodingInput = (props: CodingInputProps) => {
                   handleChange(display, displayNode);
                   handleChange(code, codeNode);
                 }}
+                styles={reactSelectStyles}
               />
               <button className="text-blue-600 p-2">Search</button>
             </div>
@@ -187,7 +190,7 @@ const CodingInput = (props: CodingInputProps) => {
             <input
               type="text"
               value={codeNode.value}
-              className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className={textInputStyle}
               onChange={(e) => {
                 handleChange(e.target.value, codeNode);
                 setSelectDisplayValue(null);

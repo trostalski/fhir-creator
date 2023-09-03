@@ -2,7 +2,7 @@ import { ProfileTreeNode } from "@/utils/buildTree";
 import { getDisplayPath } from "@/utils/path_utils";
 import React from "react";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import PrimitveInput from "./PrimitveInput";
+import PrimitveInput, { InputFromType } from "./PrimitveInput";
 import { getExpansionBgColour } from "@/utils/tree_utils";
 import { useStore } from "@/stores/useStore";
 import { ConstraintComponent } from "./ConstraintComponent";
@@ -32,8 +32,7 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
   }
   return (
     <div className="w-full rounded-md border-gray-200">
-      <div className="flex flex-row">
-        <div
+      {/* <div
           className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
             profileTree!,
             props.pathsWithInvalidCardinality,
@@ -70,18 +69,34 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
                 : null}
             </span>
             <ConstraintComponent resolver={guiConstraintResolver} />
-          </div>
-          {props.expandedNodes.includes(props.node.dataPath) && (
-            <div key={props.node.dataPath} className="flex-grow py-2  pl-40">
-              <PrimitveInput
-                node={props.node}
-                pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
-              />
-            </div>
-          )}
+          </div> */}
+      {/* {props.expandedNodes.includes(props.node.dataPath) && ( */}
+      <div key={props.node.dataPath} className="flex flex-row w-full">
+        <div className="flex flex-row w-32 justify-end">
+          <h2
+            className={`text-sm font-bold ${
+              props.node.element.min! > 0
+                ? "after:text-red-600 after:content-['*']"
+                : ""
+            }`}
+          >
+            {getDisplayPath(props.node)}
+          </h2>
         </div>
+        <div className="flex flex-grow">
+          <InputFromType
+            type={props.node.element.type![0].code}
+            node={props.node}
+          />
+        </div>
+        {/* <PrimitveInput
+            node={props.node}
+            pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
+          /> */}
       </div>
-      <hr className="mb-2 mt-4" />
+      {/* )} */}
+      {/* </div> */}
+      {/* <hr className="my-1" /> */}
     </div>
   );
 };

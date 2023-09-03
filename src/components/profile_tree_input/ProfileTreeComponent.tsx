@@ -93,7 +93,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         <div className="flex flex-row">
           <input
             placeholder="Search Elements"
-            className="h-8 w-full border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="h-8 w-full border border-gray-300 text-gray-900 text-md rounded-md focus:ring-blue-500 focus:border-blue-500 p-2.5"
             onChange={(e) => {
               setSearchInput(e.target.value);
             }}
@@ -127,7 +127,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         </div>
         <ConstraintComponent resolver={guiConstraintResolver} />
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col">
         {profileTree!
           .filter((node) => shouldDisplayNode(node, checkedBranchIds))
           .filter((node) => {
