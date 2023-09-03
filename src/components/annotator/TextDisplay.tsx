@@ -30,8 +30,8 @@ export function TextDisplay(props: TextDisplayProps) {
         onChange={(value) => {
           if (!props.activeResourceType) {
             toastError("Please select a Resource Type!");
+            return;
           }
-          console.log(value);
           if (Array.isArray(value)) {
             const entity = transformValueToEntity(value, props.text);
             props.setOutline({

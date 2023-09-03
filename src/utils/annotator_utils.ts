@@ -1,4 +1,4 @@
-import { OldOutline, Outline, OutlineItem, ValueState } from "@/types";
+import { OldOutline, OptionType, Outline, OutlineItem, ValueState } from "@/types";
 
 export function llmJsonToAnnotatorFormat(llmJson: Outline) {
     let values: ValueState[] = [];
@@ -53,10 +53,10 @@ export function llmJsonToAnnotatorFormat(llmJson: Outline) {
     return newOutline;
   };
 
-  export function removeKey<T extends object>(obj: T, key: PropertyKey): Partial<T> {
-    if (key in obj) {
-      const { [key]: deletedKey, ...otherKeys } = obj;
-      return otherKeys;
+  export const constructDefaultOutline = (defaultFocusResources: OptionType[]): Outline =>{
+    let defaultOutline: Outline = {}
+    for (const resourceType of defaultFocusResources){
+      defaultOutline[resourceType.value] =[]
     }
-    return obj;
+    return defaultOutline
   }

@@ -1,6 +1,6 @@
 import sortBy from 'lodash/sortBy'
 
-export const splitWithOffsets = (text, offsets: {start: number; end: number}[]) => {
+export const splitWithOffsets = (text:string, offsets: {start: number; end: number}[]) => {
   let lastEnd = 0
   const splits = []
 
@@ -27,7 +27,6 @@ export const splitWithOffsets = (text, offsets: {start: number; end: number}[]) 
       content: text.slice(lastEnd, text.length),
     })
   }
-
   return splits
 }
 
@@ -59,7 +58,6 @@ export const splitTokensWithOffsets = (text, offsets: {start: number; end: numbe
       content: text[i],
     })
   }
-
   return splits
 }
 

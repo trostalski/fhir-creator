@@ -7,20 +7,25 @@ import { toastError } from "@/toasts";
 import { OptionType, Outline } from "@/types";
 import {
   addMatches,
-  removeKey,
+  constructDefaultOutline,
   transformOutline,
 } from "@/utils/annotator_utils";
 import { chains } from "@/utils/langchain_utils";
 import React from "react";
 import { useState } from "react";
 import { TiDelete } from "react-icons/ti";
+import { defaultFocusResources } from "@/utils/constants";
 
 const Annotator = () => {
   const [text, setText] = useState("");
-  const [outline, setOutline] = React.useState<Outline>();
-  const [focusResources, setFocusResources] = React.useState<OptionType[]>([]);
+  const [outline, setOutline] = React.useState<Outline>(
+    constructDefaultOutline(defaultFocusResources)
+  );
+  const [focusResources, setFocusResources] = React.useState<OptionType[]>(
+    defaultFocusResources
+  );
   const [activeResourceType, setActiveResourceType] =
-    React.useState<OptionType>();
+    React.useState<OptionType>(defaultFocusResources[0]);
 
   async function handleLLMAssist() {
     if (text.length === 0) {

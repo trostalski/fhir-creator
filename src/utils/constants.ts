@@ -365,6 +365,13 @@ export const resourceList = [
   "VisionPrescription",
 ];
 
+export const defaultFocusResources: OptionType[] = [
+  { value: "Condition", label: "Condition" },
+  { value: "Medication", label: "Medication" },
+  { value: "Procedure", label: "Procedure" },
+  { value: "Observation", label: "Observation" },
+]
+
 export const resourceOptions: OptionType[] = [
   { value: "Account", label: "Account" },
   { value: "ActivityDefinition", label: "ActivityDefinition" },
