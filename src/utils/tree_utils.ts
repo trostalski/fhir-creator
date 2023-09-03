@@ -106,8 +106,10 @@ export function copyAllDescendants(
 export function getAllDescendants(
   profileTree: ProfileTree,
   node: ProfileTreeNode,
-  types?: string[]
+  types?: string[],
+  includeSelf?: boolean
 ) {
+  includeSelf = includeSelf ?? false;
   const descendants = [];
   let childPaths = node.childPaths.slice(); // first level copy
   if (types) {
@@ -127,6 +129,9 @@ export function getAllDescendants(
       descendants.push(childNode);
       childPaths = childPaths.concat(childNode.childPaths);
     }
+  }
+  if (includeSelf) {
+    descendants.push(node);
   }
   return descendants;
 }
@@ -270,16 +275,32 @@ export function getExpansionBgColour(
   hastConstraintIssues: boolean,
   node: ProfileTreeNode
 ) {
-  if (pathsWithInvalidCardinality.includes(node.dataPath)) {
+  const descendants = getAllDescendants(profileTree, node, undefined, true);
+  let isInvlid = false;
+  let isModified = false;
+  let isConstraintIssue = false;
+  let isSlice = false;
+  for (const descendant of descendants) {
+    if (pathsWithInvalidCardinality.includes(descendant.dataPath)) {
+      isInvlid = true;
+    } else if (nodeOrChildWasModified(profileTree, descendant)) {
+      isModified = true;
+    } else if (hastConstraintIssues) {
+      isConstraintIssue = true;
+    } else if (descendant.element.sliceName) {
+      isSlice = true;
+    }
+  }
+  if (isInvlid) {
     return "bg-red-400";
-  } else if (nodeOrChildWasModified(profileTree, node)) {
+  } else if (isModified) {
     return "bg-green-500";
-  } else if (hastConstraintIssues) {
+  } else if (isConstraintIssue) {
     return "bg-pink-800";
-  } else if (node.element.sliceName) {
+  } else if (isSlice) {
     return "bg-violet-300";
   } else {
-    return "bg-blue-300";
+    return "bg-blue-500";
   }
 }
 

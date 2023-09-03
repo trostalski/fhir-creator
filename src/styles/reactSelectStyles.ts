@@ -4,7 +4,6 @@ export const reactSelectStyles = {
     minHeight: 24,
     borderRadius: 2,
     borderColor: "#9ca3af",
-    // inner shadow
     boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
   }),
   valueContainer: (base: any) => ({
@@ -12,10 +11,9 @@ export const reactSelectStyles = {
     height: 24,
     minHeight: 24,
     fontSize: 12,
-    // center text
-    // center text vertically
     paddingTop: 0,
     paddingBottom: 0,
+    paddingLeft: 1,
   }),
   indicatorsContainer: (base: any) => ({
     ...base,
@@ -27,7 +25,6 @@ export const reactSelectStyles = {
   }),
   dropdownIndicator: (base: any) => ({
     ...base,
-    // decrease size
     "& svg": {
       height: 16,
       width: 16,

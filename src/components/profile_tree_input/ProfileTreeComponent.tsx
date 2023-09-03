@@ -84,8 +84,8 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     });
   }
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
+    <div className="flex h-5/6 flex-col gap-2">
+      <div className="flex flex-col">
         <div className="flex flex-row gap-4 items-center">
           <span className="text-gray-500 text-xs">Profile URL:</span>
           <span className="text-sm">{profile!.url}</span>
@@ -127,7 +127,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         </div>
         <ConstraintComponent resolver={guiConstraintResolver} />
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col grow overflow-scroll px-4">
         {profileTree!
           .filter((node) => shouldDisplayNode(node, checkedBranchIds))
           .filter((node) => {

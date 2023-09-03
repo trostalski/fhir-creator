@@ -44,7 +44,7 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
           {getDisplayPath(props.node)}
         </h2>
         <div
-          className={`flex text-xs rounded-md hover:bg-blue-100 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
+          className={`flex text-xs rounded-md hover:bg-blue-300 transition-colors duration-300 ease-in-out cursor-pointer ${getExpansionBgColour(
             profileTree!,
             props.pathsWithInvalidCardinality,
             guiConstraintResolver?.hasConstraintIssue() || false,
@@ -56,9 +56,9 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
             onClick={() => props.toggleNodeExpansion(props.node.dataPath)}
           >
             {props.expandedNodes.includes(props.node.dataPath) ? (
-              <IoMdRemove size={16} />
+              <IoMdRemove size={16} className="text-white" />
             ) : (
-              <IoMdAdd size={16} />
+              <IoMdAdd size={16} className="text-white" />
             )}
           </button>
         </div>

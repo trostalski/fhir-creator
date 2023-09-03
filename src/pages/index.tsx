@@ -36,8 +36,8 @@ const Home = () => {
 
   return (
     <Layout>
-      <div className="flex flex-col w-full pb-10 pt-4 overflow-scroll gap-2 px-8">
-        <div className="flex flex-row items-center gap-2 p-2">
+      <div className="flex flex-col h-full w-full pt-2 overflow-x-scroll overflow-hidden gap-4 px-8">
+        <div className="flex flex-row items-center gap-2">
           <Select
             instanceId={"baseprofile-select"}
             className="w-[1000px] mx-auto"
@@ -66,7 +66,7 @@ const Home = () => {
             setPathsWithInvalidCardinality={setPathsWithInvalidCardinality}
           />
         </div>
-        <div className="flex flex-col h-full ">
+        <div className="flex flex-col h-full">
           {!profileTree ? null : (
             <ProfileTreeComponent
               setPathsWithInvalidCardinality={setPathsWithInvalidCardinality}

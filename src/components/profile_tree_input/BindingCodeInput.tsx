@@ -76,6 +76,7 @@ const BindingCodeInput = (props: BindingCodeInputProps) => {
         options={getOptions()}
         onChange={(e) => handleOnChange(e)}
         className="w-full"
+        placeholder={props.node.element.short}
         value={getOptions().find(
           (option) =>
             option.value === props.node.value.code ||

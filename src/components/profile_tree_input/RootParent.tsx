@@ -93,8 +93,9 @@ const RootParent = (props: RootParentProps) => {
         <div className="flex flex-col w-full">
           <div className="flex flex-row items-center">
             <div className="flex items-center flex-row w-40 justify-end gap-2">
-              <div className="flex flex-row items-center gap-2">
+              <div className="flex flex-row items-center gap-2 overflow-x-scroll">
                 <h2
+                  title={getDisplayPath(props.node)}
                   className={`text-sm font-bold ${
                     props.node.element.min! > 0
                       ? "after:text-red-600 after:content-['*']"
@@ -111,7 +112,7 @@ const RootParent = (props: RootParentProps) => {
                 <ConstraintComponent resolver={guiConstraintResolver} />
               </div>
               <div
-                className={`flex text-xs rounded-md transition-colors duration-300 ease-in-out cursor-pointer hover:bg-blue-100 ${getExpansionBgColour(
+                className={`flex text-xs rounded-md transition-colors duration-300 ease-in-out cursor-pointer hover:bg-blue-300 ${getExpansionBgColour(
                   profileTree!,
                   props.pathsWithInvalidCardinality,
                   guiConstraintResolver?.hasConstraintIssue() || false,
@@ -123,9 +124,9 @@ const RootParent = (props: RootParentProps) => {
                   onClick={() => props.toggleNodeExpansion(props.node.dataPath)}
                 >
                   {props.expandedNodes.includes(props.node.dataPath) ? (
-                    <MdExpandLess size={16} />
+                    <MdExpandLess size={16} className="text-white" />
                   ) : (
-                    <MdExpandMore size={16} />
+                    <MdExpandMore size={16} className="text-white" />
                   )}
                 </button>
               </div>

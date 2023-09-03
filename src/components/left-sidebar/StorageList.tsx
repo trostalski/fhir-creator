@@ -8,6 +8,7 @@ import { RenameModal } from "./contextMenu/RenameModal";
 import { PreviewModal } from "./PreviewModal";
 import { MdAdd } from "react-icons/md";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
+import { bundlePoolId } from "@/utils/constants";
 
 const StorageList = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -50,6 +51,27 @@ const StorageList = () => {
         setPoints({ x: e.pageX, y: e.pageY });
       }}
     >
+      {bundleFolderz &&
+        bundleFolderz // ensure that Pool is always rendered on top of the bundle list
+          .filter((folder) => folder.id === bundlePoolId)
+          .map((bundle) => {
+            return (
+              <div key={bundle.id}>
+                <BundleComponent
+                  bundleFolder={bundle}
+                  checkedFolders={checkedFolders}
+                  checkedResources={checkedResources}
+                  setCheckedFolders={setCheckedFolders}
+                  setCheckedResources={setCheckedResources}
+                  resToBeCut={resToBeCut}
+                  resToCopy={resToCopy}
+                  setPreviewOpen={setShowPreviewModal}
+                  setPreviewPathRepr={setPreviewPathRepr}
+                  resources={resources}
+                />
+              </div>
+            );
+          })}
       <div className="overflow-hidden py-1 items-center flex flex-row w-full">
         <div
           className="flex flex-row items-center cursor-pointer w-full"
@@ -72,28 +94,6 @@ const StorageList = () => {
         </button>
       </div>
       <div className="flex flex-col gap-1">
-        {bundleFolderz &&
-          isOpen &&
-          bundleFolderz // ensure that Pool is always rendered on top of the bundle list
-            .filter((folder) => folder.id === "Pool")
-            .map((bundle) => {
-              return (
-                <div key={bundle.id}>
-                  <BundleComponent
-                    bundleFolder={bundle}
-                    checkedFolders={checkedFolders}
-                    checkedResources={checkedResources}
-                    setCheckedFolders={setCheckedFolders}
-                    setCheckedResources={setCheckedResources}
-                    resToBeCut={resToBeCut}
-                    resToCopy={resToCopy}
-                    setPreviewOpen={setShowPreviewModal}
-                    setPreviewPathRepr={setPreviewPathRepr}
-                    resources={resources}
-                  />
-                </div>
-              );
-            })}
         {bundleFolderz &&
           isOpen &&
           bundleFolderz

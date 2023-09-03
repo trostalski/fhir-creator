@@ -39,6 +39,7 @@ export const InputFromType = (props: InputFromTypeProps) => {
       return (
         <select
           className={textInputStyle}
+          placeholder={props.node.element.short}
           onChange={handleChange}
           value={props.node.value}
         >
@@ -60,6 +61,7 @@ export const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="text"
+          placeholder={props.node.element.short}
           value={props.node.value}
           onChange={handleChange}
           className={textInputStyle}
@@ -73,6 +75,7 @@ export const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="number"
+          placeholder={props.node.element.short}
           onChange={handleChange}
           className={textInputStyle}
           value={props.node.value}
@@ -83,6 +86,7 @@ export const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="datetime-local"
+          placeholder={props.node.element.short}
           className={textInputStyle}
           value={props.node.value}
           onChange={handleChange}
@@ -92,6 +96,7 @@ export const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="date"
+          placeholder={props.node.element.short}
           className={textInputStyle}
           value={props.node.value}
           onChange={handleChange}
@@ -101,6 +106,7 @@ export const InputFromType = (props: InputFromTypeProps) => {
       return (
         <input
           type="time"
+          placeholder={props.node.element.short}
           className={textInputStyle}
           value={props.node.value}
           onChange={handleChange}

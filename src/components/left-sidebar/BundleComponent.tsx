@@ -4,6 +4,7 @@ import { AiOutlineEye } from "react-icons/ai";
 import { createPathArrayFromJson } from "@/utils/utils";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
 import { Resource } from "fhir/r4";
+import { bundlePoolId } from "@/utils/constants";
 
 interface BundleComponentProps {
   bundleFolder: BundleFolder;
@@ -98,8 +99,8 @@ const BundleComponent = (props: BundleComponentProps) => {
               : "text-black"
           } font-light truncate hover:underline`}
         >
-          {`${BundleId === "Pool" ? "Resource Pool" : "Bundle/" + BundleId}`}
-        </button>{" "}
+          {`${BundleId === bundlePoolId ? "Resources" : "Bundle/" + BundleId}`}
+        </button>
       </div>
       {showResources &&
         resources &&

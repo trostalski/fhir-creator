@@ -131,6 +131,7 @@ const CodingInput = (props: CodingInputProps) => {
           <input
             type="select"
             value={systemNode.value}
+            placeholder={systemNode.element.short}
             className={textInputStyle}
             onChange={(e) => {
               handleChange(e.target.value, systemNode);
@@ -151,6 +152,7 @@ const CodingInput = (props: CodingInputProps) => {
               type="text"
               value={displayNode.value}
               className={textInputStyle}
+              placeholder={displayNode.element.short}
               onChange={(e) => {
                 setSelectDisplayValue(null);
                 handleChange(e.target.value, displayNode);
@@ -168,6 +170,9 @@ const CodingInput = (props: CodingInputProps) => {
                 isClearable={true}
                 loadOptions={loadFTSOptions}
                 onChange={async (e: any) => {
+                  if (!e) {
+                    return;
+                  }
                   const [display, code] = e.value.split(",");
                   setSelectDisplayValue(e.value.replace(",", " | "));
                   handleChange(display, displayNode);
@@ -175,7 +180,6 @@ const CodingInput = (props: CodingInputProps) => {
                 }}
                 styles={reactSelectStyles}
               />
-              <button className="text-blue-600 p-2">Search</button>
             </div>
           )}
         </InputWrapper>
@@ -190,6 +194,7 @@ const CodingInput = (props: CodingInputProps) => {
             <input
               type="text"
               value={codeNode.value}
+              placeholder={codeNode.element.short}
               className={textInputStyle}
               onChange={(e) => {
                 handleChange(e.target.value, codeNode);

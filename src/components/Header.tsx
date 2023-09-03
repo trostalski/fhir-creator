@@ -5,7 +5,7 @@ import { RiAncientGateFill } from "react-icons/ri";
 const Header = () => {
   return (
     <header>
-      <nav className="flex flex-row fixed top-0 w-full h-10 bg-blue-400 items-center text-white font-light px-4 z-10">
+      <nav className="flex flex-row w-full h-10 bg-blue-400 items-center text-white font-light px-4 z-10">
         <h1> FHIR Creator</h1>
         <span className="flex-grow"></span>
         <div className="flex flex-row gap-4">
