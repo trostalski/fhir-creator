@@ -10,14 +10,15 @@ import {
 import { Span } from "./span";
 import { ColorStore, Outline, OutlineArrayItem } from "@/types";
 
-interface SplitProps {
+export interface SplitProps {
   outlineArrayItem?: OutlineArrayItem;
   content: string;
   start: number;
   end: number;
   onClick: (any) => any;
-  mark: boolean;
-  key: string;
+  mark?: boolean;
+  key?: string;
+  color?: string;
 }
 
 const Split = (props: SplitProps) => {
@@ -102,7 +103,7 @@ export const TextAnnotator = <T extends Span>(props: TextAnnotatorProps<T>) => {
   };
 
   const { content, value, style } = props;
-  const splits = splitWithOffsets(content, value, props.outline);
+  const splits = splitWithOutline(content, value, props.outline, props.colors);
   return (
     <div style={style} onMouseUp={handleMouseUp}>
       {splits.map((split) => (
