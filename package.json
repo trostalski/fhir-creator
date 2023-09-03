@@ -14,6 +14,7 @@
     "@types/node": "18.15.11",
     "@types/react": "18.0.33",
     "@types/react-dom": "18.0.11",
+    "@types/seedrandom": "^3.0.5",
     "@types/uuid": "^9.0.2",
     "dexie": "^3.2.3",
     "dexie-react-hooks": "^1.1.3",

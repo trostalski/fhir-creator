@@ -1,4 +1,6 @@
-import { OldOutline, OptionType, Outline, OutlineItem, ValueState } from "@/types";
+import { Color, ColorStore, OldOutline, OptionType, Outline, OutlineItem, ValueState } from "@/types";
+import { Colors } from "react-select";
+import seedrandom from "seedrandom";
 
 export function llmJsonToAnnotatorFormat(llmJson: Outline) {
     let values: ValueState[] = [];
@@ -60,3 +62,20 @@ export function llmJsonToAnnotatorFormat(llmJson: Outline) {
     }
     return defaultOutline
   }
+
+  export function generateHexColor(rng: seedrandom.PRNG) {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(rng() * 16)];
+    }
+    return color;
+  }
+
+export function setColorsForDefaultResources(defaultFocusResources: OptionType[], rng: seedrandom.PRNG): ColorStore{
+  const colors: ColorStore = {}
+  for(const resource of defaultFocusResources){
+    colors[resource.value]= generateHexColor(rng)
+  }
+  return colors
+}

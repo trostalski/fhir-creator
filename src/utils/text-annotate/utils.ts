@@ -1,4 +1,57 @@
+import { Outline, OutlineArrayItem, OutlineItem } from '@/types';
 import sortBy from 'lodash/sortBy'
+
+
+const constructOutlineArray = (outline:Outline): OutlineArrayItem[] =>{
+  const outlineArray: OutlineArrayItem[] = []
+  if(outline){
+    for(const key in outline){
+        for (const entity of outline[key]){
+          if(entity.matches && entity.matches.length > 0){
+            outlineArray.push({...entity, resourceType: key})
+          }
+      }
+    }
+    
+  }
+  return outlineArray
+}
+
+
+export const splitWithOutline = (text:string, offsets: {start: number; end: number}[], outline:Outline) => {
+  const outlineArray = constructOutlineArray(outline)
+  console.log(outlineArray)
+
+  let lastEnd = 0
+  const splits = []
+
+  for (let outlineArrayItem of sortBy(outlineArray, o => o.matches![0][0])) {
+    const [start, end] = outlineArrayItem.matches![0]
+    if (lastEnd < start) {
+      splits.push({
+        start: lastEnd,
+        end: start,
+        content: text.slice(lastEnd, start),
+      })
+    }
+    splits.push({
+      start,
+      end,
+      outlineArrayItem,
+      mark: true,
+      content: text.slice(start, end),
+    })
+    lastEnd = end
+  }
+  if (lastEnd < text.length) {
+    splits.push({
+      start: lastEnd,
+      end: text.length,
+      content: text.slice(lastEnd, text.length),
+    })
+  }
+  return splits
+}
 
 export const splitWithOffsets = (text:string, offsets: {start: number; end: number}[]) => {
   let lastEnd = 0

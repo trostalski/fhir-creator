@@ -1,3 +1,4 @@
+import { Colors } from "react-select";
 import { ProfileTreeNode } from "./utils/buildTree";
 import { resourceList } from "./utils/constants";
 
@@ -147,6 +148,7 @@ export interface TextDisplayProps {
   setText: (text: string) => void;
   setOutline: (outline:Outline)=> void
   activeResourceType?: OptionType
+  colors: ColorStore;
 }
 
 export interface TextInputProps {
@@ -172,4 +174,18 @@ export interface Outline {
 
 export interface OldOutline {
   [key: string]: string[];
+}
+
+
+export interface OutlineArrayItem extends OutlineItem{
+  resourceType: string
+}
+
+export interface ColorStore {
+  [key:string]: string
+}
+
+export interface Color{
+  resourceType: string;
+  color: string
 }

@@ -574,3 +574,5 @@ export const defaultOrderedConstraintResults: OrderedConstraintResults = {
   warnings: [],
   guidelines: [],
 };
+
+export const colorSeed = "ello Darling, Do you know, where the Taj Mahal is?"

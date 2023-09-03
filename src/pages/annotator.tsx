@@ -4,19 +4,25 @@ import FocusSelector from "@/components/annotator/FocusSelector";
 import { TextDisplay } from "@/components/annotator/TextDisplay";
 import { TextInput } from "@/components/annotator/TextInput";
 import { toastError } from "@/toasts";
-import { OptionType, Outline } from "@/types";
+import { Color, ColorStore, OptionType, Outline } from "@/types";
 import {
   addMatches,
   constructDefaultOutline,
+  generateHexColor,
+  setColorsForDefaultResources,
   transformOutline,
 } from "@/utils/annotator_utils";
 import { chains } from "@/utils/langchain_utils";
 import React from "react";
 import { useState } from "react";
 import { TiDelete } from "react-icons/ti";
-import { defaultFocusResources } from "@/utils/constants";
+import { colorSeed, defaultFocusResources } from "@/utils/constants";
+import seedrandom from "seedrandom";
 
 const Annotator = () => {
+  const [rng, setRng] = React.useState<seedrandom.PRNG>(() =>
+    seedrandom(colorSeed)
+  );
   const [text, setText] = useState("");
   const [outline, setOutline] = React.useState<Outline>(
     constructDefaultOutline(defaultFocusResources)
@@ -26,6 +32,9 @@ const Annotator = () => {
   );
   const [activeResourceType, setActiveResourceType] =
     React.useState<OptionType>(defaultFocusResources[0]);
+  const [colors, setColors] = React.useState<ColorStore>(
+    setColorsForDefaultResources(defaultFocusResources, rng)
+  );
 
   async function handleLLMAssist() {
     if (text.length === 0) {
@@ -54,14 +63,13 @@ const Annotator = () => {
   }
 
   const checkActive = (focusResource: OptionType) => {
-    if (activeResourceType) {
-      if (activeResourceType.value === focusResource.value) {
-        return "bg-blue-500";
-      } else {
-        return "bg-blue-400";
-      }
+    if (
+      activeResourceType &&
+      activeResourceType.value === focusResource.value
+    ) {
+      return "text-white m-1 flex flex-row h-min rounded-md hover:scale-105 border-2 border-black";
     } else {
-      return "bg-blue-400";
+      return "text-white m-1 flex flex-row h-min rounded-md hover:scale-105";
     }
   };
 
@@ -77,6 +85,9 @@ const Annotator = () => {
                 setFocusResources={setFocusResources}
                 outline={outline}
                 setOutline={setOutline}
+                colors={colors}
+                setColors={setColors}
+                rng={rng}
               />
               <div className="flex flex-row flex-wrap overflow-scroll h-full">
                 {focusResources &&
@@ -84,9 +95,8 @@ const Annotator = () => {
                     return (
                       <div
                         key={focusResource.label}
-                        className={`${checkActive(
-                          focusResource
-                        )} text-white m-1 flex flex-row h-min rounded-md hover:bg-blue-500 hover:scale-105`}
+                        className={checkActive(focusResource)}
+                        style={{ backgroundColor: colors[focusResource.value] }}
                       >
                         <button
                           className="p-1"
@@ -130,6 +140,7 @@ const Annotator = () => {
             outline={outline}
             setOutline={setOutline}
             activeResourceType={activeResourceType}
+            colors={colors}
           />
         </div>
         <div className="w-1/5 overflow-auto">

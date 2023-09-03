@@ -1,4 +1,15 @@
+import { OutlineArrayItem } from "@/types";
 import React, { FC } from "react";
+
+export interface MarkProps {
+  outlineArrayItem?: OutlineArrayItem;
+  content: string;
+  start: number;
+  end: number;
+  onClick: (event: any) => any;
+  mark: boolean;
+  key: string;
+}
 
 export interface MarkProps {
   key: string;

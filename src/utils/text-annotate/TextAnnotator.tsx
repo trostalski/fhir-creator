@@ -5,10 +5,22 @@ import {
   selectionIsEmpty,
   selectionIsBackwards,
   splitWithOffsets,
+  splitWithOutline,
 } from "./utils";
 import { Span } from "./span";
+import { ColorStore, Outline, OutlineArrayItem } from "@/types";
 
-const Split = (props) => {
+interface SplitProps {
+  outlineArrayItem?: OutlineArrayItem;
+  content: string;
+  start: number;
+  end: number;
+  onClick: (any) => any;
+  mark: boolean;
+  key: string;
+}
+
+const Split = (props: SplitProps) => {
   if (props.mark) return <Mark {...props} />;
 
   return (
@@ -27,10 +39,12 @@ interface TextSpan extends Span {
 }
 
 type TextBaseProps<T> = {
+  outline?: Outline;
   content: string;
   value: T[];
   onChange: (value: T[]) => any;
   getSpan?: (span: TextSpan) => T;
+  colors: ColorStore;
   // TODO: determine whether to overwrite or leave intersecting ranges.
 };
 
@@ -88,7 +102,7 @@ export const TextAnnotator = <T extends Span>(props: TextAnnotatorProps<T>) => {
   };
 
   const { content, value, style } = props;
-  const splits = splitWithOffsets(content, value);
+  const splits = splitWithOffsets(content, value, props.outline);
   return (
     <div style={style} onMouseUp={handleMouseUp}>
       {splits.map((split) => (

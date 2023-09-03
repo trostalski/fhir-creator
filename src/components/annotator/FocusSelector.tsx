@@ -2,13 +2,18 @@ import { useStore } from "@/stores/useStore";
 import Select from "react-select";
 import { resourceOptions } from "@/utils/constants";
 import { getResourceTypeFromProfile } from "@/utils/utils";
-import { OptionType, Outline } from "@/types";
+import { Color, ColorStore, OptionType, Outline } from "@/types";
+import { generateHexColor } from "@/utils/annotator_utils";
+import seedrandom from "seedrandom";
 
 interface FocusSelectorProps {
   focusResources: OptionType[];
   setFocusResources: (focusResources: OptionType[]) => void;
   outline?: Outline;
   setOutline: (outline: Outline) => void;
+  colors: ColorStore;
+  setColors: (colors: ColorStore) => void;
+  rng: seedrandom.PRNG;
 }
 
 const FocusSelector = (props: FocusSelectorProps) => {
@@ -41,6 +46,12 @@ const FocusSelector = (props: FocusSelectorProps) => {
               } else {
                 props.setOutline({ ...props.outline, [e.value]: [] });
               }
+            }
+            if (!(e.value in props.colors)) {
+              props.setColors({
+                ...props.colors,
+                [e.value]: generateHexColor(props.rng),
+              });
             }
           }
         }}
