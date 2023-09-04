@@ -16,35 +16,12 @@ interface RightPartProps {
 }
 
 const Storage = (props: RightPartProps) => {
-  const [checkedResources, setCheckedResources] = useState<string[]>([]);
-  const [checkedBundles, setCheckedBundles] = useState<string[]>([]);
-  const [checkedProfiles, setCheckedProfiles] = useState<string[]>([]);
   const [showProfiles, setShowProfiles] = useState<boolean>(false);
   const [showImportMenu, setShowImportMenu] = useState<boolean>(false);
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
 
   const profiles = useLiveQuery(() => db.profiles.toArray());
   const { handleProfileUpload } = useProfileUpload();
-
-  const itemsChecked =
-    checkedResources.length + checkedBundles.length + checkedProfiles.length >
-    0;
-
-  const deleteSelection = () => {
-    const confirmation = confirm(
-      "Are you sure you want to delete the selected items?"
-    );
-    if (!confirmation) return;
-    if (checkedResources.length > 0) {
-      deleteResources(checkedResources);
-    }
-    if (checkedBundles.length > 0) {
-      deleteBundles(checkedBundles);
-    }
-    if (checkedProfiles.length > 0) {
-      deleteProfiles(checkedProfiles);
-    }
-  };
 
   return (
     <>
@@ -91,17 +68,6 @@ const Storage = (props: RightPartProps) => {
                 </button>
                 {showImportMenu && <ImportMenu />}
               </div>
-              <div>
-                <button
-                  disabled={!itemsChecked}
-                  onClick={deleteSelection}
-                  className={`text-xs text-red-600 ${
-                    itemsChecked ? "hover:underline" : "opacity-50"
-                  }`}
-                >
-                  Delete Selection
-                </button>
-              </div>
             </div>
             <div className="flex flex-col gap-4">
               <StorageList />
@@ -139,12 +105,7 @@ const Storage = (props: RightPartProps) => {
                     />
                   </label>
                 </div>
-                {showProfiles ? (
-                  <ProfilesList
-                    checkedProfiles={checkedProfiles}
-                    setCheckedProfiles={setCheckedProfiles}
-                  />
-                ) : null}
+                {showProfiles ? <ProfilesList /> : null}
               </div>
             </div>
           </div>

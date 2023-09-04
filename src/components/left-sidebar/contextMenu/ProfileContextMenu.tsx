@@ -1,23 +1,15 @@
 import { db } from "@/db/db";
+import { toastError, toastSuccess } from "@/toasts";
 import React from "react";
 
 interface ProfileContextMenuProps {
   setShowContextMenu: React.Dispatch<React.SetStateAction<boolean>>;
   x: number;
   y: number;
-  checkedProfiles: string[];
+  profileUrl: string | null;
 }
 
 const ProfileContextMenu = (props: ProfileContextMenuProps) => {
-  const { checkedProfiles } = props;
-  const deleteProfiles = (id: string) => {
-    const confirm = window.confirm("Are you sure you want to delete?");
-    if (!confirm) return;
-    checkedProfiles.forEach((id) => {
-      db.profiles.delete(id);
-    });
-  };
-
   React.useEffect(() => {
     const handleClickOutside = (e: any) => {
       if (e.target.className.includes("context-menu")) return;
@@ -34,16 +26,21 @@ const ProfileContextMenu = (props: ProfileContextMenuProps) => {
       className={`fixed flex flex-col gap-1 rounded-md bg-white border-2 border-blue-400 px-2`}
       style={{ left: props.x, top: props.y }}
     >
-      {props.checkedProfiles.length > 0 && (
-        <button
-          className="hover:underline"
-          onClick={() => {
-            deleteProfiles;
-          }}
-        >
-          Delete
-        </button>
-      )}
+      <button
+        className="hover:underline"
+        onClick={async () => {
+          console.log("edit profile: ", props.profileUrl);
+          if (!props.profileUrl) return;
+          try {
+            await db.profiles.delete(props.profileUrl);
+            toastSuccess("Profile deleted");
+          } catch (error) {
+            toastError("Error deleting profile");
+          }
+        }}
+      >
+        Delete
+      </button>
     </div>
   );
 };

@@ -5,12 +5,12 @@ import { useLiveQuery } from "dexie-react-hooks";
 import React, { useState } from "react";
 import ProfileContextMenu from "./contextMenu/ProfileContextMenu";
 
-interface ProfilesListProps {
-  setCheckedProfiles: (checkedProfiles: string[]) => void;
-  checkedProfiles: string[];
-}
+interface ProfilesListProps {}
 
 const ProfilesList = (props: ProfilesListProps) => {
+  const [checkedProfileUrl, setCheckedProfileUrl] = useState<string | null>(
+    null
+  );
   const profiles = useLiveQuery(() => db.profiles.toArray());
   const [showContextMenu, setShowContextMenu] = useState<boolean>(false);
   const [contextPoint, setContextPoint] = useState({
@@ -36,22 +36,14 @@ const ProfilesList = (props: ProfilesListProps) => {
             title={profile.url}
             onContextMenu={(e) => {
               e.preventDefault();
-              setShowContextMenu(true);
-              if (!props.checkedProfiles.includes(profile.id!)) {
-                props.setCheckedProfiles([
-                  ...props.checkedProfiles,
-                  profile.id!,
-                ]);
+              if (checkedProfileUrl !== profile.url) {
+                setCheckedProfileUrl(profile.url);
               }
               setContextPoint({ x: e.pageX, y: e.pageY });
+              setShowContextMenu(true);
             }}
             onClick={() => {
               setProfileTree(profile);
-              props.setCheckedProfiles(
-                props.checkedProfiles.includes(profile.id!)
-                  ? props.checkedProfiles.filter((id) => id !== profile.id)
-                  : [...props.checkedProfiles, profile.id!]
-              );
               setMode(Modes.EDIT);
             }}
           >
@@ -62,7 +54,7 @@ const ProfilesList = (props: ProfilesListProps) => {
       {showContextMenu && (
         <ProfileContextMenu
           setShowContextMenu={setShowContextMenu}
-          checkedProfiles={props.checkedProfiles}
+          profileUrl={checkedProfileUrl}
           x={contextPoint.x}
           y={contextPoint.y}
         />
