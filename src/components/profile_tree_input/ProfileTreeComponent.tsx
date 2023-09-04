@@ -45,6 +45,9 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   });
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
   const [searchInput, setSearchInput] = React.useState<string | null>(null);
+  const [addToBundleId, setAddToBundleId] = useState<string | undefined>(
+    undefined
+  );
   const bundleFolders = useLiveQuery(() => {
     return db.bundleFolders.toArray();
   });
@@ -162,15 +165,22 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
           })}
       </div>
       <div className="flex flex-row shrink-0 items-center w-full h-16 pb-4">
-        <Select
-          options={bundleFolderOptions}
-          placeholder="Select Bundle"
-          menuPlacement="top"
-          className="w-1/2"
-        />
+        <div className="flex flex-col w-1/2">
+          <label className="text-gray-500 text-xs">Add to Bundle</label>
+          <Select
+            options={bundleFolderOptions}
+            onChange={(e) => {
+              setAddToBundleId(e?.value);
+            }}
+            placeholder="Select Bundle"
+            menuPlacement="top"
+            className="w-full"
+          />
+        </div>
         <span className="grow" />
         <AddResourceButton
           setPathsWithInvalidCardinality={setPathsWithInvalidCardinality}
+          addToBundleId={addToBundleId}
         />
       </div>
     </div>

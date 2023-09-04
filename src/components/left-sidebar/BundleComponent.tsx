@@ -4,7 +4,7 @@ import { AiOutlineEye } from "react-icons/ai";
 import { createPathArrayFromJson } from "@/utils/utils";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
 import { Resource } from "fhir/r4";
-import { bundlePoolId } from "@/utils/constants";
+import { bundlePoolId, bundlePoolName } from "@/utils/constants";
 
 interface BundleComponentProps {
   bundleFolder: BundleFolder;
@@ -103,25 +103,25 @@ const BundleComponent = (props: BundleComponentProps) => {
           `}
         >
           {`${
-            bundleId === bundlePoolId
-              ? "Single Resources"
-              : "Bundle/" + bundleId
+            bundleId === bundlePoolId ? bundlePoolName : "Bundle/" + bundleId
           }`}
         </button>
       </div>
-      {!showResources && resources ? (
+      {showResources && resources?.length === 0 && (
+        <span className="text-xs">No resources in this bundle.</span>
+      )}
+      {showResources &&
+        resources &&
         resources.map((resource) => {
           return (
             <div
               key={resource.id}
-              className="flex flex-row pl-2 items-center justify-between text-xs hover:underline"
+              className="flex flex-row pl-2 items-center justify-between text-xs"
             >
               <button
                 className={`${
-                  props.checkedResources.includes(resource.id!)
-                    ? "text-slate-500"
-                    : "text-black"
-                } truncate`}
+                  props.checkedResources.includes(resource.id!) && "font-bold"
+                } text-white truncate hover:underline`}
                 onClick={(e) =>
                   handleClickResFol(
                     e,
@@ -144,7 +144,7 @@ const BundleComponent = (props: BundleComponentProps) => {
                 {resource.resourceType + "/" + resource.id}
               </button>
               <button
-                className="hover:scale-105"
+                className="hover:bg-blue-200 transition-colors duration-300 ease-in-out rounded-md p-1"
                 onClick={() => {
                   const resourcePathRepr = createPathArrayFromJson(resource);
                   props.setPreviewOpen(true);
@@ -154,14 +154,11 @@ const BundleComponent = (props: BundleComponentProps) => {
                   });
                 }}
               >
-                <AiOutlineEye size={15} className="ml-2" />
+                <AiOutlineEye size={15} />
               </button>
             </div>
           );
-        })
-      ) : (
-        <span className="text-xs">No resources in this bundle.</span>
-      )}
+        })}
     </div>
   );
 };

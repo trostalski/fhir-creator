@@ -39,13 +39,13 @@ function renderConstraints(constraints: ElementDefinitionConstraint[]) {
 
 export function ConstraintComponent(props: WarningComponentProps) {
   if (props.resolver) {
-    const warnings = props.resolver.getWarnings()!;
+    // const warnings = props.resolver.getWarnings()!;
     const errors = props.resolver.getErrors()!;
     const guidelines = props.resolver.getGuidelines()!;
     return (
       <div>
         <div>
-          {renderConstraints(warnings)}
+          {/* {renderConstraints(warnings)} */}
           {renderConstraints(errors)}
           {renderConstraints(guidelines)}
         </div>
