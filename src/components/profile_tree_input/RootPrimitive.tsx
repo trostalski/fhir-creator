@@ -32,7 +32,7 @@ const RootPrimitive = (props: RootPrimitiveProps) => {
     });
   }
   return (
-    <div className="flex my-0.5 items-center h-9 bg-sky-100 flex-row w-full rounded-md p-2">
+    <div className="flex my-0.5 shadow-sm items-center py-4 h-9  bg-sky-100 flex-row w-full rounded-md p-2">
       <div className="flex items-center flex-row w-40 justify-end gap-2 shrink-0">
         <h2
           className={`text-sm font-bold ${

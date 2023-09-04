@@ -54,11 +54,7 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
     return (
       <button
         disabled={profileTree.length === 0}
-        className={`bg-green-600 shrink-0 w-36 text-white py-1 px-4 rounded  ${
-          profileTree.length === 0
-            ? "bg-opacity-50 cursor-not-allowed"
-            : "hover:bg-green-800"
-        }}`}
+        className={`bg-blue-500 text-white shrink-0 w-36 py-1 px-4 rounded transition hover:bg-blue-700`}
         onClick={async () => {
           if (profileTree.length === 0) {
             return;

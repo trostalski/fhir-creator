@@ -4,10 +4,10 @@ import { checkoutResources, exportBundle } from "@/db/utils";
 import { db } from "@/db/db";
 import { toastError } from "@/toasts";
 import { useStore } from "@/stores/useStore";
-import { Modes } from "@/utils/constants";
+import { Modes, bundlePoolId } from "@/utils/constants";
 import { resolveProfileForResource } from "@/components/buttons/ImportResourceButton";
 
-interface ContextMenuProps {
+interface BundleContextMenuProps {
   x: number;
   y: number;
   checkedResources: string[];
@@ -20,7 +20,9 @@ interface ContextMenuProps {
   setShowRename: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function ContextMenuComponent(props: ContextMenuProps) {
+export default function BundleContextMenuComponent(
+  props: BundleContextMenuProps
+) {
   const { setProfileTree, setMode, setResource } = useStore((state) => {
     return {
       setProfileTree: state.setProfileTree,
@@ -47,7 +49,7 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
   };
   return (
     <div
-      className={`flex flex-col gap-1 rounded-md text-white border-2-black fixed bg-slate-400 px-2`}
+      className={`fixed flex flex-col gap-1 rounded-md bg-white border-2 border-blue-400 px-2`}
       style={{ left: props.x, top: props.y }}
     >
       {props.checkedResources.length > 0 && (
@@ -143,7 +145,7 @@ export default function ContextMenuComponent(props: ContextMenuProps) {
       >
         Export
       </button>
-      {!props.checkedFolders.includes("Pool") && (
+      {!props.checkedFolders.includes(bundlePoolId) && (
         <button
           className="hover:underline"
           onClick={() => {

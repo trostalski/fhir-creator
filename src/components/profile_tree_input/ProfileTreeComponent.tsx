@@ -9,6 +9,10 @@ import { useStore } from "@/stores/useStore";
 import { defaultProfileTreeNode } from "@/utils/constants";
 import { ConstraintComponent } from "./ConstraintComponent";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
+import AddResourceButton from "../buttons/AddResourceButton";
+import Select from "react-select";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/db/db";
 
 interface ProfileTreeComponentProps {
   pathsWithInvalidCardinality: string[];
@@ -20,6 +24,7 @@ interface ProfileTreeComponentProps {
 const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   props: ProfileTreeComponentProps
 ) => {
+  const { setPathsWithInvalidCardinality, pathsWithInvalidCardinality } = props;
   const {
     profileTree,
     profile,
@@ -40,6 +45,16 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
   });
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
   const [searchInput, setSearchInput] = React.useState<string | null>(null);
+  const bundleFolders = useLiveQuery(() => {
+    return db.bundleFolders.toArray();
+  });
+
+  const bundleFolderOptions = bundleFolders?.map((folder) => {
+    return {
+      value: folder.id,
+      label: folder.id,
+    };
+  });
 
   const toggleNodeExpansion = (nodePath: string) => {
     if (expandedNodes.includes(nodePath)) {
@@ -84,7 +99,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     });
   }
   return (
-    <div className="flex h-5/6 flex-col gap-2">
+    <div className="flex flex-col gap-2 pb-20 w-full overflow-scroll">
       <div className="flex flex-col">
         <div className="flex flex-row gap-4 items-center">
           <span className="text-gray-500 text-xs">Profile URL:</span>
@@ -100,13 +115,13 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
           />
           <span className="flex-grow" />
           <button
-            className="text-gray-500 w-32 hover:text-gray-70 text-xs rounded py-1 px-2"
+            className="text-gray-500 w-32 text-xs rounded py-1 px-2 transition hover:text-gray-700"
             onClick={() => setExpandedNodes([])}
           >
             Collapse All
           </button>
           <button
-            className="text-gray-500 w-32 hover:text-gray-700 text-xs rounded py-1 px-2"
+            className="text-gray-500 w-32 text-xs rounded py-1 px-2 transition hover:text-gray-700"
             onClick={() =>
               setExpandedNodes(profileTree!.map((node) => node.dataPath))
             }
@@ -145,6 +160,18 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
             }
             return null;
           })}
+      </div>
+      <div className="flex flex-row shrink-0 items-center w-full h-16 pb-4">
+        <Select
+          options={bundleFolderOptions}
+          placeholder="Select Bundle"
+          menuPlacement="top"
+          className="w-1/2"
+        />
+        <span className="grow" />
+        <AddResourceButton
+          setPathsWithInvalidCardinality={setPathsWithInvalidCardinality}
+        />
       </div>
     </div>
   );

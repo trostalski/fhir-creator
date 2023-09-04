@@ -2,7 +2,7 @@
 import Dexie, { Table } from "dexie";
 import { PathItem } from "../types";
 import { StructureDefinition, Resource, Bundle } from "fhir/r4";
-import { bundlePoolId } from "@/utils/constants";
+import { bundlePoolId, bundlePoolName } from "@/utils/constants";
 
 export interface ResourcePathRepr {
   id: string;
@@ -48,7 +48,7 @@ export class MySubClassedDexie extends Dexie {
     this.on("populate", () => {
       db.bundleFolders.add({
         id: bundlePoolId,
-        name: bundlePoolId,
+        name: bundlePoolName,
         resourceIds: [],
         meta: {
           resourceType: "Bundle",

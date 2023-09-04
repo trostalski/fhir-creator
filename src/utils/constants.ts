@@ -568,4 +568,5 @@ export const defaultOrderedConstraintResults: OrderedConstraintResults = {
   guidelines: [],
 };
 
-export const bundlePoolId = "Pool";
+export const bundlePoolId = "All Resources";
+export const bundlePoolName = "All Resources";

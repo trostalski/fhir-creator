@@ -35,7 +35,6 @@ const LeftSidebar = (props: LeftSidebarProps) => {
         minWidth: `${minWidth}px`,
         maxWidth: `${maxWidth}px`,
       }}
-      // onMouseDown={(e) => e.preventDefault()}
     >
       {rightPartIsOpen ? (
         <Storage

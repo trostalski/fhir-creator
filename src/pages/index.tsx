@@ -36,11 +36,11 @@ const Home = () => {
 
   return (
     <Layout>
-      <div className="flex flex-col h-full w-full pt-2 overflow-x-scroll overflow-hidden gap-4 px-8">
-        <div className="flex flex-row items-center gap-2">
+      <div className="flex flex-col h-full w-full pt-2 overflow-x-scroll overflow-y-hidden pl-8 pr-32 gap-2 ">
+        <div className="flex flex-row gap-2">
           <Select
             instanceId={"baseprofile-select"}
-            className="w-[1000px] mx-auto"
+            className="h-8 w-full mx-auto"
             value={
               profile
                 ? resourceOptions.find(
@@ -60,10 +60,6 @@ const Home = () => {
                 "failed to load profile tree."
               );
             }}
-          ></Select>
-          <span className="flex-grow" />
-          <AddResourceButton
-            setPathsWithInvalidCardinality={setPathsWithInvalidCardinality}
           />
         </div>
         <div className="flex flex-col h-full">
@@ -75,9 +71,9 @@ const Home = () => {
           )}
         </div>
       </div>
-      <RightSidebar>
+      {/* <RightSidebar>
         <BranchIdsCheckboxes />
-      </RightSidebar>
+      </RightSidebar> */}
       {checkoutModalOpen && (
         <ExportModal
           isOpen={checkoutModalOpen}

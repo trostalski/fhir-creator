@@ -14,7 +14,6 @@ import {
   getResourceTypeFromUrl,
   getUid,
 } from "@/utils/utils";
-import { some } from "lodash";
 
 const loadProfileTree = async (
   profile: StructureDefinition,

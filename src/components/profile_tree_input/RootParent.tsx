@@ -86,7 +86,7 @@ const RootParent = (props: RootParentProps) => {
   }
   return (
     <div
-      className="w-full my-0.5 bg-sky-100 rounded-md p-2"
+      className="w-full my-0.5 bg-sky-100 shadow-sm rounded-md p-2"
       key={props.node.dataPath}
     >
       <div className="flex flex-row">
@@ -229,7 +229,7 @@ const RootParent = (props: RootParentProps) => {
             </div>
           </div>
           {props.expandedNodes.includes(props.node.dataPath) && (
-            <div className="flex flex-row flex-wrap pl-44">
+            <div className="flex flex-row flex-wrap pl-36">
               {props.node.childPaths.map((childPath: string) => {
                 let childNode = profileTree!.find(
                   (n: ProfileTreeNode) => n.dataPath === childPath
