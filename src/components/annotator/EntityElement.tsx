@@ -6,16 +6,27 @@ interface EntityElementProps {
   setOutline: (outline: Outline) => void;
   entity: OutlineItem;
   resourceType: string;
+  selectedEntity?: OutlineItem;
+  setSelectedEntity: (outlineItem?: OutlineItem) => void;
 }
 
 const EntityElement = (props: EntityElementProps) => {
   return (
     <div className="flex flex-row border rounded-md pr-2">
-      <button className="truncate">{props.entity.item}</button>
+      <button
+        className="truncate"
+        onClick={() => {
+          props.setSelectedEntity(
+            props.selectedEntity === props.entity ? undefined : props.entity
+          );
+        }}
+      >
+        {props.entity.item}
+      </button>
       <TiDelete
         className="hover:scale-110 ml-auto"
         onClick={() => {
-          let newOutline = props.setOutline({
+          props.setOutline({
             ...props.outline,
             [props.resourceType]: props.outline[props.resourceType].filter(
               (entity) => {

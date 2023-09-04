@@ -1,4 +1,4 @@
-import { ColorStore, OutlineArrayItem } from "@/types";
+import { ColorStore, OutlineArrayItem, OutlineItem } from "@/types";
 import React, { FC } from "react";
 import { SplitProps } from "./TextAnnotator";
 
@@ -11,18 +11,19 @@ export interface MarkProps {
   mark?: boolean;
   key?: string;
   color?: string;
+  selected: boolean;
 }
 
-const Mark: FC<SplitProps> = (props) => (
+const Mark: FC<MarkProps> = (props) => (
   <mark
-    className="rounded-md p-1"
+    className={`rounded-md p-1 ${props.selected ? "border border-black" : ""}`}
     style={{
       backgroundColor: props.color || "#84d2ff",
       padding: "0 4px",
     }}
     data-start={props.start}
     data-end={props.end}
-    onClick={() => props.onClick({ start: props.start, end: props.end })}
+    onClick={() => props.onClick(props.outlineArrayItem)}
   >
     {props.content}
     {props.outlineArrayItem && (

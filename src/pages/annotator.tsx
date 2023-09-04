@@ -4,7 +4,7 @@ import FocusSelector from "@/components/annotator/FocusSelector";
 import { TextDisplay } from "@/components/annotator/TextDisplay";
 import { TextInput } from "@/components/annotator/TextInput";
 import { toastError } from "@/toasts";
-import { Color, ColorStore, OptionType, Outline } from "@/types";
+import { Color, ColorStore, OptionType, Outline, OutlineItem } from "@/types";
 import {
   addMatches,
   constructDefaultOutline,
@@ -35,6 +35,9 @@ const Annotator = () => {
   const [colors, setColors] = React.useState<ColorStore>(
     setColorsForDefaultResources(defaultFocusResources, rng)
   );
+  const [selectedEntity, setSelectedEntity] = React.useState<
+    OutlineItem | undefined
+  >(undefined);
 
   async function handleLLMAssist() {
     if (text.length === 0) {
@@ -141,10 +144,16 @@ const Annotator = () => {
             setOutline={setOutline}
             activeResourceType={activeResourceType}
             colors={colors}
+            selectedEntity={selectedEntity}
           />
         </div>
         <div className="w-1/5 overflow-auto">
-          <BundleOutline outline={outline} setOutline={setOutline} />
+          <BundleOutline
+            outline={outline}
+            setOutline={setOutline}
+            selectedEntity={selectedEntity}
+            setSelectedEntity={setSelectedEntity}
+          />
         </div>
       </div>
     </Layout>

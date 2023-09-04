@@ -149,6 +149,7 @@ export interface TextDisplayProps {
   setOutline: (outline:Outline)=> void
   activeResourceType?: OptionType
   colors: ColorStore;
+  selectedEntity?: OutlineItem
 }
 
 export interface TextInputProps {

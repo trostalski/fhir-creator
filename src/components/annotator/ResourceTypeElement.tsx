@@ -5,6 +5,8 @@ interface ResourceTypeElementProps {
   outline: Outline;
   setOutline: (outline: Outline) => void;
   resourceType: string;
+  selectedEntity?: OutlineItem;
+  setSelectedEntity: (outlineItem?: OutlineItem) => void;
 }
 
 const ResourceTypeElement = (props: ResourceTypeElementProps) => {
@@ -14,6 +16,8 @@ const ResourceTypeElement = (props: ResourceTypeElementProps) => {
       {props.outline[props.resourceType].map((entity) => {
         return (
           <EntityElement
+            selectedEntity={props.selectedEntity}
+            setSelectedEntity={props.setSelectedEntity}
             outline={props.outline}
             setOutline={props.setOutline}
             entity={entity}

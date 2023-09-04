@@ -26,7 +26,9 @@ export function TextDisplay(props: TextDisplayProps) {
   return (
     <div className="overflow-y-auto h-3/4">
       <TextAnnotator
+        selectedEntity={props.selectedEntity}
         outline={props.outline}
+        setOutline={props.setOutline}
         colors={props.colors}
         content={props.text}
         onChange={(value) => {

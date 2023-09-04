@@ -8,7 +8,7 @@ import {
   splitWithOutline,
 } from "./utils";
 import { Span } from "./span";
-import { ColorStore, Outline, OutlineArrayItem } from "@/types";
+import { ColorStore, Outline, OutlineArrayItem, OutlineItem } from "@/types";
 
 export interface SplitProps {
   outlineArrayItem?: OutlineArrayItem;
@@ -19,17 +19,24 @@ export interface SplitProps {
   mark?: boolean;
   key?: string;
   color?: string;
+  selectedEntity?: OutlineItem;
 }
 
 const Split = (props: SplitProps) => {
-  if (props.mark) return <Mark {...props} />;
+  if (props.mark) {
+    let selected = false;
+    if (
+      props.selectedEntity &&
+      props.selectedEntity.item === props.outlineArrayItem?.item
+    ) {
+      selected = true;
+    }
+    let markProps = { ...props, selected: selected };
+    return <Mark {...markProps} />;
+  }
 
   return (
-    <span
-      data-start={props.start}
-      data-end={props.end}
-      onClick={() => props.onClick({ start: props.start, end: props.end })}
-    >
+    <span data-start={props.start} data-end={props.end} onClick={() => {}}>
       {props.content}
     </span>
   );
@@ -41,11 +48,13 @@ interface TextSpan extends Span {
 
 type TextBaseProps<T> = {
   outline?: Outline;
+  setOutline: (outline: Outline) => void;
   content: string;
   value: T[];
   onChange: (value: T[]) => any;
   getSpan?: (span: TextSpan) => T;
   colors: ColorStore;
+  selectedEntity?: OutlineItem;
   // TODO: determine whether to overwrite or leave intersecting ranges.
 };
 
@@ -89,17 +98,17 @@ export const TextAnnotator = <T extends Span>(props: TextAnnotatorProps<T>) => {
     }
   };
 
-  const handleSplitClick = ({ start, end }: { start: number; end: number }) => {
-    // Find and remove the matching split.
-    // const splitIndex = props.value.findIndex(
-    //   (s) => s.start === start && s.end === end
-    // );
-    // if (splitIndex >= 0) {
-    //   props.onChange([
-    //     ...props.value.slice(0, splitIndex),
-    //     ...props.value.slice(splitIndex + 1),
-    //   ]);
-    // }
+  const handleSplitClick = (outlineItem: OutlineArrayItem) => {
+    if (props.outline && outlineItem) {
+      props.setOutline({
+        ...props.outline,
+        [outlineItem.resourceType]: props.outline[
+          outlineItem.resourceType
+        ].filter((entity) => {
+          return entity.item !== outlineItem.item;
+        }),
+      });
+    }
   };
 
   const { content, value, style } = props;
@@ -111,6 +120,7 @@ export const TextAnnotator = <T extends Span>(props: TextAnnotatorProps<T>) => {
           key={`${split.start}-${split.end}`}
           {...split}
           onClick={handleSplitClick}
+          selectedEntity={props.selectedEntity}
         />
       ))}
     </div>
