@@ -2,6 +2,7 @@
 import Dexie, { Table } from "dexie";
 import { PathItem } from "../types";
 import { StructureDefinition, Resource, Bundle } from "fhir/r4";
+import { bundlePoolId, bundlePoolName } from "@/utils/constants";
 
 export interface ResourcePathRepr {
   id: string;
@@ -12,18 +13,18 @@ export interface BundleFolder {
   id: string;
   name?: string;
   meta: Bundle;
-  resourceIds: string[]
+  resourceIds: string[];
 }
-export interface FolderReference{
-  resourceId: string,
-  folderId: string
+export interface FolderReference {
+  resourceId: string;
+  folderId: string;
 }
 
 export class MySubClassedDexie extends Dexie {
   resources!: Table<Resource>;
   profiles!: Table<StructureDefinition>;
   bundleFolders!: Table<BundleFolder>;
-  folderReferences!: Table<FolderReference>
+  folderReferences!: Table<FolderReference>;
   // deprecated, not sure if can be deleted on dexie with ts
   bundles!: Table<Bundle>;
   resourcesPathRepr!: Table<ResourcePathRepr>;
@@ -34,20 +35,20 @@ export class MySubClassedDexie extends Dexie {
       folderReferences: "resourceId, folderId",
       bundles: null,
       resourcesPathRepr: null,
-    })
+    });
     this.version(2).stores({
       bundleFolders: "id, name",
-    })
+    });
     this.version(1).stores({
       resources: "id", // Primary key and indexed props
       resourcesPathRepr: "id",
       profiles: "url",
       bundles: "id",
     });
-    this.on("populate", ()=>{
+    this.on("populate", () => {
       db.bundleFolders.add({
-        id:"Pool",
-        name: "Pool",
+        id: bundlePoolId,
+        name: bundlePoolName,
         resourceIds: [],
         meta: {
           resourceType: "Bundle",
@@ -55,10 +56,10 @@ export class MySubClassedDexie extends Dexie {
           timestamp: new Date().toISOString(),
           meta: {
             lastUpdated: new Date().toISOString(),
-            }
-          }
-      })
-    })
+          },
+        },
+      });
+    });
   }
 }
 

@@ -4,6 +4,7 @@ import { BundleFolder, db } from "./db";
 import { FhirResource } from "fhir/r4";
 import { v4 as uuidv4 } from "uuid";
 import { resolveProfileForResource } from "@/components/buttons/ImportResourceButton";
+import { bundlePoolId } from "@/utils/constants";
 
 export const getBaseProfile = async (resourceType: string) => {
   try {
@@ -55,7 +56,8 @@ export async function deleteResources(ids: string[]) {
   }
 }
 
-export async function addResource(resource: Resource) {
+export async function addResource(resource: Resource, bundleId?: string) {
+  bundleId = bundleId || bundlePoolId;
   try {
     db.transaction(
       "rw",
@@ -66,11 +68,14 @@ export async function addResource(resource: Resource) {
         db.resources.add(resource);
         db.bundleFolders
           .where("id")
-          .equals("Pool")
+          .equals(bundleId!)
           .modify((folder) => {
             folder.resourceIds = [...folder.resourceIds, resource.id!];
           });
-        db.folderReferences.add({ folderId: "Pool", resourceId: resource.id! });
+        db.folderReferences.add({
+          folderId: bundlePoolId,
+          resourceId: resource.id!,
+        });
       }
     );
     return true;

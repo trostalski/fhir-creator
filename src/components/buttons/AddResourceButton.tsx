@@ -2,7 +2,7 @@ import { addResource, resourceExists, updateResource } from "@/db/utils";
 import { useStore } from "@/stores/useStore";
 import { toastError, toastSuccess } from "@/toasts";
 import { PathItem } from "@/types";
-import { Modes } from "@/utils/constants";
+import { Modes, bundlePoolId } from "@/utils/constants";
 import { ConstraintResolver } from "@/utils/constraint_utils";
 import { removeNPathPartsFromStart } from "@/utils/path_utils";
 import {
@@ -17,9 +17,11 @@ interface AddResourceButtonProps {
   setPathsWithInvalidCardinality: React.Dispatch<
     React.SetStateAction<string[]>
   >;
+  addToBundleId?: string;
 }
 
 const AddResourceButton = (props: AddResourceButtonProps) => {
+  const { addToBundleId, setPathsWithInvalidCardinality } = props;
   const { mode, resourceType, profileTree, setOrderedConstraintResults } =
     useStore((state) => {
       return {
@@ -54,16 +56,12 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
     return (
       <button
         disabled={profileTree.length === 0}
-        className={`bg-green-600 shrink-0 w-36 text-white py-1 px-4 rounded  ${
-          profileTree.length === 0
-            ? "bg-opacity-50 cursor-not-allowed"
-            : "hover:bg-green-800"
-        }}`}
+        className={`bg-green-500 text-white shrink-0 w-36 py-1 px-4 rounded transition hover:bg-green-700`}
         onClick={async () => {
           if (profileTree.length === 0) {
             return;
           }
-          props.setPathsWithInvalidCardinality([]);
+          setPathsWithInvalidCardinality([]);
           const inputData = extractPathValuePairs(profileTree);
           const checkCardinalityResponse = checkCardinalities(
             profileTree,
@@ -75,7 +73,7 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
                 .map((p) => removeNPathPartsFromStart(p, 1))
                 .join(", ")}`
             );
-            props.setPathsWithInvalidCardinality(
+            setPathsWithInvalidCardinality(
               checkCardinalityResponse.pathsWithInvalidCardinality
             );
             return;
@@ -95,18 +93,18 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
           const orderedConstraintResults =
             constraintResolver.getEvaluationResult();
           setOrderedConstraintResults(orderedConstraintResults);
-          if (orderedConstraintResults.warnings.length > 0) {
-            const confirm = window.confirm(
-              "There are constraint warnings in this document. By clicking ok you chose to ignore them and proceed anyway."
-            );
-            if (!confirm) {
-              return;
-            }
-          } else if (orderedConstraintResults.errors.length > 0) {
-            toastError("Constraint error. Inspect the form for more details");
-            return;
-          }
-          addResource(resource);
+          // if (orderedConstraintResults.warnings.length > 0) {
+          //   const confirm = window.confirm(
+          //     "There are constraint warnings in this document. By clicking ok you chose to ignore them and proceed anyway."
+          //   );
+          //   if (!confirm) {
+          //     return;
+          //   }
+          // } else if (orderedConstraintResults.errors.length > 0) {
+          //   toastError("Constraint error. Inspect the form for more details");
+          //   return;
+          // }
+          addResource(resource, addToBundleId || bundlePoolId);
           toastSuccess("Resource added");
         }}
       >
@@ -116,10 +114,10 @@ const AddResourceButton = (props: AddResourceButtonProps) => {
   } else if (mode == Modes.EDIT) {
     return (
       <button
-        className={`bg-green-600 w-36 shrink-0 text-white py-1 px-4 rounded  ${
+        className={`bg-green-500 w-36 shrink-0 text-white py-1 px-4 rounded  ${
           profileTree.length === 0
             ? "bg-opacity-50 cursor-not-allowed"
-            : "hover:bg-green-800"
+            : "hover:bg-green-700"
         }}`}
         onClick={() => {
           let inputPathValuePairs = extractPathValuePairs(profileTree);

@@ -4,6 +4,7 @@ import { AiOutlineEye } from "react-icons/ai";
 import { createPathArrayFromJson } from "@/utils/utils";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
 import { Resource } from "fhir/r4";
+import { bundlePoolId, bundlePoolName } from "@/utils/constants";
 
 interface BundleComponentProps {
   bundleFolder: BundleFolder;
@@ -20,7 +21,8 @@ interface BundleComponentProps {
 
 const BundleComponent = (props: BundleComponentProps) => {
   const [showResources, setShowResources] = useState<boolean>(false);
-  const BundleId = props.bundleFolder.id;
+  const bundleId = props.bundleFolder.id;
+  const bundleName = props.bundleFolder.name;
   const resourceIds = props.bundleFolder.resourceIds;
   const resources = props.resources?.filter((resource) => {
     return resourceIds.includes(resource.id!);
@@ -67,17 +69,21 @@ const BundleComponent = (props: BundleComponentProps) => {
   };
 
   return (
-    <div className="border border-gray-300 rounded-md p-1">
-      <div className="flex flex-row items-center gap-2 hover:underline">
-        <ExpandAccordionToggle
-          isOpen={showResources}
+    <div className={`bg-blue-400 p-1 text-white rounded-md`}>
+      <div className="flex flex-row items-center gap-2">
+        <button
           onClick={() => setShowResources(!showResources)}
-        />
+          className={`p-1 transition duration-300 ease-in-out rounded-md hover:bg-blue-200 ${
+            showResources ? "bg-blue-300" : ""
+          }`}
+        >
+          <ExpandAccordionToggle isOpen={showResources} />
+        </button>
         <button
           onClick={(e) =>
             handleClickResFol(
               e,
-              BundleId,
+              bundleId,
               props.checkedFolders,
               props.setCheckedFolders,
               props.setCheckedResources
@@ -86,35 +92,36 @@ const BundleComponent = (props: BundleComponentProps) => {
           onContextMenu={(e) =>
             handleRightClick(
               e,
-              BundleId,
+              bundleId,
               props.checkedFolders,
               props.setCheckedFolders,
               props.setCheckedResources
             )
           }
-          className={`${
-            props.checkedFolders.includes(BundleId)
-              ? "text-slate-500"
-              : "text-black"
-          } font-light truncate hover:underline`}
+          className={`w-full text-left font-light text-sm truncate hover:bg-blue-200 transition-colors duration-300 ease-in-out px-2 py-1 rounded-md
+          ${props.checkedFolders.includes(bundleId) ? "bg-blue-300" : ""} 
+          `}
         >
-          {`${BundleId === "Pool" ? "Resource Pool" : "Bundle/" + BundleId}`}
-        </button>{" "}
+          {`${
+            bundleId === bundlePoolId ? bundlePoolName : "Bundle/" + bundleId
+          }`}
+        </button>
       </div>
+      {showResources && resources?.length === 0 && (
+        <span className="text-xs">No resources in this bundle.</span>
+      )}
       {showResources &&
         resources &&
         resources.map((resource) => {
           return (
             <div
               key={resource.id}
-              className="flex flex-row pl-2 items-center justify-between text-xs hover:underline"
+              className="flex flex-row pl-2 items-center justify-between text-xs"
             >
               <button
                 className={`${
-                  props.checkedResources.includes(resource.id!)
-                    ? "text-slate-500"
-                    : "text-black"
-                } truncate`}
+                  props.checkedResources.includes(resource.id!) && "font-bold"
+                } text-white truncate hover:underline`}
                 onClick={(e) =>
                   handleClickResFol(
                     e,
@@ -135,9 +142,9 @@ const BundleComponent = (props: BundleComponentProps) => {
                 }
               >
                 {resource.resourceType + "/" + resource.id}
-              </button>{" "}
+              </button>
               <button
-                className="hover:scale-105"
+                className="hover:bg-blue-200 transition-colors duration-300 ease-in-out rounded-md p-1"
                 onClick={() => {
                   const resourcePathRepr = createPathArrayFromJson(resource);
                   props.setPreviewOpen(true);
@@ -147,7 +154,7 @@ const BundleComponent = (props: BundleComponentProps) => {
                   });
                 }}
               >
-                <AiOutlineEye size={15} className="ml-2" />
+                <AiOutlineEye size={15} />
               </button>
             </div>
           );

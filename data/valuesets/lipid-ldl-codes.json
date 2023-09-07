@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "lipid-ldl-codes",
     "meta": {
-        "lastUpdated": "2022-05-28T12:47:40.239+10:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      \n      <p>This value set contains 2 concepts</p>\n      \n      <h2>LDLCodes</h2>\n      \n      <p>LDL Cholesterol codes - measured or calculated</p>\n      \n      <p>\n        \n        <b>Copyright Statement:</b> This content from LOINC© is copyright © 1995 Regenstrief Institute, Inc. and the LOINC Committee, and available at no cost under the license at http://loinc.org/terms-of-use.\n      \n      </p>\n      \n      <p>This value set includes codes defined in other code systems, using the following rules:</p>\n      \n      <ul>\n        \n        <li>Include these codes as defined in http://loinc.org\n          \n          <table>\n            \n            <tr>\n              \n              <td>\n                \n                <b>Code</b>\n              \n              </td>\n              \n              <td>\n                \n                <b>Display</b>\n              \n              </td>\n            \n            </tr>\n            \n            <tr>\n              \n              <td>18262-6</td>\n              \n              <td>LDL Cholesterol (Calc)</td>\n            \n            </tr>\n            \n            <tr>\n              \n              <td>13457-7</td>\n              \n              <td>LDL Cholesterol (Assay)</td>\n            \n            </tr>\n          \n          </table>\n        \n        </li>\n      \n      </ul>\n    \n    </div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include these codes as defined in <a href=\"http://loinc.org\"><code>http://loinc.org</code></a><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Fully specified name</b></td></tr><tr><td><a href=\"https://loinc.org/18262-6/\">18262-6</a></td><td>LDL Cholesterol (Assay)</td><td>Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay</td></tr><tr><td><a href=\"https://loinc.org/13457-7/\">13457-7</a></td><td>Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation</td><td>Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation</td></tr></table></li></ul></div>"
     },
     "extension": [
         {
@@ -21,11 +21,12 @@
     "identifier": [
         {
             "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.0"
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.3211"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "LDLCodes",
+    "title": "L D L Codes",
     "status": "draft",
     "experimental": false,
     "date": "2015-06-23T10:59:44+10:00",
@@ -45,6 +46,17 @@
         }
     ],
     "description": "LDL Cholesterol codes - measured or calculated",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "copyright": "This content from LOINC© is copyright © 1995 Regenstrief Institute, Inc. and the LOINC Committee, and available at no cost under the license at http://loinc.org/terms-of-use.",
     "compose": {
         "include": [

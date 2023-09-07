@@ -1,100 +1,113 @@
 {
-  "resourceType": "CodeSystem",
-  "id": "focus-characteristic-code",
-  "meta": {
-    "lastUpdated": "2022-05-28T13:47:40.239+11:00",
-    "profile": ["http://hl7.org/fhir/StructureDefinition/shareablecodesystem"]
-  },
-  "text": {
-    "status": "generated",
-    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      \n      <p>This code system http://terminology.hl7.org/CodeSystem/focus-characteristic-code defines the following codes:</p>\n      \n      <table class=\"codes\">\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">\n            \n            <b>Code</b>\n          \n          </td>\n          \n          <td>\n            \n            <b>Display</b>\n          \n          </td>\n          \n          <td>\n            \n            <b>Definition</b>\n          \n          </td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">citation\n            \n            <a name=\"focus-characteristic-code-citation\"> </a>\n          \n          </td>\n          \n          <td>Citation</td>\n          \n          <td>Used to reference a specific article.</td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">clinical-outcomes-observed\n            \n            <a name=\"focus-characteristic-code-clinical-outcomes-observed\"> </a>\n          \n          </td>\n          \n          <td>Observed outcomes are clinical outcomes</td>\n          \n          <td>Used to denote a focus on clinical outcomes, ie evidence variable in role of outcome (measured variable) as observed is considered a &quot;clinical outcome&quot; (patient-important outcome such as mortality, symptoms, function or quality of life).</td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">population\n            \n            <a name=\"focus-characteristic-code-population\"> </a>\n          \n          </td>\n          \n          <td>Population</td>\n          \n          <td>The population of interest.</td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">exposure\n            \n            <a name=\"focus-characteristic-code-exposure\"> </a>\n          \n          </td>\n          \n          <td>Exposure</td>\n          \n          <td>The exposure of interest, such as an intervention.</td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">comparator\n            \n            <a name=\"focus-characteristic-code-comparator\"> </a>\n          \n          </td>\n          \n          <td>Comparator</td>\n          \n          <td>The comparator (intervention or control state) of interest.</td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">outcome\n            \n            <a name=\"focus-characteristic-code-outcome\"> </a>\n          \n          </td>\n          \n          <td>Outcome</td>\n          \n          <td>the outcome of interest.</td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">medication-exposures\n            \n            <a name=\"focus-characteristic-code-medication-exposures\"> </a>\n          \n          </td>\n          \n          <td>Medication exposures</td>\n          \n          <td>Any medication exposures. A subset of exposures or interventions that are medications.</td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">study-type\n            \n            <a name=\"focus-characteristic-code-study-type\"> </a>\n          \n          </td>\n          \n          <td>Study type</td>\n          \n          <td>Type of research study, such as randomized trial or case-control study.</td>\n        \n        </tr>\n      \n      </table>\n    \n    </div>"
-  },
-  "extension": [
-    {
-      "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
-      "valueCode": "cds"
+    "resourceType": "CodeSystem",
+    "id": "focus-characteristic-code",
+    "meta": {
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
+        "profile": [
+            "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
+        ]
     },
-    {
-      "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
-      "valueCode": "trial-use"
+    "text": {
+        "status": "generated",
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>This case-sensitive code system <code>http://hl7.org/fhir/focus-characteristic-code</code> defines the following codes:</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td style=\"white-space:nowrap\">citation<a name=\"focus-characteristic-code-citation\"> </a></td><td>Citation</td><td>Used to reference a specific article.</td></tr><tr><td style=\"white-space:nowrap\">clinical-outcomes-observed<a name=\"focus-characteristic-code-clinical-outcomes-observed\"> </a></td><td>Observed outcomes are clinical outcomes</td><td>Used to denote a focus on clinical outcomes, ie evidence variable in role of outcome (measured variable) as observed is considered a &quot;clinical outcome&quot; (patient-important outcome such as mortality, symptoms, function or quality of life).</td></tr><tr><td style=\"white-space:nowrap\">population<a name=\"focus-characteristic-code-population\"> </a></td><td>Population</td><td>The population of interest.</td></tr><tr><td style=\"white-space:nowrap\">exposure<a name=\"focus-characteristic-code-exposure\"> </a></td><td>Exposure</td><td>The exposure of interest, such as an intervention.</td></tr><tr><td style=\"white-space:nowrap\">comparator<a name=\"focus-characteristic-code-comparator\"> </a></td><td>Comparator</td><td>The comparator (intervention or control state) of interest.</td></tr><tr><td style=\"white-space:nowrap\">outcome<a name=\"focus-characteristic-code-outcome\"> </a></td><td>Outcome</td><td>the outcome of interest.</td></tr><tr><td style=\"white-space:nowrap\">medication-exposures<a name=\"focus-characteristic-code-medication-exposures\"> </a></td><td>Medication exposures</td><td>Any medication exposures. A subset of exposures or interventions that are medications.</td></tr><tr><td style=\"white-space:nowrap\">study-type<a name=\"focus-characteristic-code-study-type\"> </a></td><td>Study type</td><td>Type of research study, such as randomized trial or case-control study.</td></tr></table></div>"
     },
-    {
-      "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-      "valueInteger": 0
-    }
-  ],
-  "url": "http://terminology.hl7.org/CodeSystem/focus-characteristic-code",
-  "identifier": [
-    {
-      "system": "urn:ietf:rfc:3986",
-      "value": "urn:oid:2.16.840.1.113883.4.642.1.0"
-    }
-  ],
-  "version": "4.3.0",
-  "name": "FocusCharacteristicCode",
-  "title": "FocusCharacteristicCode",
-  "status": "draft",
-  "experimental": false,
-  "date": "2020-12-28T16:55:11+11:00",
-  "publisher": "HL7 (FHIR Project)",
-  "contact": [
-    {
-      "telecom": [
+    "extension": [
         {
-          "system": "url",
-          "value": "http://hl7.org/fhir"
+            "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
+            "valueCode": "cds"
         },
         {
-          "system": "email",
-          "value": "fhir@lists.hl7.org"
+            "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
+            "valueCode": "trial-use"
+        },
+        {
+            "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
+            "valueInteger": 0
         }
-      ]
-    }
-  ],
-  "description": "Evidence focus characteristic code.",
-  "caseSensitive": true,
-  "valueSet": "http://hl7.org/fhir/ValueSet/focus-characteristic-code",
-  "content": "complete",
-  "concept": [
-    {
-      "code": "citation",
-      "display": "Citation",
-      "definition": "Used to reference a specific article."
-    },
-    {
-      "code": "clinical-outcomes-observed",
-      "display": "Observed outcomes are clinical outcomes",
-      "definition": "Used to denote a focus on clinical outcomes, ie evidence variable in role of outcome (measured variable) as observed is considered a \"clinical outcome\" (patient-important outcome such as mortality, symptoms, function or quality of life)."
-    },
-    {
-      "code": "population",
-      "display": "Population",
-      "definition": "The population of interest."
-    },
-    {
-      "code": "exposure",
-      "display": "Exposure",
-      "definition": "The exposure of interest, such as an intervention."
-    },
-    {
-      "code": "comparator",
-      "display": "Comparator",
-      "definition": "The comparator (intervention or control state) of interest."
-    },
-    {
-      "code": "outcome",
-      "display": "Outcome",
-      "definition": "the outcome of interest."
-    },
-    {
-      "code": "medication-exposures",
-      "display": "Medication exposures",
-      "definition": "Any medication exposures. A subset of exposures or interventions that are medications."
-    },
-    {
-      "code": "study-type",
-      "display": "Study type",
-      "definition": "Type of research study, such as randomized trial or case-control study."
-    }
-  ]
+    ],
+    "url": "http://hl7.org/fhir/focus-characteristic-code",
+    "identifier": [
+        {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.4.1960"
+        }
+    ],
+    "version": "6.0.0-cibuild",
+    "name": "FocusCharacteristicCode",
+    "title": "Focus Characteristic Code",
+    "status": "active",
+    "experimental": false,
+    "date": "2020-12-28T16:55:11+11:00",
+    "publisher": "HL7 (FHIR Project)",
+    "contact": [
+        {
+            "telecom": [
+                {
+                    "system": "url",
+                    "value": "http://hl7.org/fhir"
+                },
+                {
+                    "system": "email",
+                    "value": "fhir@lists.hl7.org"
+                }
+            ]
+        }
+    ],
+    "description": "Evidence focus characteristic code.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
+    "caseSensitive": true,
+    "valueSet": "http://hl7.org/fhir/ValueSet/focus-characteristic-code",
+    "content": "complete",
+    "concept": [
+        {
+            "code": "citation",
+            "display": "Citation",
+            "definition": "Used to reference a specific article."
+        },
+        {
+            "code": "clinical-outcomes-observed",
+            "display": "Observed outcomes are clinical outcomes",
+            "definition": "Used to denote a focus on clinical outcomes, ie evidence variable in role of outcome (measured variable) as observed is considered a \"clinical outcome\" (patient-important outcome such as mortality, symptoms, function or quality of life)."
+        },
+        {
+            "code": "population",
+            "display": "Population",
+            "definition": "The population of interest."
+        },
+        {
+            "code": "exposure",
+            "display": "Exposure",
+            "definition": "The exposure of interest, such as an intervention."
+        },
+        {
+            "code": "comparator",
+            "display": "Comparator",
+            "definition": "The comparator (intervention or control state) of interest."
+        },
+        {
+            "code": "outcome",
+            "display": "Outcome",
+            "definition": "the outcome of interest."
+        },
+        {
+            "code": "medication-exposures",
+            "display": "Medication exposures",
+            "definition": "Any medication exposures. A subset of exposures or interventions that are medications."
+        },
+        {
+            "code": "study-type",
+            "display": "Study type",
+            "definition": "Type of research study, such as randomized trial or case-control study."
+        }
+    ]
 }

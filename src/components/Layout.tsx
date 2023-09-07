@@ -28,7 +28,7 @@ export default function Layout(props: LayoutProps) {
       </Head>
       <div className="w-screen h-screen overflow-hidden">
         <Header />
-        <main className="flex flex-row pt-8 h-full overflow-scroll">
+        <main className="flex flex-row h-full w-full overflow-hidden">
           <LeftSidebar setCheckoutModalOpen={setCheckoutModalOpen} />
           {props.children}
         </main>

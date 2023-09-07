@@ -2,11 +2,11 @@
     "resourceType": "ValueSet",
     "id": "example-filter",
     "meta": {
-        "lastUpdated": "2022-05-28T12:47:40.239+10:00"
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00"
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include codes from <a href=\"codesystem-example.html\"><code>http://hl7.org/fhir/CodeSystem/example</code></a> where acme-plasma  =  true</li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <ul>\n        <li>Include codes from \n          <a href=\"codesystem-example.html\">\n            <code>http://hl7.org/fhir/CodeSystem/example</code>\n          </a> where acme-plasma  =  true\n        </li>\n      </ul>\n    </div>"
     },
     "extension": [
         {
@@ -15,7 +15,13 @@
         }
     ],
     "url": "http://hl7.org/fhir/ValueSet/example-filter",
-    "version": "4.3.0",
+    "identifier": [
+        {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.3148"
+        }
+    ],
+    "version": "6.0.0-cibuild",
     "name": "ACMECholCodesPlasma",
     "title": "ACME Codes for Cholesterol: Plasma only",
     "status": "draft",
@@ -46,6 +52,9 @@
                     }
                 ]
             }
+        ],
+        "property": [
+            "status"
         ]
     }
 }

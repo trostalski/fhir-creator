@@ -2,19 +2,19 @@
     "resourceType": "ValueSet",
     "id": "vision-eye-codes",
     "meta": {
-        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <h2>VisionEyes</h2>\n      <div>\n        <p>A coded concept listing the eye codes.</p>\n\n      </div>\n      <p>This value set includes codes from the following code systems:</p>\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-vision-eye-codes.html\">\n            <code>http://hl7.org/fhir/vision-eye-codes</code>\n          </a>\n        </li>\n      </ul>\n    </div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-vision-eye-codes.html\"><code>http://hl7.org/fhir/vision-eye-codes</code></a></li></ul></div>"
     },
     "extension": [
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
-            "valueCode": "fm"
+            "valueCode": "oo"
         },
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
@@ -22,7 +22,7 @@
         },
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-            "valueInteger": 2
+            "valueInteger": 3
         }
     ],
     "url": "http://hl7.org/fhir/ValueSet/vision-eye-codes",
@@ -30,14 +30,24 @@
         {
             "system": "urn:ietf:rfc:3986",
             "value": "urn:oid:2.16.840.1.113883.4.642.3.660"
+        },
+        {
+            "use": "old",
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.644"
+        },
+        {
+            "use": "old",
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.2.344"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "VisionEyes",
-    "title": "VisionEyes",
+    "title": "Vision Eyes",
     "status": "draft",
     "experimental": false,
-    "date": "2021-01-17T07:06:13+11:00",
+    "date": "2020-12-28T16:55:11+11:00",
     "publisher": "HL7 (FHIR Project)",
     "contact": [
         {
@@ -54,6 +64,17 @@
         }
     ],
     "description": "A coded concept listing the eye codes.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "immutable": true,
     "compose": {
         "include": [

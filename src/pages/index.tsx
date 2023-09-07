@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import { Modes, resourceOptions } from "../utils/constants";
+import { Modes, resourceTypeList } from "../utils/constants";
 import "react-tooltip/dist/react-tooltip.css";
-import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import { getBaseProfile } from "@/db/utils";
 import ProfileTreeComponent from "../components/profile_tree_input/ProfileTreeComponent";
 import ExportModal from "@/components/ExportModal";
-import AddResourceButton from "@/components/buttons/AddResourceButton";
 import { useStore } from "@/stores/useStore";
 import Layout from "@/components/Layout";
 import { toastPromise } from "@/toasts";
@@ -29,6 +27,13 @@ const Home = () => {
     }
   );
 
+  const resourceOptions = resourceTypeList.map((resourceType) => {
+    return {
+      value: resourceType,
+      label: resourceType,
+    };
+  });
+
   const handleSelectBaseProfile = async (value: string) => {
     const profile = await getBaseProfile(value);
     setProfileTree(profile);
@@ -36,11 +41,11 @@ const Home = () => {
 
   return (
     <Layout>
-      <div className="flex flex-col w-full pb-10 pt-4 overflow-scroll gap-2 px-8">
-        <div className="flex flex-row items-center gap-2 p-2">
+      <div className="flex flex-col h-full w-full pt-2 overflow-x-scroll overflow-y-hidden pl-8 pr-32 gap-2 ">
+        <div className="flex flex-row gap-2">
           <Select
             instanceId={"baseprofile-select"}
-            className="w-[1000px] mx-auto"
+            className="h-8 w-full mx-auto"
             value={
               profile
                 ? resourceOptions.find(
@@ -60,13 +65,9 @@ const Home = () => {
                 "failed to load profile tree."
               );
             }}
-          ></Select>
-          <span className="flex-grow" />
-          <AddResourceButton
-            setPathsWithInvalidCardinality={setPathsWithInvalidCardinality}
           />
         </div>
-        <div className="flex flex-col h-full ">
+        <div className="flex flex-col h-full">
           {!profileTree ? null : (
             <ProfileTreeComponent
               setPathsWithInvalidCardinality={setPathsWithInvalidCardinality}
@@ -75,9 +76,9 @@ const Home = () => {
           )}
         </div>
       </div>
-      <RightSidebar>
+      {/* <RightSidebar>
         <BranchIdsCheckboxes />
-      </RightSidebar>
+      </RightSidebar> */}
       {checkoutModalOpen && (
         <ExportModal
           isOpen={checkoutModalOpen}

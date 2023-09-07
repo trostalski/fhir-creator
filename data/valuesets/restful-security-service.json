@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "restful-security-service",
     "meta": {
-        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <h2>RestfulSecurityService</h2>\n      <div>\n        <p>Types of security services used with FHIR.</p>\n\n      </div>\n      <p>This value set includes codes from the following code systems:</p>\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-restful-security-service.html\">\n            <code>http://terminology.hl7.org/CodeSystem/restful-security-service</code>\n          </a>\n        </li>\n      </ul>\n    </div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-restful-security-service.html\"><code>http://hl7.org/fhir/restful-security-service</code></a></li></ul></div>"
     },
     "extension": [
         {
@@ -34,14 +34,24 @@
         {
             "system": "urn:ietf:rfc:3986",
             "value": "urn:oid:2.16.840.1.113883.4.642.3.178"
+        },
+        {
+            "use": "old",
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.168"
+        },
+        {
+            "use": "old",
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.2.82"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "RestfulSecurityService",
-    "title": "RestfulSecurityService",
+    "title": "Restful Security Service",
     "status": "active",
     "experimental": false,
-    "date": "2021-01-17T07:06:13+11:00",
+    "date": "2020-12-28T16:55:11+11:00",
     "publisher": "HL7 (FHIR Project)",
     "contact": [
         {
@@ -58,11 +68,22 @@
         }
     ],
     "description": "Types of security services used with FHIR.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "immutable": true,
     "compose": {
         "include": [
             {
-                "system": "http://terminology.hl7.org/CodeSystem/restful-security-service"
+                "system": "http://hl7.org/fhir/restful-security-service"
             }
         ]
     }

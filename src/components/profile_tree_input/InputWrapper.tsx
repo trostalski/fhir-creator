@@ -53,12 +53,12 @@ ${
           }`}
         >
           <span>{props.title}</span>
-          <span className="text-gray-400 font-normal text-md">
+          {/* <span className="text-gray-400 font-normal text-md">
             {props.node.element.type ? " (" + elementType + ")" : null}
-          </span>{" "}
+          </span>{" "} */}
           <ConstraintComponent resolver={guiConstraintResolver} />
         </div>
-        {props.helpText && (
+        {/* {props.helpText && (
           <>
             <div
               data-tooltip-id={props.node.dataPath}
@@ -72,7 +72,7 @@ ${
               style={tooltipStyles}
             />
           </>
-        )}
+        )} */}
       </div>
       {props.children}
     </div>

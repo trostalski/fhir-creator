@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "contributor-role",
     "meta": {
-        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      \n      <ul>\n        \n        <li>Include all codes defined in \n          \n          <a href=\"codesystem-contributor-role.html\">\n            \n            <code>http://terminology.hl7.org/CodeSystem/contributor-role</code>\n          \n          </a>\n        \n        </li>\n      \n      </ul>\n    \n    </div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-contributor-role.html\"><code>http://hl7.org/fhir/contributor-role</code></a></li></ul></div>"
     },
     "extension": [
         {
@@ -22,19 +22,19 @@
         },
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-            "valueInteger": 0
+            "valueInteger": 1
         }
     ],
     "url": "http://hl7.org/fhir/ValueSet/contributor-role",
     "identifier": [
         {
             "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.0"
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.2961"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "ContributorRole",
-    "title": "ContributorRole",
+    "title": "Contributor Role",
     "status": "draft",
     "experimental": true,
     "date": "2021-03-11T16:55:11+11:00",
@@ -54,11 +54,22 @@
         }
     ],
     "description": "Used to code the format of the display string.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "immutable": true,
     "compose": {
         "include": [
             {
-                "system": "http://terminology.hl7.org/CodeSystem/contributor-role"
+                "system": "http://hl7.org/fhir/contributor-role"
             }
         ]
     }

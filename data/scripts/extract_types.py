@@ -3,8 +3,13 @@ import json
 import os
 import sys
 
+current_dir = os.path.dirname(os.path.realpath(__file__))
+data_dir = os.path.dirname(current_dir)
+profile_types = os.path.join(data_dir, "fhir-definitions/profiles-types.json")
+output_dir = os.path.join(data_dir, "fhir-types")
+
 # load json file
-with open(os.path.join("../data", "fhir-definitions", "profiles-types.json"), "r") as f:
+with open(profile_types, "r") as f:
     data = json.load(f)
 
 content = []
@@ -13,5 +18,5 @@ for entry in data["entry"]:
 
 for entry in content:
     filename = entry["id"] + ".json"
-    with open(os.path.join("../data", "fhir-types", filename), "w") as f:
+    with open(os.path.join(output_dir, filename), "w") as f:
         json.dump(entry, f, indent=4)

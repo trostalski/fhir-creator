@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "detectedissue-mitigation-action",
     "meta": {
-        "lastUpdated": "2022-05-28T12:47:40.239+10:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include codes from <a href=\"http://terminology.hl7.org/3.1.0/CodeSystem-v3-ActCode.html\"><code>http://terminology.hl7.org/CodeSystem/v3-ActCode</code></a> where concept  is-a  <a href=\"http://terminology.hl7.org/3.1.0/CodeSystem-v3-ActCode.html#v3-ActCode-_ActDetectedIssueManagementCode\">_ActDetectedIssueManagementCode</a></li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include codes from <a href=\"http://terminology.hl7.org/5.2.0/CodeSystem-v3-ActCode.html\"><code>http://terminology.hl7.org/CodeSystem/v3-ActCode</code></a> where concept  is-a  <a href=\"http://terminology.hl7.org/5.2.0/CodeSystem-v3-ActCode.html#v3-ActCode-_ActDetectedIssueManagementCode\">_ActDetectedIssueManagementCode</a></li></ul></div>"
     },
     "extension": [
         {
@@ -22,9 +22,19 @@
         {
             "system": "urn:ietf:rfc:3986",
             "value": "urn:oid:2.16.840.1.113883.4.642.3.205"
+        },
+        {
+            "use": "old",
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.195"
+        },
+        {
+            "use": "old",
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.2.104"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "DetectedIssueMitigationAction",
     "title": "Detected Issue Mitigation Action",
     "status": "draft",
@@ -41,6 +51,17 @@
         }
     ],
     "description": "Kinds of mitigating actions and observations that can be associated with a detected issue or contraindication, such as 'added concurrent therapy', 'prior therapy documented', etc.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "compose": {
         "include": [
             {

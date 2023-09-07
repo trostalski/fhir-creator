@@ -2,7 +2,7 @@
     "resourceType": "ValueSet",
     "id": "legal-status-of-supply",
     "meta": {
-        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
+        "lastUpdated": "2023-09-03T04:49:58.148+11:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
@@ -29,12 +29,12 @@
     "identifier": [
         {
             "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.1555"
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.3017"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "LegalStatusOfSupply",
-    "title": "LegalStatusOfSupply",
+    "title": "Legal Status Of Supply",
     "status": "draft",
     "experimental": true,
     "date": "2020-12-28T16:55:11+11:00",
@@ -54,6 +54,17 @@
         }
     ],
     "description": "The prescription supply types appropriate to a medicinal product",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "immutable": true,
     "compose": {
         "include": [

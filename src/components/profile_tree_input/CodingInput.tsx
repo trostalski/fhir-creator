@@ -11,6 +11,8 @@ import {
   snomedTerminologySystem,
 } from "@/utils/constants";
 import { fetchTermFts } from "@/utils/api";
+import { selectInputStyle, textInputStyle } from "@/styles/inputStyles";
+import { reactSelectStyles } from "@/styles/reactSelectStyles";
 
 interface CodingInputProps {
   pathsWithInvalidCardinality: string[];
@@ -89,8 +91,8 @@ const CodingInput = (props: CodingInputProps) => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-2">
-      <div className="flex flex-row w-full gap-4">
+    <div className="w-full flex flex-col">
+      <div className="flex flex-row w-full gap-2">
         <InputWrapper
           node={userSelectedNode}
           pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
@@ -99,7 +101,7 @@ const CodingInput = (props: CodingInputProps) => {
           type="string"
         >
           <select
-            className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className={selectInputStyle + " w-full"}
             value={systemName}
             onChange={(e) => {
               const systemName = e.target.value;
@@ -129,14 +131,15 @@ const CodingInput = (props: CodingInputProps) => {
           <input
             type="select"
             value={systemNode.value}
-            className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder={systemNode.element.short}
+            className={textInputStyle}
             onChange={(e) => {
               handleChange(e.target.value, systemNode);
             }}
           ></input>
         </InputWrapper>
       </div>
-      <div className="w-full flex flex-col gap-2">
+      <div className="w-full flex flex-col">
         <InputWrapper
           node={displayNode}
           pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
@@ -148,7 +151,8 @@ const CodingInput = (props: CodingInputProps) => {
             <input
               type="text"
               value={displayNode.value}
-              className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className={textInputStyle}
+              placeholder={displayNode.element.short}
               onChange={(e) => {
                 setSelectDisplayValue(null);
                 handleChange(e.target.value, displayNode);
@@ -166,13 +170,16 @@ const CodingInput = (props: CodingInputProps) => {
                 isClearable={true}
                 loadOptions={loadFTSOptions}
                 onChange={async (e: any) => {
+                  if (!e) {
+                    return;
+                  }
                   const [display, code] = e.value.split(",");
                   setSelectDisplayValue(e.value.replace(",", " | "));
                   handleChange(display, displayNode);
                   handleChange(code, codeNode);
                 }}
+                styles={reactSelectStyles}
               />
-              <button className="text-blue-600 p-2">Search</button>
             </div>
           )}
         </InputWrapper>
@@ -187,7 +194,8 @@ const CodingInput = (props: CodingInputProps) => {
             <input
               type="text"
               value={codeNode.value}
-              className="w-full h-8 p-1 border border-gray-500 text-gray-900 text-xs rounded-md focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder={codeNode.element.short}
+              className={textInputStyle}
               onChange={(e) => {
                 handleChange(e.target.value, codeNode);
                 setSelectDisplayValue(null);

@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "country",
     "meta": {
-        "lastUpdated": "2022-05-28T12:47:40.239+10:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <code>urn:iso:std:iso:3166</code></li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"http://terminology.hl7.org/5.2.0/CodeSystem-ISO3166Part1.html\"><code>urn:iso:std:iso:3166</code></a></li></ul></div>"
     },
     "extension": [
         {
@@ -29,15 +29,15 @@
     "identifier": [
         {
             "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.0"
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.3297"
         }
     ],
-    "version": "4.3.0",
-    "name": "Country ValueSet",
-    "title": "Country",
+    "version": "6.0.0-cibuild",
+    "name": "CountryValueSet",
+    "title": "Country ValueSet",
     "status": "draft",
     "experimental": true,
-    "date": "2022-05-28T12:47:40+10:00",
+    "date": "2023-09-02T17:49:58+00:00",
     "publisher": "FHIR Project team",
     "contact": [
         {
@@ -50,6 +50,17 @@
         }
     ],
     "description": "This value set defines a base set of codes for countries.   \r\n   \r\n   Note: The codes for countries are taken from    [ISO 3166](https://www.iso.org/iso-3166-country-codes.html).",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "compose": {
         "include": [
             {

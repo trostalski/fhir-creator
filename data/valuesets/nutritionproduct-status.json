@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "nutritionproduct-status",
     "meta": {
-        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-nutritionproduct-status.html\">\n            <code>http://hl7.org/fhir/nutritionproduct-status</code>\n          </a>\n        </li>\n      </ul>\n    </div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-nutritionproduct-status.html\"><code>http://hl7.org/fhir/nutritionproduct-status</code></a></li></ul></div>"
     },
     "extension": [
         {
@@ -22,19 +22,19 @@
         },
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-            "valueInteger": 0
+            "valueInteger": 1
         }
     ],
     "url": "http://hl7.org/fhir/ValueSet/nutritionproduct-status",
     "identifier": [
         {
             "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.1529"
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.3271"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "NutritionProductStatus",
-    "title": "NutritionProductStatus",
+    "title": "Nutrition Product Status",
     "status": "draft",
     "experimental": true,
     "date": "2020-12-28T16:55:11+11:00",
@@ -54,6 +54,17 @@
         }
     ],
     "description": "Codes identifying the lifecycle stage of a product.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "immutable": true,
     "compose": {
         "include": [

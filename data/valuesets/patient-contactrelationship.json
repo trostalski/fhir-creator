@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "patient-contactrelationship",
     "meta": {
-        "lastUpdated": "2022-05-28T12:47:40.239+10:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include codes from <a href=\"http://terminology.hl7.org/3.1.0/CodeSystem-v2-0131.html\"><code>http://terminology.hl7.org/CodeSystem/v2-0131</code></a> where concept  is-not-a  <a href=\"http://terminology.hl7.org/3.1.0/CodeSystem-v2-0131.html#v2-0131-O\">O</a></li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include codes from <a href=\"http://terminology.hl7.org/5.2.0/CodeSystem-v2-0131.html\"><code>http://terminology.hl7.org/CodeSystem/v2-0131</code></a> where concept  is-not-a  <a href=\"http://terminology.hl7.org/5.2.0/CodeSystem-v2-0131.html#v2-0131-O\">O</a></li></ul></div>"
     },
     "extension": [
         {
@@ -36,9 +36,9 @@
             "value": "urn:oid:2.16.840.1.113883.4.642.3.1130"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "PatientContactRelationship",
-    "title": "Patient Contact Relationship",
+    "title": "Patient Contact Relationship ",
     "status": "active",
     "experimental": false,
     "publisher": "FHIR Project team",
@@ -53,6 +53,17 @@
         }
     ],
     "description": "The nature of the relationship between the patient and the contact person.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "compose": {
         "include": [
             {
