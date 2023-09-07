@@ -14,6 +14,8 @@ export interface BundleFolder {
   name?: string;
   meta: Bundle;
   resourceIds: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 export interface FolderReference {
   resourceId: string;
@@ -31,17 +33,10 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super("fhir-creator-db");
-    this.version(3).stores({
-      folderReferences: "resourceId, folderId",
-      bundles: null,
-      resourcesPathRepr: null,
-    });
-    this.version(2).stores({
-      bundleFolders: "id, name",
-    });
     this.version(1).stores({
       resources: "id", // Primary key and indexed props
-      resourcesPathRepr: "id",
+      folderReferences: "resourceId, folderId",
+      bundleFolders: "id",
       profiles: "url",
       bundles: "id",
     });
@@ -49,6 +44,8 @@ export class MySubClassedDexie extends Dexie {
       db.bundleFolders.add({
         id: bundlePoolId,
         name: bundlePoolName,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         resourceIds: [],
         meta: {
           resourceType: "Bundle",

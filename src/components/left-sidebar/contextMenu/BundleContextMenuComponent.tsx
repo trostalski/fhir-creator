@@ -1,6 +1,10 @@
 import { copyFolders, executeCopy, executeCut, handleDelete } from "../utils";
 import { createPathArrayFromJson } from "@/utils/utils";
-import { checkoutResources, exportBundle } from "@/db/utils";
+import {
+  checkoutResources,
+  exportBundleFolder,
+  exportBundleFolderById,
+} from "@/db/utils";
 import { db } from "@/db/db";
 import { toastError } from "@/toasts";
 import { useStore } from "@/stores/useStore";
@@ -131,8 +135,8 @@ export default function BundleContextMenuComponent(
         className="hover:underline"
         onClick={async () => {
           if (props.checkedFolders.length > 0) {
-            for (const folder of props.checkedFolders) {
-              await exportBundle(folder);
+            for (const folderId of props.checkedFolders) {
+              await exportBundleFolderById(folderId);
             }
           } else if (props.checkedResources.length > 0) {
             const resources = await db.resources

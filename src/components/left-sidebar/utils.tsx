@@ -100,6 +100,8 @@ export const handleAddFolder = async () => {
   const folder: BundleFolder = {
     id: uuidv4(),
     resourceIds: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     meta: {
       resourceType: "Bundle",
       type: "collection",
