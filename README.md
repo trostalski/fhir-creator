@@ -1,6 +1,6 @@
 # Fhir-Creator
 
-Visit the project at [https://fhir-creator.com](https://fhir-creator.com)!
+Visit the project at [https://fhir-creator.com](https://fhir-creator.com)
 
 ## Features
 
