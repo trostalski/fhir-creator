@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import { Modes, resourceOptions } from "../utils/constants";
+import { Modes, resourceTypeList } from "../utils/constants";
 import "react-tooltip/dist/react-tooltip.css";
-import RightSidebar, { BranchIdsCheckboxes } from "@/components/RightSidebar";
 import { getBaseProfile } from "@/db/utils";
 import ProfileTreeComponent from "../components/profile_tree_input/ProfileTreeComponent";
 import ExportModal from "@/components/ExportModal";
-import AddResourceButton from "@/components/buttons/AddResourceButton";
 import { useStore } from "@/stores/useStore";
 import Layout from "@/components/Layout";
 import { toastPromise } from "@/toasts";
@@ -28,6 +26,13 @@ const Home = () => {
       };
     }
   );
+
+  const resourceOptions = resourceTypeList.map((resourceType) => {
+    return {
+      value: resourceType,
+      label: resourceType,
+    };
+  });
 
   const handleSelectBaseProfile = async (value: string) => {
     const profile = await getBaseProfile(value);

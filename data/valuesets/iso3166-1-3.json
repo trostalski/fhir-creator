@@ -2,18 +2,18 @@
     "resourceType": "ValueSet",
     "id": "iso3166-1-3",
     "meta": {
-        "lastUpdated": "2022-05-28T12:47:40.239+10:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include codes from <code>urn:iso:std:iso:3166</code> where code  matches (by regex)  [A-Z]{3}</li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include codes from <a href=\"http://terminology.hl7.org/5.2.0/CodeSystem-ISO3166Part1.html\"><code>urn:iso:std:iso:3166</code></a> where code  matches (by regex)  [A-Z]{3}</li></ul></div>"
     },
     "url": "http://hl7.org/fhir/ValueSet/iso3166-1-3",
-    "version": "4.3.0",
-    "name": "Iso3166-1-3",
+    "version": "6.0.0-cibuild",
+    "name": "Iso316613",
     "title": "Iso 3166 Part 1: 3 Letter Codes",
     "status": "active",
     "experimental": false,

@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "immunization-evaluation-status",
     "meta": {
-        "lastUpdated": "2022-05-28T12:47:40.239+10:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "extensions",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include these codes as defined in <a href=\"codesystem-medication-admin-status.html\"><code>http://terminology.hl7.org/CodeSystem/medication-admin-status</code></a><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href=\"codesystem-medication-admin-status.html#medication-admin-status-completed\">completed</a></td><td>Completed</td><td>All actions that are implied by the administration have occurred.</td></tr><tr><td><a href=\"codesystem-medication-admin-status.html#medication-admin-status-entered-in-error\">entered-in-error</a></td><td>Entered in Error</td><td>The administration was entered in error and therefore nullified.</td></tr></table></li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include these codes as defined in <a href=\"codesystem-medication-admin-status.html\"><code>http://hl7.org/fhir/CodeSystem/medication-admin-status</code></a><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td><td><b><a href=\"valueset-resource-status.html\">Canonical Mapping for &quot;Immunization Evaluation Status Codes&quot;</a></b></td></tr><tr><td><a href=\"codesystem-medication-admin-status.html#medication-admin-status-completed\">completed</a></td><td style=\"color: #cccccc\">Completed</td><td>All actions that are implied by the administration have occurred.</td><td><span title=\"EQUIVALENT\">~</span><a href=\"codesystem-resource-status.html#resource-status-complete\">complete</a></td></tr><tr><td><a href=\"codesystem-medication-admin-status.html#medication-admin-status-entered-in-error\">entered-in-error</a></td><td style=\"color: #cccccc\">Entered in Error</td><td>The administration was entered in error and therefore nullified.</td><td><span title=\"EQUIVALENT\">~</span><a href=\"codesystem-resource-status.html#resource-status-error\">error</a></td></tr></table></li></ul></div>"
     },
     "extension": [
         {
@@ -22,7 +22,7 @@
         },
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-            "valueInteger": 0
+            "valueInteger": 1
         }
     ],
     "url": "http://hl7.org/fhir/ValueSet/immunization-evaluation-status",
@@ -32,7 +32,7 @@
             "value": "urn:oid:2.16.840.1.113883.4.642.3.299"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "ImmunizationEvaluationStatusCodes",
     "title": "Immunization Evaluation Status Codes",
     "status": "draft",
@@ -49,10 +49,21 @@
         }
     ],
     "description": "The value set to instantiate this attribute should be drawn from a terminologically robust code system that consists of or contains concepts to support describing the current status of the evaluation for vaccine administration event.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "compose": {
         "include": [
             {
-                "system": "http://terminology.hl7.org/CodeSystem/medication-admin-status",
+                "system": "http://hl7.org/fhir/CodeSystem/medication-admin-status",
                 "concept": [
                     {
                         "code": "completed"

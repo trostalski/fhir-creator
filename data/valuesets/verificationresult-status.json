@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "verificationresult-status",
     "meta": {
-        "lastUpdated": "2022-05-28T12:47:40.239+10:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-verificationresult-status.html\"><code>http://hl7.org/fhir/verificationresult-status</code></a></li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-verificationresult-status.html\"><code>http://hl7.org/fhir/CodeSystem/verificationresult-status</code></a></li></ul></div>"
     },
     "extension": [
         {
@@ -22,7 +22,7 @@
         },
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-            "valueInteger": 0
+            "valueInteger": 1
         }
     ],
     "url": "http://hl7.org/fhir/ValueSet/verificationresult-status",
@@ -32,8 +32,9 @@
             "value": "urn:oid:2.16.840.1.113883.4.642.3.884"
         }
     ],
-    "version": "4.3.0",
-    "name": "status",
+    "version": "6.0.0-cibuild",
+    "name": "VerificationResultStatus",
+    "title": "Verification Result status",
     "status": "draft",
     "experimental": true,
     "date": "2018-06-05T14:06:02+00:00",
@@ -53,11 +54,22 @@
         }
     ],
     "description": "The validation status of the target",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "immutable": true,
     "compose": {
         "include": [
             {
-                "system": "http://hl7.org/fhir/verificationresult-status"
+                "system": "http://hl7.org/fhir/CodeSystem/verificationresult-status"
             }
         ]
     }

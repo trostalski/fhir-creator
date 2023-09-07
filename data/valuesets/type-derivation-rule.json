@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "type-derivation-rule",
     "meta": {
-        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <h2>TypeDerivationRule</h2>\n      <div>\n        <p>How a type relates to its baseDefinition.</p>\n\n      </div>\n      <p>This value set includes codes from the following code systems:</p>\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-type-derivation-rule.html\">\n            <code>http://hl7.org/fhir/type-derivation-rule</code>\n          </a>\n        </li>\n      </ul>\n    </div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-type-derivation-rule.html\"><code>http://hl7.org/fhir/type-derivation-rule</code></a></li></ul></div>"
     },
     "extension": [
         {
@@ -34,14 +34,19 @@
         {
             "system": "urn:ietf:rfc:3986",
             "value": "urn:oid:2.16.840.1.113883.4.642.3.673"
+        },
+        {
+            "use": "old",
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.659"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "TypeDerivationRule",
-    "title": "TypeDerivationRule",
+    "title": "Type Derivation Rule",
     "status": "active",
     "experimental": false,
-    "date": "2021-01-17T07:06:13+11:00",
+    "date": "2020-12-28T16:55:11+11:00",
     "publisher": "HL7 (FHIR Project)",
     "contact": [
         {
@@ -58,6 +63,17 @@
         }
     ],
     "description": "How a type relates to its baseDefinition.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "immutable": true,
     "compose": {
         "include": [
