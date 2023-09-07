@@ -48,7 +48,6 @@ export async function getResources(ids: string[]) {
 export async function deleteResources(ids: string[]) {
   try {
     await db.resources.bulkDelete(ids);
-    await db.resourcesPathRepr.bulkDelete(ids);
     return true;
   } catch (error) {
     console.log(`Failed to delete resources with ids ${ids}`);
