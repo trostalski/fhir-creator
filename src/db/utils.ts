@@ -56,7 +56,8 @@ export async function deleteResources(ids: string[]) {
   }
 }
 
-export async function addResource(resource: Resource, bundleId: string) {
+export async function addResource(resource: Resource, bundleId?: string) {
+  bundleId = bundleId || bundlePoolId;
   try {
     db.transaction(
       "rw",
@@ -67,7 +68,7 @@ export async function addResource(resource: Resource, bundleId: string) {
         db.resources.add(resource);
         db.bundleFolders
           .where("id")
-          .equals(bundleId)
+          .equals(bundleId!)
           .modify((folder) => {
             folder.resourceIds = [...folder.resourceIds, resource.id!];
           });
