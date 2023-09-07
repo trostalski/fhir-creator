@@ -132,7 +132,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
             Open All
           </button>
           <button
-            className="text-red-500 w-20 hover:text-red-700 text-xs rounded py-1 px-2"
+            className="text-red-500 w-20 transition hover:text-red-700 text-xs rounded py-1 px-2"
             onClick={() => {
               props.setPathsWithInvalidCardinality([]);
               setExpandedNodes([]);
