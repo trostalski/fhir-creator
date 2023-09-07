@@ -125,6 +125,23 @@ export async function addBundle(bundle: Bundle) {
   }
 }
 
+export async function getResourcesForBundleFolder(bundleFolderId: string) {
+  try {
+    const bundleFolder = await db.bundleFolders.get(bundleFolderId);
+    if (!bundleFolder) {
+      return [];
+    }
+    const resources = await db.resources
+      .where("id")
+      .anyOf(bundleFolder.resourceIds)
+      .toArray();
+    return resources;
+  } catch (error) {
+    console.log(`Failed to get resources for bundle folder ${bundleFolderId}`);
+    return [];
+  }
+}
+
 export async function parseBundle(bundle: Bundle) {
   // Ensure bundle has an ID
   if (!bundle.id) {
@@ -150,6 +167,8 @@ export async function parseBundle(bundle: Bundle) {
   const bundleFolder: BundleFolder = {
     id: bundle.id,
     resourceIds: resourceIds,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     meta: metaInfo,
   };
   const folderReferences = resourceIds.map((resourceId) => ({
@@ -244,12 +263,16 @@ function addBundlesToBundle(bundle: Bundle, bundles: Bundle[]) {
   return bundle;
 }
 
-export async function exportBundle(bundleId: string) {
-  const bundleFolder = await db.bundleFolders.get(bundleId);
+export async function exportBundleFolderById(bundleFolderId: string) {
+  const bundleFolder = await db.bundleFolders.get(bundleFolderId);
   if (!bundleFolder) {
     toastError("No bundle for export found");
     return;
   }
+  exportBundleFolder(bundleFolder);
+}
+
+export async function exportBundleFolder(bundleFolder: BundleFolder) {
   const bundle = await createBundleFromFolder(bundleFolder);
   const bundle_string = JSON.stringify(bundle, null, 2);
   const blob = new Blob([bundle_string], { type: "application/json" });

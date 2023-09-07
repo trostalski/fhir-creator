@@ -9,6 +9,7 @@ import { deleteResources, deleteBundles, deleteProfiles } from "@/db/utils";
 import StorageList from "./StorageList";
 import { MdAdd } from "react-icons/md";
 import { useProfileUpload } from "@/hooks/useProfileUpload";
+import ExportModal from "../ExportModal";
 
 interface RightPartProps {
   startResizing: () => void;
@@ -111,6 +112,9 @@ const Storage = (props: RightPartProps) => {
           </div>
         </div>
       </div>
+      {showExportModal && (
+        <ExportModal isOpen={showExportModal} setIsOpen={setShowExportModal} />
+      )}
       <div
         onMouseDown={props.startResizing}
         className="w-2 hover:bg-gray-200 hover:cursor-col-resize shadow-xl flex-shrink-0"

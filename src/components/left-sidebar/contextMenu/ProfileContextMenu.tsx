@@ -23,7 +23,7 @@ const ProfileContextMenu = (props: ProfileContextMenuProps) => {
 
   return (
     <div
-      className={`fixed flex flex-col gap-1 rounded-md bg-white border-2 border-blue-400 px-2`}
+      className="fixed flex flex-col gap-1 rounded-md bg-white border-2 border-blue-400 px-2"
       style={{ left: props.x, top: props.y }}
     >
       <button
