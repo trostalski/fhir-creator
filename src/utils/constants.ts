@@ -407,5 +407,5 @@ export const defaultOrderedConstraintResults: OrderedConstraintResults = {
   guidelines: [],
 };
 
-export const bundlePoolId = "BundlePool";
+export const bundlePoolId = "Single_Resources";
 export const bundlePoolName = "Single Resources";

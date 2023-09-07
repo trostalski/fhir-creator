@@ -29,7 +29,6 @@ export class MySubClassedDexie extends Dexie {
   folderReferences!: Table<FolderReference>;
   // deprecated, not sure if can be deleted on dexie with ts
   bundles!: Table<Bundle>;
-  resourcesPathRepr!: Table<ResourcePathRepr>;
 
   constructor() {
     super("fhir-creator-db");

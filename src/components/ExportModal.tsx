@@ -197,7 +197,7 @@ const ExportModal = (props: ExportModalProps) => {
             </div>
             <span className="flex-grow" />
             <button
-              className="w-24 p-2 text-gray-500 rounded-md"
+              className="w-24 p-2 text-gray-500 rounded-md transition hover:bg-gray-500 hover:text-white"
               onClick={() => {
                 setSelectedResources([]);
                 setSelectedBundleFolders([]);
@@ -207,7 +207,7 @@ const ExportModal = (props: ExportModalProps) => {
               Cancel
             </button>
             <button
-              className="w-24 p-2 text-blue-500 rounded-md"
+              className="w-24 p-2 text-blue-500 rounded-md transition hover:bg-blue-500 hover:text-white"
               onClick={() => {
                 handleSubmit();
               }}
