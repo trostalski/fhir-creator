@@ -141,22 +141,23 @@ export async function getResourcesForBundleFolder(bundleFolderId: string) {
   }
 }
 
+function extractResources(bundle: Bundle){
+  const resources = (bundle.entry || []).map((entry) => entry.resource) as FhirResource[]
+  // ensure resource has id
+  for (let resource of resources){
+    if(resource && !resource.id){
+      resource.id = uuidv4()
+    }
+  }
+  return resources
+}
+
 export async function parseBundle(bundle: Bundle) {
   // Ensure bundle has an ID
   if (!bundle.id) {
     bundle.id = uuidv4();
   }
-
-  // Extract resources and their IDs from the bundle
-  const resources = (bundle.entry || [])
-    .map((entry) => entry.resource)
-    .filter((resource) => {
-      if (resource?.id) {
-        return true;
-      } else {
-        return false;
-      }
-    }) as FhirResource[];
+  const resources = extractResources(bundle)
   const resourceIds = resources.map((resource) => resource.id!);
 
   // Create the metaInfo object
