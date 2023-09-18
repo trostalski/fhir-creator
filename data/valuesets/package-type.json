@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "package-type",
     "meta": {
-        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-package-type.html\">\n            <code>http://hl7.org/fhir/package-type</code>\n          </a>\n        </li>\n      </ul>\n    </div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-package-type.html\"><code>http://hl7.org/fhir/package-type</code></a></li></ul></div>"
     },
     "extension": [
         {
@@ -29,12 +29,12 @@
     "identifier": [
         {
             "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.1670"
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.3073"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "PackageType",
-    "title": "PackageType",
+    "title": "Package Type",
     "status": "draft",
     "experimental": true,
     "date": "2020-12-28T16:55:11+11:00",
@@ -54,6 +54,17 @@
         }
     ],
     "description": "A high level categorisation of a package.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "immutable": true,
     "compose": {
         "include": [

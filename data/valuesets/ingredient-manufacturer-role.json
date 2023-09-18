@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "ingredient-manufacturer-role",
     "meta": {
-        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-ingredient-manufacturer-role.html\">\n            <code>http://hl7.org/fhir/ingredient-manufacturer-role</code>\n          </a>\n        </li>\n      </ul> \n    </div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-ingredient-manufacturer-role.html\"><code>http://hl7.org/fhir/ingredient-manufacturer-role</code></a></li></ul></div>"
     },
     "extension": [
         {
@@ -22,21 +22,21 @@
         },
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-            "valueInteger": 1
+            "valueInteger": 2
         }
     ],
     "url": "http://hl7.org/fhir/ValueSet/ingredient-manufacturer-role",
     "identifier": [
         {
             "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.1598"
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.3247"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "IngredientManufacturerRole",
-    "title": "IngredientManufacturerRole",
+    "title": "Ingredient Manufacturer Role",
     "status": "draft",
-    "experimental": true,
+    "experimental": false,
     "date": "2020-12-28T16:55:11+11:00",
     "publisher": "HL7 (FHIR Project)",
     "contact": [
@@ -54,6 +54,17 @@
         }
     ],
     "description": "The way in which this manufacturer is associated with the ingredient. For example whether it is a possible one (others allowed), or an exclusive authorized one for this ingredient. Note that this is not the manufacturing process role.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "immutable": true,
     "compose": {
         "include": [

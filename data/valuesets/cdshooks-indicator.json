@@ -2,7 +2,7 @@
     "resourceType": "ValueSet",
     "id": "cdshooks-indicator",
     "meta": {
-        "lastUpdated": "2022-05-28T12:47:40.239+10:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
@@ -24,12 +24,12 @@
             "value": "urn:oid:2.16.840.1.113883.4.642.3.1065"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "Indicator",
-    "title": "CDSHooksIndicator",
+    "title": "Indicator",
     "status": "draft",
-    "experimental": false,
-    "date": "2022-05-28T12:47:40+10:00",
+    "experimental": true,
+    "date": "2023-09-02T17:49:58+00:00",
     "publisher": "FHIR Project team",
     "contact": [
         {
@@ -42,6 +42,17 @@
         }
     ],
     "description": "This value set captures the set of indicator codes defined by the CDS Hooks specification.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "immutable": true,
     "compose": {
         "include": [

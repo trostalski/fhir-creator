@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "specimen-container-type",
     "meta": {
-        "lastUpdated": "2022-05-28T12:47:40.239+10:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include codes from <a href=\"http://www.snomed.org/\"><code>http://snomed.info/sct</code></a> where concept  is-a  434711009 (Specimen container)</li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include codes from <a href=\"http://www.snomed.org/\"><code>http://snomed.info/sct</code></a> where concept  is-a  706041008 (Device for body fluid and tissue collection/transfer/processing)</li></ul></div>"
     },
     "extension": [
         {
@@ -30,10 +30,21 @@
         {
             "system": "urn:ietf:rfc:3986",
             "value": "urn:oid:2.16.840.1.113883.4.642.3.470"
+        },
+        {
+            "use": "old",
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.463"
+        },
+        {
+            "use": "old",
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.2.277"
         }
     ],
-    "version": "4.3.0",
-    "name": "SpecimenContainer",
+    "version": "6.0.0-cibuild",
+    "name": "SpecimenContainerType",
+    "title": "Specimen Container Type",
     "status": "draft",
     "experimental": true,
     "publisher": "FHIR Project team",
@@ -47,7 +58,18 @@
             ]
         }
     ],
-    "description": "Containers which may hold specimens or specimen containers. Include codes  SNOMED CT(http://snomed.info/sct) where concept is-a 434711009 (Specimen container (physical object))",
+    "description": "Checks on the patient prior specimen collection. All SNOMED CT concepts descendants of 706041008 |Device for body fluid and tissue collection/transfer/processing (physical object)|",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "copyright": "This resource includes content from SNOMED Clinical Terms® (SNOMED CT®) which is copyright of the International Health Terminology Standards Development Organisation (IHTSDO). Implementers of these specifications must have the appropriate SNOMED CT Affiliate license - for more information contact http://www.snomed.org/snomed-ct/get-snomed-ct or info@snomed.org",
     "compose": {
         "include": [
@@ -57,7 +79,7 @@
                     {
                         "property": "concept",
                         "op": "is-a",
-                        "value": "434711009"
+                        "value": "706041008"
                     }
                 ]
             }

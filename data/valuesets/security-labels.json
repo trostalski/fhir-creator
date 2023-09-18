@@ -2,19 +2,19 @@
     "resourceType": "ValueSet",
     "id": "security-labels",
     "meta": {
-        "lastUpdated": "2022-05-28T12:47:40.239+10:00",
+        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>This value set includes codes based on the following rules:</p><ul><li>Import all the codes that are contained in http://terminology.hl7.org/ValueSet/v3-ConfidentialityClassification</li><li>Import all the codes that are contained in <a href=\"http://terminology.hl7.org/3.1.0/ValueSet-v3-InformationSensitivityPolicy.html\">http://terminology.hl7.org/ValueSet/v3-InformationSensitivityPolicy</a></li><li>Import all the codes that are contained in <a href=\"http://terminology.hl7.org/3.1.0/ValueSet-v3-Compartment.html\">http://terminology.hl7.org/ValueSet/v3-Compartment</a></li><li>Import all the codes that are contained in <a href=\"http://terminology.hl7.org/3.1.0/ValueSet-v3-SecurityIntegrityObservationValue.html\">http://terminology.hl7.org/ValueSet/v3-SecurityIntegrityObservationValue</a></li><li>Import all the codes that are contained in <a href=\"http://terminology.hl7.org/3.1.0/ValueSet-v3-SecurityControlObservationValue.html\">http://terminology.hl7.org/ValueSet/v3-SecurityControlObservationValue</a></li><li>Import all the codes that are contained in <a href=\"http://terminology.hl7.org/3.1.0/ValueSet-v3-ActUSPrivacyLaw.html\">http://terminology.hl7.org/ValueSet/v3-ActUSPrivacyLaw</a></li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>This value set includes codes based on the following rules:</p><ul><li>Import all the codes that are contained in <a href=\"http://terminology.hl7.org/5.2.0/ValueSet-v3-Confidentiality.html\">Confidentiality</a></li><li>Import all the codes that are contained in <a href=\"http://terminology.hl7.org/5.2.0/ValueSet-v3-InformationSensitivityPolicy.html\">InformationSensitivityPolicy</a></li><li>Import all the codes that are contained in <a href=\"http://terminology.hl7.org/5.2.0/ValueSet-v3-Compartment.html\">Compartment</a></li><li>Import all the codes that are contained in <a href=\"http://terminology.hl7.org/5.2.0/ValueSet-v3-SecurityIntegrityObservationValue.html\">SecurityIntegrityObservationValue</a></li><li>Import all the codes that are contained in <a href=\"http://terminology.hl7.org/5.2.0/ValueSet-v3-SecurityControlObservationValue.html\">SecurityControlObservationValue</a></li><li>Import all the codes that are contained in <a href=\"http://terminology.hl7.org/5.2.0/ValueSet-v3-ActUSPrivacyLaw.html\">ActUSPrivacyLaw</a></li></ul></div>"
     },
     "extension": [
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
-            "valueCode": "vocab"
+            "valueCode": "fhir"
         },
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
@@ -34,11 +34,21 @@
         {
             "system": "urn:ietf:rfc:3986",
             "value": "urn:oid:2.16.840.1.113883.4.642.3.47"
+        },
+        {
+            "use": "old",
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.46"
+        },
+        {
+            "use": "old",
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:oid:2.16.840.1.113883.4.642.2.31"
         }
     ],
-    "version": "4.3.0",
-    "name": "All Security Labels",
-    "title": "SecurityLabels",
+    "version": "6.0.0-cibuild",
+    "name": "AllSecurityLabels",
+    "title": "All Security Labels",
     "status": "active",
     "experimental": false,
     "date": "2014-07-28",
@@ -54,11 +64,22 @@
         }
     ],
     "description": "A single value set for all security labels defined by FHIR.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "compose": {
         "include": [
             {
                 "valueSet": [
-                    "http://terminology.hl7.org/ValueSet/v3-ConfidentialityClassification"
+                    "http://terminology.hl7.org/ValueSet/v3-Confidentiality"
                 ]
             },
             {

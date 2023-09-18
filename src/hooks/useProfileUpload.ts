@@ -1,6 +1,6 @@
 import { addProfile } from "@/db/utils";
 import { useStore } from "@/stores/useStore";
-import { toastPromise } from "@/toasts";
+import { toastError, toastPromise } from "@/toasts";
 
 export const useProfileUpload = () => {
   const { setProfileTree } = useStore((state) => {
@@ -15,7 +15,13 @@ export const useProfileUpload = () => {
         const reader = new FileReader();
         reader.onload = async (e) => {
           if (e.target) {
-            const profile = JSON.parse(e.target.result as string);
+            let profile;
+            try {
+              profile = JSON.parse(e.target.result as string);
+            } catch (err) {
+              toastError("Invalid JSON.");
+              return;
+            }
             if (numFiles === 1) {
               await toastPromise(
                 setProfileTree(profile),

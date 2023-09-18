@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "task-intent",
     "meta": {
-        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
+        "lastUpdated": "2023-09-03T04:49:58.148+11:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
-        "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <h2>TaskIntent</h2>\n      <div>\n        <p>Distinguishes whether the task is a proposal, plan or full order.</p>\n\n      </div>\n      <p>This value set includes codes from the following code systems:</p>\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-task-intent.html\">\n            <code>http://hl7.org/fhir/task-intent</code>\n          </a>\n        </li>\n        <li>Include these codes as defined in \n          <a href=\"codesystem-request-intent.html\">\n            <code>http://hl7.org/fhir/request-intent</code>\n          </a>\n          <table class=\"none\">\n            <tr>\n              <td style=\"white-space:nowrap\">\n                <b>Code</b>\n              </td>\n              <td>\n                <b>Display</b>\n              </td>\n            </tr>\n            <tr>\n              <td>\n                <a href=\"codesystem-request-intent.html#request-intent-proposal\">proposal</a>\n              </td>\n              <td>Proposal</td>\n              <td>The request is a suggestion made by someone/something that does not have an intention to ensure it occurs and without providing an authorization to act.</td>\n            </tr>\n            <tr>\n              <td>\n                <a href=\"codesystem-request-intent.html#request-intent-plan\">plan</a>\n              </td>\n              <td>Plan</td>\n              <td>The request represents an intention to ensure something occurs without providing an authorization for others to act.</td>\n            </tr>\n            <tr>\n              <td>\n                <a href=\"codesystem-request-intent.html#request-intent-order\">order</a>\n              </td>\n              <td>Order</td>\n              <td>The request represents a request/demand and authorization for action by a Practitioner.</td>\n            </tr>\n            <tr>\n              <td>\n                <a href=\"codesystem-request-intent.html#request-intent-original-order\">original-order</a>\n              </td>\n              <td>Original Order</td>\n              <td>The request represents an original authorization for action.</td>\n            </tr>\n            <tr>\n              <td>\n                <a href=\"codesystem-request-intent.html#request-intent-reflex-order\">reflex-order</a>\n              </td>\n              <td>Reflex Order</td>\n              <td>The request represents an automatically generated supplemental authorization for action based on a parent authorization together with initial results of the action taken against that parent authorization.</td>\n            </tr>\n            <tr>\n              <td>\n                <a href=\"codesystem-request-intent.html#request-intent-filler-order\">filler-order</a>\n              </td>\n              <td>Filler Order</td>\n              <td>The request represents the view of an authorization instantiated by a fulfilling system representing the details of the fulfiller's intention to act upon a submitted order.</td>\n            </tr>\n            <tr>\n              <td>\n                <a href=\"codesystem-request-intent.html#request-intent-instance-order\">instance-order</a>\n              </td>\n              <td>Instance Order</td>\n              <td>An order created in fulfillment of a broader order that represents the authorization for a single activity occurrence.  E.g. The administration of a single dose of a drug.</td>\n            </tr>\n            <tr>\n              <td>\n                <a href=\"codesystem-request-intent.html#request-intent-option\">option</a>\n              </td>\n              <td>Option</td>\n              <td>The request represents a component or option for a RequestGroup that establishes timing, conditionality and/or other constraints among a set of requests.  Refer to [[[RequestGroup]]] for additional information on how this status is used.</td>\n            </tr>\n          </table>\n        </li>\n      </ul>\n    </div>"
+        "status": "extensions",
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>This value set includes codes based on the following rules:</p><ul><li>Include all codes defined in <a href=\"codesystem-task-intent.html\"><code>http://hl7.org/fhir/task-intent</code></a></li><li>Include these codes as defined in <a href=\"codesystem-request-intent.html\"><code>http://hl7.org/fhir/request-intent</code></a><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href=\"codesystem-request-intent.html#request-intent-proposal\">proposal</a></td><td style=\"color: #cccccc\">Proposal</td><td>The request is a suggestion made by someone/something that does not have an intention to ensure it occurs and without providing an authorization to act.</td></tr><tr><td><a href=\"codesystem-request-intent.html#request-intent-plan\">plan</a></td><td style=\"color: #cccccc\">Plan</td><td>The request represents an intention to ensure something occurs without providing an authorization for others to act.</td></tr><tr><td><a href=\"codesystem-request-intent.html#request-intent-order\">order</a></td><td style=\"color: #cccccc\">Order</td><td>The request represents a request/demand and authorization for action by the requestor.</td></tr><tr><td><a href=\"codesystem-request-intent.html#request-intent-original-order\">original-order</a></td><td style=\"color: #cccccc\">Original Order</td><td>The request represents an original authorization for action.</td></tr><tr><td><a href=\"codesystem-request-intent.html#request-intent-reflex-order\">reflex-order</a></td><td style=\"color: #cccccc\">Reflex Order</td><td>The request represents an automatically generated supplemental authorization for action based on a parent authorization together with initial results of the action taken against that parent authorization.</td></tr><tr><td><a href=\"codesystem-request-intent.html#request-intent-filler-order\">filler-order</a></td><td style=\"color: #cccccc\">Filler Order</td><td>The request represents the view of an authorization instantiated by a fulfilling system representing the details of the fulfiller's intention to act upon a submitted order.</td></tr><tr><td><a href=\"codesystem-request-intent.html#request-intent-instance-order\">instance-order</a></td><td style=\"color: #cccccc\">Instance Order</td><td>An order created in fulfillment of a broader order that represents the authorization for a single activity occurrence.  E.g. The administration of a single dose of a drug.</td></tr><tr><td><a href=\"codesystem-request-intent.html#request-intent-option\">option</a></td><td style=\"color: #cccccc\">Option</td><td>The request represents a component or option for a RequestOrchestration that establishes timing, conditionality and/or other constraints among a set of requests.  Refer to [[[RequestOrchestration]]] for additional information on how this status is used.</td></tr></table></li></ul></div>"
     },
     "extension": [
         {
@@ -22,7 +22,7 @@
         },
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-            "valueInteger": 2
+            "valueInteger": 3
         }
     ],
     "url": "http://hl7.org/fhir/ValueSet/task-intent",
@@ -32,12 +32,12 @@
             "value": "urn:oid:2.16.840.1.113883.4.642.3.1240"
         }
     ],
-    "version": "4.3.0",
+    "version": "6.0.0-cibuild",
     "name": "TaskIntent",
-    "title": "TaskIntent",
+    "title": "Task Intent",
     "status": "draft",
     "experimental": false,
-    "date": "2021-01-17T07:06:13+11:00",
+    "date": "2020-12-28T16:55:11+11:00",
     "publisher": "HL7 (FHIR Project)",
     "contact": [
         {
@@ -54,6 +54,17 @@
         }
     ],
     "description": "Distinguishes whether the task is a proposal, plan or full order.",
+    "jurisdiction": [
+        {
+            "coding": [
+                {
+                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+                    "code": "001",
+                    "display": "World"
+                }
+            ]
+        }
+    ],
     "immutable": true,
     "compose": {
         "include": [

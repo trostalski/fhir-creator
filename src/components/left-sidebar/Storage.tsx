@@ -9,6 +9,7 @@ import { deleteResources, deleteBundles, deleteProfiles } from "@/db/utils";
 import StorageList from "./StorageList";
 import { MdAdd } from "react-icons/md";
 import { useProfileUpload } from "@/hooks/useProfileUpload";
+import ExportModal from "../ExportModal";
 
 interface RightPartProps {
   startResizing: () => void;
@@ -16,9 +17,6 @@ interface RightPartProps {
 }
 
 const Storage = (props: RightPartProps) => {
-  const [checkedResources, setCheckedResources] = useState<string[]>([]);
-  const [checkedBundles, setCheckedBundles] = useState<string[]>([]);
-  const [checkedProfiles, setCheckedProfiles] = useState<string[]>([]);
   const [showProfiles, setShowProfiles] = useState<boolean>(false);
   const [showImportMenu, setShowImportMenu] = useState<boolean>(false);
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
@@ -26,32 +24,12 @@ const Storage = (props: RightPartProps) => {
   const profiles = useLiveQuery(() => db.profiles.toArray());
   const { handleProfileUpload } = useProfileUpload();
 
-  const itemsChecked =
-    checkedResources.length + checkedBundles.length + checkedProfiles.length >
-    0;
-
-  const deleteSelection = () => {
-    const confirmation = confirm(
-      "Are you sure you want to delete the selected items?"
-    );
-    if (!confirmation) return;
-    if (checkedResources.length > 0) {
-      deleteResources(checkedResources);
-    }
-    if (checkedBundles.length > 0) {
-      deleteBundles(checkedBundles);
-    }
-    if (checkedProfiles.length > 0) {
-      deleteProfiles(checkedProfiles);
-    }
-  };
-
   return (
     <>
       <div className="min-w-0 flex-grow shadow-md overflow-hidden">
         <div className="flex flex-col h-full p-2">
           <div
-            className="h-full flex flex-col gap-4 overflow-y-scroll overflow-x-hidden p-2"
+            className="h-full flex flex-col gap-4 overflow-y-scroll overflow-x-hidden px-2"
             onClick={(e) => {
               // e.stopPropagation(); not sure if this is neccessary? It breaks contextMenu disappearance
               setShowImportMenu(false);
@@ -64,7 +42,7 @@ const Storage = (props: RightPartProps) => {
               >
                 <span className="grow font-bold">Storage</span>
                 <button
-                  className="text-blue-600 hover:underline"
+                  className="text-blue-600 transition hover:underline"
                   data-dropdown-toggle="dropdown"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -74,7 +52,7 @@ const Storage = (props: RightPartProps) => {
                   Export
                 </button>
                 <button
-                  className="text-blue-600 hover:underline"
+                  className="text-blue-600 transition hover:underline"
                   data-dropdown-toggle="dropdown"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -83,63 +61,60 @@ const Storage = (props: RightPartProps) => {
                 >
                   Import
                 </button>
-                <button
-                  onClick={props.closeRightPart}
-                  // add transition to closing animation
-                  className="h-8"
-                  title="toggle sidebar"
-                >
-                  <RxHamburgerMenu />
+                <button onClick={props.closeRightPart} title="toggle sidebar">
+                  <RxHamburgerMenu
+                    size={24}
+                    className="transition hover:text-gray-400"
+                  />
                 </button>
                 {showImportMenu && <ImportMenu />}
               </div>
-              <div>
-                <button
-                  disabled={!itemsChecked}
-                  onClick={deleteSelection}
-                  className={`text-xs text-red-600 ${
-                    itemsChecked ? "hover:underline" : "opacity-50"
-                  }`}
-                >
-                  Delete Selection
-                </button>
-              </div>
             </div>
-            <StorageList />
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-row w-full items-center">
-                <div
-                  className="overflow-hidden items-center flex flex-row w-full cursor-pointer"
-                  onClick={() => setShowProfiles(!showProfiles)}
-                >
-                  <ExpandAccordionToggle isOpen={showProfiles} />
-                  <span className="mx-auto">
-                    {"Profiles " + "(" + profiles?.length + ")"}
-                  </span>
+            <div className="flex flex-col gap-4">
+              <StorageList />
+              <hr />
+              <div className="flex flex-col gap-1">
+                <div className="flex flex-row w-full items-center">
+                  <div
+                    className="flex flex-row items-center cursor-pointer w-full transition group"
+                    onClick={() => setShowProfiles(!showProfiles)}
+                  >
+                    <button
+                      className={`text-gray-500 transition group-hover:bg-gray-200 rounded-md ${
+                        showProfiles && "bg-gray-300"
+                      }`}
+                    >
+                      <ExpandAccordionToggle isOpen={showProfiles} size={24} />
+                    </button>
+                    <div className="w-full text-center">
+                      <span className="mx-auto">Profiles</span>
+                      <span className="text-gray-400">
+                        {" (" + profiles?.length + ")"}
+                      </span>
+                    </div>
+                  </div>
+                  <label
+                    className="bg-blue-500 text-white rounded-md cursor-pointer transition hover:bg-blue-400"
+                    onClick={() => {}}
+                  >
+                    <MdAdd size={24} />
+                    <input
+                      hidden
+                      multiple
+                      type="file"
+                      onChange={handleProfileUpload}
+                    />
+                  </label>
                 </div>
-                <label
-                  className="bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600"
-                  onClick={() => {}}
-                >
-                  <MdAdd size={24} />
-                  <input
-                    hidden
-                    multiple
-                    type="file"
-                    onChange={handleProfileUpload}
-                  />
-                </label>
+                {showProfiles ? <ProfilesList /> : null}
               </div>
-              {showProfiles ? (
-                <ProfilesList
-                  checkedProfiles={checkedProfiles}
-                  setCheckedProfiles={setCheckedProfiles}
-                />
-              ) : null}
             </div>
           </div>
         </div>
       </div>
+      {showExportModal && (
+        <ExportModal isOpen={showExportModal} setIsOpen={setShowExportModal} />
+      )}
       <div
         onMouseDown={props.startResizing}
         className="w-2 hover:bg-gray-200 hover:cursor-col-resize shadow-xl flex-shrink-0"

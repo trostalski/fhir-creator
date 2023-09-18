@@ -1,6 +1,6 @@
 import { Colors } from "react-select";
 import { ProfileTreeNode } from "./utils/buildTree";
-import { resourceList } from "./utils/constants";
+import { resourceTypeList } from "./utils/constants";
 
 export interface PathItem {
   path: string;
@@ -36,7 +36,7 @@ export interface PathCounter {
 export interface BaseFeature {
   id: number;
   name: string;
-  targetResources: (typeof resourceList)[number][];
+  targetResources: (typeof resourceTypeList)[number][];
 }
 
 export interface CategoricalStringFeature extends BaseFeature {
