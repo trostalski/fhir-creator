@@ -2,6 +2,8 @@ import { useState } from "react";
 import { addMatches, transformOutline } from "@/utils/annotator_utils";
 import { chains } from "@/utils/langchain_utils";
 import { TextInputProps } from "@/types";
+import { Fhir } from "fhir";
+import data from "../../../data/temp/exampleResource.json";
 
 const focus_resources = [
   "Observation",
@@ -61,14 +63,4 @@ export function TextInput(props: TextInputProps) {
       </button>
     </div>
   );
-}
-
-{
-  /* <button
-  onClick={() => {
-    handleParse();
-  }}
->
-  Parse
-</button> */
 }

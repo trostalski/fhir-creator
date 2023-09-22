@@ -12,12 +12,14 @@ import {
   setColorsForDefaultResources,
   transformOutline,
 } from "@/utils/annotator_utils";
-import { chains } from "@/utils/langchain_utils";
+import { chains, createResources } from "@/utils/langchain_utils";
 import React from "react";
 import { useState } from "react";
 import { TiDelete } from "react-icons/ti";
 import { colorSeed, defaultFocusResources } from "@/utils/constants";
 import seedrandom from "seedrandom";
+import { json } from "stream/consumers";
+import { Fhir } from "fhir";
 
 const Annotator = () => {
   const [rng, setRng] = React.useState<seedrandom.PRNG>(() =>
@@ -62,6 +64,22 @@ const Annotator = () => {
       let matchedOutline = transformOutline(llmOutlineJson);
       addMatches(matchedOutline, text);
       setOutline(matchedOutline);
+    }
+  }
+
+  async function handleCreateResources() {
+    if (outline) {
+      const fhir = new Fhir();
+      const results = await createResources(text, outline);
+      if (results) {
+        for (const result of results) {
+          if (result.status === "fulfilled") {
+            const valResult = fhir.validate(result.value);
+            console.log(valResult);
+          }
+        }
+      }
+      console.log(results);
     }
   }
 
@@ -134,7 +152,13 @@ const Annotator = () => {
               >
                 LLM Assist
               </button>
-              {/* Focus selection and LLM Assist button */}
+              <button
+                onClick={async () => {
+                  await handleCreateResources();
+                }}
+              >
+                Create Resources
+              </button>
             </div>
           </div>
           <TextDisplay

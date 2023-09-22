@@ -190,3 +190,9 @@ export interface Color{
   resourceType: string;
   color: string
 }
+
+export interface InputDict{
+  resource_type: string,
+  medical_term: string,
+  context: string
+}
