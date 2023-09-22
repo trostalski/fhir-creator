@@ -4,11 +4,10 @@ import FocusSelector from "@/components/annotator/FocusSelector";
 import { TextDisplay } from "@/components/annotator/TextDisplay";
 import { TextInput } from "@/components/annotator/TextInput";
 import { toastError } from "@/toasts";
-import { Color, ColorStore, OptionType, Outline, OutlineItem } from "@/types";
+import { ColorStore, OptionType, Outline, OutlineItem } from "@/types";
 import {
   addMatches,
   constructDefaultOutline,
-  generateHexColor,
   setColorsForDefaultResources,
   transformOutline,
 } from "@/utils/annotator_utils";
@@ -18,8 +17,10 @@ import { useState } from "react";
 import { TiDelete } from "react-icons/ti";
 import { colorSeed, defaultFocusResources } from "@/utils/constants";
 import seedrandom from "seedrandom";
-import { json } from "stream/consumers";
-import { Fhir } from "fhir";
+import { handleAddFolder } from "@/components/left-sidebar/utils";
+import { Resource } from "fhir/r4";
+import { addResource } from "@/db/utils";
+import { v4 as uuidv4 } from "uuid";
 
 const Annotator = () => {
   const [rng, setRng] = React.useState<seedrandom.PRNG>(() =>
@@ -68,18 +69,18 @@ const Annotator = () => {
   }
 
   async function handleCreateResources() {
+    const bundleId = await handleAddFolder();
     if (outline) {
-      const fhir = new Fhir();
       const results = await createResources(text, outline);
       if (results) {
         for (const result of results) {
           if (result.status === "fulfilled") {
-            const valResult = fhir.validate(result.value);
-            console.log(valResult);
+            const resource = result.value as Resource;
+            resource.id = uuidv4();
+            await addResource(resource, bundleId);
           }
         }
       }
-      console.log(results);
     }
   }
 

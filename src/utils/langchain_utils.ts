@@ -214,9 +214,6 @@ const chat = new ChatOpenAI({
     if(valResult.valid){
       return {jsonResult, failCount}
     } else{
-      console.log("Validation result not valid")
-      console.log("Erroneous JsonResult")
-      console.log(jsonResult)
       errorStack.push(JSON.stringify(valResult))
       const errorMessages = valResult.messages.filter((message) => message.severity === "error")
       if(checkArrayErrorSolvable(errorMessages)){ // handle array error
@@ -224,14 +221,11 @@ const chat = new ChatOpenAI({
         jsonResult[errorLocation[0]] = [jsonResult[errorLocation[0]]]
       } else {
         checkFailCap(failCount, failCap, errorStack);
-        console.log("new llm call")
         failCount += 1;
         const retryInputDict = createValidationFailInputDict(inputDict, jsonResult, errorMessages);
         const response = await chains.correctValidationError.call(retryInputDict);
         ({jsonResult, failCount} = await jsonTransformation(response, inputDict, failCount, failCap, errorStack));
       }
-      console.log("new jsonResult");
-      console.log(jsonResult);
       ({jsonResult, failCount} = await fhirValidation(jsonResult, inputDict, failCount, failCap, errorStack));
       return {jsonResult, failCount}
     }

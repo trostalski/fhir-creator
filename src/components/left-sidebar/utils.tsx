@@ -112,6 +112,7 @@ export const handleAddFolder = async () => {
     },
   };
   await db.bundleFolders.add(folder);
+  return folder.id;
 };
 
 export const executeCopy = async (
