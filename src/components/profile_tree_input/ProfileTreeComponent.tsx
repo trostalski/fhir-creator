@@ -13,6 +13,7 @@ import AddResourceButton from "../buttons/AddResourceButton";
 import Select from "react-select";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
+import { ReferenceInput } from "./ReferenceInput";
 
 interface ProfileTreeComponentProps {
   pathsWithInvalidCardinality: string[];
@@ -80,6 +81,8 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
           />
         );
       }
+    } else if (node.element.type![0].code === "Reference") {
+      return <ReferenceInput node={node} />;
     } else {
       return (
         <RootParent

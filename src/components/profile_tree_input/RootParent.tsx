@@ -29,6 +29,7 @@ import { useStore } from "@/stores/useStore";
 import { ConstraintComponent } from "./ConstraintComponent";
 import { GUIConstraintResolver } from "@/utils/constraint_utils";
 import { selectInputStyle } from "@/styles/inputStyles";
+import { ReferenceInput } from "./ReferenceInput";
 
 interface RootParentProps {
   node: ProfileTreeNode;
@@ -64,6 +65,8 @@ const RootParent = (props: RootParentProps) => {
           />
         </div>
       );
+    } else if (node.element.type![0].code === "Reference") {
+      return <ReferenceInput node={node} />;
     } else {
       return (
         <div className="w-full" key={node.dataPath}>
