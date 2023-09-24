@@ -13,6 +13,7 @@ import {
   getExpansionBgColour,
   getLastDescendant,
   insertAfterNode,
+  shouldRenderReferenceInput,
 } from "@/utils/tree_utils";
 import React from "react";
 import {
@@ -65,8 +66,6 @@ const RootParent = (props: RootParentProps) => {
           />
         </div>
       );
-    } else if (node.element.type![0].code === "Reference") {
-      return <ReferenceInput node={node} />;
     } else {
       return (
         <div className="w-full" key={node.dataPath}>
@@ -233,21 +232,30 @@ const RootParent = (props: RootParentProps) => {
           </div>
           {props.expandedNodes.includes(props.node.dataPath) && (
             <div className="flex flex-row flex-wrap pl-36">
-              {props.node.childPaths.map((childPath: string) => {
-                let childNode = profileTree!.find(
-                  (n: ProfileTreeNode) => n.dataPath === childPath
-                );
-                if (props.node.multiTypeType) {
-                  // multiype node with select input for type selection
-                  // the following code filters the child nodes to only show the ones that match the selected type
-                  childNode = childNode?.dataPath
-                    .toLowerCase()
-                    .includes(props.node.multiTypeType.toLowerCase())
-                    ? childNode
-                    : undefined;
-                }
-                return childNode && renderNode(childNode);
-              })}
+              {shouldRenderReferenceInput(props.node) ? (
+                <ReferenceInput
+                  node={props.node}
+                  pathsWithInvalidCardinality={
+                    props.pathsWithInvalidCardinality
+                  }
+                />
+              ) : (
+                props.node.childPaths.map((childPath: string) => {
+                  let childNode = profileTree!.find(
+                    (n: ProfileTreeNode) => n.dataPath === childPath
+                  );
+                  if (props.node.multiTypeType) {
+                    // multiype node with select input for type selection
+                    // the following code filters the child nodes to only show the ones that match the selected type
+                    childNode = childNode?.dataPath
+                      .toLowerCase()
+                      .includes(props.node.multiTypeType.toLowerCase())
+                      ? childNode
+                      : undefined;
+                  }
+                  return childNode && renderNode(childNode);
+                })
+              )}
             </div>
           )}
         </div>

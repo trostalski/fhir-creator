@@ -69,7 +69,6 @@ const BindingCodeInput = (props: BindingCodeInputProps) => {
       newProfileTree[nodeIndex].value = e.value;
     }
     updateProfileTree(newProfileTree);
-    // pass selection up to parent component
   };
 
   return (

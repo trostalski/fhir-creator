@@ -326,8 +326,10 @@ export function createJsonFromPathArray(pathArray: PathItem[]): any {
   const result: any = {}; // Initialize the result object
 
   for (const pathObj of pathArray) {
+    console.log(pathObj)
     const { path: id, value } = pathObj;
     let current = result; // Initialize the current object to the result object
+    console.log(current)
     const pathArray = id.split("."); // Split the path string into an array of property names
 
     for (let i = 0; i < pathArray.length - 1; i++) {
