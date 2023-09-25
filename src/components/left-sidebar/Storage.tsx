@@ -127,7 +127,7 @@ const Storage = (props: RightPartProps) => {
                       <ExpandAccordionToggle isOpen={showApiKeys} size={24} />
                     </button>
                     <div className="w-full text-center">
-                      <span className="mx-auto">Api Keys</span>
+                      <span className="mx-auto">API Keys</span>
                       <span className="text-gray-400">
                         {" (" + apiKeys?.length + ")"}
                       </span>

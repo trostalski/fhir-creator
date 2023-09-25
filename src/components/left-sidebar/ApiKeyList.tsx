@@ -26,6 +26,20 @@ const ApiKeyList = (props: ApiKeyListProps) => {
     setActiveAPIKey(apiKeys[0].key);
   }
 
+  function maskApiKey(apiKey: string): string {
+    const visibleCharsBegin = 4;
+    const visibleCharsEnd = 4;
+    const length = apiKey.length;
+
+    if (length <= visibleCharsBegin + visibleCharsEnd) return apiKey; // Return the original key if it's shorter than or equal to 4 chars
+
+    const maskedPart = " ... *** ... ";
+    const visiblePartBegin = apiKey.substring(0, visibleCharsBegin);
+    const visiblePartEnd = apiKey.substring(length - visibleCharsEnd);
+
+    return `${visiblePartBegin}${maskedPart}${visiblePartEnd}`;
+  }
+
   return (
     <div className="flex flex-col gap-1">
       {apiKeys?.length === 0 && (
@@ -53,7 +67,7 @@ const ApiKeyList = (props: ApiKeyListProps) => {
               setActiveAPIKey(apiKey.key);
             }}
           >
-            <span className="text-xs">{apiKey.key}</span>
+            <span className="text-xs">{maskApiKey(apiKey.key)}</span>
           </button>
         </div>
       ))}
