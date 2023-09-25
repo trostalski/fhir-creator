@@ -43,7 +43,7 @@ export function TextInput(props: TextInputProps) {
   }
 
   return (
-    <div className="flex flex-col w-1/2">
+    <div className="flex flex-col w-1/2 gap-2">
       <textarea
         className="h-full w-full"
         name="input"
@@ -54,7 +54,7 @@ export function TextInput(props: TextInputProps) {
         }}
       ></textarea>
       <button
-        className="bg-blue-500 text-white text-lg font-semibold py-4 rounded-lg hover:bg-blue-700"
+        className="bg-blue-500 text-white text-lg font-semibold py-1 rounded-lg hover:bg-blue-700"
         onClick={() => {
           props.setText(tempText);
         }}

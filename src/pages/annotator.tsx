@@ -101,7 +101,7 @@ const Annotator = () => {
         <div className="flex flex-col items-center gap-5 justify-center h-full w-full">
           <div className="flex flex-row w-full gap-5 h-1/4">
             <TextInput text={text} setText={setText} setOutline={setOutline} />
-            <div className="flex flex-col w-1/2">
+            <div className="flex flex-col w-1/2 gap-2">
               <FocusSelector
                 focusResources={focusResources}
                 setFocusResources={setFocusResources}
@@ -146,7 +146,7 @@ const Annotator = () => {
                   })}
               </div>
               <button
-                className="bg-blue-500 text-white text-lg font-semibold py-4 rounded-lg hover:bg-blue-700"
+                className="bg-blue-500 text-white text-lg font-semibold py-1 rounded-lg hover:bg-blue-700"
                 onClick={async () => {
                   await handleLLMAssist();
                 }}
@@ -154,6 +154,7 @@ const Annotator = () => {
                 LLM Assist
               </button>
               <button
+                className="bg-blue-500 text-white text-lg font-semibold py-1 rounded-lg hover:bg-blue-700"
                 onClick={async () => {
                   await handleCreateResources();
                 }}
