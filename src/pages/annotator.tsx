@@ -11,8 +11,8 @@ import {
   setColorsForDefaultResources,
   transformOutline,
 } from "@/utils/annotator_utils";
-import { chains, createResources } from "@/utils/langchain_utils";
-import React from "react";
+import { createResources, promptList } from "@/utils/langchain_utils";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { TiDelete } from "react-icons/ti";
 import { colorSeed, defaultFocusResources } from "@/utils/constants";
@@ -22,11 +22,17 @@ import { Resource } from "fhir/r4";
 import { addResource } from "@/db/utils";
 import { v4 as uuidv4 } from "uuid";
 import { BounceLoader } from "react-spinners";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/db/db";
+import { ApiKeyModal } from "@/components/annotator/ApiKeyModal";
+import { ChatOpenAI } from "langchain/chat_models/openai";
+import { LLMChain } from "langchain/chains";
 
 const Annotator = () => {
   const [rng, setRng] = React.useState<seedrandom.PRNG>(() =>
     seedrandom(colorSeed)
   );
+  const [showApiKeyModal, setShowApiKeyModal] = useState<boolean>(false);
   const [llmAnnotationLoading, setLlmAnnotationLoading] =
     useState<boolean>(false);
   const [llmResourceCreationLoading, setLlmResourceCreationLoading] =
@@ -46,8 +52,50 @@ const Annotator = () => {
   const [selectedEntity, setSelectedEntity] = React.useState<
     OutlineItem | undefined
   >(undefined);
+  const [chains, setChains] = useState<{
+    [key: string]: LLMChain<string, ChatOpenAI>;
+  }>();
+  const apiKey = useLiveQuery(() => {
+    return db.apiKey.toArray();
+  });
+
+  useEffect(() => {
+    if (apiKey && apiKey.length > 0) {
+      const chat = new ChatOpenAI({
+        temperature: 0,
+        openAIApiKey: apiKey[0].key,
+      });
+
+      setChains({
+        bundleOutlineV2: new LLMChain({
+          llm: chat,
+          prompt: promptList.bundleOutlineV2,
+        }),
+        buildResourceV2: new LLMChain({
+          llm: chat,
+          prompt: promptList.buildResourceV2,
+        }),
+        buildResourceV3: new LLMChain({
+          llm: chat,
+          prompt: promptList.buildResourceV3,
+        }),
+        correctJsonError: new LLMChain({
+          llm: chat,
+          prompt: promptList.correctJsonError,
+        }),
+        correctValidationError: new LLMChain({
+          llm: chat,
+          prompt: promptList.correctValidationError,
+        }),
+      });
+    }
+  }, [apiKey]);
 
   async function handleLLMAssist() {
+    if (apiKey?.length === 0) {
+      setShowApiKeyModal(true);
+      return;
+    }
     if (text.length === 0) {
       toastError("Please provide a text");
       return;
@@ -57,37 +105,58 @@ const Annotator = () => {
       return;
     }
     setLlmAnnotationLoading(true);
-    const llmOutline = await chains.bundleOutlineV2.call({
-      medical_text: text,
-      focus_resources: focusResources.map((resource) => resource.value),
-    });
-    let llmOutlineJson;
-    try {
-      llmOutlineJson = JSON.parse(llmOutline.text);
-    } catch (error) {
-      console.log("Not able to parse llmOutput to Json with Error: ", error);
-    }
-    if (llmOutlineJson) {
-      let matchedOutline = transformOutline(llmOutlineJson);
-      addMatches(matchedOutline, text);
-      setOutline(matchedOutline);
+    if (chains) {
+      try {
+        const llmOutline = await chains.bundleOutlineV2.call({
+          medical_text: text,
+          focus_resources: focusResources.map((resource) => resource.value),
+        });
+        let llmOutlineJson;
+        try {
+          llmOutlineJson = JSON.parse(llmOutline.text);
+        } catch (error) {
+          console.log(
+            "Not able to parse llmOutput to Json with Error: ",
+            error
+          );
+        }
+        if (llmOutlineJson) {
+          let matchedOutline = transformOutline(llmOutlineJson);
+          addMatches(matchedOutline, text);
+          setOutline(matchedOutline);
+        }
+      } catch (error) {
+        toastError("There was an error, is your API-Key valid?");
+        console.log(error);
+      }
     }
     setLlmAnnotationLoading(false);
   }
 
   async function handleCreateResources() {
-    if (outline) {
-      setLlmResourceCreationLoading(true);
-      const results = await createResources(text, outline);
-      if (results) {
-        const bundleId = await handleAddFolder();
-        for (const result of results) {
-          if (result.status === "fulfilled") {
-            const resource = result.value as Resource;
-            resource.id = uuidv4();
-            await addResource(resource, bundleId);
+    if (apiKey?.length === 0) {
+      setShowApiKeyModal(true);
+      return;
+    }
+    if (outline && chains) {
+      try {
+        setLlmResourceCreationLoading(true);
+        const results = await createResources(text, outline, chains);
+        if (results) {
+          const bundleId = await handleAddFolder();
+          for (const result of results) {
+            if (result.status === "fulfilled") {
+              const resource = result.value as Resource;
+              resource.id = uuidv4();
+              await addResource(resource, bundleId);
+            }
           }
         }
+      } catch (error) {
+        toastError(
+          "There was a problem while calling OpenAI, is your API Key valid?"
+        );
+        console.log(error);
       }
       setLlmResourceCreationLoading(false);
     }
@@ -202,6 +271,9 @@ const Annotator = () => {
           />
         </div>
       </div>
+      {showApiKeyModal && (
+        <ApiKeyModal setShowApiKeyModal={setShowApiKeyModal} />
+      )}
     </Layout>
   );
 };

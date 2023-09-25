@@ -1,5 +1,5 @@
 import { toastError } from "@/toasts";
-import { InputDict, Outline, OutlineItem } from "@/types";
+import { InputDict, Outline } from "@/types";
 import { Fhir, ValidatorMessage } from "fhir";
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
@@ -8,7 +8,6 @@ import {
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
   } from "langchain/prompts";
-import { join } from "path";
   
   export const templateList = {
     bundleOutlineV2: `
@@ -135,33 +134,33 @@ import { join } from "path";
   };
   
 
-const chat = new ChatOpenAI({
-    temperature: 0,
-    openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-  });
+// const chat = new ChatOpenAI({
+//     temperature: 0,
+//     openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+//   });
   
-  export const chains = {
-    bundleOutlineV2: new LLMChain({
-      llm: chat,
-      prompt: promptList.bundleOutlineV2,
-    }),
-    buildResourceV2: new LLMChain({
-      llm: chat,
-      prompt: promptList.buildResourceV2,
-    }),
-    buildResourceV3: new LLMChain({
-      llm: chat,
-      prompt: promptList.buildResourceV3,
-    }),
-    correctJsonError: new LLMChain({
-      llm: chat,
-      prompt: promptList.correctJsonError,
-    }),
-    correctValidationError: new LLMChain({
-      llm: chat,
-      prompt: promptList.correctValidationError,
-    }),
-  };
+//   export const chains = {
+//     bundleOutlineV2: new LLMChain({
+//       llm: chat,
+//       prompt: promptList.bundleOutlineV2,
+//     }),
+//     buildResourceV2: new LLMChain({
+//       llm: chat,
+//       prompt: promptList.buildResourceV2,
+//     }),
+//     buildResourceV3: new LLMChain({
+//       llm: chat,
+//       prompt: promptList.buildResourceV3,
+//     }),
+//     correctJsonError: new LLMChain({
+//       llm: chat,
+//       prompt: promptList.correctJsonError,
+//     }),
+//     correctValidationError: new LLMChain({
+//       llm: chat,
+//       prompt: promptList.correctValidationError,
+//     }),
+//   };
   
   function createSlice(text: string, match: number[], extendBy: number = 50) {
     // Adjust the start and end indices by the extension value.
@@ -181,13 +180,15 @@ const chat = new ChatOpenAI({
   }
 
 
-  const createBuildCall = async (inputDict:InputDict, failCap: number = 6) =>{
+  const createBuildCall = async (inputDict:InputDict, chains: {
+    [key: string]: LLMChain<string, ChatOpenAI>;
+  },  failCap: number = 6) =>{
     let failCount = 0
     let jsonResult : any
     const errorStack: string[] = []
     const response = await chains.buildResourceV3.call(inputDict);
-    ({jsonResult, failCount} = await jsonTransformation(response, inputDict, failCount, failCap, errorStack));
-    ({jsonResult, failCount} = await fhirValidation(jsonResult, inputDict, failCount, failCap, errorStack));
+    ({jsonResult, failCount} = await jsonTransformation(response, inputDict, failCount, failCap, errorStack, chains));
+    ({jsonResult, failCount} = await fhirValidation(jsonResult, inputDict, failCount, failCap, errorStack, chains));
     return jsonResult
   }
 
@@ -208,7 +209,9 @@ const chat = new ChatOpenAI({
     return solvable
   }
 
-  const fhirValidation = async (jsonResult:any, inputDict: InputDict, failCount:number, failCap:number, errorStack:string[])=>{
+  const fhirValidation = async (jsonResult:any, inputDict: InputDict, failCount:number, failCap:number, errorStack:string[], chains: {
+    [key: string]: LLMChain<string, ChatOpenAI>;
+  })=>{
     const fhir = new Fhir()
     const valResult = fhir.validate(jsonResult)
     if(valResult.valid){
@@ -224,9 +227,9 @@ const chat = new ChatOpenAI({
         failCount += 1;
         const retryInputDict = createValidationFailInputDict(inputDict, jsonResult, errorMessages);
         const response = await chains.correctValidationError.call(retryInputDict);
-        ({jsonResult, failCount} = await jsonTransformation(response, inputDict, failCount, failCap, errorStack));
+        ({jsonResult, failCount} = await jsonTransformation(response, inputDict, failCount, failCap, errorStack, chains));
       }
-      ({jsonResult, failCount} = await fhirValidation(jsonResult, inputDict, failCount, failCap, errorStack));
+      ({jsonResult, failCount} = await fhirValidation(jsonResult, inputDict, failCount, failCap, errorStack, chains));
       return {jsonResult, failCount}
     }
 
@@ -245,7 +248,9 @@ const chat = new ChatOpenAI({
     }
   }
 
-  const jsonTransformation = async (response: ChainValues, inputDict: InputDict, failCount: number, failCap: number, errorStack:string[])=>{
+  const jsonTransformation = async (response: ChainValues, inputDict: InputDict, failCount: number, failCap: number, errorStack:string[], chains: {
+    [key: string]: LLMChain<string, ChatOpenAI>;
+  })=>{
     let jsonResult: any
     try{
       jsonResult = JSON.parse(response.text);
@@ -255,12 +260,14 @@ const chat = new ChatOpenAI({
       checkFailCap(failCount, failCap, errorStack);
       failCount += 1;
       response = await chains.correctJsonError.call(inputDict);
-      ({jsonResult, failCount} = await jsonTransformation(response, inputDict, failCount, failCap, errorStack));
+      ({jsonResult, failCount} = await jsonTransformation(response, inputDict, failCount, failCap, errorStack, chains));
     }
     return {jsonResult: jsonResult, failCount: failCount} 
   }
 
-  export const createResources = async (text:string, outline:Outline)=> {
+  export const createResources = async (text:string, outline:Outline, chains: {
+    [key: string]: LLMChain<string, ChatOpenAI>;
+  })=> {
     let responses = []
     for(const resourceType in outline){
       for(const item of outline[resourceType]){
@@ -270,7 +277,7 @@ const chat = new ChatOpenAI({
             medical_term: item.item,
             context: createSlice(text, item.matches![0])
           }
-          responses.push(createBuildCall(inputDict))
+          responses.push(createBuildCall(inputDict, chains))
         }
       }
     }
