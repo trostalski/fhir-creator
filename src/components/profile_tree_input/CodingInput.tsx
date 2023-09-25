@@ -69,7 +69,6 @@ const CodingInput = (props: CodingInputProps) => {
       callback([]);
       return;
     }
-    console.log(systemNode.value);
     const data = await fetchTermFts(systemNode.value, input, 20);
     const dataOptions = data.coded_terms.map((item) => {
       return {
