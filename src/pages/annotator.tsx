@@ -21,11 +21,16 @@ import { handleAddFolder } from "@/components/left-sidebar/utils";
 import { Resource } from "fhir/r4";
 import { addResource } from "@/db/utils";
 import { v4 as uuidv4 } from "uuid";
+import { BounceLoader } from "react-spinners";
 
 const Annotator = () => {
   const [rng, setRng] = React.useState<seedrandom.PRNG>(() =>
     seedrandom(colorSeed)
   );
+  const [llmAnnotationLoading, setLlmAnnotationLoading] =
+    useState<boolean>(false);
+  const [llmResourceCreationLoading, setLlmResourceCreationLoading] =
+    useState<boolean>(false);
   const [text, setText] = useState("");
   const [outline, setOutline] = React.useState<Outline>(
     constructDefaultOutline(defaultFocusResources)
@@ -51,6 +56,7 @@ const Annotator = () => {
       toastError("Please provide focus resources");
       return;
     }
+    setLlmAnnotationLoading(true);
     const llmOutline = await chains.bundleOutlineV2.call({
       medical_text: text,
       focus_resources: focusResources.map((resource) => resource.value),
@@ -66,13 +72,15 @@ const Annotator = () => {
       addMatches(matchedOutline, text);
       setOutline(matchedOutline);
     }
+    setLlmAnnotationLoading(false);
   }
 
   async function handleCreateResources() {
-    const bundleId = await handleAddFolder();
     if (outline) {
+      setLlmResourceCreationLoading(true);
       const results = await createResources(text, outline);
       if (results) {
+        const bundleId = await handleAddFolder();
         for (const result of results) {
           if (result.status === "fulfilled") {
             const resource = result.value as Resource;
@@ -81,6 +89,7 @@ const Annotator = () => {
           }
         }
       }
+      setLlmResourceCreationLoading(false);
     }
   }
 
@@ -146,20 +155,31 @@ const Annotator = () => {
                   })}
               </div>
               <button
-                className="bg-blue-500 text-white text-lg font-semibold py-1 rounded-lg hover:bg-blue-700"
+                className={` text-white text-lg font-semibold py-1 rounded-lg flex flex-row justify-center gap-10 ${
+                  llmAnnotationLoading
+                    ? "bg-gray-500"
+                    : "hover:bg-blue-700 bg-blue-500"
+                }`}
+                disabled={llmAnnotationLoading}
                 onClick={async () => {
                   await handleLLMAssist();
                 }}
               >
-                LLM Assist
+                LLM Annotation
+                <BounceLoader loading={llmAnnotationLoading} size={30} />
               </button>
               <button
-                className="bg-blue-500 text-white text-lg font-semibold py-1 rounded-lg hover:bg-blue-700"
+                className={` text-white text-lg font-semibold py-1 rounded-lg flex flex-row justify-center gap-10 ${
+                  llmResourceCreationLoading
+                    ? "bg-gray-500"
+                    : "hover:bg-blue-700 bg-blue-500"
+                }`}
                 onClick={async () => {
                   await handleCreateResources();
                 }}
               >
-                Create Resources
+                LLM Resource Creation
+                <BounceLoader loading={llmResourceCreationLoading} size={30} />
               </button>
             </div>
           </div>

@@ -4715,6 +4715,11 @@ react-select@^5.7.2:
     react-transition-group "^4.3.0"
     use-isomorphic-layout-effect "^1.1.2"
 
+react-spinners@^0.13.8:
+  version "0.13.8"
+  resolved "https://registry.yarnpkg.com/react-spinners/-/react-spinners-0.13.8.tgz#5262571be0f745d86bbd49a1e6b49f9f9cb19acc"
+  integrity sha512-3e+k56lUkPj0vb5NDXPVFAOkPC//XyhKPJjvcGjyMNPWsBKpplfeyialP74G7H7+It7KzhtET+MvGqbKgAqpZA==
+
 react-text-annotate@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/react-text-annotate/-/react-text-annotate-0.3.0.tgz#95b028ec7ea67a093d8dc30e99d1db93fdb69591"
