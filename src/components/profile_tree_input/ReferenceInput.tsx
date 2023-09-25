@@ -118,7 +118,7 @@ export const ReferenceInput = (props: ReferenceInputProps) => {
         <InputWrapper
           node={referenceNode}
           pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
-          title="Reference Context"
+          title="Reference Context Bundle"
         >
           <Select
             options={bundleFolderOptions}

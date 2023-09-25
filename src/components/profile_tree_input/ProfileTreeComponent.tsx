@@ -32,6 +32,8 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
     orderedConstraintResults,
     setOrderedConstraintResults,
     clearProfileTree,
+    activeReferenceContext,
+    setActiveReferenceContext,
   } = useStore((state) => {
     return {
       profileTree: state.activeProfileTree,
@@ -41,6 +43,8 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
       updateProfileTree: state.updateProfileTree,
       clearProfileTree: state.clearProfileTree,
       setOrderedConstraintResults: state.setOrderedConstraintResults,
+      activeReferenceContext: state.activeReferenceContext,
+      setActiveReferenceContext: state.setActiveReferenceContext,
     };
   });
   const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
@@ -99,6 +103,15 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
       orderedConstraintResults,
     });
   }
+
+  const getBundleSelectPlaceholder = () => {
+    if (activeReferenceContext) {
+      return activeReferenceContext;
+    } else {
+      return "Select Bundle";
+    }
+  };
+
   return (
     <div className="flex flex-col gap-2 pb-20 w-full overflow-scroll">
       <div className="flex flex-col">
@@ -168,9 +181,11 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
           <Select
             options={bundleFolderOptions}
             onChange={(e) => {
-              setAddToBundleId(e?.value);
+              if (e) {
+                setActiveReferenceContext(e?.value);
+              }
             }}
-            placeholder="Select Bundle"
+            placeholder={getBundleSelectPlaceholder()}
             menuPlacement="top"
             className="w-full"
           />
@@ -178,7 +193,7 @@ const ProfileTreeComponent: React.FC<ProfileTreeComponentProps> = (
         <span className="grow" />
         <AddResourceButton
           setPathsWithInvalidCardinality={setPathsWithInvalidCardinality}
-          addToBundleId={addToBundleId}
+          addToBundleId={activeReferenceContext}
         />
       </div>
     </div>
