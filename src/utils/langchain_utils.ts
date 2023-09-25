@@ -133,35 +133,6 @@ import {
     ]),
   };
   
-
-// const chat = new ChatOpenAI({
-//     temperature: 0,
-//     openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-//   });
-  
-//   export const chains = {
-//     bundleOutlineV2: new LLMChain({
-//       llm: chat,
-//       prompt: promptList.bundleOutlineV2,
-//     }),
-//     buildResourceV2: new LLMChain({
-//       llm: chat,
-//       prompt: promptList.buildResourceV2,
-//     }),
-//     buildResourceV3: new LLMChain({
-//       llm: chat,
-//       prompt: promptList.buildResourceV3,
-//     }),
-//     correctJsonError: new LLMChain({
-//       llm: chat,
-//       prompt: promptList.correctJsonError,
-//     }),
-//     correctValidationError: new LLMChain({
-//       llm: chat,
-//       prompt: promptList.correctValidationError,
-//     }),
-//   };
-  
   function createSlice(text: string, match: number[], extendBy: number = 50) {
     // Adjust the start and end indices by the extension value.
     // If the indices go beyond the string bounds, clamp them to the string boundaries.

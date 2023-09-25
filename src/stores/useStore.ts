@@ -15,7 +15,9 @@ interface Store {
   activeProfileTree?: ProfileTree;
   activeResourceType?: string;
   activeProfile?: StructureDefinition;
+  activeAPIKey?: string;
   mode: Modes;
+  setActiveAPIKey: (apiKey:string) => void;
   setProfileTree: (
     profile: StructureDefinition,
     inputData?: PathItem[]
@@ -41,6 +43,10 @@ export const useStore = create<Store>((set, get) => ({
   activeResourceType: undefined,
   activeProfile: undefined,
   mode: Modes.CREATE,
+  activeAPIKey: undefined,
+  setActiveAPIKey: (apiKey: string) =>{
+    set({activeAPIKey: apiKey})
+  },
   setProfileTree: async (
     profile: StructureDefinition,
     inputData?: PathItem[]

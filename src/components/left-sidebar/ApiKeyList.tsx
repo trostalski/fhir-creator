@@ -1,8 +1,8 @@
 import { db } from "@/db/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import React, { useState } from "react";
-import ProfileContextMenu from "./contextMenu/ProfileContextMenu";
 import ApiKeyContextMenu from "./contextMenu/ApiKeyContextMenu";
+import { useStore } from "@/stores/useStore";
 
 interface ApiKeyListProps {}
 
@@ -14,6 +14,17 @@ const ApiKeyList = (props: ApiKeyListProps) => {
     x: 0,
     y: 0,
   });
+  const { activeAPIKey, setActiveAPIKey } = useStore((state) => {
+    return {
+      activeAPIKey: state.activeAPIKey,
+      setActiveAPIKey: state.setActiveAPIKey,
+    };
+  });
+
+  if (!activeAPIKey && apiKeys) {
+    // maybe a bit dirty
+    setActiveAPIKey(apiKeys[0].key);
+  }
 
   return (
     <div className="flex flex-col gap-1">
@@ -21,7 +32,12 @@ const ApiKeyList = (props: ApiKeyListProps) => {
         <div className="text-xs text-gray-500">No API keys</div>
       )}
       {apiKeys?.map((apiKey) => (
-        <div key={apiKey.key} className="bg-blue-400 p-1 text-white rounded-md">
+        <div
+          key={apiKey.key}
+          className={`${
+            activeAPIKey === apiKey.key ? "bg-blue-600" : "bg-blue-400"
+          } p-1 text-white rounded-md`}
+        >
           <button
             className="w-full text-left font-light text-sm truncate transition-colors duration-300 ease-in-out px-2 py-1 rounded-md overflow-hidden hover:bg-blue-200"
             title={apiKey.key}
@@ -33,7 +49,9 @@ const ApiKeyList = (props: ApiKeyListProps) => {
               setContextPoint({ x: e.pageX, y: e.pageY });
               setShowContextMenu(true);
             }}
-            onClick={() => {}}
+            onClick={() => {
+              setActiveAPIKey(apiKey.key);
+            }}
           >
             <span className="text-xs">{apiKey.key}</span>
           </button>

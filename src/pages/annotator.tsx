@@ -27,6 +27,7 @@ import { db } from "@/db/db";
 import { ApiKeyModal } from "@/components/annotator/ApiKeyModal";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { LLMChain } from "langchain/chains";
+import { useStore } from "@/stores/useStore";
 
 const Annotator = () => {
   const [rng, setRng] = React.useState<seedrandom.PRNG>(() =>
@@ -55,15 +56,21 @@ const Annotator = () => {
   const [chains, setChains] = useState<{
     [key: string]: LLMChain<string, ChatOpenAI>;
   }>();
-  const apiKey = useLiveQuery(() => {
+  const apiKeys = useLiveQuery(() => {
     return db.apiKey.toArray();
+  });
+  const { activeAPIKey, setActiveAPIKey } = useStore((state) => {
+    return {
+      activeAPIKey: state.activeAPIKey,
+      setActiveAPIKey: state.setActiveAPIKey,
+    };
   });
 
   useEffect(() => {
-    if (apiKey && apiKey.length > 0) {
+    if (activeAPIKey) {
       const chat = new ChatOpenAI({
         temperature: 0,
-        openAIApiKey: apiKey[0].key,
+        openAIApiKey: activeAPIKey,
       });
 
       setChains({
@@ -89,10 +96,10 @@ const Annotator = () => {
         }),
       });
     }
-  }, [apiKey]);
+  }, [activeAPIKey]);
 
   async function handleLLMAssist() {
-    if (apiKey?.length === 0) {
+    if (apiKeys?.length === 0) {
       setShowApiKeyModal(true);
       return;
     }
@@ -134,7 +141,7 @@ const Annotator = () => {
   }
 
   async function handleCreateResources() {
-    if (apiKey?.length === 0) {
+    if (apiKeys?.length === 0) {
       setShowApiKeyModal(true);
       return;
     }
