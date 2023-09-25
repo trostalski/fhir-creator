@@ -97,11 +97,11 @@ const Annotator = () => {
 
   return (
     <Layout>
-      <div className="flex flex-row pt-4 w-full gap-5">
-        <div className="flex flex-col items-center gap-5 justify-center h-screen w-full">
-          <div className="flex flex-row w-full gap-5">
+      <div className="flex flex-row mt-4 pb-11 w-full gap-5 overflow-auto">
+        <div className="flex flex-col items-center gap-5 justify-center h-full w-full">
+          <div className="flex flex-row w-full gap-5 h-1/4">
             <TextInput text={text} setText={setText} setOutline={setOutline} />
-            <div className="flex flex-col h-[25vh] w-1/2">
+            <div className="flex flex-col w-1/2">
               <FocusSelector
                 focusResources={focusResources}
                 setFocusResources={setFocusResources}

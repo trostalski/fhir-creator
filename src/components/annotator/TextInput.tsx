@@ -43,7 +43,7 @@ export function TextInput(props: TextInputProps) {
   }
 
   return (
-    <div className="flex flex-col h-[25vh] w-1/2">
+    <div className="flex flex-col w-1/2">
       <textarea
         className="h-full w-full"
         name="input"
