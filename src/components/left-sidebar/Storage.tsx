@@ -111,7 +111,8 @@ const Storage = (props: RightPartProps) => {
                   </label>
                 </div>
                 {showProfiles ? <ProfilesList /> : null}
-              </div>{" "}
+              </div>
+              <hr />
               <div className="flex flex-col gap-1">
                 <div className="flex flex-row w-full items-center">
                   <div
