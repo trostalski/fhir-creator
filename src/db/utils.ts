@@ -5,6 +5,7 @@ import { FhirResource } from "fhir/r4";
 import { v4 as uuidv4 } from "uuid";
 import { resolveProfileForResource } from "@/components/buttons/ImportResourceButton";
 import { bundlePoolId } from "@/utils/constants";
+import { getResourceTypeFromUrl } from "@/utils/utils";
 
 export const getBaseProfile = async (resourceType: string) => {
   try {
@@ -152,6 +153,30 @@ export async function getResourcesForBundleFolder(bundleFolderId: string) {
   }
 }
 
+
+export async function getPossibleReferenceIds(profileURL: string, bundleId: string){
+ try{
+  const resourceIds = await db.transaction("rw", db.bundleFolders, db.resources, async () =>{
+    const bundle = await db.bundleFolders.get(bundleId)
+    if(bundle){
+      const resources = await db.resources.filter((resource)=>{
+        if(resource.meta?.profile){
+          return bundle.resourceIds.includes(resource.id!) && resource.meta.profile.includes(profileURL)
+        } else{
+          return bundle.resourceIds.includes(resource.id!) && resource.resourceType === getResourceTypeFromUrl(profileURL)
+        }
+      }).toArray()
+      return resources.map((resource) => resource.id!)
+    } else {
+      return []
+    }
+  })
+  return resourceIds
+ } catch{
+  toastError(`Failed to resolve for bundle ${bundleId}`)
+  return []
+ }
+}
 export async function parseBundle(bundle: Bundle) {
   // Ensure bundle has an ID
   if (!bundle.id) {
@@ -281,7 +306,6 @@ export async function exportBundleFolderById(bundleFolderId: string) {
   }
   exportBundleFolder(bundleFolder);
 }
-
 export async function exportBundleFolder(bundleFolder: BundleFolder) {
   const bundle = await createBundleFromFolder(bundleFolder);
   const bundle_string = JSON.stringify(bundle, null, 2);
@@ -289,7 +313,7 @@ export async function exportBundleFolder(bundleFolder: BundleFolder) {
   const url = URL.createObjectURL(blob);
   const filename = `Bundle_${bundleFolder.id}` + ".json";
   fetch(url)
-    .then((response) => response.blob())
+  .then((response) => response.blob())
     .then((blob) => {
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);

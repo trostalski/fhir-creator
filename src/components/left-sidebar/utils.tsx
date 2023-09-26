@@ -2,7 +2,12 @@ import { BundleFolder, FolderReference, ResourcePathRepr, db } from "@/db/db";
 import { getBaseProfile } from "@/db/utils";
 import { toastError } from "@/toasts";
 import { createPathArrayFromJson, isBaseUrl } from "@/utils/utils";
-import { Resource, StructureDefinition } from "fhir/r4";
+import {
+  DomainResource,
+  FhirResource,
+  Resource,
+  StructureDefinition,
+} from "fhir/r4";
 import { v4 as uuidv4 } from "uuid";
 
 interface pooledRef {
@@ -176,9 +181,67 @@ export const poolRefs = (folderReferences: FolderReference[]) => {
   return pooledRefs;
 };
 
+type AnyObject = { [key: string]: any };
+
+function findReferences(
+  obj: AnyObject,
+  path: string[] = [],
+  references: { path: string; reference: string }[] = []
+): { path: string; reference: string }[] {
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const value = obj[key];
+      const newPath = [...path, key];
+
+      if (typeof value === "object" && value !== null) {
+        findReferences(value, newPath, references);
+      }
+
+      if (key === "reference" && typeof value === "string") {
+        references.push({ path: newPath.join("."), reference: value });
+      }
+    }
+  }
+
+  return references;
+}
+
+const updateReferences = (
+  oldResources: Resource[],
+  copiedResources: Resource[],
+  idMapping: { [oldId: string]: string }
+) => {
+  // Traverse an object and its nested objects to update references
+  const traverseAndUpdate = (obj: any) => {
+    for (const key in obj) {
+      if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
+
+      const value = obj[key];
+      if (typeof value === "object" && value !== null) {
+        traverseAndUpdate(value); // Recursive call for nested object
+      }
+
+      // If the key is 'reference' and its value is in idMapping, update it
+      if (
+        key === "reference" &&
+        typeof value === "string" &&
+        idMapping[value]
+      ) {
+        obj[key] = idMapping[value];
+      }
+    }
+  };
+
+  // Go through each resource in copiedResources and update references
+  for (const resource of copiedResources) {
+    traverseAndUpdate(resource);
+  }
+};
+
 export const copyResources = async (
   resourceIds: string[],
-  destinationFolder: string
+  destinationFolder: string,
+  updateReferencesBool: boolean = false
 ) => {
   db.transaction(
     "rw",
@@ -189,11 +252,21 @@ export const copyResources = async (
       const resources = (await db.resources.bulkGet(resourceIds)).filter(
         (resource) => typeof resource !== "undefined"
       ) as unknown as Resource[];
+      // for (const resource of resources) {
+      //   const references = findReferences(resource);
+      //   console.log(references);
+      // }
       const copiedResources: Resource[] = [];
+      let idMapping: { [oldId: string]: string } = {}; // need this when whole bundles are being duplicated
       for (const resource of resources) {
+        const oldId = resource.id!;
         let copiedResource = JSON.parse(JSON.stringify(resource)) as Resource;
         copiedResource = { ...copiedResource, id: uuidv4() }; // ensure no duplicate resources
+        idMapping[oldId] = copiedResource.id!;
         copiedResources.push(copiedResource);
+      }
+      if (updateReferencesBool) {
+        updateReferences(resources, copiedResources, idMapping);
       }
       // push to database and attach to folder
       await db.resources.bulkAdd(copiedResources);
@@ -242,7 +315,8 @@ export const copyFolders = async (checkedFolders: string[]) => {
         await db.bundleFolders.bulkAdd(copiedFolders);
         await copyResources(
           originalFolders[i].resourceIds,
-          copiedFolders[i].id
+          copiedFolders[i].id,
+          true
         );
       }
     }
