@@ -85,6 +85,17 @@ export async function addResource(resource: Resource, bundleId?: string) {
   }
 }
 
+export async function addApiKey(apiKey:string){
+  try{
+    db.apiKey.add({key: apiKey})
+    return true
+  } catch(error){
+    toastError("Failed to add Api-Key")
+    console.log(error)
+    return false
+  }
+}
+
 export async function addProfile(profile: StructureDefinition) {
   try {
     await db.profiles.add(profile);

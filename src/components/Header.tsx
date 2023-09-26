@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { AiFillGithub } from "react-icons/ai";
 import { RiAncientGateFill } from "react-icons/ri";
