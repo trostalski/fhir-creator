@@ -3,6 +3,11 @@ import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { rootName } from "./constants";
 import { getPathLength } from "./path_utils";
 import { getBranchId } from "./utils";
+import { ElementDefinition } from "fhir/r4";
+
+export function getNodeByDataPath(nodes: ProfileTreeNode[], dataPath: string) {
+  return nodes.find((node) => node.dataPath === dataPath);
+}
 
 export function getAllChidlren(
   profileTree: ProfileTree,
@@ -53,16 +58,35 @@ export function getReferenceChildren(
   let referenceNode: ProfileTreeNode;
   let typeNode: ProfileTreeNode;
   let displayNode: ProfileTreeNode;
-  if(node.multiTypeType){
-    referenceNode = children.find((child) => child.baseId.endsWith("Reference.reference"))!
-    typeNode = children.find((child)=> child.baseId.endsWith("Reference.type"))!
-    displayNode = children.find((child) => child.baseId.endsWith("Reference.display"))!
+  if (node.multiTypeType) {
+    referenceNode = children.find((child) =>
+      child.baseId.endsWith("Reference.reference")
+    )!;
+    typeNode = children.find((child) =>
+      child.baseId.endsWith("Reference.type")
+    )!;
+    displayNode = children.find((child) =>
+      child.baseId.endsWith("Reference.display")
+    )!;
   } else {
-    referenceNode = children.find((child) => child.baseId.endsWith(".reference"))!
-    typeNode = children.find((child)=> child.baseId.endsWith(".type"))!
-    displayNode = children.find((child) => child.baseId.endsWith(".display"))!
+    referenceNode = children.find((child) =>
+      child.baseId.endsWith(".reference")
+    )!;
+    typeNode = children.find((child) => child.baseId.endsWith(".type"))!;
+    displayNode = children.find((child) => child.baseId.endsWith(".display"))!;
   }
-  return {referenceNode, typeNode, displayNode}
+  return { referenceNode, typeNode, displayNode };
+}
+export function getElementTypes(element: ElementDefinition): string[] {
+  const types = [];
+  if (element.type) {
+    for (const type of element.type) {
+      if (type.code) {
+        types.push(type.code);
+      }
+    }
+  }
+  return types;
 }
 
 export function extractDirectChildrenPaths(
@@ -166,10 +190,6 @@ export function getLastDescendant(
     return descendants[descendants.length - 1];
   }
   return node;
-}
-
-export function getNodeByDataPath(nodes: ProfileTreeNode[], dataPath: string) {
-  return nodes.find((node) => node.dataPath === dataPath);
 }
 
 export function getBranchIds(profileTree: ProfileTree) {
@@ -334,12 +354,12 @@ export function nodeIsType(node: ProfileTreeNode, type: string) {
   }
 }
 
-export function shouldRenderReferenceInput(node: ProfileTreeNode){
+export function shouldRenderReferenceInput(node: ProfileTreeNode) {
   let should = false;
-  if(node.multiTypeType && node.multiTypeType === "Reference"){
-    should = true
-  } else if(node.element.type && node.element.type[0].code === "Reference"){
-    should = true
+  if (node.multiTypeType && node.multiTypeType === "Reference") {
+    should = true;
+  } else if (node.element.type && node.element.type[0].code === "Reference") {
+    should = true;
   }
-  return should
+  return should;
 }
