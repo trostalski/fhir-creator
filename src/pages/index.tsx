@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import { Modes, resourceTypeList } from "../utils/constants";
+import {
+  Modes,
+  availableFhirVersions,
+  resourceTypeList,
+} from "../utils/constants";
 import "react-tooltip/dist/react-tooltip.css";
 import { getBaseProfile } from "@/db/utils";
 import ProfileTreeComponent from "../components/profile_tree_input/ProfileTreeComponent";
@@ -9,6 +13,7 @@ import { useStore } from "@/stores/useStore";
 import Layout from "@/components/Layout";
 import { toastPromise } from "@/toasts";
 import { getResourceTypeFromProfile } from "@/utils/utils";
+import { reactSelectStyles } from "@/styles/reactSelectStyles";
 
 const Home = () => {
   const [checkoutModalOpen, setCheckoutModalOpen] = useState<boolean>(false);
@@ -42,10 +47,10 @@ const Home = () => {
   return (
     <Layout>
       <div className="flex flex-col h-full w-full pt-2 overflow-x-scroll overflow-y-hidden pl-8 pr-32 gap-2 ">
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 items-center">
           <Select
             instanceId={"baseprofile-select"}
-            className="h-8 w-full mx-auto"
+            className="w-full mx-auto"
             value={
               profile
                 ? resourceOptions.find(
@@ -66,6 +71,13 @@ const Home = () => {
               );
             }}
           />
+          <select className="h-10 rounded-md border-gray-400">
+            {availableFhirVersions.map((version) => (
+              <option key={version} value={version}>
+                {version}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="flex flex-col h-full">
           {!profileTree ? null : (

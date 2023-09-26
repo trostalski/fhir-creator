@@ -3,6 +3,7 @@ import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { rootName } from "./constants";
 import { getPathLength } from "./path_utils";
 import { getBranchId } from "./utils";
+import { ElementDefinition } from "fhir/r4";
 
 export function getAllChidlren(
   profileTree: ProfileTree,
@@ -43,6 +44,18 @@ export function getCodingChildren(
     versionNode,
     userSelectedNode,
   };
+}
+
+export function getElementTypes(element: ElementDefinition): string[] {
+  const types = [];
+  if (element.type) {
+    for (const type of element.type) {
+      if (type.code) {
+        types.push(type.code);
+      }
+    }
+  }
+  return types;
 }
 
 export function extractDirectChildrenPaths(

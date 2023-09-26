@@ -287,16 +287,6 @@ export async function buildTreeFromElementsRecursive(
       multiTypeType = getElementTypes(element)![0];
     }
 
-    if (element.binding) {
-      const bindingCodes = await tryGetBindingCodes(element);
-      if (bindingCodes && bindingCodes.length > 0) {
-        elementNode.bindingCodes = bindingCodes;
-        elementNode.isPrimitive = true;
-        profileTree.push(elementNode);
-        continue; // skip children binding element is primitive here
-      }
-    }
-
     if (await isPrimitiveElement(element)) {
       if (!profileTree.find((node) => node.dataPath === elementDataPath)) {
         elementNode.isPrimitive = true;
@@ -358,7 +348,31 @@ export async function buildTreeFromElementsRecursive(
         multiTypeType: multiTypeType,
         value: "",
       };
-      profileTree.push(parentNode, ...childNodes);
+
+      if (element.binding) {
+        const bindingCodes = await tryGetBindingCodes(element);
+        if (bindingCodes && bindingCodes.length > 0) {
+          const types = getElementTypes(element);
+          if (types && types[0] == "CodeableConcept") {
+            const codingChild = childNodes.find(
+              (node) => node.element.id === "CodeableConcept.coding"
+            )!;
+            codingChild.bindingCodes = bindingCodes;
+            codingChild.isPrimitive = true;
+            codingChild.childPaths = [];
+            elementNode.childPaths = [codingChild.dataPath];
+            profileTree.push(elementNode, codingChild);
+          } else if (types && types[0] == "Coding") {
+            elementNode.bindingCodes = bindingCodes;
+            elementNode.isPrimitive = true;
+            profileTree.push(elementNode);
+          } else {
+            profileTree.push(parentNode, ...childNodes);
+          }
+        }
+      } else {
+        profileTree.push(parentNode, ...childNodes);
+      }
     }
   }
   return profileTree;

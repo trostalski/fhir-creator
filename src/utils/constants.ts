@@ -6,15 +6,6 @@ import {
   NumericalFeature,
   OptionType,
 } from "../types";
-
-export const detaSpaceUrl = isProd()
-  ? process.env.NEXT_PUBLIC_DETA_URL
-  : process.env.NEXT_PUBLIC_DETA_URL;
-
-export const awsUrl = isProd()
-  ? process.env.NEXT_PUBLIC_AWS_URL
-  : "http://localhost:8000";
-
 import { ElementDefinitionConstraint } from "fhir/r4";
 import { ProfileTreeNode } from "./buildTree";
 import {
@@ -22,6 +13,12 @@ import {
   OrderedConstraintResults,
 } from "./constraint_utils";
 import { isProd } from "./utils";
+
+export const availableFhirVersions = ["R4"];
+
+export const awsUrl = isProd()
+  ? process.env.NEXT_PUBLIC_AWS_URL
+  : "http://localhost:8000";
 
 export const rootName = "root";
 export const pathDelimiter = ".";
