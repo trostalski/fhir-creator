@@ -24,7 +24,7 @@ const EntityElement = (props: EntityElementProps) => {
         {props.entity.item}
       </button>
       <TiDelete
-        className="hover:scale-110 ml-auto"
+        className="hover:scale-110 ml-auto flex-shrink-0"
         onClick={() => {
           props.setOutline({
             ...props.outline,
