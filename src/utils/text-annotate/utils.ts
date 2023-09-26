@@ -19,7 +19,7 @@ const constructOutlineArray = (outline:Outline): OutlineArrayItem[] =>{
 }
 
 
-export const splitWithOutline = (text:string, offsets: {start: number; end: number}[], outline?:Outline, colors: ColorStore) => {
+export const splitWithOutline = (text:string, offsets: {start: number; end: number}[],colors: ColorStore, outline?:Outline ) => {
   let lastEnd = 0
   const splits: SplitProps[] = []
 
@@ -91,7 +91,7 @@ export const splitWithOffsets = (text:string, offsets: {start: number; end: numb
   return splits
 }
 
-export const splitTokensWithOffsets = (text, offsets: {start: number; end: number}[]) => {
+export const splitTokensWithOffsets = (text:string, offsets: {start: number; end: number}[]) => {
   let lastEnd = 0
   const splits = []
 
@@ -108,7 +108,7 @@ export const splitTokensWithOffsets = (text, offsets: {start: number; end: numbe
     splits.push({
       ...offset,
       mark: true,
-      content: text.slice(start, end).join(' '),
+      content: text.slice(start, end),
     })
     lastEnd = end
   }
@@ -123,6 +123,7 @@ export const splitTokensWithOffsets = (text, offsets: {start: number; end: numbe
 }
 
 export const selectionIsEmpty = (selection: Selection) => {
+  if (!selection.anchorNode || !selection.focusNode) return true;
   let position = selection.anchorNode.compareDocumentPosition(selection.focusNode)
 
   return position === 0 && selection.focusOffset === selection.anchorOffset
@@ -130,7 +131,7 @@ export const selectionIsEmpty = (selection: Selection) => {
 
 export const selectionIsBackwards = (selection: Selection) => {
   if (selectionIsEmpty(selection)) return false
-
+  if (!selection.anchorNode || !selection.focusNode) return true;
   let position = selection.anchorNode.compareDocumentPosition(selection.focusNode)
 
   let backward = false

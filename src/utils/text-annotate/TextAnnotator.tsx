@@ -4,7 +4,6 @@ import Mark from "./Mark";
 import {
   selectionIsEmpty,
   selectionIsBackwards,
-  splitWithOffsets,
   splitWithOutline,
 } from "./utils";
 import { Span } from "./span";
@@ -15,7 +14,7 @@ export interface SplitProps {
   content: string;
   start: number;
   end: number;
-  onClick: (any) => any;
+  onClick: (e: any) => any;
   mark?: boolean;
   key?: string;
   color?: string;
@@ -112,7 +111,7 @@ export const TextAnnotator = <T extends Span>(props: TextAnnotatorProps<T>) => {
   };
 
   const { content, value, style } = props;
-  const splits = splitWithOutline(content, value, props.outline, props.colors);
+  const splits = splitWithOutline(content, value, props.colors, props.outline);
   return (
     <div onMouseUp={handleMouseUp} className="overflow-y-auto">
       {splits.map((split) => (
