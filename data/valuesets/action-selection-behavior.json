@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "action-selection-behavior",
     "meta": {
-        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
+        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-action-selection-behavior.html\"><code>http://hl7.org/fhir/action-selection-behavior</code></a></li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-action-selection-behavior.html\">\n            <code>http://hl7.org/fhir/action-selection-behavior</code>\n          </a>\n        </li>\n      </ul>\n    </div>"
     },
     "extension": [
         {
@@ -22,7 +22,7 @@
         },
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-            "valueInteger": 4
+            "valueInteger": 3
         }
     ],
     "url": "http://hl7.org/fhir/ValueSet/action-selection-behavior",
@@ -30,16 +30,11 @@
         {
             "system": "urn:ietf:rfc:3986",
             "value": "urn:oid:2.16.840.1.113883.4.642.3.801"
-        },
-        {
-            "use": "old",
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.784"
         }
     ],
-    "version": "6.0.0-cibuild",
+    "version": "4.3.0",
     "name": "ActionSelectionBehavior",
-    "title": "Action Selection Behavior",
+    "title": "ActionSelectionBehavior",
     "status": "draft",
     "experimental": false,
     "date": "2020-12-28T16:55:11+11:00",
@@ -59,17 +54,6 @@
         }
     ],
     "description": "Defines selection behavior of a group.",
-    "jurisdiction": [
-        {
-            "coding": [
-                {
-                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
-                    "code": "001",
-                    "display": "World"
-                }
-            ]
-        }
-    ],
     "immutable": true,
     "compose": {
         "include": [

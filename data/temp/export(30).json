@@ -1,0 +1,64 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "timestamp": "2023-07-24T14:41:19.203Z",
+  "meta": {
+    "lastUpdated": "2023-07-24T14:41:19.203Z"
+  },
+  "entry": [
+    {
+      "resource": {
+        "bodySite": [
+          {
+            "text": "Right lower belly"
+          }
+        ],
+        "category": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/condition-category",
+            "code": "encounter-diagnosis",
+            "display": "Encounter Diagnosis"
+          }
+        ],
+        "clinicalStatus": {
+          "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+          "code": "recurrence",
+          "display": "Recurrence"
+        },
+        "code": {
+          "text": "Appendicits"
+        },
+        "id": "lkgz496yg64b6vg14c",
+        "meta": {
+          "lastUpdated": "2023-07-24T14:38:56.650Z",
+          "profile": [
+            "http://hl7.org/fhir/StructureDefinition/Condition"
+          ]
+        },
+        "onsetDateTime": {
+          "dateTime": "2023-07-25T03:03"
+        },
+        "recordedDate": "2023-07-25T11:11",
+        "recorder": {
+          "display": "Dr. Awesome"
+        },
+        "severity": {
+          "code": "6736007"
+        },
+        "subject": {
+          "display": "Mrs. Smith"
+        },
+        "text": {
+          "div": "Some stuff",
+          "status": "additional"
+        },
+        "verificationStatus": {
+          "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+          "code": "provisional",
+          "display": "Provisional"
+        },
+        "resourceType": "Condition"
+      }
+    }
+  ]
+}

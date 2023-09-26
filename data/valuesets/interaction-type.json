@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "interaction-type",
     "meta": {
-        "lastUpdated": "2023-09-03T04:49:58.148+11:00",
+        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      \n      <ul>\n        \n        <li>Include all codes defined in \n          \n          <a href=\"codesystem-interaction-type.html\">\n            \n            <code>http://hl7.org/fhir/interaction-type</code>\n          \n          </a>\n        \n        </li>\n      \n      </ul>interaction-type\n    \n    </div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-interaction-type.html\">\n            <code>http://hl7.org/fhir/interaction-type</code>\n          </a>\n        </li>\n      </ul>interaction-type\n    </div>"
     },
     "extension": [
         {
@@ -29,12 +29,12 @@
     "identifier": [
         {
             "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.3115"
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.1662"
         }
     ],
-    "version": "6.0.0-cibuild",
+    "version": "4.3.0",
     "name": "InteractionType",
-    "title": "Interaction Type",
+    "title": "InteractionType",
     "status": "draft",
     "experimental": true,
     "date": "2020-12-28T16:55:11+11:00",
@@ -54,17 +54,6 @@
         }
     ],
     "description": "A categorisation for an interaction between two substances.",
-    "jurisdiction": [
-        {
-            "coding": [
-                {
-                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
-                    "code": "001",
-                    "display": "World"
-                }
-            ]
-        }
-    ],
     "immutable": true,
     "compose": {
         "include": [

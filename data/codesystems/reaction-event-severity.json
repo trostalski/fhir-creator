@@ -1,98 +1,75 @@
 {
-    "resourceType": "CodeSystem",
-    "id": "reaction-event-severity",
-    "meta": {
-        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
-        "profile": [
-            "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
-        ]
+  "resourceType": "CodeSystem",
+  "id": "reaction-event-severity",
+  "meta": {
+    "lastUpdated": "2022-05-28T13:47:40.239+11:00",
+    "profile": ["http://hl7.org/fhir/StructureDefinition/shareablecodesystem"]
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      \n      <h2>AllergyIntoleranceSeverity</h2>\n      \n      <div>\n        \n        <p>Clinical assessment of the severity of a reaction event as a whole, potentially considering multiple different manifestations.</p>\n\n      \n      </div>\n      \n      <p>This code system http://hl7.org/fhir/reaction-event-severity defines the following codes:</p>\n      \n      <table class=\"codes\">\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">\n            \n            <b>Code</b>\n          \n          </td>\n          \n          <td>\n            \n            <b>Display</b>\n          \n          </td>\n          \n          <td>\n            \n            <b>Definition</b>\n          \n          </td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">mild\n            \n            <a name=\"reaction-event-severity-mild\"> </a>\n          \n          </td>\n          \n          <td>Mild</td>\n          \n          <td>Causes mild physiological effects.</td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">moderate\n            \n            <a name=\"reaction-event-severity-moderate\"> </a>\n          \n          </td>\n          \n          <td>Moderate</td>\n          \n          <td>Causes moderate physiological effects.</td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">severe\n            \n            <a name=\"reaction-event-severity-severe\"> </a>\n          \n          </td>\n          \n          <td>Severe</td>\n          \n          <td>Causes severe physiological effects.</td>\n        \n        </tr>\n      \n      </table>\n    \n    </div>"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
+      "valueCode": "pc"
     },
-    "text": {
-        "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>This case-sensitive code system <code>http://hl7.org/fhir/reaction-event-severity</code> defines the following codes:</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td style=\"white-space:nowrap\">mild<a name=\"reaction-event-severity-mild\"> </a></td><td>Mild</td><td>Causes mild physiological effects.</td></tr><tr><td style=\"white-space:nowrap\">moderate<a name=\"reaction-event-severity-moderate\"> </a></td><td>Moderate</td><td>Causes moderate physiological effects.</td></tr><tr><td style=\"white-space:nowrap\">severe<a name=\"reaction-event-severity-severe\"> </a></td><td>Severe</td><td>Causes severe physiological effects.</td></tr></table></div>"
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
+      "valueCode": "trial-use"
     },
-    "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
+      "valueInteger": 3
+    }
+  ],
+  "url": "http://hl7.org/fhir/reaction-event-severity",
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:oid:2.16.840.1.113883.4.642.4.136"
+    }
+  ],
+  "version": "4.3.0",
+  "name": "AllergyIntoleranceSeverity",
+  "title": "AllergyIntoleranceSeverity",
+  "status": "draft",
+  "experimental": false,
+  "date": "2021-01-17T07:06:13+11:00",
+  "publisher": "HL7 (FHIR Project)",
+  "contact": [
+    {
+      "telecom": [
         {
-            "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
-            "valueCode": "pc"
+          "system": "url",
+          "value": "http://hl7.org/fhir"
         },
         {
-            "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
-            "valueCode": "trial-use"
-        },
-        {
-            "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-            "valueInteger": 3
+          "system": "email",
+          "value": "fhir@lists.hl7.org"
         }
-    ],
-    "url": "http://hl7.org/fhir/reaction-event-severity",
-    "identifier": [
-        {
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.4.136"
-        },
-        {
-            "use": "old",
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.1.126"
-        },
-        {
-            "use": "old",
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.2.56"
-        }
-    ],
-    "version": "6.0.0-cibuild",
-    "name": "AllergyIntoleranceSeverity",
-    "title": "Allergy Intolerance Severity",
-    "status": "active",
-    "experimental": false,
-    "date": "2021-01-05T10:01:24+11:00",
-    "publisher": "HL7 (FHIR Project)",
-    "contact": [
-        {
-            "telecom": [
-                {
-                    "system": "url",
-                    "value": "http://hl7.org/fhir"
-                },
-                {
-                    "system": "email",
-                    "value": "fhir@lists.hl7.org"
-                }
-            ]
-        }
-    ],
-    "description": "Clinical assessment of the severity of a reaction event as a whole, potentially considering multiple different manifestations.",
-    "jurisdiction": [
-        {
-            "coding": [
-                {
-                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
-                    "code": "001",
-                    "display": "World"
-                }
-            ]
-        }
-    ],
-    "caseSensitive": true,
-    "valueSet": "http://hl7.org/fhir/ValueSet/reaction-event-severity",
-    "content": "complete",
-    "concept": [
-        {
-            "code": "mild",
-            "display": "Mild",
-            "definition": "Causes mild physiological effects."
-        },
-        {
-            "code": "moderate",
-            "display": "Moderate",
-            "definition": "Causes moderate physiological effects."
-        },
-        {
-            "code": "severe",
-            "display": "Severe",
-            "definition": "Causes severe physiological effects."
-        }
-    ]
+      ]
+    }
+  ],
+  "description": "Clinical assessment of the severity of a reaction event as a whole, potentially considering multiple different manifestations.",
+  "caseSensitive": true,
+  "valueSet": "http://hl7.org/fhir/ValueSet/reaction-event-severity",
+  "content": "complete",
+  "concept": [
+    {
+      "code": "mild",
+      "display": "Mild",
+      "definition": "Causes mild physiological effects."
+    },
+    {
+      "code": "moderate",
+      "display": "Moderate",
+      "definition": "Causes moderate physiological effects."
+    },
+    {
+      "code": "severe",
+      "display": "Severe",
+      "definition": "Causes severe physiological effects."
+    }
+  ]
 }

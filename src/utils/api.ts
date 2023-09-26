@@ -13,7 +13,6 @@ import {
   _codedConcept,
   _codedNumerical,
   _numerical,
-  detaSpaceUrl,
   icd10TerminologySystem,
   icd9TerminologySystem,
   loincTerminologySystem,
@@ -37,15 +36,6 @@ export const fetchProfileTree = async (
   }
   const profileTreeJson = await profileTreeResponse.json();
   return profileTreeJson;
-};
-
-export const pingBackend = async () => {
-  const pingResponse = await fetch(`${detaSpaceUrl}/api/v1/ping/`);
-  if (!pingResponse.ok) {
-    throw new Error("Error fetching profile tree");
-  }
-  const pingJson = await pingResponse.json();
-  return pingJson;
 };
 
 export const fetchPatSimData = async (

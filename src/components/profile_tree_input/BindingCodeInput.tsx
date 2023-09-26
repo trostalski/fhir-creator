@@ -60,7 +60,7 @@ const BindingCodeInput = (props: BindingCodeInputProps) => {
     const nodeIndex = newProfileTree.findIndex(
       (node) => node.dataPath === props.node.dataPath
     );
-    if (nodeIsType(props.node, "CodeableConcept")) {
+    if (nodeIsType(props.node, "Coding")) {
       const code = props.node.bindingCodes!.find(
         (code) => code.code === e.value
       );

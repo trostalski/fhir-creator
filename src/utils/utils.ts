@@ -451,12 +451,16 @@ export function getPathsWithInvalidCardinality(
   if (hasChildren && existsInInputData(inputData, dataPath)) {
     const children = getChildrenForNode(profileTree, profileTreeNode);
     for (const child of children) {
-      if (child.element.sliceName) {
-        // if the child is a slice, check if any of its children have a value
-        const children = getChildrenForNode(profileTree, child);
-        if (!children.some((child) => child.value !== "")) {
-          continue;
+      try {
+        if (child.element.sliceName) {
+          // if the child is a slice, check if any of its children have a value
+          const children = getChildrenForNode(profileTree, child);
+          if (!children.some((child) => child.value !== "")) {
+            continue;
+          }
         }
+      } catch (error) {
+        console.log("error for dataPath", dataPath);
       }
       const childPath = child.dataPath;
       getPathsWithInvalidCardinality(

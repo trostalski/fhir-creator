@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "contributor-summary-source",
     "meta": {
-        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
+        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-contributor-summary-source.html\"><code>http://hl7.org/fhir/contributor-summary-source</code></a></li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-contributor-summary-source.html\">\n            <code>http://terminology.hl7.org/CodeSystem/contributor-summary-source</code>\n          </a>\n        </li>\n      </ul>\n    </div>"
     },
     "extension": [
         {
@@ -22,19 +22,19 @@
         },
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-            "valueInteger": 1
+            "valueInteger": 0
         }
     ],
     "url": "http://hl7.org/fhir/ValueSet/contributor-summary-source",
     "identifier": [
         {
             "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.2965"
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.0"
         }
     ],
-    "version": "6.0.0-cibuild",
+    "version": "4.3.0",
     "name": "ContributorSummarySource",
-    "title": "Contributor Summary Source",
+    "title": "ContributorSummarySource",
     "status": "draft",
     "experimental": true,
     "date": "2020-12-28T16:55:11+11:00",
@@ -54,22 +54,11 @@
         }
     ],
     "description": "Used to code the producer or rule for creating the display string.",
-    "jurisdiction": [
-        {
-            "coding": [
-                {
-                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
-                    "code": "001",
-                    "display": "World"
-                }
-            ]
-        }
-    ],
     "immutable": true,
     "compose": {
         "include": [
             {
-                "system": "http://hl7.org/fhir/contributor-summary-source"
+                "system": "http://terminology.hl7.org/CodeSystem/contributor-summary-source"
             }
         ]
     }

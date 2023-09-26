@@ -1,11 +1,20 @@
 # Currently working on
-- Add Landing Page with generation-type selection
-- Add generator option to generate large batch of data
+- Terminology support for codes
+- Bundle Editor
+  - enable editing of uploaded bundles
+  - enable editing of resources contained in the bundle
+  - remove resources present in the bundle
+  - add resources based on profiles
+- Export Modal -> Individual and Bundle Export
 
 # Short-Term
+- Remove far Left Tab-Bar
+- Include csv export in export modal
+- Turn app into single view (-> editor) app
 - create bundle overview environment
 
 # Mid-Term
+- Analysis Overview for Resources
 - Resource csv import
 - Analysis Overview for Bundles -> Whipple
 - bundle high level overview
@@ -29,3 +38,4 @@
   - should enable editing of resources of multiple bundles
   - bundle affiliation color coded
 - profile-to-profile mapping
+- Create Data through generation

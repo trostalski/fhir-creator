@@ -55,6 +55,7 @@ export const useStore = create<Store>((set, get) => ({
     inputData?: PathItem[]
   ) => {
     const profileTree = await fetchProfileTree(profile, inputData);
+    console.log("profileTree", profileTree);
     set({ activeProfile: profile });
     set({ activeResourceType: getResourceTypeFromProfile(profile) });
     set({ activeProfileTree: profileTree });

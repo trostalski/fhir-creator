@@ -1,64 +1,52 @@
 {
-    "resourceType": "CodeSystem",
-    "id": "catalogType",
-    "meta": {
-        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
-        "profile": [
-            "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
-        ]
+  "resourceType": "CodeSystem",
+  "id": "catalogType",
+  "meta": { "lastUpdated": "2020-04-09T21:10:28.568+00:00" },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>This code system <code>http://terminology.hl7.org/CodeSystem/catalogType</code> defines the following codes:</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td style=\"white-space:nowrap\">medication<a name=\"catalogType-medication\"> </a></td><td>Medication Catalog</td><td>Medication Catalog.</td></tr><tr><td style=\"white-space:nowrap\">device<a name=\"catalogType-device\"> </a></td><td>Device Catalog</td><td>Device Catalog.</td></tr><tr><td style=\"white-space:nowrap\">protocol<a name=\"catalogType-protocol\"> </a></td><td>Protocol List</td><td>Protocol List.</td></tr></table></div>"
+  },
+  "url": "http://terminology.hl7.org/CodeSystem/catalogType",
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:oid:2.16.840.1.113883.4.642.1.1288"
+    }
+  ],
+  "version": "0.1.0",
+  "name": "CatalogType",
+  "title": "CatalogType",
+  "status": "draft",
+  "experimental": false,
+  "date": "2020-04-09T21:10:28+00:00",
+  "publisher": "HL7 (FHIR Project)",
+  "contact": [
+    {
+      "telecom": [
+        { "system": "url", "value": "http://hl7.org/fhir" },
+        { "system": "email", "value": "fhir@lists.hl7.org" }
+      ]
+    }
+  ],
+  "description": "The type of catalog.",
+  "caseSensitive": true,
+  "valueSet": "http://terminology.hl7.org/ValueSet/catalogType",
+  "content": "complete",
+  "concept": [
+    {
+      "code": "medication",
+      "display": "Medication Catalog",
+      "definition": "Medication Catalog."
     },
-    "text": {
-        "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>This case-sensitive code system <code>http://hl7.org/fhir/catalogType</code> defines the following codes:</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td style=\"white-space:nowrap\">medication<a name=\"catalogType-medication\"> </a></td><td>Medication Catalog</td><td>Medication Catalog.</td></tr><tr><td style=\"white-space:nowrap\">device<a name=\"catalogType-device\"> </a></td><td>Device Catalog</td><td>Device Catalog.</td></tr><tr><td style=\"white-space:nowrap\">protocol<a name=\"catalogType-protocol\"> </a></td><td>Protocol List</td><td>Protocol List.</td></tr></table></div>"
+    {
+      "code": "device",
+      "display": "Device Catalog",
+      "definition": "Device Catalog."
     },
-    "extension": [
-        {
-            "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
-            "valueCode": "sd"
-        }
-    ],
-    "url": "http://hl7.org/fhir/catalogType",
-    "identifier": [
-        {
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.4.2013"
-        }
-    ],
-    "version": "6.0.0-cibuild",
-    "name": "CatalogType",
-    "title": "Catalog Type",
-    "status": "draft",
-    "experimental": true,
-    "publisher": "HL7 International",
-    "description": "CatalogType",
-    "jurisdiction": [
-        {
-            "coding": [
-                {
-                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
-                    "code": "001",
-                    "display": "World"
-                }
-            ]
-        }
-    ],
-    "caseSensitive": true,
-    "content": "complete",
-    "concept": [
-        {
-            "code": "medication",
-            "display": "Medication Catalog",
-            "definition": "Medication Catalog."
-        },
-        {
-            "code": "device",
-            "display": "Device Catalog",
-            "definition": "Device Catalog."
-        },
-        {
-            "code": "protocol",
-            "display": "Protocol List",
-            "definition": "Protocol List."
-        }
-    ]
+    {
+      "code": "protocol",
+      "display": "Protocol List",
+      "definition": "Protocol List."
+    }
+  ]
 }

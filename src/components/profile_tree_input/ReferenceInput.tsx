@@ -9,6 +9,7 @@ import Select from "react-select";
 import { getPossibleReferenceIds } from "@/db/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
+import { reactSelectStyles } from "@/styles/reactSelectStyles";
 
 interface ReferenceInputProps {
   node: ProfileTreeNode;
@@ -105,7 +106,7 @@ export const ReferenceInput = (props: ReferenceInputProps) => {
           <CreatableSelect
             options={referenceOptions}
             onChange={(e) => handleOnChange(e, referenceNode)}
-            className="w-full"
+            styles={reactSelectStyles}
             placeholder={referenceNode.element.short}
           />
         </InputWrapper>
@@ -122,6 +123,9 @@ export const ReferenceInput = (props: ReferenceInputProps) => {
         >
           <Select
             options={bundleFolderOptions}
+            styles={{
+              ...reactSelectStyles,
+            }}
             onChange={(e) => handleRefContextOnChange(e)}
             placeholder={getRefContextPlaceholder()}
           />

@@ -10,7 +10,7 @@ export function TextInput(props: TextInputProps) {
   return (
     <div className="flex flex-col w-1/2 gap-2">
       <textarea
-        className="h-full w-full"
+        className="h-full w-full rounded-md resize-none border-gray-400"
         name="input"
         id=""
         placeholder={"Copy your text here"}

@@ -21,7 +21,7 @@ const ApiKeyList = (props: ApiKeyListProps) => {
     };
   });
 
-  if (!activeAPIKey && apiKeys) {
+  if (!activeAPIKey && apiKeys && apiKeys?.length > 0) {
     // maybe a bit dirty
     setActiveAPIKey(apiKeys[0].key);
   }
