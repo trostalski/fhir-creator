@@ -15,7 +15,11 @@ interface Store {
   activeProfileTree?: ProfileTree;
   activeResourceType?: string;
   activeProfile?: StructureDefinition;
+  activeAPIKey?: string;
   mode: Modes;
+  setActiveAPIKey: (apiKey: string) => void;
+  activeReferenceContext?: string;
+  setActiveReferenceContext: (bundleId: string) => void;
   setProfileTree: (
     profile: StructureDefinition,
     inputData?: PathItem[]
@@ -40,7 +44,12 @@ export const useStore = create<Store>((set, get) => ({
   activeProfileTree: undefined,
   activeResourceType: undefined,
   activeProfile: undefined,
+  activeReferenceContext: undefined,
   mode: Modes.CREATE,
+  activeAPIKey: undefined,
+  setActiveAPIKey: (apiKey: string) => {
+    set({ activeAPIKey: apiKey });
+  },
   setProfileTree: async (
     profile: StructureDefinition,
     inputData?: PathItem[]
@@ -72,6 +81,9 @@ export const useStore = create<Store>((set, get) => ({
       const branchIds = uniq(getBranchIds(profileTree));
       set({ branchIds: branchIds });
     }
+  },
+  setActiveReferenceContext: (bundleId: string) => {
+    set({ activeReferenceContext: bundleId });
   },
   setCheckedBranchIds: (checkedBranchIds: string[]) =>
     set({ checkedBranchIds: checkedBranchIds }),

@@ -9,6 +9,10 @@ export interface ResourcePathRepr {
   data: PathItem[];
 }
 
+export interface apiKey {
+  key:string
+}
+
 export interface BundleFolder {
   id: string;
   name?: string;
@@ -29,6 +33,7 @@ export class MySubClassedDexie extends Dexie {
   folderReferences!: Table<FolderReference>;
   // deprecated, not sure if can be deleted on dexie with ts
   bundles!: Table<Bundle>;
+  apiKey!: Table<apiKey>
 
   constructor() {
     super("fhir-creator-db");
@@ -38,6 +43,7 @@ export class MySubClassedDexie extends Dexie {
       bundleFolders: "id",
       profiles: "url",
       bundles: "id",
+      apiKey: "key"
     });
     this.on("populate", () => {
       db.bundleFolders.add({

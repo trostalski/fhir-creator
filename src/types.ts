@@ -1,3 +1,4 @@
+import { Colors } from "react-select";
 import { ProfileTreeNode } from "./utils/buildTree";
 import { resourceTypeList } from "./utils/constants";
 
@@ -132,6 +133,12 @@ export interface CodingChildren {
   userSelectedNode: ProfileTreeNode;
 }
 
+export interface ReferenceChildren{
+  referenceNode: ProfileTreeNode,
+  typeNode: ProfileTreeNode,
+  displayNode: ProfileTreeNode
+}
+
 export interface CodedTerm {
   term: string;
   code: string;
@@ -139,4 +146,59 @@ export interface CodedTerm {
 
 export interface FTSResponse {
   coded_terms: CodedTerm[];
+}
+
+export interface TextDisplayProps {
+  text: string;
+  outline?: Outline;
+  setText: (text: string) => void;
+  setOutline: (outline:Outline)=> void
+  activeResourceType?: OptionType
+  colors: ColorStore;
+  selectedEntity?: OutlineItem
+}
+
+export interface TextInputProps {
+  text: string;
+  setText: (text: string) => void;
+  setOutline: (outline: Outline) => void;
+}
+
+export interface ValueState {
+  start: number;
+  end: number;
+  tag: string;
+}
+
+export interface OutlineItem {
+  item: string;
+  matches?: [number, number][];
+}
+
+export interface Outline {
+  [key: string]: OutlineItem[];
+}
+
+export interface OldOutline {
+  [key: string]: string[];
+}
+
+
+export interface OutlineArrayItem extends OutlineItem{
+  resourceType: string
+}
+
+export interface ColorStore {
+  [key:string]: string
+}
+
+export interface Color{
+  resourceType: string;
+  color: string
+}
+
+export interface InputDict{
+  resource_type: string,
+  medical_term: string,
+  context: string
 }

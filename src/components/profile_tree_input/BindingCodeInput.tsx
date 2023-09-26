@@ -7,6 +7,7 @@ import Select from "react-select";
 
 interface BindingCodeInputProps {
   node: ProfileTreeNode;
+  // insert state props
 }
 
 const BindingCodeInput = (props: BindingCodeInputProps) => {
