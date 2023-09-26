@@ -3,6 +3,7 @@ import { useStore } from "@/stores/useStore";
 import { Modes } from "@/utils/constants";
 import { useLiveQuery } from "dexie-react-hooks";
 import React, { useState } from "react";
+import ProfileContextMenu from "./contextMenu/ProfileContextMenu";
 
 interface ProfilesListProps {}
 
