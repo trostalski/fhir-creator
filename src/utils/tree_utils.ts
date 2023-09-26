@@ -1,4 +1,4 @@
-import { CodingChildren } from "@/types";
+import { CodingChildren, ReferenceChildren } from "@/types";
 import { ProfileTree, ProfileTreeNode } from "./buildTree";
 import { rootName } from "./constants";
 import { getPathLength } from "./path_utils";
@@ -43,6 +43,26 @@ export function getCodingChildren(
     versionNode,
     userSelectedNode,
   };
+}
+
+export function getReferenceChildren(
+  profileTree: ProfileTree,
+  node: ProfileTreeNode
+): ReferenceChildren {
+  const children = getAllChidlren(profileTree, node);
+  let referenceNode: ProfileTreeNode;
+  let typeNode: ProfileTreeNode;
+  let displayNode: ProfileTreeNode;
+  if(node.multiTypeType){
+    referenceNode = children.find((child) => child.baseId.endsWith("Reference.reference"))!
+    typeNode = children.find((child)=> child.baseId.endsWith("Reference.type"))!
+    displayNode = children.find((child) => child.baseId.endsWith("Reference.display"))!
+  } else {
+    referenceNode = children.find((child) => child.baseId.endsWith(".reference"))!
+    typeNode = children.find((child)=> child.baseId.endsWith(".type"))!
+    displayNode = children.find((child) => child.baseId.endsWith(".display"))!
+  }
+  return {referenceNode, typeNode, displayNode}
 }
 
 export function extractDirectChildrenPaths(
@@ -312,4 +332,14 @@ export function nodeIsType(node: ProfileTreeNode, type: string) {
   } else {
     return node.element.type[0].code === type;
   }
+}
+
+export function shouldRenderReferenceInput(node: ProfileTreeNode){
+  let should = false;
+  if(node.multiTypeType && node.multiTypeType === "Reference"){
+    should = true
+  } else if(node.element.type && node.element.type[0].code === "Reference"){
+    should = true
+  }
+  return should
 }

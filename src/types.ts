@@ -132,6 +132,12 @@ export interface CodingChildren {
   userSelectedNode: ProfileTreeNode;
 }
 
+export interface ReferenceChildren{
+  referenceNode: ProfileTreeNode,
+  typeNode: ProfileTreeNode,
+  displayNode: ProfileTreeNode
+}
+
 export interface CodedTerm {
   term: string;
   code: string;

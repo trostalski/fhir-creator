@@ -14,6 +14,7 @@ import {
   getExpansionBgColour,
   getLastDescendant,
   insertAfterNode,
+  shouldRenderReferenceInput,
 } from "@/utils/tree_utils";
 import React from "react";
 import {
@@ -30,6 +31,7 @@ import { GUIConstraintResolver } from "@/utils/constraint_utils";
 import { ConstraintComponent } from "./ConstraintComponent";
 import CodingInput from "./CodingInput";
 import { selectInputStyle, textInputStyle } from "@/styles/inputStyles";
+import { ReferenceInput } from "./ReferenceInput";
 
 interface IntermediateParentProps {
   node: ProfileTreeNode;
@@ -240,6 +242,11 @@ const IntermediateParent = (props: IntermediateParentProps) => {
               <CodingInput
                 key={props.node.dataPath}
                 codingChildren={getCodingChildren(profileTree!, props.node)}
+                pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
+              />
+            ) : shouldRenderReferenceInput(props.node) ? (
+              <ReferenceInput
+                node={props.node}
                 pathsWithInvalidCardinality={props.pathsWithInvalidCardinality}
               />
             ) : (
