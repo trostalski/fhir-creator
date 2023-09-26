@@ -5,7 +5,6 @@ import ImportMenu from "./ImportMenu";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/db";
-import { deleteResources, deleteBundles, deleteProfiles } from "@/db/utils";
 import StorageList from "./StorageList";
 import { MdAdd } from "react-icons/md";
 import { useProfileUpload } from "@/hooks/useProfileUpload";
