@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "data-absent-reason",
     "meta": {
-        "lastUpdated": "2023-09-03T04:49:58.148+11:00",
+        "lastUpdated": "2022-05-28T12:47:40.239+10:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      \n      <ul> \n        \n        <li> Include all codes defined in \n          \n          <a href=\"codesystem-data-absent-reason.html\">\n            \n            <code> http://terminology.hl7.org/CodeSystem/data-absent-reason</code> \n          \n          </a> \n        \n        </li> \n      \n      </ul> \n    \n    </div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-data-absent-reason.html\"><code>http://terminology.hl7.org/CodeSystem/data-absent-reason</code></a></li></ul></div>"
     },
     "extension": [
         {
@@ -36,12 +36,12 @@
             "value": "urn:oid:2.16.840.1.113883.4.642.3.5"
         }
     ],
-    "version": "6.0.0-cibuild",
+    "version": "4.3.0",
     "name": "DataAbsentReason",
-    "title": "Data Absent Reason",
+    "title": "DataAbsentReason",
     "status": "active",
     "experimental": false,
-    "date": "2022-12-13T10:04:31+11:00",
+    "date": "2022-05-28T12:47:40+10:00",
     "publisher": "HL7 (FHIR Project)",
     "contact": [
         {
@@ -58,17 +58,6 @@
         }
     ],
     "description": "Used to specify why the normally expected content of the data element is missing.",
-    "jurisdiction": [
-        {
-            "coding": [
-                {
-                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
-                    "code": "001",
-                    "display": "World"
-                }
-            ]
-        }
-    ],
     "immutable": true,
     "compose": {
         "include": [

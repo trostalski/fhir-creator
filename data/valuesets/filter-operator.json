@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "filter-operator",
     "meta": {
-        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
+        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-filter-operator.html\"><code>http://hl7.org/fhir/filter-operator</code></a></li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <h2>FilterOperator</h2>\n      <div>\n        <p>The kind of operation to perform as a part of a property based filter.</p>\n\n      </div>\n      <p>This value set includes codes from the following code systems:</p>\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-filter-operator.html\">\n            <code>http://hl7.org/fhir/filter-operator</code>\n          </a>\n        </li>\n      </ul>\n    </div>"
     },
     "extension": [
         {
@@ -34,24 +34,14 @@
         {
             "system": "urn:ietf:rfc:3986",
             "value": "urn:oid:2.16.840.1.113883.4.642.3.478"
-        },
-        {
-            "use": "old",
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.471"
-        },
-        {
-            "use": "old",
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.2.280"
         }
     ],
-    "version": "6.0.0-cibuild",
+    "version": "4.3.0",
     "name": "FilterOperator",
-    "title": "Filter Operator",
+    "title": "FilterOperator",
     "status": "active",
     "experimental": false,
-    "date": "2020-12-28T16:55:11+11:00",
+    "date": "2021-01-17T07:06:13+11:00",
     "publisher": "HL7 (FHIR Project)",
     "contact": [
         {
@@ -68,17 +58,6 @@
         }
     ],
     "description": "The kind of operation to perform as a part of a property based filter.",
-    "jurisdiction": [
-        {
-            "coding": [
-                {
-                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
-                    "code": "001",
-                    "display": "World"
-                }
-            ]
-        }
-    ],
     "immutable": true,
     "compose": {
         "include": [

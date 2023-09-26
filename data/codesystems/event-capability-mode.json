@@ -1,92 +1,74 @@
 {
-    "resourceType": "CodeSystem",
-    "id": "event-capability-mode",
-    "meta": {
-        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
-        "profile": [
-            "http://hl7.org/fhir/StructureDefinition/shareablecodesystem"
-        ]
+  "resourceType": "CodeSystem",
+  "id": "event-capability-mode",
+  "meta": {
+    "lastUpdated": "2022-05-28T13:47:40.239+11:00",
+    "profile": ["http://hl7.org/fhir/StructureDefinition/shareablecodesystem"]
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      \n      <h2>EventCapabilityMode</h2>\n      \n      <div>\n        \n        <p>The mode of a message capability statement.</p>\n\n      \n      </div>\n      \n      <p>This code system http://hl7.org/fhir/event-capability-mode defines the following codes:</p>\n      \n      <table class=\"codes\">\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">\n            \n            <b>Code</b>\n          \n          </td>\n          \n          <td>\n            \n            <b>Display</b>\n          \n          </td>\n          \n          <td>\n            \n            <b>Definition</b>\n          \n          </td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">sender\n            \n            <a name=\"event-capability-mode-sender\"> </a>\n          \n          </td>\n          \n          <td>Sender</td>\n          \n          <td>The application sends requests and receives responses.</td>\n        \n        </tr>\n        \n        <tr>\n          \n          <td style=\"white-space:nowrap\">receiver\n            \n            <a name=\"event-capability-mode-receiver\"> </a>\n          \n          </td>\n          \n          <td>Receiver</td>\n          \n          <td>The application receives requests and sends responses.</td>\n        \n        </tr>\n      \n      </table>\n    \n    </div>"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
+      "valueCode": "fhir"
     },
-    "text": {
-        "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>This case-sensitive code system <code>http://hl7.org/fhir/event-capability-mode</code> defines the following codes:</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td style=\"white-space:nowrap\">sender<a name=\"event-capability-mode-sender\"> </a></td><td>Sender</td><td>The application sends requests and receives responses.</td></tr><tr><td style=\"white-space:nowrap\">receiver<a name=\"event-capability-mode-receiver\"> </a></td><td>Receiver</td><td>The application receives requests and sends responses.</td></tr></table></div>"
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
+      "valueCode": "normative"
     },
-    "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version",
+      "valueCode": "4.0.0"
+    },
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
+      "valueInteger": 5
+    }
+  ],
+  "url": "http://hl7.org/fhir/event-capability-mode",
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:oid:2.16.840.1.113883.4.642.4.183"
+    }
+  ],
+  "version": "4.3.0",
+  "name": "EventCapabilityMode",
+  "title": "EventCapabilityMode",
+  "status": "active",
+  "experimental": false,
+  "date": "2021-01-17T07:06:13+11:00",
+  "publisher": "HL7 (FHIR Project)",
+  "contact": [
+    {
+      "telecom": [
         {
-            "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
-            "valueCode": "fhir"
+          "system": "url",
+          "value": "http://hl7.org/fhir"
         },
         {
-            "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
-            "valueCode": "normative"
-        },
-        {
-            "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version",
-            "valueCode": "4.0.0"
-        },
-        {
-            "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-            "valueInteger": 5
+          "system": "email",
+          "value": "fhir@lists.hl7.org"
         }
-    ],
-    "url": "http://hl7.org/fhir/event-capability-mode",
-    "identifier": [
-        {
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.4.183"
-        },
-        {
-            "use": "old",
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.1.173"
-        }
-    ],
-    "version": "6.0.0-cibuild",
-    "name": "EventCapabilityMode",
-    "title": "Event Capability Mode",
-    "status": "active",
-    "experimental": false,
-    "date": "2021-01-05T10:01:24+11:00",
-    "publisher": "HL7 (FHIR Project)",
-    "contact": [
-        {
-            "telecom": [
-                {
-                    "system": "url",
-                    "value": "http://hl7.org/fhir"
-                },
-                {
-                    "system": "email",
-                    "value": "fhir@lists.hl7.org"
-                }
-            ]
-        }
-    ],
-    "description": "The mode of a message capability statement.",
-    "jurisdiction": [
-        {
-            "coding": [
-                {
-                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
-                    "code": "001",
-                    "display": "World"
-                }
-            ]
-        }
-    ],
-    "caseSensitive": true,
-    "valueSet": "http://hl7.org/fhir/ValueSet/event-capability-mode",
-    "content": "complete",
-    "concept": [
-        {
-            "code": "sender",
-            "display": "Sender",
-            "definition": "The application sends requests and receives responses."
-        },
-        {
-            "code": "receiver",
-            "display": "Receiver",
-            "definition": "The application receives requests and sends responses."
-        }
-    ]
+      ]
+    }
+  ],
+  "description": "The mode of a message capability statement.",
+  "caseSensitive": true,
+  "valueSet": "http://hl7.org/fhir/ValueSet/event-capability-mode",
+  "content": "complete",
+  "concept": [
+    {
+      "code": "sender",
+      "display": "Sender",
+      "definition": "The application sends requests and receives responses."
+    },
+    {
+      "code": "receiver",
+      "display": "Receiver",
+      "definition": "The application receives requests and sends responses."
+    }
+  ]
 }

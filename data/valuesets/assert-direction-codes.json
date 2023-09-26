@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "assert-direction-codes",
     "meta": {
-        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
+        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-assert-direction-codes.html\"><code>http://hl7.org/fhir/assert-direction-codes</code></a></li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <h2>AssertionDirectionType</h2>\n      <div>\n        <p>The type of direction to use for assertion.</p>\n\n      </div>\n      <p>This value set includes codes from the following code systems:</p>\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-assert-direction-codes.html\">\n            <code>http://hl7.org/fhir/assert-direction-codes</code>\n          </a>\n        </li>\n      </ul>\n    </div>"
     },
     "extension": [
         {
@@ -22,7 +22,7 @@
         },
         {
             "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
-            "valueInteger": 4
+            "valueInteger": 2
         }
     ],
     "url": "http://hl7.org/fhir/ValueSet/assert-direction-codes",
@@ -30,24 +30,14 @@
         {
             "system": "urn:ietf:rfc:3986",
             "value": "urn:oid:2.16.840.1.113883.4.642.3.706"
-        },
-        {
-            "use": "old",
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.694"
-        },
-        {
-            "use": "old",
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.2.359"
         }
     ],
-    "version": "6.0.0-cibuild",
+    "version": "4.3.0",
     "name": "AssertionDirectionType",
-    "title": "Assertion Direction Type",
+    "title": "AssertionDirectionType",
     "status": "draft",
     "experimental": false,
-    "date": "2020-12-28T16:55:11+11:00",
+    "date": "2021-01-17T07:06:13+11:00",
     "publisher": "HL7 (FHIR Project)",
     "contact": [
         {
@@ -64,17 +54,6 @@
         }
     ],
     "description": "The type of direction to use for assertion.",
-    "jurisdiction": [
-        {
-            "coding": [
-                {
-                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
-                    "code": "001",
-                    "display": "World"
-                }
-            ]
-        }
-    ],
     "immutable": true,
     "compose": {
         "include": [

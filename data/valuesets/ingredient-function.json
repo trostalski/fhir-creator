@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "ingredient-function",
     "meta": {
-        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
+        "lastUpdated": "2022-05-28T13:47:40.239+11:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"codesystem-ingredient-function.html\"><code>http://hl7.org/fhir/ingredient-function</code></a></li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <ul>\n        <li>Include all codes defined in \n          <a href=\"codesystem-ingredient-function.html\">\n            <code>http://hl7.org/fhir/ingredient-function</code>\n          </a>\n        </li>\n      </ul>\n    </div>"
     },
     "extension": [
         {
@@ -29,12 +29,12 @@
     "identifier": [
         {
             "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.3.3245"
+            "value": "urn:oid:2.16.840.1.113883.4.642.3.1596"
         }
     ],
-    "version": "6.0.0-cibuild",
+    "version": "4.3.0",
     "name": "IngredientFunction",
-    "title": "Ingredient Function",
+    "title": "IngredientFunction",
     "status": "draft",
     "experimental": true,
     "date": "2020-12-28T16:55:11+11:00",
@@ -54,17 +54,6 @@
         }
     ],
     "description": "A classification of the ingredient identifying its precise purpose(s) in the drug product (beyond e.g. active/inactive).",
-    "jurisdiction": [
-        {
-            "coding": [
-                {
-                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
-                    "code": "001",
-                    "display": "World"
-                }
-            ]
-        }
-    ],
     "immutable": true,
     "compose": {
         "include": [

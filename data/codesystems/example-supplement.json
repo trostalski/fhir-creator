@@ -1,81 +1,73 @@
 {
-    "resourceType": "CodeSystem",
-    "id": "example-supplement",
-    "meta": {
-        "lastUpdated": "2023-09-02T17:49:58.148+00:00"
+  "resourceType": "CodeSystem",
+  "id": "example-supplement",
+  "meta": {
+    "lastUpdated": "2022-05-28T12:47:40.239+10:00"
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A supplement pack for <code>http://hl7.org/fhir/CodeSystem/example</code> that defines the administrative property 'legacy' for whether the test is currently performed </p>\n      <table class=\"grid\">\n        <tr>\n          <td>\n            <b>Code</b>\n          </td>\n          <td>\n            <b>Legacy</b>\n          </td>\n        </tr>\n        <tr>\n          <td>chol-mmol</td>\n          <td>false</td>\n        </tr>\n        <tr>\n          <td>chol-mass</td>\n          <td>true</td>\n        </tr>\n        <tr>\n          <td>chol</td>\n          <td>true</td>\n        </tr>\n      </table>\n    </div>"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
+      "valueCode": "fhir"
+    }
+  ],
+  "url": "http://hl7.org/fhir/CodeSystem/example-supplement",
+  "version": "4.3.0",
+  "name": "CholCodeLegacyStatus",
+  "status": "draft",
+  "experimental": true,
+  "date": "2016-01-28",
+  "publisher": "ACME Co",
+  "contact": [
+    {
+      "name": "FHIR project team",
+      "telecom": [
+        {
+          "system": "url",
+          "value": "http://hl7.org/fhir"
+        }
+      ]
+    }
+  ],
+  "content": "supplement",
+  "supplements": "http://hl7.org/fhir/CodeSystem/example",
+  "property": [
+    {
+      "code": "legacy",
+      "description": "hether the test is currently performed",
+      "type": "boolean"
+    }
+  ],
+  "concept": [
+    {
+      "code": "chol-mmol",
+      "property": [
+        {
+          "code": "legacy",
+          "valueBoolean": false
+        }
+      ]
     },
-    "text": {
-        "status": "additional",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      \n      \n      \n      <p>A supplement pack for \n        \n        \n        <code>http://hl7.org/fhir/CodeSystem/example</code> that defines the administrative property 'legacy' for whether the test is currently performed \n      \n      \n      </p>\n      \n      \n      \n      <table class=\"grid\">\n        \n        \n        \n        <tr>\n          \n          \n          \n          <td>\n            \n            \n            \n            <b>Code</b>\n          \n          \n          \n          </td>\n          \n          \n          \n          <td>\n            \n            \n            \n            <b>Legacy</b>\n          \n          \n          \n          </td>\n        \n        \n        \n        </tr>\n        \n        \n        \n        <tr>\n          \n          \n          \n          <td>chol-mmol</td>\n          \n          \n          \n          <td>false</td>\n        \n        \n        \n        </tr>\n        \n        \n        \n        <tr>\n          \n          \n          \n          <td>chol-mass</td>\n          \n          \n          \n          <td>true</td>\n        \n        \n        \n        </tr>\n        \n        \n        \n        <tr>\n          \n          \n          \n          <td>chol</td>\n          \n          \n          \n          <td>true</td>\n        \n        \n        \n        </tr>\n      \n      \n      \n      </table>\n    \n    \n    \n    </div>"
+    {
+      "code": "chol-mass",
+      "property": [
+        {
+          "code": "legacy",
+          "valueBoolean": true
+        }
+      ]
     },
-    "extension": [
+    {
+      "code": "chol",
+      "property": [
         {
-            "url": "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
-            "valueCode": "fhir"
+          "code": "legacy",
+          "valueBoolean": true
         }
-    ],
-    "url": "http://hl7.org/fhir/CodeSystem/example-supplement",
-    "identifier": [
-        {
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:oid:2.16.840.1.113883.4.642.4.1820"
-        }
-    ],
-    "version": "6.0.0-cibuild",
-    "name": "CholCodeLegacyStatus",
-    "title": "Cholesterol Code Legacy Status",
-    "status": "draft",
-    "experimental": true,
-    "date": "2016-01-28",
-    "publisher": "ACME Co",
-    "contact": [
-        {
-            "name": "FHIR project team",
-            "telecom": [
-                {
-                    "system": "url",
-                    "value": "http://hl7.org/fhir"
-                }
-            ]
-        }
-    ],
-    "description": "CholCodeLegacyStatus",
-    "content": "supplement",
-    "supplements": "http://hl7.org/fhir/CodeSystem/example",
-    "property": [
-        {
-            "code": "legacy",
-            "description": "hether the test is currently performed",
-            "type": "boolean"
-        }
-    ],
-    "concept": [
-        {
-            "code": "chol-mmol",
-            "property": [
-                {
-                    "code": "legacy",
-                    "valueBoolean": false
-                }
-            ]
-        },
-        {
-            "code": "chol-mass",
-            "property": [
-                {
-                    "code": "legacy",
-                    "valueBoolean": true
-                }
-            ]
-        },
-        {
-            "code": "chol",
-            "property": [
-                {
-                    "code": "legacy",
-                    "valueBoolean": true
-                }
-            ]
-        }
-    ]
+      ]
+    }
+  ]
 }

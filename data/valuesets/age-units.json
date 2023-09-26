@@ -2,14 +2,14 @@
     "resourceType": "ValueSet",
     "id": "age-units",
     "meta": {
-        "lastUpdated": "2023-09-02T17:49:58.148+00:00",
+        "lastUpdated": "2022-05-28T12:47:40.239+10:00",
         "profile": [
             "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
         ]
     },
     "text": {
         "status": "generated",
-        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include these codes as defined in <a href=\"http://unitsofmeasure.org\"><code>http://unitsofmeasure.org</code></a><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td></tr><tr><td>min</td><td>minutes</td></tr><tr><td>h</td><td>hours</td></tr><tr><td>d</td><td>days</td></tr><tr><td>wk</td><td>weeks</td></tr><tr><td>mo</td><td>months</td></tr><tr><td>a</td><td>years</td></tr></table></li></ul></div>"
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>\n        This value set includes all common UCUM codes used for Age - that it is, all commonly used units which have the same canonical unit as &quot;a&quot; (year)\n      </p>\n      <p> \n        The UCUM codes, UCUM table (regardless of format), and UCUM Specification are copyright © 1999-2009, Regenstrief Institute, Inc. and the Unified Codes for Units of Measures (UCUM) Organization. All rights reserved.\n     </p>\n    \n    </div>"
     },
     "extension": [
         {
@@ -32,12 +32,12 @@
             "value": "urn:oid:2.16.840.1.113883.4.642.3.19"
         }
     ],
-    "version": "6.0.0-cibuild",
+    "version": "4.3.0",
     "name": "CommonUCUMCodesForAge",
     "title": "Common UCUM Codes for Age",
     "status": "draft",
-    "experimental": true,
-    "date": "2023-09-02T17:49:58+00:00",
+    "experimental": false,
+    "date": "2022-05-28T12:47:40+10:00",
     "publisher": "FHIR Project team",
     "contact": [
         {
@@ -49,18 +49,7 @@
             ]
         }
     ],
-    "description": "Unified Code for Units of Measure (UCUM). This value set includes all common UCUM codes used for Age - that it is, all commonly used units which have the same canonical unit as 'a' (year)",
-    "jurisdiction": [
-        {
-            "coding": [
-                {
-                    "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
-                    "code": "001",
-                    "display": "World"
-                }
-            ]
-        }
-    ],
+    "description": "Unified Code for Units of Measure (UCUM). This value set includes all UCUM codes",
     "copyright": "The UCUM codes, UCUM table (regardless of format), and UCUM Specification are copyright © 1999-2009, Regenstrief Institute, Inc. and the Unified Codes for Units of Measures (UCUM) Organization. All rights reserved.",
     "compose": {
         "include": [
