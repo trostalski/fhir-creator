@@ -133,10 +133,10 @@ export interface CodingChildren {
   userSelectedNode: ProfileTreeNode;
 }
 
-export interface ReferenceChildren{
-  referenceNode: ProfileTreeNode,
-  typeNode: ProfileTreeNode,
-  displayNode: ProfileTreeNode
+export interface ReferenceChildren {
+  referenceNode: ProfileTreeNode;
+  typeNode: ProfileTreeNode;
+  displayNode: ProfileTreeNode;
 }
 
 export interface CodedTerm {
@@ -152,10 +152,34 @@ export interface TextDisplayProps {
   text: string;
   outline?: Outline;
   setText: (text: string) => void;
-  setOutline: (outline:Outline)=> void
-  activeResourceType?: OptionType
+  setOutline: (outline: Outline) => void;
+  activeResourceType?: OptionType;
   colors: ColorStore;
-  selectedEntity?: OutlineItem
+  selectedEntity?: OutlineItem;
+}
+
+// enum with three states: "askedFor", "inferred", "notAllocated"
+export enum SectionState {
+  askedFor,
+  inferred,
+  notAllocated,
+}
+
+export interface Section {
+  id: number;
+  heading: string;
+  text: string;
+  state: SectionState;
+  children: React.ReactNode;
+}
+
+export interface SectionComponentProps {
+  section: Section;
+  children: React.ReactNode;
+}
+
+export interface SectionTextProps {
+  children: React.ReactNode;
 }
 
 export interface TextInputProps {
@@ -183,22 +207,21 @@ export interface OldOutline {
   [key: string]: string[];
 }
 
-
-export interface OutlineArrayItem extends OutlineItem{
-  resourceType: string
+export interface OutlineArrayItem extends OutlineItem {
+  resourceType: string;
 }
 
 export interface ColorStore {
-  [key:string]: string
+  [key: string]: string;
 }
 
-export interface Color{
+export interface Color {
   resourceType: string;
-  color: string
+  color: string;
 }
 
-export interface InputDict{
-  resource_type: string,
-  medical_term: string,
-  context: string
+export interface InputDict {
+  resource_type: string;
+  medical_term: string;
+  context: string;
 }

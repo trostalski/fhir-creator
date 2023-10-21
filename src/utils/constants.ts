@@ -20,6 +20,10 @@ export const awsUrl = isProd()
   ? process.env.NEXT_PUBLIC_AWS_URL
   : "http://localhost:8000";
 
+export const fhirChainUrl = isProd()
+  ? process.env.NEXT_PUBLIC_FHIR_CHAIN_URL
+  : "http://localhost:8000";
+
 export const rootName = "root";
 export const pathDelimiter = ".";
 export const multiTypeString = "[x]";
@@ -379,7 +383,7 @@ export const defaultFocusResources: OptionType[] = [
   { value: "Medication", label: "Medication" },
   { value: "Procedure", label: "Procedure" },
   { value: "Observation", label: "Observation" },
-]
+];
 
 export const resourceOptions: OptionType[] = [
   { value: "Account", label: "Account" },
@@ -584,6 +588,6 @@ export const defaultOrderedConstraintResults: OrderedConstraintResults = {
   guidelines: [],
 };
 
-export const colorSeed = "ello Darling, Do you know, where the Taj Mahal is?"
+export const colorSeed = "ello Darling, Do you know, where the Taj Mahal is?";
 export const bundlePoolId = "Single_Resources";
 export const bundlePoolName = "Single Resources";
