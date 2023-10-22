@@ -18,6 +18,11 @@ export default async function handler(
     },
     body: JSON.stringify({ text: text, api_key: apiKey }),
   });
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
   const data = await response.json();
-  console.log(data);
+  res.send(data);
 }
