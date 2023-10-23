@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Section, SectionState, TextInputProps } from "@/types";
 import { toast } from "react-toastify";
 import { split } from "lodash";
-import segmentedText from "@/../data/temp/segmentedText.json";
 
 export function TextInput(props: TextInputProps) {
   const [tempText, setTempText] = useState("");

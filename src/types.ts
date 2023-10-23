@@ -165,6 +165,24 @@ export enum SectionState {
   notAllocated,
 }
 
+export enum StructurerModes {
+  inputText,
+  labelText,
+  segmentText,
+}
+
+export interface StructurerProps {
+  text: string;
+  setText: (text: string) => void;
+  setMode: (mode: StructurerModes) => void;
+}
+
+export interface StructurerTextInputProps extends StructurerProps {}
+
+export interface StructurerLabelerProps extends StructurerProps {}
+
+export interface StructurerSegmenterProps extends StructurerProps {}
+
 export interface Section {
   id: number;
   heading: string;

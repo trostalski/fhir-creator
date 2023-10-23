@@ -71,6 +71,7 @@ const Annotator = () => {
       const chat = new ChatOpenAI({
         temperature: 0,
         openAIApiKey: activeAPIKey,
+        // modelName: "gpt-4",
       });
 
       setChains({

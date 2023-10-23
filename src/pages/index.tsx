@@ -15,8 +15,13 @@ const Home = () => {
           </button>
         </Link>
         <Link href={"/annotator"}>
-          <button className="bg-green-500 text-white text-lg font-semibold py-4 px-8 rounded-lg w-64 hover:bg-green-700">
+          <button className="bg-green-500 text-white text-lg font-semibold py-4 px-8 rounded-lg mb-4 w-64 hover:bg-green-700">
             Create Bundle from Text
+          </button>
+        </Link>
+        <Link href={"/structurer"}>
+          <button className="bg-red-500 text-white text-lg font-semibold py-4 px-8 rounded-lg w-64 hover:bg-red-700">
+            Structure Text Data
           </button>
         </Link>
       </div>

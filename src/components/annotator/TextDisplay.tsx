@@ -109,66 +109,66 @@ export function TextDisplay(props: TextDisplayProps) {
   }
 
   return (
-    <div className="overflow-y-auto h-3/4">
-      <button
-        className="bg-blue-500 text-white text-lg font-semibold py-1 rounded-lg hover:bg-blue-700"
-        onClick={async () => {
-          await segmentText();
-        }}
-      >
-        Segment Text
-      </button>
-      <button
-        className="bg-blue-500 text-white text-lg font-semibold py-1 rounded-lg hover:bg-blue-700"
-        onClick={async () => {
-          splitText();
-        }}
-      >
-        Split Text
-      </button>
-      {sections &&
-        sections.map((section: any) => (
-          <SectionComponent key={section.id} section={section}>
-            <SectionText>
-              <TextAnnotator
-                colors={props.colors}
-                content={section.text}
-                onChange={(value) => {}}
-                value={[]}
-                setOutline={() => {}}
-                selectedEntity={props.selectedEntity}
-                outline={props.outline}
-              />
-            </SectionText>
-          </SectionComponent>
-        ))}
-    </div>
-
     // <div className="overflow-y-auto h-3/4">
-    //   <TextAnnotator
-    //     selectedEntity={props.selectedEntity}
-    //     outline={props.outline}
-    //     setOutline={props.setOutline}
-    //     colors={props.colors}
-    //     content={props.text}
-    //     onChange={(value) => {
-    //       if (!props.activeResourceType) {
-    //         toastError("Please select a Resource Type!");
-    //         return;
-    //       }
-    //       if (Array.isArray(value)) {
-    //         const entity = transformValueToEntity(value, props.text);
-    //         props.setOutline({
-    //           ...props.outline,
-    //           [props.activeResourceType!.value]: [
-    //             ...props.outline![props.activeResourceType!.value],
-    //             entity,
-    //           ],
-    //         });
-    //       }
+    //   <button
+    //     className="bg-blue-500 text-white text-lg font-semibold py-1 rounded-lg hover:bg-blue-700"
+    //     onClick={async () => {
+    //       await segmentText();
     //     }}
-    //     value={annotatorMatches}
-    //   />
+    //   >
+    //     Segment Text
+    //   </button>
+    //   <button
+    //     className="bg-blue-500 text-white text-lg font-semibold py-1 rounded-lg hover:bg-blue-700"
+    //     onClick={async () => {
+    //       splitText();
+    //     }}
+    //   >
+    //     Split Text
+    //   </button>
+    //   {sections &&
+    //     sections.map((section: any) => (
+    //       <SectionComponent key={section.id} section={section}>
+    //         <SectionText>
+    //           <TextAnnotator
+    //             colors={props.colors}
+    //             content={section.text}
+    //             onChange={(value) => {}}
+    //             value={[]}
+    //             setOutline={() => {}}
+    //             selectedEntity={props.selectedEntity}
+    //             outline={props.outline}
+    //           />
+    //         </SectionText>
+    //       </SectionComponent>
+    //     ))}
     // </div>
+
+    <div className="overflow-y-auto h-3/4">
+      <TextAnnotator
+        selectedEntity={props.selectedEntity}
+        outline={props.outline}
+        setOutline={props.setOutline}
+        colors={props.colors}
+        content={props.text}
+        onChange={(value) => {
+          if (!props.activeResourceType) {
+            toastError("Please select a Resource Type!");
+            return;
+          }
+          if (Array.isArray(value)) {
+            const entity = transformValueToEntity(value, props.text);
+            props.setOutline({
+              ...props.outline,
+              [props.activeResourceType!.value]: [
+                ...props.outline![props.activeResourceType!.value],
+                entity,
+              ],
+            });
+          }
+        }}
+        value={annotatorMatches}
+      />
+    </div>
   );
 }
