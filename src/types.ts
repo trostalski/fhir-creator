@@ -148,6 +148,19 @@ export interface FTSResponse {
   coded_terms: CodedTerm[];
 }
 
+export interface IndexSection {
+  key: string;
+  startIndex: number;
+  endIndex: number;
+  askedFor: boolean;
+  text?: string;
+}
+
+export interface LMMSections {
+  sectionsAskedFor: Record<string, string[]>;
+  sectionsInferred: Record<string, string[]>;
+}
+
 export interface TextDisplayProps {
   text: string;
   outline?: Outline;
@@ -175,13 +188,84 @@ export interface StructurerProps {
   text: string;
   setText: (text: string) => void;
   setMode: (mode: StructurerModes) => void;
+  llmResponse?: string;
+  setLlmResponse: (llmResponse: string) => void;
 }
+
+export interface StructurerTextProps extends StructurerProps {
+  mode: StructurerModes;
+}
+
+export interface structureTextWithTemplateAndInferResponse {
+  sections_asked_for: {
+    [key: string]: string[];
+  };
+  sections_inferred: {
+    [key: string]: string[];
+  };
+  text: string;
+}
+
+export interface CategorySelectorProps {
+  selectedCategories: string[];
+  setSelectedCategories: (categories: string[]) => void;
+  onSelectCategory: (category: string) => void;
+  placeholder: string;
+  InputComponent: React.FC<InputTextProps | InputSelectionProps>;
+  fetchCategories?: () => Promise<string[]>;
+  DisplayComponent: React.FC<
+    DisplayCategoriesProps | DisplayCategoriesLabelerProps
+  >;
+  colors?: ColorStore;
+  focusedCategory?: string;
+  setFocusedCategory?: (category: string) => void;
+  getColor?: () => string;
+  setColors?: (colors: ColorStore) => void;
+}
+
+export interface DisplayCategoriesProps {
+  selectedCategories: string[];
+  setSelectedCategories: (categories: string[]) => void;
+}
+
+export interface DisplayCategoriesLabelerProps extends DisplayCategoriesProps {
+  colors: ColorStore;
+  setColors: (colors: ColorStore) => void;
+  getColor: () => string;
+  focusedCategory: string;
+  setFocusedCategory: (category: string) => void;
+}
+
+export interface StructurerTextDisplayProps extends StructurerTextProps {}
+
+export interface StructurerWorkBenchProps extends StructurerTextProps {}
+
+export interface StructurerWorkBenchTextInputProps
+  extends StructurerWorkBenchProps {}
+
+export interface StructurerWorkBenchSegmenterProps
+  extends StructurerWorkBenchProps {}
+
+export interface StructurerWorkBenchLabelerProps
+  extends StructurerWorkBenchProps {}
 
 export interface StructurerTextInputProps extends StructurerProps {}
 
-export interface StructurerLabelerProps extends StructurerProps {}
+export enum CategorySelectorInputTypes {
+  text,
+  selection,
+}
 
-export interface StructurerSegmenterProps extends StructurerProps {}
+export interface InputProps {
+  onSelect: (category: string) => void;
+  placeholder: string;
+}
+
+export interface InputSelectionProps extends InputProps {
+  fetchCategories: () => Promise<string[]>;
+}
+
+export interface InputTextProps extends InputProps {}
 
 export interface Section {
   id: number;

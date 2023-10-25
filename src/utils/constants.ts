@@ -54,6 +54,23 @@ export const notImportantIdSuffices = [
   "entry",
 ];
 
+export const segmentationCategories = [
+  "Previous illnesses",
+  "Discharge diagnosis",
+  "Hospital course",
+  "Medication",
+  "Allergies",
+  "Family history",
+  "Social history",
+  "Physical exam",
+  "Laboratory and data results",
+  "Imaging results",
+  "Consultations",
+  "Procedures",
+  "Brief hospital course",
+  "Discharge medications",
+];
+
 export const validFhirTypes = [
   "Address",
   "Age",

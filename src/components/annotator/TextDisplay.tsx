@@ -92,7 +92,7 @@ export function TextDisplay(props: TextDisplayProps) {
       toast.error("No API Key selected");
       return;
     }
-    const response = await fetch("/api/segmentText", {
+    const response = await fetch("/api/fhirchain", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

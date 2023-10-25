@@ -1,22 +1,31 @@
 import { useState } from "react";
-import StructurerTextInput from "./StructurerTextInput";
 import { StructurerModes } from "@/types";
-import StructurerSegmenter from "./StructurerSegmenter";
-import StructurerLabeler from "./StructurerLabeler";
+import StructurerText from "./StructurerText";
+import StructurerWorkBench from "./StructurerWorkBench";
 
 const StructurerBody = () => {
   const [text, setText] = useState("");
   const [mode, setMode] = useState<StructurerModes>(StructurerModes.inputText);
+  const [llmResponse, setLlmResponse] = useState<string>();
 
   return (
-    <div className="w-full overflow-auto p-4">
-      {mode === StructurerModes.inputText ? (
-        <StructurerTextInput setMode={setMode} setText={setText} text={text} />
-      ) : mode === StructurerModes.segmentText ? (
-        <StructurerSegmenter text={text} setMode={setMode} setText={setText} />
-      ) : (
-        <StructurerLabeler text={text} setMode={setMode} setText={setText} />
-      )}
+    <div className="w-full p-4 flex flex-row gap-4">
+      <StructurerText
+        setMode={setMode}
+        setText={setText}
+        text={text}
+        mode={mode}
+        llmResponse={llmResponse}
+        setLlmResponse={setLlmResponse}
+      />
+      <StructurerWorkBench
+        mode={mode}
+        setMode={setMode}
+        text={text}
+        setText={setText}
+        llmResponse={llmResponse}
+        setLlmResponse={setLlmResponse}
+      />
     </div>
   );
 };
