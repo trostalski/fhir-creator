@@ -71,6 +71,23 @@ export const segmentationCategories = [
   "Discharge medications",
 ];
 
+export const segmentationCategoriesGerman = [
+  "Vorerkrankungen",
+  "Entlassungsdiagnose",
+  "Krankheitsverlauf im Krankenhaus",
+  "Medikation",
+  "Allergien",
+  "Familienanamnese",
+  "Sozialanamnese",
+  "Körperliche Untersuchung",
+  "Labor- und Datenbefunde",
+  "Bildgebende Befunde",
+  "Beratungen",
+  "Eingriffe",
+  "Kurzer Krankenhausaufenthalt",
+  "Medikamente bei Entlassung",
+];
+
 export const validFhirTypes = [
   "Address",
   "Age",

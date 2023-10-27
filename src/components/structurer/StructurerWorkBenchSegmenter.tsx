@@ -6,7 +6,7 @@ import CategorySelector from "./CategorySelector";
 import { useState } from "react";
 import InputText from "./InputText";
 import DisplayCategoriesBasic from "./DisplayCategoriesBasic";
-import { segmentationCategories } from "@/utils/constants";
+import { segmentationCategoriesGerman } from "@/utils/constants";
 import { useStore } from "@/stores/useStore";
 import { toastError } from "@/toasts";
 import { PuffLoader } from "react-spinners";
@@ -16,7 +16,7 @@ const StructurerWorkBenchSegmenter = (
 ) => {
   const { mode, text, setMode, setText, llmResponse, setLlmResponse } = props;
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
-    segmentationCategories
+    segmentationCategoriesGerman
   );
   const [isLoading, setIslLoading] = useState<boolean>(false);
   const { activeAPIKey } = useStore((state) => {
@@ -61,6 +61,38 @@ const StructurerWorkBenchSegmenter = (
     }
   };
 
+  const handleLLMSegmentGerman = async () => {
+    if (!activeAPIKey) {
+      toastError("No API Key selected");
+      return;
+    }
+    try {
+      setIslLoading(true);
+      const response = await fetch(
+        "http://localhost:8000/fhirchain/structureTextWithTemplateAndInferGerman/",
+        {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: text,
+            sections_to_look_for: selectedCategories,
+            api_key: activeAPIKey,
+          }),
+        }
+      );
+      const data: structureTextWithTemplateAndInferResponse =
+        await response.json();
+      setLlmResponse(data.text);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIslLoading(false);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col gap-3">
       <CategorySelector
@@ -79,6 +111,16 @@ const StructurerWorkBenchSegmenter = (
         disabled={isLoading}
       >
         {isLoading ? "Loading" : "LLM Segment!"}
+        {isLoading && <PuffLoader size={20} />}
+      </button>
+      <button
+        onClick={async () => await handleLLMSegmentGerman()}
+        className={`${
+          isLoading ? "bg-gray-500" : "bg-blue-500"
+        } rounded-md transform hover:scale-y-105 flex flex-row gap-2 p-2 justify-center items-center`}
+        disabled={isLoading}
+      >
+        {isLoading ? "Loading" : "LLM Segment German!"}
         {isLoading && <PuffLoader size={20} />}
       </button>
     </div>
