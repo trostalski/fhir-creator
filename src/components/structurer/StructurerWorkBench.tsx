@@ -7,11 +7,20 @@ import { useEffect } from "react";
 const StructurerWorkBench = (props: StructurerWorkBenchProps) => {
   const { mode, text, outline, setOutline } = props;
 
-  // useEffect(() => {
-  //   if (mode === StructurerModes.labelText) {
-  //     setLlmResponse(undefined);
-  //   }
-  // }, [mode]);
+  useEffect(() => {
+    if (mode === StructurerModes.labelText) {
+      setOutline([
+        {
+          key: "Text",
+          startIndex: 0,
+          endIndex: text.length,
+          askedFor: true,
+        },
+      ]);
+    } else if (mode === StructurerModes.segmentText) {
+      setOutline([]);
+    }
+  }, [mode]);
 
   return (
     <div className="flex flex-col items-center w-1/2">

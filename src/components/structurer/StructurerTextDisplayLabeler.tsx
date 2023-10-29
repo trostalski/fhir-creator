@@ -5,14 +5,16 @@ const StructurerTextDisplayLabeler = (props: StructurerTextDisplayProps) => {
   const { text, outline, setOutline } = props;
   return (
     <div className="whitespace-pre">
-      <TextAnnotator
-        content={text}
-        outline={outline[0].entities}
-        onChange={(value) => {}}
-        value={[]}
-        colors={{}}
-        setOutline={() => {}}
-      />
+      {outline[0] && (
+        <TextAnnotator
+          content={text}
+          outline={outline[0].entities}
+          onChange={(value) => {}}
+          value={[]}
+          colors={{}}
+          setOutline={() => {}}
+        />
+      )}
       ;
     </div>
   );

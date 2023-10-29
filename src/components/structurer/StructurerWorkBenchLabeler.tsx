@@ -1,4 +1,4 @@
-import { StructurerWorkBenchLabelerProps } from "@/types";
+import { Entities, StructurerWorkBenchLabelerProps } from "@/types";
 import CategorySelector from "./CategorySelector";
 import { useState } from "react";
 import { resourceOptions } from "@/utils/constants";
@@ -7,9 +7,10 @@ import InputSelection from "./InputSelection";
 import DisplayCategoriesBasic from "./DisplayCategoriesBasic";
 import { useStore } from "@/stores/useStore";
 import { PuffLoader } from "react-spinners";
+import { addMatches, transformOutline } from "@/utils/annotator_utils";
 
 const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
-  const { mode, text, setMode, setText, llmResponse, setLlmResponse } = props;
+  const { text, outline, setOutline } = props;
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     defaultFocusResources.map((option) => option.value)
   );
@@ -23,6 +24,21 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
       activeAPIKey: state.activeAPIKey,
     };
   });
+
+  const setOutlineFromLabeler = (matchedOutline: Entities) => {
+    setOutline(
+      outline.map((section) => {
+        if (section.key === "Text") {
+          return {
+            ...section,
+            entities: matchedOutline,
+          };
+        } else {
+          return section;
+        }
+      })
+    );
+  };
 
   const handleLLMLabel = async () => {
     if (!activeAPIKey) {
@@ -46,7 +62,11 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
         }
       );
       const data = await response.json();
-      console.log(data);
+      if (data && data.outline) {
+        let matchedOutline = transformOutline(data.outline);
+        addMatches(matchedOutline, text);
+        setOutlineFromLabeler(matchedOutline);
+      }
     } catch (error) {
       console.log(error);
     } finally {
