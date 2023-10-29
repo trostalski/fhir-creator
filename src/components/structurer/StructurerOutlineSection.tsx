@@ -6,12 +6,18 @@ const StructurerOutlineSection = (props: StructurerOutlineSectionProps) => {
 
   return (
     <div>
-      <div className="flex flex-col gap-1">{section}</div>
-      {Object.keys(outline[section]).map((entity) => {
-        return (
-          <StructuerOutlineEntity key={entity} {...props} entity={entity} />
-        );
-      })}
+      <div className="flex flex-col gap-1">{section.key}</div>
+      {section.entities &&
+        Object.keys(section.entities).map((key) => {
+          return (
+            <StructuerOutlineEntity
+              entityName={key}
+              key={key}
+              {...props}
+              entity={section.entities![key]}
+            />
+          );
+        })}
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
 import React, { useState } from "react";
 import { llmJsonToAnnotatorFormat } from "@/utils/annotator_utils";
 import {
-  OutlineItem,
+  EntityElement,
   Section,
   SectionState,
   TextDisplayProps,
@@ -24,7 +24,7 @@ export function TextDisplay(props: TextDisplayProps) {
   }
 
   const transformValueToEntity = (value: ValueState[], text: string) => {
-    const entity: OutlineItem = {
+    const entity: EntityElement = {
       item: text.slice(
         value[value.length - 1].start,
         value[value.length - 1].end

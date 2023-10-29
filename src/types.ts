@@ -148,12 +148,13 @@ export interface FTSResponse {
   coded_terms: CodedTerm[];
 }
 
-export interface IndexSection {
+export interface SectionInfo {
   key: string;
   startIndex: number;
   endIndex: number;
   askedFor: boolean;
   text?: string;
+  entities?: Entities;
 }
 
 export interface LMMSections {
@@ -163,12 +164,12 @@ export interface LMMSections {
 
 export interface TextDisplayProps {
   text: string;
-  outline?: SectionOutline;
+  outline?: Entities;
   setText: (text: string) => void;
-  setOutline: (outline: SectionOutline) => void;
+  setOutline: (outline: Entities) => void;
   activeResourceType?: OptionType;
   colors: ColorStore;
-  selectedEntity?: OutlineItem;
+  selectedEntity?: EntityElement;
 }
 
 // enum with three states: "askedFor", "inferred", "notAllocated"
@@ -190,6 +191,8 @@ export interface StructurerProps {
   setMode: (mode: StructurerModes) => void;
   llmResponse?: string;
   setLlmResponse: (llmResponse: string) => void;
+  outline: SectionInfo[];
+  setOutline: (outline: SectionInfo[]) => void;
 }
 
 export interface StructurerTextProps extends StructurerProps {
@@ -280,32 +283,33 @@ export interface SectionTextProps {
 }
 
 export interface StructurerOutlineProps {
-  outline: Outline;
-  setOutline: (outline: Outline) => void;
+  outline: SectionInfo[];
+  setOutline: (outline: SectionInfo[]) => void;
 }
 
 export interface StructurerOutlineSectionProps extends StructurerOutlineProps {
-  section: string;
+  section: SectionInfo;
 }
 
 export interface StructurerOutlineEntityProps
   extends StructurerOutlineSectionProps {
-  entity: string;
+  entity: EntityElement[];
+  entityName: string;
 }
 
 export interface StructurerOutlineEntityElementProps
   extends StructurerOutlineEntityProps {
-  entityElement: OutlineItem;
+  entityElement: EntityElement;
 }
 
 export interface Outline {
-  [key: string]: SectionOutline; // key is section
+  [key: string]: Entities; // key is section
 }
 
 export interface TextInputProps {
   text: string;
   setText: (text: string) => void;
-  setOutline: (outline: SectionOutline) => void;
+  setOutline: (outline: Entities) => void;
 }
 
 export interface ValueState {
@@ -314,20 +318,20 @@ export interface ValueState {
   tag: string;
 }
 
-export interface OutlineItem {
+export interface EntityElement {
   item: string;
   matches?: [number, number][];
 }
 
-export interface SectionOutline {
-  [key: string]: OutlineItem[]; // key is resource type
+export interface Entities {
+  [key: string]: EntityElement[]; // key is resource type
 }
 
 export interface OldOutline {
   [key: string]: string[];
 }
 
-export interface OutlineArrayItem extends OutlineItem {
+export interface OutlineArrayItem extends EntityElement {
   resourceType: string;
 }
 

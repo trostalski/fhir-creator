@@ -1,4 +1,4 @@
-import { Outline, SectionOutline, StructurerOutlineProps } from "@/types";
+import { Outline, Entities, StructurerOutlineProps } from "@/types";
 import StructurerOutlineSection from "./StructurerOutlineSection";
 
 const StructurerOutline = (props: StructurerOutlineProps) => {
@@ -6,13 +6,14 @@ const StructurerOutline = (props: StructurerOutlineProps) => {
 
   return (
     <div className="flex flex-col">
-      {Object.keys(outline).map((key) => {
+      Outline
+      {outline.map((section) => {
         return (
           <StructurerOutlineSection
             outline={outline}
             setOutline={setOutline}
-            section={key}
-            key={key}
+            section={section}
+            key={section.key}
           />
         );
       })}

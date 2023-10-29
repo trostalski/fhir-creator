@@ -1,11 +1,11 @@
-import { SectionOutline, OutlineItem } from "@/types";
+import { Entities, EntityElement } from "@/types";
 import ResourceTypeElement from "./ResourceTypeElement";
 
 interface BundleOutlineProps {
-  outline?: SectionOutline;
-  setOutline: (outline: SectionOutline) => void;
-  selectedEntity?: OutlineItem;
-  setSelectedEntity: (outlineItem?: OutlineItem) => void;
+  outline?: Entities;
+  setOutline: (outline: Entities) => void;
+  selectedEntity?: EntityElement;
+  setSelectedEntity: (outlineItem?: EntityElement) => void;
 }
 
 const BundleOutline = (props: BundleOutlineProps) => {

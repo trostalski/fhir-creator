@@ -1,4 +1,4 @@
-import { ColorStore, OutlineArrayItem, OutlineItem } from "@/types";
+import { ColorStore, OutlineArrayItem, EntityElement } from "@/types";
 import React, { FC } from "react";
 import { SplitProps } from "./TextAnnotator";
 

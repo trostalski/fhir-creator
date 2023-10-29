@@ -8,22 +8,9 @@ const StructurerText = (props: StructurerTextProps) => {
   return (
     <div className="w-1/2">
       {mode === StructurerModes.inputText ? (
-        <StructurerTextInput
-          setMode={setMode}
-          setText={setText}
-          text={text}
-          llmResponse={llmResponse}
-          setLlmResponse={setLlmResponse}
-        />
+        <StructurerTextInput {...props} />
       ) : (
-        <StructurerTextDisplay
-          mode={mode}
-          text={text}
-          setMode={setMode}
-          setText={setText}
-          llmResponse={llmResponse}
-          setLlmResponse={setLlmResponse}
-        />
+        <StructurerTextDisplay {...props} />
       )}
     </div>
   );

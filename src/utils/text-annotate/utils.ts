@@ -1,13 +1,8 @@
-import {
-  ColorStore,
-  SectionOutline,
-  OutlineArrayItem,
-  OutlineItem,
-} from "@/types";
+import { ColorStore, Entities, OutlineArrayItem, EntityElement } from "@/types";
 import sortBy from "lodash/sortBy";
 import { SplitProps } from "./TextAnnotator";
 
-const constructOutlineArray = (outline: SectionOutline): OutlineArrayItem[] => {
+const constructOutlineArray = (outline: Entities): OutlineArrayItem[] => {
   const outlineArray: OutlineArrayItem[] = [];
   if (outline) {
     for (const key in outline) {
@@ -25,7 +20,7 @@ export const splitWithOutline = (
   text: string,
   offsets: { start: number; end: number }[],
   colors: ColorStore,
-  outline?: SectionOutline
+  outline?: Entities
 ) => {
   let lastEnd = 0;
   const splits: SplitProps[] = [];

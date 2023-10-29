@@ -1,12 +1,12 @@
-import { IndexSection, StructurerTextDisplayProps } from "@/types";
+import { SectionInfo, Outline, StructurerTextDisplayProps } from "@/types";
 import { prepareIndexList } from "@/utils/structurerUtils";
 import { useEffect, useState } from "react";
 import { TextAnnotator } from "react-text-annotate";
 
 const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
-  const { text, llmResponse } = props;
+  const { text, llmResponse, outline, setOutline } = props;
 
-  const [indexSections, setIndexSections] = useState<IndexSection[]>([]);
+  const [indexSections, setIndexSections] = useState<SectionInfo[]>([]);
 
   useEffect(() => {
     if (llmResponse) {
@@ -17,7 +17,10 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
           sectionsInferred: jsonData.sections_inferred,
         };
         const indexSections = prepareIndexList(llmSections, text);
-        if (indexSections) setIndexSections(indexSections);
+        if (indexSections) {
+          setIndexSections(indexSections);
+          setOutline(indexSections);
+        }
       } catch (error) {
         console.error("Error parsing llmResponse:", error);
       }

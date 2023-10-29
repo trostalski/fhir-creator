@@ -3,14 +3,14 @@ import {
   ColorStore,
   OldOutline,
   OptionType,
-  SectionOutline,
-  OutlineItem,
+  Entities,
+  EntityElement,
   ValueState,
 } from "@/types";
 import { Colors } from "react-select";
 import seedrandom from "seedrandom";
 
-export function llmJsonToAnnotatorFormat(llmJson: SectionOutline) {
+export function llmJsonToAnnotatorFormat(llmJson: Entities) {
   let values: ValueState[] = [];
   for (const [resourceType, entities] of Object.entries(llmJson)) {
     if (entities.length > 0) {
@@ -36,7 +36,7 @@ const caseInsensitiveFindIter = (
   return text.matchAll(pattern);
 };
 
-export const addMatches = (outline: SectionOutline, text: string): void => {
+export const addMatches = (outline: Entities, text: string): void => {
   for (const key in outline) {
     for (const item of outline[key]) {
       const matches = Array.from(caseInsensitiveFindIter(item.item, text));
@@ -48,14 +48,14 @@ export const addMatches = (outline: SectionOutline, text: string): void => {
   }
 };
 
-export const transformOutline = (outline: OldOutline): SectionOutline => {
-  const newOutline: SectionOutline = {};
+export const transformOutline = (outline: OldOutline): Entities => {
+  const newOutline: Entities = {};
 
   for (const key in outline) {
     newOutline[key] = [];
 
     for (const entity of outline[key]) {
-      const preppedDict: OutlineItem = { item: entity, matches: [] };
+      const preppedDict: EntityElement = { item: entity, matches: [] };
       newOutline[key].push(preppedDict);
     }
   }
@@ -65,8 +65,8 @@ export const transformOutline = (outline: OldOutline): SectionOutline => {
 
 export const constructDefaultOutline = (
   defaultFocusResources: OptionType[]
-): SectionOutline => {
-  let defaultOutline: SectionOutline = {};
+): Entities => {
+  let defaultOutline: Entities = {};
   for (const resourceType of defaultFocusResources) {
     defaultOutline[resourceType.value] = [];
   }

@@ -7,12 +7,7 @@ import {
   splitWithOutline,
 } from "./utils";
 import { Span } from "./span";
-import {
-  ColorStore,
-  SectionOutline,
-  OutlineArrayItem,
-  OutlineItem,
-} from "@/types";
+import { ColorStore, Entities, OutlineArrayItem, EntityElement } from "@/types";
 
 export interface SplitProps {
   outlineArrayItem?: OutlineArrayItem;
@@ -23,7 +18,7 @@ export interface SplitProps {
   mark?: boolean;
   key?: string;
   color?: string;
-  selectedEntity?: OutlineItem;
+  selectedEntity?: EntityElement;
 }
 
 const Split = (props: SplitProps) => {
@@ -51,14 +46,14 @@ interface TextSpan extends Span {
 }
 
 type TextBaseProps<T> = {
-  outline?: SectionOutline;
-  setOutline: (outline: SectionOutline) => void;
+  outline?: Entities;
+  setOutline: (outline: Entities) => void;
   content: string;
   value: T[];
   onChange: (value: T[]) => any;
   getSpan?: (span: TextSpan) => T;
   colors: ColorStore;
-  selectedEntity?: OutlineItem;
+  selectedEntity?: EntityElement;
   // TODO: determine whether to overwrite or leave intersecting ranges.
 };
 

@@ -1,5 +1,5 @@
 import { toastError } from "@/toasts";
-import { InputDict, SectionOutline } from "@/types";
+import { InputDict, Entities } from "@/types";
 import { Fhir, ValidatorMessage } from "fhir";
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
@@ -318,7 +318,7 @@ const jsonTransformation = async (
 
 export const createResources = async (
   text: string,
-  outline: SectionOutline,
+  outline: Entities,
   chains: {
     [key: string]: LLMChain<string, ChatOpenAI>;
   }

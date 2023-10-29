@@ -1,4 +1,4 @@
-import { IndexSection, LMMSections } from "@/types";
+import { SectionInfo, LMMSections } from "@/types";
 
 // Function to extract sections from the input
 const extractSections = (
@@ -18,8 +18,8 @@ const extractSections = (
   });
 
 const checkEndIndex = (
-  section: IndexSection,
-  nextSection: IndexSection,
+  section: SectionInfo,
+  nextSection: SectionInfo,
   text: string
 ) => {
   // check if endIndex is greater than startIndex, otherwise extend to next section
@@ -88,7 +88,7 @@ export const prepareIndexList = (
   // Adding unnamed sections
   const sectionsWithGaps = allSections.reduce((acc, section, i, arr) => {
     const nextSection = arr[i + 1]; // Look ahead to the next section
-    let unnamedSection: IndexSection | undefined = undefined;
+    let unnamedSection: SectionInfo | undefined = undefined;
     if (nextSection && nextSection.startIndex > section.endIndex) {
       // If there is a gap between the current section and the next section
       const gapText = text.slice(section.endIndex, nextSection.startIndex);
@@ -110,7 +110,7 @@ export const prepareIndexList = (
       acc.push(unnamedSection); // Push the unnamed section second
     }
     return acc;
-  }, [] as IndexSection[]);
+  }, [] as SectionInfo[]);
 
   // Handle unnamed section at the start
   if (sectionsWithGaps[0]?.startIndex > 0) {

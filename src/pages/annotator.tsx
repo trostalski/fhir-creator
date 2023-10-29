@@ -4,7 +4,7 @@ import FocusSelector from "@/components/annotator/FocusSelector";
 import { TextDisplay } from "@/components/annotator/TextDisplay";
 import { TextInput } from "@/components/annotator/TextInput";
 import { toastError } from "@/toasts";
-import { ColorStore, OptionType, SectionOutline, OutlineItem } from "@/types";
+import { ColorStore, OptionType, Entities, EntityElement } from "@/types";
 import {
   addMatches,
   constructDefaultOutline,
@@ -39,7 +39,7 @@ const Annotator = () => {
   const [llmResourceCreationLoading, setLlmResourceCreationLoading] =
     useState<boolean>(false);
   const [text, setText] = useState("");
-  const [outline, setOutline] = React.useState<SectionOutline>(
+  const [outline, setOutline] = React.useState<Entities>(
     constructDefaultOutline(defaultFocusResources)
   );
   const [focusResources, setFocusResources] = React.useState<OptionType[]>(
@@ -51,7 +51,7 @@ const Annotator = () => {
     setColorsForDefaultResources(defaultFocusResources, rng)
   );
   const [selectedEntity, setSelectedEntity] = React.useState<
-    OutlineItem | undefined
+    EntityElement | undefined
   >(undefined);
   const [chains, setChains] = useState<{
     [key: string]: LLMChain<string, ChatOpenAI>;
