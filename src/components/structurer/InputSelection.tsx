@@ -9,6 +9,9 @@ const InputSelection = (props: InputSelectionProps) => {
   useEffect(() => {
     const loadCategories = async () => {
       try {
+        if (!fetchCategories) {
+          throw new Error("No fetchCategories function provided");
+        }
         const fetchedCategories = await fetchCategories();
         setCategories(fetchedCategories);
       } catch (error) {

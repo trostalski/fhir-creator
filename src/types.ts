@@ -262,7 +262,7 @@ export interface InputProps {
 }
 
 export interface InputSelectionProps extends InputProps {
-  fetchCategories: () => Promise<string[]>;
+  fetchCategories?: () => Promise<string[]>;
 }
 
 export interface InputTextProps extends InputProps {}
