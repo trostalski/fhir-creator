@@ -1,7 +1,7 @@
 import { SectionInfo, Outline, StructurerTextDisplayProps } from "@/types";
 import { prepareIndexList } from "@/utils/structurerUtils";
 import { useEffect, useState } from "react";
-import { TextAnnotator } from "react-text-annotate";
+import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
 
 const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
   const { text, llmResponse, outline, setOutline } = props;
@@ -41,6 +41,8 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
                   content={section.text}
                   onChange={(value) => {}}
                   value={[]}
+                  colors={{}}
+                  setOutline={() => {}}
                 />
               )}
             </div>

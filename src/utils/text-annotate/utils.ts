@@ -60,6 +60,33 @@ export const splitWithOutline = (
         onClick: () => {},
       });
     }
+  } else {
+    for (let offset of sortBy(offsets, (o) => o.start)) {
+      const { start, end } = offset;
+      if (lastEnd < start) {
+        splits.push({
+          start: lastEnd,
+          end: start,
+          content: text.slice(lastEnd, start),
+          onClick: () => {},
+        });
+      }
+      splits.push({
+        ...offset,
+        mark: true,
+        content: text.slice(start, end),
+        onClick: () => {},
+      });
+      lastEnd = end;
+    }
+    if (lastEnd < text.length) {
+      splits.push({
+        start: lastEnd,
+        end: text.length,
+        content: text.slice(lastEnd, text.length),
+        onClick: () => {},
+      });
+    }
   }
 
   return splits;

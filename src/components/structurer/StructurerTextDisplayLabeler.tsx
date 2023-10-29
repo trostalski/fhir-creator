@@ -1,11 +1,19 @@
 import { StructurerTextDisplayProps } from "@/types";
-import { TextAnnotator } from "react-text-annotate";
+import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
 
 const StructurerTextDisplayLabeler = (props: StructurerTextDisplayProps) => {
-  const { mode, text, setMode, setText, llmResponse, setLlmResponse } = props;
+  const { text, outline, setOutline } = props;
   return (
     <div className="whitespace-pre">
-      <TextAnnotator content={text} onChange={(value) => {}} value={[]} />;
+      <TextAnnotator
+        content={text}
+        outline={outline[0].entities}
+        onChange={(value) => {}}
+        value={[]}
+        colors={{}}
+        setOutline={() => {}}
+      />
+      ;
     </div>
   );
 };
