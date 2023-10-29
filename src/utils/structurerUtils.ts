@@ -1,4 +1,5 @@
 import { IndexSection, LMMSections } from "@/types";
+import { ca } from "date-fns/locale";
 
 // Function to extract sections from the input
 const extractSections = (
@@ -6,16 +7,26 @@ const extractSections = (
   askedFor: boolean,
   text: string
 ) =>
-  Object.entries(sections).map(([key, substrings]) => {
-    const startIndex = text.indexOf(substrings[0]);
-    const endIndex = text.indexOf(substrings[1], startIndex);
-    return {
-      key,
-      startIndex,
-      endIndex: endIndex + substrings[1].length, // adjust to get the last index of the substring
-      askedFor,
-    };
-  });
+  Object.entries(sections)
+    .map(([key, substrings]) => {
+      try {
+        const startIndex = text.indexOf(substrings[0]);
+        const endIndex = text.indexOf(substrings[1], startIndex);
+        return {
+          key,
+          startIndex,
+          endIndex: endIndex + substrings[1].length, // adjust to get the last index of the substring
+          askedFor,
+        };
+      } catch (e) {
+        console.error(
+          `Error while extracting section ${key} from text: ${text}`,
+          e
+        );
+        return;
+      }
+    })
+    .filter((section): section is IndexSection => section !== undefined); // filter out undefined sections
 
 const checkEndIndex = (
   section: IndexSection,
@@ -61,29 +72,6 @@ export const prepareIndexList = (
     const nextSection = allSections[i + 1];
     checkEndIndex(section, nextSection, text);
   }
-
-  // Adding unnamed sections
-  // const sectionsWithGaps = allSections.reduce((acc, section, i, arr) => {
-  //   const previousSection = arr[i - 1];
-  //   if (previousSection && section.startIndex > previousSection.endIndex) {
-  //     // if section text only contains newlines and whitespace, add to previous section
-  //     const sectionText = text.slice(
-  //       previousSection.endIndex,
-  //       section.startIndex
-  //     );
-  //     // if (sectionText.trim().length === 0) {
-  //     //   previousSection.endIndex = section.endIndex;
-  //     // }
-  //     acc.push({
-  //       key: "unnamed",
-  //       startIndex: previousSection.endIndex,
-  //       endIndex: section.startIndex,
-  //       askedFor: false,
-  //     });
-  //   }
-  //   acc.push(section);
-  //   return acc;
-  // }, [] as IndexSection[]);
 
   // Adding unnamed sections
   const sectionsWithGaps = allSections.reduce((acc, section, i, arr) => {
