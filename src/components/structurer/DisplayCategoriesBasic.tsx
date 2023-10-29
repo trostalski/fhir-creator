@@ -2,7 +2,15 @@ import { DisplayCategoriesProps } from "@/types";
 import { TiDelete } from "react-icons/ti";
 
 const DisplayCategoriesBasic = (props: DisplayCategoriesProps) => {
-  const { selectedCategories, setSelectedCategories } = props;
+  const {
+    selectedCategories,
+    setSelectedCategories,
+    colors,
+    focusedCategory,
+    getColor,
+    setColors,
+    setFocusedCategory,
+  } = props;
 
   return (
     <div className="flex flex-row flex-wrap overflow-scroll h-full border border-black rounded-md p-2 gap-1">

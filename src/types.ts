@@ -213,9 +213,7 @@ export interface CategorySelectorProps {
   placeholder: string;
   InputComponent: React.FC<InputTextProps | InputSelectionProps>;
   fetchCategories?: () => Promise<string[]>;
-  DisplayComponent: React.FC<
-    DisplayCategoriesProps | DisplayCategoriesLabelerProps
-  >;
+  DisplayComponent: React.FC<DisplayCategoriesProps>;
   colors?: ColorStore;
   focusedCategory?: string;
   setFocusedCategory?: (category: string) => void;
@@ -226,14 +224,11 @@ export interface CategorySelectorProps {
 export interface DisplayCategoriesProps {
   selectedCategories: string[];
   setSelectedCategories: (categories: string[]) => void;
-}
-
-export interface DisplayCategoriesLabelerProps extends DisplayCategoriesProps {
-  colors: ColorStore;
-  setColors: (colors: ColorStore) => void;
-  getColor: () => string;
-  focusedCategory: string;
-  setFocusedCategory: (category: string) => void;
+  colors?: ColorStore;
+  setColors?: (colors: ColorStore) => void;
+  getColor?: () => string;
+  focusedCategory?: string;
+  setFocusedCategory?: (category: string) => void;
 }
 
 export interface StructurerTextDisplayProps extends StructurerTextProps {}
@@ -283,6 +278,8 @@ export interface SectionComponentProps {
 export interface SectionTextProps {
   children: React.ReactNode;
 }
+
+// export interface StructurerOutlineProps {
 
 export interface TextInputProps {
   text: string;
