@@ -7,7 +7,12 @@ import {
   splitWithOutline,
 } from "./utils";
 import { Span } from "./span";
-import { ColorStore, Outline, OutlineArrayItem, OutlineItem } from "@/types";
+import {
+  ColorStore,
+  SectionOutline,
+  OutlineArrayItem,
+  OutlineItem,
+} from "@/types";
 
 export interface SplitProps {
   outlineArrayItem?: OutlineArrayItem;
@@ -46,8 +51,8 @@ interface TextSpan extends Span {
 }
 
 type TextBaseProps<T> = {
-  outline?: Outline;
-  setOutline: (outline: Outline) => void;
+  outline?: SectionOutline;
+  setOutline: (outline: SectionOutline) => void;
   content: string;
   value: T[];
   onChange: (value: T[]) => any;

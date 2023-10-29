@@ -2,15 +2,15 @@ import { useStore } from "@/stores/useStore";
 import Select from "react-select";
 import { resourceOptions } from "@/utils/constants";
 import { getResourceTypeFromProfile } from "@/utils/utils";
-import { Color, ColorStore, OptionType, Outline } from "@/types";
+import { Color, ColorStore, OptionType, SectionOutline } from "@/types";
 import { generateHexColor } from "@/utils/annotator_utils";
 import seedrandom from "seedrandom";
 
 interface FocusSelectorProps {
   focusResources: OptionType[];
   setFocusResources: (focusResources: OptionType[]) => void;
-  outline?: Outline;
-  setOutline: (outline: Outline) => void;
+  outline?: SectionOutline;
+  setOutline: (outline: SectionOutline) => void;
   colors: ColorStore;
   setColors: (colors: ColorStore) => void;
   rng: seedrandom.PRNG;

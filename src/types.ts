@@ -163,9 +163,9 @@ export interface LMMSections {
 
 export interface TextDisplayProps {
   text: string;
-  outline?: Outline;
+  outline?: SectionOutline;
   setText: (text: string) => void;
-  setOutline: (outline: Outline) => void;
+  setOutline: (outline: SectionOutline) => void;
   activeResourceType?: OptionType;
   colors: ColorStore;
   selectedEntity?: OutlineItem;
@@ -279,12 +279,33 @@ export interface SectionTextProps {
   children: React.ReactNode;
 }
 
-// export interface StructurerOutlineProps {
+export interface StructurerOutlineProps {
+  outline: Outline;
+  setOutline: (outline: Outline) => void;
+}
+
+export interface StructurerOutlineSectionProps extends StructurerOutlineProps {
+  section: string;
+}
+
+export interface StructurerOutlineEntityProps
+  extends StructurerOutlineSectionProps {
+  entity: string;
+}
+
+export interface StructurerOutlineEntityElementProps
+  extends StructurerOutlineEntityProps {
+  entityElement: OutlineItem;
+}
+
+export interface Outline {
+  [key: string]: SectionOutline; // key is section
+}
 
 export interface TextInputProps {
   text: string;
   setText: (text: string) => void;
-  setOutline: (outline: Outline) => void;
+  setOutline: (outline: SectionOutline) => void;
 }
 
 export interface ValueState {
@@ -298,8 +319,8 @@ export interface OutlineItem {
   matches?: [number, number][];
 }
 
-export interface Outline {
-  [key: string]: OutlineItem[];
+export interface SectionOutline {
+  [key: string]: OutlineItem[]; // key is resource type
 }
 
 export interface OldOutline {

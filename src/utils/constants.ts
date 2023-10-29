@@ -5,6 +5,7 @@ import {
   CsvExportFeature,
   NumericalFeature,
   OptionType,
+  Outline,
 } from "../types";
 import { ElementDefinitionConstraint } from "fhir/r4";
 import { ProfileTreeNode } from "./buildTree";
@@ -401,6 +402,37 @@ export const defaultFocusResources: OptionType[] = [
   { value: "Procedure", label: "Procedure" },
   { value: "Observation", label: "Observation" },
 ];
+
+export const dummyOutline: Outline = {
+  Medication: {
+    MedicationRequest: [
+      {
+        item: "Taluvolul",
+        matches: [[22, 44]],
+      },
+    ],
+  },
+  Nebendiagnosen: {
+    Condition: [
+      {
+        item: "Colitis ulcerosa",
+        matches: [[22, 44]],
+      },
+      {
+        item: "Morbus Bechterew",
+        matches: [[110, 333]],
+      },
+      {
+        item: "Myokarditis",
+        matches: [[555, 666]],
+      },
+      {
+        item: "Hypertonie",
+        matches: [[88, 99]],
+      },
+    ],
+  },
+};
 
 export const resourceOptions: OptionType[] = [
   { value: "Account", label: "Account" },

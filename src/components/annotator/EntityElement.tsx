@@ -1,9 +1,9 @@
-import { Outline, OutlineItem } from "@/types";
+import { SectionOutline, OutlineItem } from "@/types";
 import { TiDelete } from "react-icons/ti";
 
 interface EntityElementProps {
-  outline: Outline;
-  setOutline: (outline: Outline) => void;
+  outline: SectionOutline;
+  setOutline: (outline: SectionOutline) => void;
   entity: OutlineItem;
   resourceType: string;
   selectedEntity?: OutlineItem;
