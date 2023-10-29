@@ -6,7 +6,7 @@ const StructurerText = (props: StructurerTextProps) => {
   const { mode, text, setMode, setText, llmResponse, setLlmResponse } = props;
 
   return (
-    <div className="w-1/2">
+    <div className="w-6/12">
       {mode === StructurerModes.inputText ? (
         <StructurerTextInput {...props} />
       ) : (

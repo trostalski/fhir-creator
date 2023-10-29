@@ -23,7 +23,7 @@ const StructurerWorkBench = (props: StructurerWorkBenchProps) => {
   }, [mode]);
 
   return (
-    <div className="flex flex-col items-center w-1/2">
+    <div className="flex flex-col items-center w-4/12 overflow-auto">
       {mode === StructurerModes.inputText ? (
         <StructurerWorkBenchTextInput {...props} />
       ) : mode === StructurerModes.segmentText ? (

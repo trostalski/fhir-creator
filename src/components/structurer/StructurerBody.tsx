@@ -12,7 +12,7 @@ const StructurerBody = () => {
   const [outline, setOutline] = useState<SectionInfo[]>([]);
 
   return (
-    <div className="w-full p-4 flex flex-row gap-4">
+    <div className="w-full p-2 flex flex-row gap-2">
       <StructurerText
         setMode={setMode}
         setText={setText}

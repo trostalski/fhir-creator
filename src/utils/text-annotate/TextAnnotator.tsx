@@ -8,6 +8,7 @@ import {
 } from "./utils";
 import { Span } from "./span";
 import { ColorStore, Entities, OutlineArrayItem, EntityElement } from "@/types";
+import { random } from "lodash";
 
 export interface SplitProps {
   outlineArrayItem?: OutlineArrayItem;
@@ -112,11 +113,12 @@ export const TextAnnotator = <T extends Span>(props: TextAnnotatorProps<T>) => {
 
   const { content, value, style } = props;
   const splits = splitWithOutline(content, value, props.colors, props.outline);
+  console.log(splits);
   return (
-    <div onMouseUp={handleMouseUp} className="overflow-y-auto whitespace-pre">
+    <div onMouseUp={handleMouseUp} className="overflow-auto whitespace-pre">
       {splits.map((split) => (
         <Split
-          key={`${split.start}-${split.end}`}
+          key={`${split.start}-${split.end}+${random(0, 1000)}`}
           {...split}
           onClick={handleSplitClick}
           selectedEntity={props.selectedEntity}
