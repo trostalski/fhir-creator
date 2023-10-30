@@ -10,7 +10,7 @@ import { PuffLoader } from "react-spinners";
 import { addMatches, transformOutline } from "@/utils/annotator_utils";
 
 const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
-  const { text, outline, setOutline } = props;
+  const { text, outline, setOutline, focusedSection } = props;
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     defaultFocusResources.map((option) => option.value)
   );
@@ -26,22 +26,24 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
   });
 
   const setOutlineFromLabeler = (matchedOutline: Entities) => {
-    setOutline(
-      outline.map((section) => {
-        if (section.key === "Text") {
-          return {
-            ...section,
-            entities: matchedOutline,
-          };
-        } else {
-          return section;
-        }
-      })
-    );
+    if (focusedSection) {
+      setOutline(
+        outline.map((section) => {
+          if (section.key === focusedSection.key) {
+            return {
+              ...section,
+              entities: matchedOutline,
+            };
+          } else {
+            return section;
+          }
+        })
+      );
+    }
   };
 
   const handleLLMLabel = async () => {
-    if (!activeAPIKey) {
+    if (!activeAPIKey || !focusedSection || !focusedSection.text) {
       return;
     }
     try {
@@ -55,7 +57,7 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            text: text,
+            text: focusedSection?.text,
             focus_resources: selectedCategories,
             api_key: activeAPIKey,
           }),
@@ -64,7 +66,7 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
       const data = await response.json();
       if (data && data.outline) {
         let matchedOutline = transformOutline(data.outline);
-        addMatches(matchedOutline, text);
+        addMatches(matchedOutline, focusedSection.text);
         setOutlineFromLabeler(matchedOutline);
       }
     } catch (error) {
@@ -91,9 +93,9 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
       />
       <button
         className={`${
-          isLoading ? "bg-gray-500" : "bg-blue-500"
+          isLoading || !focusedSection ? "bg-gray-500" : "bg-blue-500"
         } rounded-md transform hover:scale-y-105 flex flex-row gap-2 p-2 justify-center items-center`}
-        disabled={isLoading}
+        disabled={isLoading || !focusedSection}
         onClick={async () => await handleLLMLabel()}
       >
         {isLoading ? "Loading" : "LLM Label!"}

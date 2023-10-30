@@ -113,7 +113,6 @@ export const TextAnnotator = <T extends Span>(props: TextAnnotatorProps<T>) => {
 
   const { content, value, style } = props;
   const splits = splitWithOutline(content, value, props.colors, props.outline);
-  console.log(splits);
   return (
     <div onMouseUp={handleMouseUp} className="overflow-auto whitespace-pre">
       {splits.map((split) => (

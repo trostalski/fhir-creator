@@ -28,7 +28,10 @@ const InputSelection = (props: InputSelectionProps) => {
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        <select onChange={(e) => onSelect(e.target.value)}>
+        <select
+          onChange={(e) => onSelect(e.target.value)}
+          className="rounded-md"
+        >
           {categories.map((category) => (
             <option key={category} value={category}>
               {category}

@@ -10,6 +10,7 @@ const StructurerBody = () => {
   const [mode, setMode] = useState<StructurerModes>(StructurerModes.inputText);
   const [llmResponse, setLlmResponse] = useState<string>();
   const [outline, setOutline] = useState<SectionInfo[]>([]);
+  const [focusSection, setFocusSection] = useState<SectionInfo | undefined>();
 
   return (
     <div className="w-full p-2 flex flex-row gap-2">
@@ -22,6 +23,8 @@ const StructurerBody = () => {
         setLlmResponse={setLlmResponse}
         outline={outline}
         setOutline={setOutline}
+        focusedSection={focusSection}
+        setFocusedSection={setFocusSection}
       />
       <StructurerWorkBench
         mode={mode}
@@ -32,6 +35,8 @@ const StructurerBody = () => {
         setLlmResponse={setLlmResponse}
         outline={outline}
         setOutline={setOutline}
+        focusedSection={focusSection}
+        setFocusedSection={setFocusSection}
       />
       <StructurerOutline outline={outline} setOutline={setOutline} />
     </div>

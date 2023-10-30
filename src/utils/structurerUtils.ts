@@ -61,31 +61,8 @@ export const prepareIndexList = (
     const nextSection = allSections[i + 1];
     checkEndIndex(section, nextSection, text);
   }
-
-  // Adding unnamed sections
-  // const sectionsWithGaps = allSections.reduce((acc, section, i, arr) => {
-  //   const previousSection = arr[i - 1];
-  //   if (previousSection && section.startIndex > previousSection.endIndex) {
-  //     // if section text only contains newlines and whitespace, add to previous section
-  //     const sectionText = text.slice(
-  //       previousSection.endIndex,
-  //       section.startIndex
-  //     );
-  //     // if (sectionText.trim().length === 0) {
-  //     //   previousSection.endIndex = section.endIndex;
-  //     // }
-  //     acc.push({
-  //       key: "unnamed",
-  //       startIndex: previousSection.endIndex,
-  //       endIndex: section.startIndex,
-  //       askedFor: false,
-  //     });
-  //   }
-  //   acc.push(section);
-  //   return acc;
-  // }, [] as IndexSection[]);
-
-  // Adding unnamed sections
+  // adding unnamed sections
+  let unnamedSectionIndex = 0;
   const sectionsWithGaps = allSections.reduce((acc, section, i, arr) => {
     const nextSection = arr[i + 1]; // Look ahead to the next section
     let unnamedSection: SectionInfo | undefined = undefined;
@@ -95,7 +72,7 @@ export const prepareIndexList = (
       // If the gap text only contains newlines and whitespace, you might want to skip adding the unnamed section
       if (gapText.trim().length > 0) {
         unnamedSection = {
-          key: "unnamed",
+          key: `unnamed-${unnamedSectionIndex++}`,
           startIndex: section.endIndex,
           endIndex: nextSection.startIndex,
           askedFor: false,
@@ -115,7 +92,7 @@ export const prepareIndexList = (
   // Handle unnamed section at the start
   if (sectionsWithGaps[0]?.startIndex > 0) {
     sectionsWithGaps.unshift({
-      key: "unnamed",
+      key: `unnamed-${unnamedSectionIndex++}`,
       startIndex: 0,
       endIndex: sectionsWithGaps[0].startIndex,
       askedFor: false,

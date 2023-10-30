@@ -5,18 +5,20 @@ import StructurerWorkBenchLabeler from "./StructurerWorkBenchLabeler";
 import { useEffect } from "react";
 
 const StructurerWorkBench = (props: StructurerWorkBenchProps) => {
-  const { mode, text, outline, setOutline } = props;
+  const { mode, text, outline, setOutline, focusedSection, setFocusedSection } =
+    props;
+
+  const labelerSection = {
+    key: "Text",
+    startIndex: 0,
+    endIndex: text.length,
+    askedFor: true,
+  };
 
   useEffect(() => {
     if (mode === StructurerModes.labelText) {
-      setOutline([
-        {
-          key: "Text",
-          startIndex: 0,
-          endIndex: text.length,
-          askedFor: true,
-        },
-      ]);
+      setOutline([labelerSection]);
+      setFocusedSection(labelerSection);
     } else if (mode === StructurerModes.segmentText) {
       setOutline([]);
     }

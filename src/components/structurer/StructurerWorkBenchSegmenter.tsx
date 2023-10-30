@@ -10,6 +10,7 @@ import { segmentationCategories } from "@/utils/constants";
 import { useStore } from "@/stores/useStore";
 import { toastError } from "@/toasts";
 import { PuffLoader } from "react-spinners";
+import StructurerWorkBenchLabeler from "./StructurerWorkBenchLabeler";
 
 const StructurerWorkBenchSegmenter = (
   props: StructurerWorkBenchSegmenterProps
@@ -81,6 +82,8 @@ const StructurerWorkBenchSegmenter = (
         {isLoading ? "Loading" : "LLM Segment!"}
         {isLoading && <PuffLoader size={20} />}
       </button>
+      <h2 className="border-y-2 border text-center">Labeler</h2>
+      <StructurerWorkBenchLabeler {...props} />
     </div>
   );
 };

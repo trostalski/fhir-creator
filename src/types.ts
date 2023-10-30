@@ -193,6 +193,8 @@ export interface StructurerProps {
   setLlmResponse: (llmResponse: string) => void;
   outline: SectionInfo[];
   setOutline: (outline: SectionInfo[]) => void;
+  focusedSection?: SectionInfo;
+  setFocusedSection: (section: SectionInfo) => void;
 }
 
 export interface StructurerTextProps extends StructurerProps {
