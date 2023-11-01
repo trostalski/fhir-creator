@@ -43,7 +43,7 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
     }
   };
 
-  const handleLLMLabel = async () => {
+  const handleLLMLabel = async (version: string = "2", gpt: string = "3") => {
     if (!activeAPIKey || !focusedSection || !focusedSection.text) {
       toast.error("API key missing or no text");
       return;
@@ -51,7 +51,7 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
     try {
       setIslLoading(true);
       const response = await fetch(
-        "http://localhost:8000/fhirchain/bundleOutlineV2/",
+        `http://localhost:8000/fhirchain/bundleOutlineV${version}GPT${gpt}/`,
         {
           method: "POST",
           mode: "cors",
@@ -100,7 +100,37 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
         disabled={isLoading || !focusedSection}
         onClick={async () => await handleLLMLabel()}
       >
-        {isLoading ? "Loading" : "LLM Label!"}
+        {isLoading ? "Loading" : "LLM Label V2 GPT3!"}
+        {isLoading && <PuffLoader size={20} />}
+      </button>
+      <button
+        className={`${
+          isLoading || !focusedSection ? "bg-gray-500" : "bg-blue-500"
+        } rounded-md transform hover:scale-y-105 flex flex-row gap-2 p-2 justify-center items-center`}
+        disabled={isLoading || !focusedSection}
+        onClick={async () => await handleLLMLabel("2", "4")}
+      >
+        {isLoading ? "Loading" : "LLM Label V2 GPT4!"}
+        {isLoading && <PuffLoader size={20} />}
+      </button>
+      <button
+        className={`${
+          isLoading || !focusedSection ? "bg-gray-500" : "bg-blue-500"
+        } rounded-md transform hover:scale-y-105 flex flex-row gap-2 p-2 justify-center items-center`}
+        disabled={isLoading || !focusedSection}
+        onClick={async () => await handleLLMLabel("3")}
+      >
+        {isLoading ? "Loading" : "LLM Label V3 GPT3!"}
+        {isLoading && <PuffLoader size={20} />}
+      </button>
+      <button
+        className={`${
+          isLoading || !focusedSection ? "bg-gray-500" : "bg-blue-500"
+        } rounded-md transform hover:scale-y-105 flex flex-row gap-2 p-2 justify-center items-center`}
+        disabled={isLoading || !focusedSection}
+        onClick={async () => await handleLLMLabel("3", "4")}
+      >
+        {isLoading ? "Loading" : "LLM Label V3 GPT4!"}
         {isLoading && <PuffLoader size={20} />}
       </button>
     </div>
