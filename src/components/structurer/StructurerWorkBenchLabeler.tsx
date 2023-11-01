@@ -8,6 +8,7 @@ import DisplayCategoriesBasic from "./DisplayCategoriesBasic";
 import { useStore } from "@/stores/useStore";
 import { PuffLoader } from "react-spinners";
 import { addMatches, transformOutline } from "@/utils/annotator_utils";
+import { toast } from "react-toastify";
 
 const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
   const { text, outline, setOutline, focusedSection } = props;
@@ -44,6 +45,7 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
 
   const handleLLMLabel = async () => {
     if (!activeAPIKey || !focusedSection || !focusedSection.text) {
+      toast.error("API key missing or no text");
       return;
     }
     try {

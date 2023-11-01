@@ -13,6 +13,7 @@ const StructurerWorkBench = (props: StructurerWorkBenchProps) => {
     startIndex: 0,
     endIndex: text.length,
     askedFor: true,
+    text: text,
   };
 
   useEffect(() => {

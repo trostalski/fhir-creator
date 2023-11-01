@@ -4,7 +4,7 @@ import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
 const StructurerTextDisplayLabeler = (props: StructurerTextDisplayProps) => {
   const { text, outline, setOutline } = props;
   return (
-    <div className="whitespace-pre">
+    <div className="">
       {outline[0] && (
         <TextAnnotator
           content={text}
