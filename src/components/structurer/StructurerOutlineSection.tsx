@@ -1,7 +1,8 @@
-import { StructurerOutlineSectionProps } from "@/types";
+import { Entities, SectionInfo, StructurerOutlineSectionProps } from "@/types";
 import StructuerOutlineEntity from "./StructurerOutlineEntity";
 import { useState } from "react";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
+import StructurerOutlineDownloadButton from "./StructurerOutlineDownloadButton";
 
 const StructurerOutlineSection = (props: StructurerOutlineSectionProps) => {
   const { outline, setOutline, section, sectionRefs } = props;
@@ -19,9 +20,9 @@ const StructurerOutlineSection = (props: StructurerOutlineSectionProps) => {
 
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex flex-row gap-1 bg-blue-500 rounded-md p-1 items-center">
+      <div className="flex gap-1 bg-blue-500 rounded-md p-1 items-center">
         {section.entities && (
-          <div className="transform hover:bg-gray-700 rounded-md p-1">
+          <div className="transform hover:bg-gray-700 rounded-md p-1 flex-shrink-0">
             <ExpandAccordionToggle
               isOpen={isOpen}
               onClick={() => setIsOpen(!isOpen)}
@@ -30,10 +31,11 @@ const StructurerOutlineSection = (props: StructurerOutlineSectionProps) => {
         )}
         <button
           onClick={() => handleSectionClick()}
-          className="text-left transform hover:bg-gray-700 p-1 rounded-md"
+          className="text-left flex-grow transform hover:bg-gray-700 p-1 rounded-md"
         >
           {section.key}
         </button>
+        <StructurerOutlineDownloadButton outlinePart={outline} />
       </div>
       <div
         className={`flex flex-col gap-1 transition-all overflow-hidden ${

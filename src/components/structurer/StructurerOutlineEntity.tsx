@@ -2,6 +2,7 @@ import { StructurerOutlineEntityProps } from "@/types";
 import StructurerOutlineEntityElement from "./StructurerOutlineEntityElement";
 import { useState } from "react";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
+import StructurerOutlineDownloadButton from "./StructurerOutlineDownloadButton";
 
 const StructuerOutlineEntity = (props: StructurerOutlineEntityProps) => {
   const { entity, entityName, colors } = props;
@@ -14,14 +15,17 @@ const StructuerOutlineEntity = (props: StructurerOutlineEntityProps) => {
     >
       <div className="flex flex-row items-center gap-1">
         {entity.length > 0 ? (
-          <div className="transform hover:bg-gray-700 p-1 rounded-md">
+          <div className="transform hover:bg-gray-700 p-1 rounded-md flex-shrink-0">
             <ExpandAccordionToggle
               isOpen={isOpen}
               onClick={() => setIsOpen(!isOpen)}
             />
           </div>
         ) : null}
-        {entityName}
+        <div className="flex-grow">{entityName}</div>
+        <StructurerOutlineDownloadButton
+          outlinePart={{ [entityName]: entity }}
+        />
       </div>
       <div className={`overflow-hidden ${!isOpen ? "max-h-0" : ""}`}>
         {entity.map((entityElement) => {

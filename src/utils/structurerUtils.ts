@@ -1,5 +1,11 @@
 import { toastError } from "@/toasts";
-import { SectionInfo, LMMSections, ValueState, EntityElement } from "@/types";
+import {
+  SectionInfo,
+  LMMSections,
+  ValueState,
+  EntityElement,
+  Entities,
+} from "@/types";
 import { FormEvent } from "react";
 
 // Function to extract sections from the input
@@ -172,4 +178,16 @@ export const handleAnnotationChange = (args: HandleAnnotationChangeArgs) => {
       );
     }
   }
+};
+
+export const downloadOutlinePart = (
+  outlinePart: SectionInfo[] | SectionInfo | Entities
+) => {
+  const outlinePartString = JSON.stringify(outlinePart, null, 2);
+  const blob = new Blob([outlinePartString], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "download.json";
+  a.click();
 };

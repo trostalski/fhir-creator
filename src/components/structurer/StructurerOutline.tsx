@@ -2,6 +2,9 @@ import { Outline, Entities, StructurerOutlineProps } from "@/types";
 import StructurerOutlineSection from "./StructurerOutlineSection";
 import { useState } from "react";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
+import { TiDownload } from "react-icons/ti";
+import { downloadOutlinePart } from "@/utils/structurerUtils";
+import StructurerOutlineDownloadButton from "./StructurerOutlineDownloadButton";
 
 const StructurerOutline = (props: StructurerOutlineProps) => {
   const { outline, setOutline } = props;
@@ -21,6 +24,7 @@ const StructurerOutline = (props: StructurerOutlineProps) => {
         <h2 className="text-center text-lg flex-grow mx-auto">
           Sections ({outline.length})
         </h2>
+        <StructurerOutlineDownloadButton outlinePart={outline} />
       </div>
       <div
         className={`${

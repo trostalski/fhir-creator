@@ -336,6 +336,10 @@ export interface Entities {
   [key: string]: EntityElement[]; // key is resource type
 }
 
+export interface StructurerOutlineDownloadButtonProps {
+  outlinePart: SectionInfo[] | SectionInfo | Entities;
+}
+
 export interface OldOutline {
   [key: string]: string[];
 }
