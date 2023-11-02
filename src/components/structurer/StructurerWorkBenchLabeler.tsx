@@ -11,7 +11,13 @@ import { addMatches, transformOutline } from "@/utils/annotator_utils";
 import { toast } from "react-toastify";
 
 const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
-  const { text, outline, setOutline, focusedSection } = props;
+  const {
+    outline,
+    setOutline,
+    focusedSection,
+    focusedCategory,
+    setFocusedCategory,
+  } = props;
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     defaultFocusResources.map((option) => option.value)
   );
@@ -87,8 +93,8 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
         selectedCategories={selectedCategories}
         setSelectedCategories={setSelectedCategories}
         onSelectCategory={handleSelectCategory}
-        focusedCategory=""
-        setFocusedCategory={() => {}}
+        focusedCategory={focusedCategory}
+        setFocusedCategory={setFocusedCategory}
         fetchCategories={() =>
           Promise.resolve(resourceOptions.map((option) => option.value))
         }

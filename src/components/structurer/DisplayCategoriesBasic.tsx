@@ -17,7 +17,10 @@ const DisplayCategoriesBasic = (props: DisplayCategoriesProps) => {
       {selectedCategories.map((category) => (
         <div
           key={category}
-          className="flex flex-row gap-1 border border-black p-1 rounded-md"
+          className={`flex flex-row gap-1 border border-black p-1 rounded-md ${
+            focusedCategory === category ? "border-4" : ""
+          }`}
+          onClick={() => setFocusedCategory(category)}
         >
           {category}
           <TiDelete

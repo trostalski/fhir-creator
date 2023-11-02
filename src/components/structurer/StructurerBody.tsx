@@ -10,6 +10,7 @@ const StructurerBody = () => {
   const [llmResponse, setLlmResponse] = useState<string>();
   const [outline, setOutline] = useState<SectionInfo[]>([]);
   const [focusSection, setFocusSection] = useState<SectionInfo | undefined>();
+  const [focusedCategory, setFocusedCategory] = useState<string>();
 
   const sectionRefs = outline.map(() => createRef<HTMLDivElement>());
 
@@ -27,6 +28,8 @@ const StructurerBody = () => {
         focusedSection={focusSection}
         setFocusedSection={setFocusSection}
         sectionRefs={sectionRefs}
+        focusedCategory={focusedCategory}
+        setFocusedCategory={setFocusedCategory}
       />
       <StructurerWorkBench
         mode={mode}
@@ -40,6 +43,8 @@ const StructurerBody = () => {
         focusedSection={focusSection}
         setFocusedSection={setFocusSection}
         sectionRefs={sectionRefs}
+        focusedCategory={focusedCategory}
+        setFocusedCategory={setFocusedCategory}
       />
       <StructurerOutline
         setMode={setMode}
@@ -52,6 +57,8 @@ const StructurerBody = () => {
         focusedSection={focusSection}
         setFocusedSection={setFocusSection}
         sectionRefs={sectionRefs}
+        focusedCategory={focusedCategory}
+        setFocusedCategory={setFocusedCategory}
       />
     </div>
   );

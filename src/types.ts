@@ -197,6 +197,8 @@ export interface StructurerProps {
   focusedSection?: SectionInfo;
   setFocusedSection: (section: SectionInfo) => void;
   sectionRefs: RefObject<HTMLDivElement>[];
+  focusedCategory?: string;
+  setFocusedCategory: (entity: string) => void;
 }
 
 export interface StructurerTextProps extends StructurerProps {
@@ -235,7 +237,7 @@ export interface DisplayCategoriesProps {
   setColors?: (colors: ColorStore) => void;
   getColor?: () => string;
   focusedCategory?: string;
-  setFocusedCategory?: (category: string) => void;
+  setFocusedCategory: (category: string) => void;
 }
 
 export interface StructurerTextDisplayProps extends StructurerTextProps {}

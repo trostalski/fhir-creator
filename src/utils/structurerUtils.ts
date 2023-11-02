@@ -1,4 +1,6 @@
-import { SectionInfo, LMMSections } from "@/types";
+import { toastError } from "@/toasts";
+import { SectionInfo, LMMSections, ValueState, EntityElement } from "@/types";
+import { FormEvent } from "react";
 
 // Function to extract sections from the input
 const extractSections = (
@@ -105,4 +107,69 @@ export const prepareIndexList = (
   });
 
   return sectionsWithGaps;
+};
+
+export const transformValueToEntity = (value: ValueState[], text: string) => {
+  const entity: EntityElement = {
+    item: text.slice(
+      value[value.length - 1].start,
+      value[value.length - 1].end
+    ),
+    matches: [[value[value.length - 1].start, value[value.length - 1].end]],
+  };
+  return entity;
+};
+
+interface HandleAnnotationChangeArgs {
+  value: ValueState[] | FormEvent<HTMLDivElement>;
+  focusedSection: SectionInfo | undefined;
+  focusedCategory: string | undefined;
+  text: string | undefined;
+  setOutline: (outline: SectionInfo[]) => void;
+  outline: SectionInfo[];
+}
+
+export const handleAnnotationChange = (args: HandleAnnotationChangeArgs) => {
+  const { value, focusedSection, focusedCategory, text, setOutline, outline } =
+    args;
+
+  if (!focusedCategory) {
+    toastError("Please select a Category!");
+    return;
+  }
+  if (!text) {
+    toastError("Please set a text!");
+    return;
+  }
+  if (Array.isArray(value)) {
+    const entity = transformValueToEntity(value, text);
+    if (focusedSection) {
+      setOutline(
+        outline.map((section) => {
+          if (section.key === focusedSection.key) {
+            if (!section.entities) {
+              return {
+                ...section,
+                entities: {
+                  [focusedCategory]: [entity],
+                },
+              };
+            }
+            return {
+              ...section,
+              entities: {
+                ...section.entities,
+                [focusedCategory]: [
+                  ...(section.entities[focusedCategory] || []),
+                  entity,
+                ],
+              },
+            };
+          } else {
+            return section;
+          }
+        })
+      );
+    }
+  }
 };
