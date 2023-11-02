@@ -43,7 +43,7 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
     }
   };
 
-  const handleLLMLabel = async () => {
+  const handleLLMLabel = async (version: string = "2", gpt: string = "3") => {
     if (!activeAPIKey || !focusedSection || !focusedSection.text) {
       toast.error("API key missing or no text");
       return;
@@ -51,7 +51,7 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
     try {
       setIslLoading(true);
       const response = await fetch(
-        "http://localhost:8000/fhirchain/bundleOutlineV2/",
+        `http://localhost:8000/fhirchain/bundleOutlineV${version}GPT${gpt}/`,
         {
           method: "POST",
           mode: "cors",

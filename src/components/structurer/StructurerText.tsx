@@ -1,6 +1,7 @@
 import { StructurerModes, StructurerTextProps } from "@/types";
 import StructurerTextInput from "./StructurerTextInput";
 import StructurerTextDisplay from "./StructurerTextDisplay";
+import { RefObject, forwardRef } from "react";
 
 const StructurerText = (props: StructurerTextProps) => {
   const { mode, text, setMode, setText, llmResponse, setLlmResponse } = props;

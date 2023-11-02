@@ -1,6 +1,7 @@
 import { Colors } from "react-select";
 import { ProfileTreeNode } from "./utils/buildTree";
 import { resourceTypeList } from "./utils/constants";
+import React, { RefObject } from "react";
 
 export interface PathItem {
   path: string;
@@ -195,6 +196,7 @@ export interface StructurerProps {
   setOutline: (outline: SectionInfo[]) => void;
   focusedSection?: SectionInfo;
   setFocusedSection: (section: SectionInfo) => void;
+  sectionRefs: RefObject<HTMLDivElement>[];
 }
 
 export interface StructurerTextProps extends StructurerProps {
@@ -284,10 +286,7 @@ export interface SectionTextProps {
   children: React.ReactNode;
 }
 
-export interface StructurerOutlineProps {
-  outline: SectionInfo[];
-  setOutline: (outline: SectionInfo[]) => void;
-}
+export interface StructurerOutlineProps extends StructurerProps {}
 
 export interface StructurerOutlineSectionProps extends StructurerOutlineProps {
   section: SectionInfo;

@@ -10,10 +10,9 @@ const StructurerOutline = (props: StructurerOutlineProps) => {
       {outline.map((section) => {
         return (
           <StructurerOutlineSection
-            outline={outline}
-            setOutline={setOutline}
-            section={section}
             key={section.key}
+            {...props}
+            section={section}
           />
         );
       })}

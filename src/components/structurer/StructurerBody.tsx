@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { StructurerModes, Outline, SectionInfo } from "@/types";
+import { createRef, useState } from "react";
+import { StructurerModes, SectionInfo } from "@/types";
 import StructurerText from "./StructurerText";
 import StructurerWorkBench from "./StructurerWorkBench";
 import StructurerOutline from "./StructurerOutline";
-import { dummyOutline } from "@/utils/constants";
 
 const StructurerBody = () => {
   const [text, setText] = useState("");
@@ -11,6 +10,8 @@ const StructurerBody = () => {
   const [llmResponse, setLlmResponse] = useState<string>();
   const [outline, setOutline] = useState<SectionInfo[]>([]);
   const [focusSection, setFocusSection] = useState<SectionInfo | undefined>();
+
+  const sectionRefs = outline.map(() => createRef<HTMLDivElement>());
 
   return (
     <div className="w-full p-2 flex flex-row gap-2">
@@ -25,6 +26,7 @@ const StructurerBody = () => {
         setOutline={setOutline}
         focusedSection={focusSection}
         setFocusedSection={setFocusSection}
+        sectionRefs={sectionRefs}
       />
       <StructurerWorkBench
         mode={mode}
@@ -37,8 +39,20 @@ const StructurerBody = () => {
         setOutline={setOutline}
         focusedSection={focusSection}
         setFocusedSection={setFocusSection}
+        sectionRefs={sectionRefs}
       />
-      <StructurerOutline outline={outline} setOutline={setOutline} />
+      <StructurerOutline
+        setMode={setMode}
+        text={text}
+        setText={setText}
+        llmResponse={llmResponse}
+        setLlmResponse={setLlmResponse}
+        outline={outline}
+        setOutline={setOutline}
+        focusedSection={focusSection}
+        setFocusedSection={setFocusSection}
+        sectionRefs={sectionRefs}
+      />
     </div>
   );
 };

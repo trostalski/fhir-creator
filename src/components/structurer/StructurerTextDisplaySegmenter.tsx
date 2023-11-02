@@ -1,6 +1,6 @@
-import { SectionInfo, Outline, StructurerTextDisplayProps } from "@/types";
+import { StructurerTextDisplayProps } from "@/types";
 import { prepareIndexList } from "@/utils/structurerUtils";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
 
 const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
@@ -11,6 +11,7 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
     setOutline,
     setFocusedSection,
     focusedSection,
+    sectionRefs,
   } = props;
 
   useEffect(() => {
@@ -34,8 +35,9 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
   return (
     <div className="flex flex-col gap-1 whitespace-pre">
       {outline.length > 0
-        ? outline.map((section) => (
+        ? outline.map((section, index) => (
             <div
+              ref={sectionRefs[index]}
               key={section.startIndex}
               className="border border-blue-500 rounded-md flex flex-col gap-1 p-2"
             >
