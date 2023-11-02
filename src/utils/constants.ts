@@ -6,6 +6,7 @@ import {
   NumericalFeature,
   OptionType,
   Outline,
+  SectionInfo,
 } from "../types";
 import { ElementDefinitionConstraint } from "fhir/r4";
 import { ProfileTreeNode } from "./buildTree";
@@ -433,6 +434,16 @@ export const dummyOutline: Outline = {
     ],
   },
 };
+
+export const dummySections: SectionInfo[] = [
+  {
+    key: "Medication",
+    startIndex: 0,
+    endIndex: 100,
+    askedFor: true,
+    text: "Medication",
+  },
+];
 
 export const resourceOptions: OptionType[] = [
   { value: "Account", label: "Account" },
