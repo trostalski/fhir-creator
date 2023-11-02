@@ -2,6 +2,7 @@ import { Colors } from "react-select";
 import { ProfileTreeNode } from "./utils/buildTree";
 import { resourceTypeList } from "./utils/constants";
 import React, { RefObject } from "react";
+import seedrandom from "seedrandom";
 
 export interface PathItem {
   path: string;
@@ -199,6 +200,9 @@ export interface StructurerProps {
   sectionRefs: RefObject<HTMLDivElement>[];
   focusedCategory?: string;
   setFocusedCategory: (entity: string) => void;
+  colors: ColorStore;
+  setColors: (colors: ColorStore) => void;
+  rng: seedrandom.PRNG;
 }
 
 export interface StructurerTextProps extends StructurerProps {
@@ -223,21 +227,23 @@ export interface CategorySelectorProps {
   InputComponent: React.FC<InputTextProps | InputSelectionProps>;
   fetchCategories?: () => Promise<string[]>;
   DisplayComponent: React.FC<DisplayCategoriesProps>;
-  colors?: ColorStore;
   focusedCategory?: string;
-  setFocusedCategory?: (category: string) => void;
+  setFocusedCategory: (category: string) => void;
+  colors?: ColorStore;
+  setColors: (colors: ColorStore) => void;
   getColor?: () => string;
-  setColors?: (colors: ColorStore) => void;
+  rng: seedrandom.PRNG;
 }
 
 export interface DisplayCategoriesProps {
   selectedCategories: string[];
   setSelectedCategories: (categories: string[]) => void;
   colors?: ColorStore;
-  setColors?: (colors: ColorStore) => void;
+  setColors: (colors: ColorStore) => void;
   getColor?: () => string;
   focusedCategory?: string;
   setFocusedCategory: (category: string) => void;
+  rng: seedrandom.PRNG;
 }
 
 export interface StructurerTextDisplayProps extends StructurerTextProps {}

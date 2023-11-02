@@ -4,11 +4,14 @@ import { useState } from "react";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
 
 const StructuerOutlineEntity = (props: StructurerOutlineEntityProps) => {
-  const { entity, entityName } = props;
+  const { entity, entityName, colors } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
-    <div className="flex flex-col ml-1 border rounded-md bg-blue-500 p-1 gap-1">
+    <div
+      className="flex flex-col ml-1 rounded-md p-1 gap-1"
+      style={{ backgroundColor: colors[entityName] }}
+    >
       <div className="flex flex-row items-center gap-1">
         {entity.length > 0 ? (
           <div className="transform hover:bg-gray-700 p-1 rounded-md">

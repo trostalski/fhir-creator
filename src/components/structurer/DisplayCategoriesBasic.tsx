@@ -10,6 +10,7 @@ const DisplayCategoriesBasic = (props: DisplayCategoriesProps) => {
     getColor,
     setColors,
     setFocusedCategory,
+    rng,
   } = props;
 
   return (
@@ -20,6 +21,7 @@ const DisplayCategoriesBasic = (props: DisplayCategoriesProps) => {
           className={`flex flex-row gap-1 border border-black p-1 rounded-md ${
             focusedCategory === category ? "border-4" : ""
           }`}
+          style={colors && { backgroundColor: colors[category] }}
           onClick={() => setFocusedCategory(category)}
         >
           {category}

@@ -15,7 +15,18 @@ import StructurerWorkBenchLabeler from "./StructurerWorkBenchLabeler";
 const StructurerWorkBenchSegmenter = (
   props: StructurerWorkBenchSegmenterProps
 ) => {
-  const { mode, text, setMode, setText, llmResponse, setLlmResponse } = props;
+  const {
+    mode,
+    text,
+    setMode,
+    setText,
+    llmResponse,
+    setLlmResponse,
+    colors,
+    setColors,
+    rng,
+    setFocusedCategory,
+  } = props;
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     segmentationCategories
   );
@@ -71,6 +82,9 @@ const StructurerWorkBenchSegmenter = (
         onSelectCategory={handleSelectCategory}
         placeholder="Enter categories to look for in the text (e.g. Medication, History of Present Illness)"
         DisplayComponent={DisplayCategoriesBasic}
+        setColors={setColors}
+        rng={rng}
+        setFocusedCategory={setFocusedCategory}
       />
       <button
         onClick={async () => await handleLLMSegment()}

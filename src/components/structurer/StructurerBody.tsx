@@ -1,8 +1,11 @@
 import { createRef, useState } from "react";
-import { StructurerModes, SectionInfo } from "@/types";
+import { StructurerModes, SectionInfo, ColorStore } from "@/types";
 import StructurerText from "./StructurerText";
 import StructurerWorkBench from "./StructurerWorkBench";
 import StructurerOutline from "./StructurerOutline";
+import seedrandom from "seedrandom";
+import { colorSeed, defaultFocusResources } from "@/utils/constants";
+import { setColorsForDefaultResources } from "@/utils/annotator_utils";
 
 const StructurerBody = () => {
   const [text, setText] = useState("");
@@ -11,6 +14,10 @@ const StructurerBody = () => {
   const [outline, setOutline] = useState<SectionInfo[]>([]);
   const [focusSection, setFocusSection] = useState<SectionInfo | undefined>();
   const [focusedCategory, setFocusedCategory] = useState<string>();
+  const [rng, setRng] = useState<seedrandom.PRNG>(() => seedrandom(colorSeed));
+  const [colors, setColors] = useState<ColorStore>(
+    setColorsForDefaultResources(defaultFocusResources, rng)
+  );
 
   const sectionRefs = outline.map(() => createRef<HTMLDivElement>());
 
@@ -30,6 +37,9 @@ const StructurerBody = () => {
         sectionRefs={sectionRefs}
         focusedCategory={focusedCategory}
         setFocusedCategory={setFocusedCategory}
+        colors={colors}
+        setColors={setColors}
+        rng={rng}
       />
       <StructurerWorkBench
         mode={mode}
@@ -45,6 +55,9 @@ const StructurerBody = () => {
         sectionRefs={sectionRefs}
         focusedCategory={focusedCategory}
         setFocusedCategory={setFocusedCategory}
+        colors={colors}
+        setColors={setColors}
+        rng={rng}
       />
       <StructurerOutline
         setMode={setMode}
@@ -59,6 +72,9 @@ const StructurerBody = () => {
         sectionRefs={sectionRefs}
         focusedCategory={focusedCategory}
         setFocusedCategory={setFocusedCategory}
+        colors={colors}
+        setColors={setColors}
+        rng={rng}
       />
     </div>
   );

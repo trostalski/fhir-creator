@@ -3,7 +3,8 @@ import { handleAnnotationChange } from "@/utils/structurerUtils";
 import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
 
 const StructurerTextDisplayLabeler = (props: StructurerTextDisplayProps) => {
-  const { text, outline, setOutline, focusedCategory, focusedSection } = props;
+  const { text, outline, setOutline, focusedCategory, focusedSection, colors } =
+    props;
 
   let dummyValue: ValueState[] = []; // need this somehow so that the type in the TextAnnotator is not never... might be nice to get rid off for usability
 
@@ -24,7 +25,7 @@ const StructurerTextDisplayLabeler = (props: StructurerTextDisplayProps) => {
             })
           }
           value={dummyValue} // need this somehow so that the type in the TextAnnotator is not never... might be nice to get rid off for usability
-          colors={{}}
+          colors={colors}
           setOutline={() => {}}
         />
       )}

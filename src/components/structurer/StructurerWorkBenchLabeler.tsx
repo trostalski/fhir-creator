@@ -17,6 +17,9 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
     focusedSection,
     focusedCategory,
     setFocusedCategory,
+    colors,
+    setColors,
+    rng,
   } = props;
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     defaultFocusResources.map((option) => option.value)
@@ -98,6 +101,9 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
         fetchCategories={() =>
           Promise.resolve(resourceOptions.map((option) => option.value))
         }
+        colors={colors}
+        setColors={setColors}
+        rng={rng}
       />
       <button
         className={`${

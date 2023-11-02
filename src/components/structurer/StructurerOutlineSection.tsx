@@ -36,7 +36,9 @@ const StructurerOutlineSection = (props: StructurerOutlineSectionProps) => {
         </button>
       </div>
       <div
-        className={`transition-all overflow-hidden ${!isOpen ? "max-h-0" : ""}`}
+        className={`flex flex-col gap-1 transition-all overflow-hidden ${
+          !isOpen ? "max-h-0" : ""
+        }`}
       >
         {section.entities &&
           Object.keys(section.entities).map((key) => {

@@ -15,6 +15,7 @@ const CategorySelector = (props: CategorySelectorProps) => {
     setFocusedCategory,
     setColors,
     getColor,
+    rng,
   } = props;
 
   return (
@@ -27,11 +28,12 @@ const CategorySelector = (props: CategorySelectorProps) => {
       <DisplayComponent
         selectedCategories={selectedCategories}
         setSelectedCategories={setSelectedCategories}
-        colors={colors}
+        colors={colors} // set colors only if you want need them (currently only for labeler)
         setColors={setColors}
         getColor={getColor}
         focusedCategory={focusedCategory}
         setFocusedCategory={setFocusedCategory}
+        rng={rng}
       />
     </div>
   );

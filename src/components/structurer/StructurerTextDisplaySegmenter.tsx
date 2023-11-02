@@ -16,6 +16,7 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
     focusedSection,
     sectionRefs,
     focusedCategory,
+    colors,
   } = props;
 
   let dummyValue: ValueState[] = []; // need this somehow so that the type in the TextAnnotator is not never... might be nice to get rid off for usability
@@ -77,7 +78,7 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
                     })
                   }
                   value={dummyValue} // need this somehow so that the type in the TextAnnotator is not never... might be nice to get rid off for usability
-                  colors={{}}
+                  colors={colors}
                   setOutline={() => {}}
                   outline={
                     outline.find((sec) => sec.key === section.key)?.entities
