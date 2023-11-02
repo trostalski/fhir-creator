@@ -68,7 +68,10 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
                       value: value,
                       outline: outline,
                       setOutline: setOutline,
-                      focusedSection: focusedSection,
+                      focusedSection:
+                        focusedSection?.key === section.key
+                          ? focusedSection
+                          : undefined,
                       focusedCategory: focusedCategory,
                       text: focusedSection?.text,
                     })
