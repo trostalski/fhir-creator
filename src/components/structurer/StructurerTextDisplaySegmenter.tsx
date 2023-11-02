@@ -1,5 +1,8 @@
-import { StructurerTextDisplayProps } from "@/types";
-import { prepareIndexList } from "@/utils/structurerUtils";
+import { StructurerTextDisplayProps, ValueState } from "@/types";
+import {
+  handleAnnotationChange,
+  prepareIndexList,
+} from "@/utils/structurerUtils";
 import { useEffect } from "react";
 import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
 
@@ -12,7 +15,10 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
     setFocusedSection,
     focusedSection,
     sectionRefs,
+    focusedCategory,
   } = props;
+
+  let dummyValue: ValueState[] = []; // need this somehow so that the type in the TextAnnotator is not never... might be nice to get rid off for usability
 
   useEffect(() => {
     if (llmResponse) {
@@ -57,8 +63,17 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
               {section.text && (
                 <TextAnnotator
                   content={section.text}
-                  onChange={(value) => {}}
-                  value={[]}
+                  onChange={(value) =>
+                    handleAnnotationChange({
+                      value: value,
+                      outline: outline,
+                      setOutline: setOutline,
+                      focusedSection: focusedSection,
+                      focusedCategory: focusedCategory,
+                      text: focusedSection?.text,
+                    })
+                  }
+                  value={dummyValue} // need this somehow so that the type in the TextAnnotator is not never... might be nice to get rid off for usability
                   colors={{}}
                   setOutline={() => {}}
                   outline={
