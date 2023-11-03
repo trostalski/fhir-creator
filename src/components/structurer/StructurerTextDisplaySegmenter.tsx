@@ -1,10 +1,15 @@
-import { StructurerTextDisplayProps, ValueState } from "@/types";
+import {
+  CombineSectionButtonState,
+  StructurerTextDisplayProps,
+  ValueState,
+} from "@/types";
 import {
   handleAnnotationChange,
   prepareIndexList,
 } from "@/utils/structurerUtils";
 import { useEffect } from "react";
 import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
+import StructurerCombineSectionButton from "./StructurerCombineSectionButton";
 
 const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
   const {
@@ -48,8 +53,10 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
               key={section.startIndex}
               className="border border-blue-500 rounded-md flex flex-col gap-1 p-2"
             >
-              <div className="flex flex-row justify-between">
-                <span className="text-lg font-semibold">{section.key}:</span>
+              <div className="flex flex-row justify-between gap-2">
+                <span className="text-lg font-semibold flex-grow">
+                  {section.key}:
+                </span>
                 <button
                   className={`${
                     focusedSection?.key === section.key
@@ -60,6 +67,12 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
                 >
                   Label Entities
                 </button>
+                <StructurerCombineSectionButton
+                  state={CombineSectionButtonState.CombineAbove}
+                  outline={outline}
+                  setOutline={setOutline}
+                  section={section}
+                />
               </div>
               {section.text && (
                 <TextAnnotator
@@ -85,6 +98,14 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
                   }
                 />
               )}
+              <div className="flex justify-end">
+                <StructurerCombineSectionButton
+                  state={CombineSectionButtonState.CombineBelow}
+                  outline={outline}
+                  setOutline={setOutline}
+                  section={section}
+                />
+              </div>
             </div>
           ))
         : text}

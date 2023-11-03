@@ -361,6 +361,18 @@ export interface StructurerUploadProps {
   setText: (text: string) => void;
 }
 
+export interface StructurerCombineSectionButtonProps {
+  state: CombineSectionButtonState;
+  outline: SectionInfo[];
+  setOutline: (outline: SectionInfo[]) => void;
+  section: SectionInfo;
+}
+
+export enum CombineSectionButtonState {
+  CombineAbove,
+  CombineBelow,
+}
+
 export enum TextExtractionApiEndpoints {
   extractPDFText = "extractPDFText",
   extractScanText = "extractScanText",

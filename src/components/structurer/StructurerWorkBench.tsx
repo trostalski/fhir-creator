@@ -3,6 +3,7 @@ import StructurerWorkBenchTextInput from "./StructurerWorkBenchTextInput";
 import StructurerWorkBenchSegmenter from "./StructurerWorkBenchSegmenter";
 import StructurerWorkBenchLabeler from "./StructurerWorkBenchLabeler";
 import { useEffect } from "react";
+import { dummySections } from "@/utils/constants";
 
 const StructurerWorkBench = (props: StructurerWorkBenchProps) => {
   const { mode, text, outline, setOutline, focusedSection, setFocusedSection } =
@@ -21,7 +22,7 @@ const StructurerWorkBench = (props: StructurerWorkBenchProps) => {
       setOutline([labelerSection]);
       setFocusedSection(labelerSection);
     } else if (mode === StructurerModes.segmentText) {
-      setOutline([]);
+      setOutline(dummySections);
     }
   }, [mode]);
 

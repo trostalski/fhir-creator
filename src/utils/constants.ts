@@ -435,13 +435,37 @@ export const dummyOutline: Outline = {
   },
 };
 
+const dummyText: string =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vitae aliquam aliquam, nisl nisl aliquam nisl, vitae aliquam n";
+
 export const dummySections: SectionInfo[] = [
   {
-    key: "Medication",
+    key: "Section0",
     startIndex: 0,
     endIndex: 100,
     askedFor: true,
-    text: "Medication",
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vit",
+  },
+  {
+    key: "Section1",
+    startIndex: 0,
+    endIndex: 100,
+    askedFor: true,
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vit",
+  },
+  {
+    key: "Section3",
+    startIndex: 0,
+    endIndex: 100,
+    askedFor: true,
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vit",
+  },
+  {
+    key: "Section4",
+    startIndex: 0,
+    endIndex: 100,
+    askedFor: true,
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vit",
   },
 ];
 
