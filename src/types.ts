@@ -357,6 +357,15 @@ export interface Color {
   color: string;
 }
 
+export interface StructurerUploadProps {
+  setText: (text: string) => void;
+}
+
+export enum TextExtractionApiEndpoints {
+  extractPDFText = "extractPDFText",
+  extractScanText = "extractScanText",
+}
+
 export interface InputDict {
   resource_type: string;
   medical_term: string;
