@@ -441,28 +441,28 @@ const dummyText: string =
 export const dummySections: SectionInfo[] = [
   {
     key: "Section0",
-    startIndex: 0,
+    startIndex: 1,
     endIndex: 100,
     askedFor: true,
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vit",
   },
   {
     key: "Section1",
-    startIndex: 0,
+    startIndex: 2,
     endIndex: 100,
     askedFor: true,
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vit",
   },
   {
     key: "Section3",
-    startIndex: 0,
+    startIndex: 3,
     endIndex: 100,
     askedFor: true,
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vit",
   },
   {
     key: "Section4",
-    startIndex: 0,
+    startIndex: 4,
     endIndex: 100,
     askedFor: true,
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vit",
