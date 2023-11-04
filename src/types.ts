@@ -400,6 +400,22 @@ export interface StructurerSectionLabelButtonProps {
   setFocusedSection: (section: SectionInfo) => void;
 }
 
+export interface StructurerSectionRenameButtonProps {
+  setShowSectionRenameModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setRenameSection: React.Dispatch<
+    React.SetStateAction<SectionInfo | undefined>
+  >;
+  section: SectionInfo;
+}
+
+export interface StructurerSectionRenameModalProps {
+  setShowSectionRenameModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setRenameSection: (section: SectionInfo | undefined) => void;
+  renameSection: SectionInfo;
+  setOutline: (outline: SectionInfo[]) => void;
+  outline: SectionInfo[];
+}
+
 export interface InputDict {
   resource_type: string;
   medical_term: string;
