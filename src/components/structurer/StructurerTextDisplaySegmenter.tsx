@@ -1,41 +1,17 @@
-import {
-  CombineSectionButtonState,
-  SectionInfo,
-  StructurerTextDisplayProps,
-  ValueState,
-} from "@/types";
-import {
-  handleAnnotationChange,
-  prepareIndexList,
-} from "@/utils/structurerUtils";
+import { SectionInfo, StructurerTextDisplayProps } from "@/types";
+import { prepareIndexList } from "@/utils/structurerUtils";
 import { useEffect, useState } from "react";
-import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
-import StructurerSectionCombineButton from "./StructurerSectionCombineButton";
-import StructurerSectionSplitButton from "./StructurerSectionSplitButton";
 import StructurerSectionSplitModal from "./StructurerSectionSplitModal";
-import StructurerSectionLabelButton from "./StructurerSectionLabelButton";
 import StructurerSectionRenameModal from "./StructurerSectionRenameModal";
-import StructurerSectionRenameButton from "./StructurerSectionRenameButton";
+import StructurerTextDisplaySection from "./StructurerTextDisplaySection";
 
 const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
-  const {
-    text,
-    llmResponse,
-    outline,
-    setOutline,
-    setFocusedSection,
-    focusedSection,
-    sectionRefs,
-    focusedCategory,
-    colors,
-  } = props;
+  const { text, llmResponse, outline, setOutline } = props;
 
   const [showSplitSectionModal, setShowSplitSectionModal] = useState(false);
   const [splitSection, setSplitSection] = useState<SectionInfo | undefined>();
   const [showSectionRenameModal, setShowSectionRenameModal] = useState(false);
   const [renameSection, setRenameSection] = useState<SectionInfo | undefined>();
-
-  let dummyValue: ValueState[] = []; // need this somehow so that the type in the TextAnnotator is not never... might be nice to get rid off for usability
 
   useEffect(() => {
     if (llmResponse) {
@@ -77,64 +53,16 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
       )}
       {outline.length > 0
         ? outline.map((section, index) => (
-            <div
-              ref={sectionRefs[index]}
+            <StructurerTextDisplaySection
               key={section.startIndex}
-              className="border border-blue-500 rounded-md flex flex-col gap-1 p-2"
-            >
-              <div className="flex flex-row justify-between gap-2">
-                <div className="flex flex-grow gap-2">
-                  <StructurerSectionRenameButton
-                    section={section}
-                    setRenameSection={setRenameSection}
-                    setShowSectionRenameModal={setShowSectionRenameModal}
-                  />
-                  <span className="text-lg font-semibold">{section.key}:</span>
-                </div>
-                <StructurerSectionLabelButton
-                  focusedSection={focusedSection}
-                  section={section}
-                  setFocusedSection={setFocusedSection}
-                />
-                <StructurerSectionSplitButton
-                  setShowSplitSectionModal={setShowSplitSectionModal}
-                  setSplitSection={setSplitSection}
-                  section={section}
-                />
-              </div>
-              {section.text && (
-                <TextAnnotator
-                  content={section.text}
-                  onChange={(value) =>
-                    handleAnnotationChange({
-                      value: value,
-                      outline: outline,
-                      setOutline: setOutline,
-                      focusedSection:
-                        focusedSection?.key === section.key
-                          ? focusedSection
-                          : undefined,
-                      focusedCategory: focusedCategory,
-                      text: focusedSection?.text,
-                    })
-                  }
-                  value={dummyValue} // need this somehow so that the type in the TextAnnotator is not never... might be nice to get rid off for usability
-                  colors={colors}
-                  setOutline={() => {}}
-                  outline={
-                    outline.find((sec) => sec.key === section.key)?.entities
-                  }
-                />
-              )}
-              <div className="flex justify-end">
-                <StructurerSectionCombineButton
-                  state={CombineSectionButtonState.CombineBelow}
-                  outline={outline}
-                  setOutline={setOutline}
-                  section={section}
-                />
-              </div>
-            </div>
+              {...props}
+              section={section}
+              index={index}
+              setRenameSection={setRenameSection}
+              setShowSectionRenameModal={setShowSectionRenameModal}
+              setShowSplitSectionModal={setShowSplitSectionModal}
+              setSplitSection={setSplitSection}
+            />
           ))
         : text}
     </div>
