@@ -6,8 +6,7 @@ import { useEffect } from "react";
 import { dummySections } from "@/utils/constants";
 
 const StructurerWorkBench = (props: StructurerWorkBenchProps) => {
-  const { mode, text, outline, setOutline, focusedSection, setFocusedSection } =
-    props;
+  const { mode, text, setOutline, setFocusedSection } = props;
 
   const labelerSection = {
     key: "Text",

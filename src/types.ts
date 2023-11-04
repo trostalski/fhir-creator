@@ -203,6 +203,8 @@ export interface StructurerProps {
   colors: ColorStore;
   setColors: (colors: ColorStore) => void;
   rng: seedrandom.PRNG;
+  expandedSections: ExpandedSections;
+  setExpandedSections: (expandedSections: ExpandedSections) => void;
 }
 
 export interface StructurerTextProps extends StructurerProps {
@@ -356,6 +358,10 @@ export interface StructurerOutlineDownloadButtonProps {
 
 export interface OldOutline {
   [key: string]: string[];
+}
+
+export interface ExpandedSections {
+  [key: string]: boolean;
 }
 
 export interface OutlineArrayItem extends EntityElement {

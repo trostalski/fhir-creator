@@ -1,5 +1,10 @@
-import { createRef, useState } from "react";
-import { StructurerModes, SectionInfo, ColorStore } from "@/types";
+import { createRef, useEffect, useState } from "react";
+import {
+  StructurerModes,
+  SectionInfo,
+  ColorStore,
+  ExpandedSections,
+} from "@/types";
 import StructurerText from "./StructurerText";
 import StructurerWorkBench from "./StructurerWorkBench";
 import StructurerOutline from "./StructurerOutline";
@@ -18,6 +23,22 @@ const StructurerBody = () => {
   const [colors, setColors] = useState<ColorStore>(
     setColorsForDefaultResources(defaultFocusResources, rng)
   );
+  const [expandedSections, setExpandedSections] = useState<ExpandedSections>(
+    {}
+  );
+
+  useEffect(() => {
+    const newExpandedSections: ExpandedSections = {};
+    outline.forEach((section) => {
+      if (section.key in expandedSections) {
+        // If the key already exists, use its current state, otherwise initialize to false
+        newExpandedSections[section.key] = expandedSections[section.key];
+      } else {
+        newExpandedSections[section.key] = false;
+      }
+    });
+    setExpandedSections(newExpandedSections);
+  }, [outline]);
 
   const sectionRefs = outline.map(() => createRef<HTMLDivElement>());
 
@@ -40,6 +61,8 @@ const StructurerBody = () => {
         colors={colors}
         setColors={setColors}
         rng={rng}
+        expandedSections={expandedSections}
+        setExpandedSections={setExpandedSections}
       />
       <StructurerWorkBench
         mode={mode}
@@ -58,6 +81,8 @@ const StructurerBody = () => {
         colors={colors}
         setColors={setColors}
         rng={rng}
+        expandedSections={expandedSections}
+        setExpandedSections={setExpandedSections}
       />
       <StructurerOutline
         setMode={setMode}
@@ -75,6 +100,8 @@ const StructurerBody = () => {
         colors={colors}
         setColors={setColors}
         rng={rng}
+        expandedSections={expandedSections}
+        setExpandedSections={setExpandedSections}
       />
     </div>
   );

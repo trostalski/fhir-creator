@@ -11,6 +11,7 @@ import { handleAnnotationChange } from "@/utils/structurerUtils";
 import StructurerSectionCombineButton from "./StructurerSectionCombineButton";
 import { useState } from "react";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
+import { set } from "lodash";
 
 const StructurerTextDisplaySection = (
   props: StructurerTextDisplaySectionProps
@@ -29,9 +30,9 @@ const StructurerTextDisplaySection = (
     setRenameSection,
     section,
     index,
+    expandedSections,
+    setExpandedSections,
   } = props;
-
-  const [showSectionBody, setShowSectionBody] = useState<boolean>(false);
 
   let dummyValue: ValueState[] = []; // need this somehow so that the type in the TextAnnotator is not never... might be nice to get rid off for usability
 
@@ -45,8 +46,13 @@ const StructurerTextDisplaySection = (
         <div className="flex flex-grow gap-2">
           <button>
             <ExpandAccordionToggle
-              isOpen={showSectionBody}
-              onClick={() => setShowSectionBody(!showSectionBody)}
+              isOpen={expandedSections[section.key]}
+              onClick={() =>
+                setExpandedSections({
+                  ...expandedSections,
+                  [section.key]: !expandedSections[section.key],
+                })
+              }
             />
           </button>
           <StructurerSectionRenameButton
@@ -67,7 +73,7 @@ const StructurerTextDisplaySection = (
           section={section}
         />
       </div>
-      {section.text && showSectionBody && (
+      {section.text && expandedSections[section.key] && (
         <TextAnnotator
           content={section.text}
           onChange={(value) =>
