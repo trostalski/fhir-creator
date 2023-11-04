@@ -1,5 +1,6 @@
 import {
   CombineSectionButtonState,
+  SectionInfo,
   StructurerTextDisplayProps,
   ValueState,
 } from "@/types";
@@ -7,9 +8,11 @@ import {
   handleAnnotationChange,
   prepareIndexList,
 } from "@/utils/structurerUtils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
 import StructurerCombineSectionButton from "./StructurerCombineSectionButton";
+import StructurerSplitSectionButton from "./StructurerSplitSectionButton";
+import StructurerSplitSectionModal from "./StructurerSplitSectionModal";
 
 const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
   const {
@@ -23,6 +26,9 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
     focusedCategory,
     colors,
   } = props;
+
+  const [showSplitSectionModal, setShowSplitSectionModal] = useState(false);
+  const [splitSection, setSplitSection] = useState<SectionInfo | undefined>();
 
   let dummyValue: ValueState[] = []; // need this somehow so that the type in the TextAnnotator is not never... might be nice to get rid off for usability
 
@@ -46,6 +52,15 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
 
   return (
     <div className="flex flex-col gap-1 whitespace-pre">
+      {showSplitSectionModal && splitSection && (
+        <StructurerSplitSectionModal
+          setShowSplitSectionModal={setShowSplitSectionModal}
+          setSpliceSection={setSplitSection}
+          splitSection={splitSection}
+          setOutline={setOutline}
+          outline={outline}
+        />
+      )}
       {outline.length > 0
         ? outline.map((section, index) => (
             <div
@@ -67,10 +82,9 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
                 >
                   Label Entities
                 </button>
-                <StructurerCombineSectionButton
-                  state={CombineSectionButtonState.CombineAbove}
-                  outline={outline}
-                  setOutline={setOutline}
+                <StructurerSplitSectionButton
+                  setShowSplitSectionModal={setShowSplitSectionModal}
+                  setSplitSection={setSplitSection}
                   section={section}
                 />
               </div>

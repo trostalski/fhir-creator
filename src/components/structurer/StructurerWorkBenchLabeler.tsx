@@ -9,6 +9,7 @@ import { useStore } from "@/stores/useStore";
 import { PuffLoader } from "react-spinners";
 import { addMatches, transformOutline } from "@/utils/annotator_utils";
 import { toast } from "react-toastify";
+import TextSplitter from "./TextSplitter";
 
 const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
   const {

@@ -259,3 +259,43 @@ export const updateMatches = (
   });
   return updatedEntities;
 };
+
+export const splitEntities = (
+  entities: Entities,
+  range: [number, number]
+): Entities | undefined => {
+  const newEntities: Entities = {};
+  for (const key of Object.keys(entities)) {
+    const entityElements = entities[key];
+    const newEntityElements = entityElements.filter((element) => {
+      if (!element.matches) return false;
+      if (EntityElementIntersectsSplitRange(element, range)) {
+        throw new Error("Please set a split outside of an entity");
+      }
+      return (
+        element.matches[0][0] >= range[0] && element.matches[0][1] <= range[1]
+      ); // Only handling the first match here, not decided what to do with multiple matches
+    });
+    if (newEntityElements.length > 0) {
+      const updatedEntityElements = newEntityElements.map((element) => {
+        element.matches![0][0] -= range[0];
+        element.matches![0][1] -= range[0];
+        return element;
+      });
+      newEntities[key] = updatedEntityElements;
+    }
+  }
+  if (Object.keys(newEntities).length === 0) return undefined;
+  return newEntities;
+};
+
+export const EntityElementIntersectsSplitRange = (
+  element: EntityElement,
+  range: [number, number]
+) => {
+  return (
+    (range[0] >= element.matches![0][0] &&
+      range[0] <= element.matches![0][1]) || // start of split range is inside entity
+    (range[1] >= element.matches![0][0] && range[1] <= element.matches![0][1]) // end of split range is inside entity
+  );
+};
