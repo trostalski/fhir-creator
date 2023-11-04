@@ -1,12 +1,16 @@
-import { Entities, SectionInfo, StructurerSplitTextModalProps } from "@/types";
+import {
+  Entities,
+  SectionInfo,
+  StructurerSectionSplitModalProps,
+} from "@/types";
 import ModalWrapper from "../ModalWrapper";
 import { LuSplitSquareHorizontal } from "react-icons/lu";
-import { check } from "prettier";
-import EntityElement from "../annotator/EntityElement";
 import { splitEntities, updateMatches } from "@/utils/structurerUtils";
 import { toastError } from "@/toasts";
 
-const StructurerSplitSectionModal = (props: StructurerSplitTextModalProps) => {
+const StructurerSectionSplitModal = (
+  props: StructurerSectionSplitModalProps
+) => {
   const {
     setShowSplitSectionModal,
     splitSection,
@@ -106,4 +110,4 @@ const StructurerSplitSectionModal = (props: StructurerSplitTextModalProps) => {
   );
 };
 
-export default StructurerSplitSectionModal;
+export default StructurerSectionSplitModal;

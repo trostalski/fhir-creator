@@ -1,13 +1,13 @@
 import {
   CombineSectionButtonState,
-  StructurerCombineSectionButtonProps,
+  StructurerSectionCombineButtonProps,
 } from "@/types";
 import { combineSections } from "@/utils/structurerUtils";
 import { PiUniteFill } from "react-icons/pi";
 import { Tooltip } from "react-tooltip";
 
-const StructurerCombineSectionButton = (
-  props: StructurerCombineSectionButtonProps
+const StructurerSectionCombineButton = (
+  props: StructurerSectionCombineButtonProps
 ) => {
   const { state, outline, setOutline, section } = props;
 
@@ -63,4 +63,4 @@ const StructurerCombineSectionButton = (
   );
 };
 
-export default StructurerCombineSectionButton;
+export default StructurerSectionCombineButton;

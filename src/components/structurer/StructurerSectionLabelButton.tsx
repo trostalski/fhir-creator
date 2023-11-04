@@ -1,9 +1,9 @@
-import { SectionInfo, StructurerLabelSectionButtonProps } from "@/types";
+import { StructurerSectionLabelButtonProps } from "@/types";
 import { LiaMarkerSolid } from "react-icons/lia";
 import { Tooltip } from "react-tooltip";
 
-const StructurerLabelSectionButton = (
-  props: StructurerLabelSectionButtonProps
+const StructurerSectionLabelButton = (
+  props: StructurerSectionLabelButtonProps
 ) => {
   const { focusedSection, section, setFocusedSection } = props;
 
@@ -25,4 +25,4 @@ const StructurerLabelSectionButton = (
   );
 };
 
-export default StructurerLabelSectionButton;
+export default StructurerSectionLabelButton;

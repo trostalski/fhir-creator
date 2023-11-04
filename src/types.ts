@@ -361,7 +361,7 @@ export interface StructurerUploadProps {
   setText: (text: string) => void;
 }
 
-export interface StructurerCombineSectionButtonProps {
+export interface StructurerSectionCombineButtonProps {
   state: CombineSectionButtonState;
   outline: SectionInfo[];
   setOutline: (outline: SectionInfo[]) => void;
@@ -378,7 +378,7 @@ export enum TextExtractionApiEndpoints {
   extractScanText = "extractScanText",
 }
 
-export interface StructurerSplitTextModalProps {
+export interface StructurerSectionSplitModalProps {
   setShowSplitSectionModal: React.Dispatch<React.SetStateAction<boolean>>;
   setSpliceSection: (section: SectionInfo | undefined) => void;
   splitSection: SectionInfo;
@@ -386,7 +386,7 @@ export interface StructurerSplitTextModalProps {
   outline: SectionInfo[];
 }
 
-export interface StructurerSplitSectionButtonProps {
+export interface StructurerSectionSplitButtonProps {
   setShowSplitSectionModal: React.Dispatch<React.SetStateAction<boolean>>;
   setSplitSection: React.Dispatch<
     React.SetStateAction<SectionInfo | undefined>
@@ -394,7 +394,7 @@ export interface StructurerSplitSectionButtonProps {
   section: SectionInfo;
 }
 
-export interface StructurerLabelSectionButtonProps {
+export interface StructurerSectionLabelButtonProps {
   focusedSection: SectionInfo | undefined;
   section: SectionInfo;
   setFocusedSection: (section: SectionInfo) => void;

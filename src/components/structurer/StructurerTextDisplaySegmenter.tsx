@@ -10,11 +10,10 @@ import {
 } from "@/utils/structurerUtils";
 import { useEffect, useState } from "react";
 import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
-import StructurerCombineSectionButton from "./StructurerCombineSectionButton";
-import StructurerSplitSectionButton from "./StructurerSplitSectionButton";
-import StructurerSplitSectionModal from "./StructurerSplitSectionModal";
-import { LiaMarkerSolid } from "react-icons/lia";
-import StructurerLabelSectionButton from "./StructurerLabelSectionButton";
+import StructurerSectionCombineButton from "./StructurerSectionCombineButton";
+import StructurerSectionSplitButton from "./StructurerSectionSplitButton";
+import StructurerSectionSplitModal from "./StructurerSectionSplitModal";
+import StructurerSectionLabelButton from "./StructurerSectionLabelButton";
 
 const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
   const {
@@ -55,7 +54,7 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
   return (
     <div className="flex flex-col gap-1 whitespace-pre">
       {showSplitSectionModal && splitSection && (
-        <StructurerSplitSectionModal
+        <StructurerSectionSplitModal
           setShowSplitSectionModal={setShowSplitSectionModal}
           setSpliceSection={setSplitSection}
           splitSection={splitSection}
@@ -74,12 +73,12 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
                 <span className="text-lg font-semibold flex-grow">
                   {section.key}:
                 </span>
-                <StructurerLabelSectionButton
+                <StructurerSectionLabelButton
                   focusedSection={focusedSection}
                   section={section}
                   setFocusedSection={setFocusedSection}
                 />
-                <StructurerSplitSectionButton
+                <StructurerSectionSplitButton
                   setShowSplitSectionModal={setShowSplitSectionModal}
                   setSplitSection={setSplitSection}
                   section={section}
@@ -110,7 +109,7 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
                 />
               )}
               <div className="flex justify-end">
-                <StructurerCombineSectionButton
+                <StructurerSectionCombineButton
                   state={CombineSectionButtonState.CombineBelow}
                   outline={outline}
                   setOutline={setOutline}
