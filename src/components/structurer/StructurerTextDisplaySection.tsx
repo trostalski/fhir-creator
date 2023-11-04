@@ -9,6 +9,8 @@ import StructurerSectionSplitButton from "./StructurerSectionSplitButton";
 import TextAnnotator from "@/utils/text-annotate/TextAnnotator";
 import { handleAnnotationChange } from "@/utils/structurerUtils";
 import StructurerSectionCombineButton from "./StructurerSectionCombineButton";
+import { useState } from "react";
+import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
 
 const StructurerTextDisplaySection = (
   props: StructurerTextDisplaySectionProps
@@ -29,6 +31,8 @@ const StructurerTextDisplaySection = (
     index,
   } = props;
 
+  const [showSectionBody, setShowSectionBody] = useState<boolean>(false);
+
   let dummyValue: ValueState[] = []; // need this somehow so that the type in the TextAnnotator is not never... might be nice to get rid off for usability
 
   return (
@@ -39,6 +43,12 @@ const StructurerTextDisplaySection = (
     >
       <div className="flex flex-row justify-between gap-2">
         <div className="flex flex-grow gap-2">
+          <button>
+            <ExpandAccordionToggle
+              isOpen={showSectionBody}
+              onClick={() => setShowSectionBody(!showSectionBody)}
+            />
+          </button>
           <StructurerSectionRenameButton
             section={section}
             setRenameSection={setRenameSection}
@@ -57,7 +67,7 @@ const StructurerTextDisplaySection = (
           section={section}
         />
       </div>
-      {section.text && (
+      {section.text && showSectionBody && (
         <TextAnnotator
           content={section.text}
           onChange={(value) =>
