@@ -114,7 +114,7 @@ export const TextAnnotator = <T extends Span>(props: TextAnnotatorProps<T>) => {
   const { content, value, style } = props;
   const splits = splitWithOutline(content, value, props.colors, props.outline);
   return (
-    <div onMouseUp={handleMouseUp} className="overflow-auto">
+    <div onMouseUp={handleMouseUp} className="overflow-auto max-w-3xl">
       {splits.map((split) => (
         <Split
           key={`${split.start}-${split.end}+${random(0, 1000)}`}

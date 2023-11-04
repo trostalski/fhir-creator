@@ -9,9 +9,7 @@ import StructurerSectionSplitButton from "./StructurerSectionSplitButton";
 import TextAnnotator from "@/utils/text-annotate/TextAnnotator";
 import { handleAnnotationChange } from "@/utils/structurerUtils";
 import StructurerSectionCombineButton from "./StructurerSectionCombineButton";
-import { useState } from "react";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
-import { set } from "lodash";
 
 const StructurerTextDisplaySection = (
   props: StructurerTextDisplaySectionProps

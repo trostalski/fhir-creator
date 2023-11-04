@@ -21,7 +21,7 @@ const StructurerWorkBench = (props: StructurerWorkBenchProps) => {
       setOutline([labelerSection]);
       setFocusedSection(labelerSection);
     } else if (mode === StructurerModes.segmentText) {
-      setOutline(dummySections);
+      setOutline([]);
     }
   }, [mode]);
 
