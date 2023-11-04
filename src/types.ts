@@ -248,6 +248,20 @@ export interface DisplayCategoriesProps {
 
 export interface StructurerTextDisplayProps extends StructurerTextProps {}
 
+export interface StructurerTextDisplaySectionProps
+  extends StructurerTextDisplayProps {
+  section: SectionInfo;
+  index: number;
+  setShowSplitSectionModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setSplitSection: React.Dispatch<
+    React.SetStateAction<SectionInfo | undefined>
+  >;
+  setShowSectionRenameModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setRenameSection: React.Dispatch<
+    React.SetStateAction<SectionInfo | undefined>
+  >;
+}
+
 export interface StructurerWorkBenchProps extends StructurerTextProps {}
 
 export interface StructurerWorkBenchTextInputProps
