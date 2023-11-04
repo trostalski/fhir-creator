@@ -1,18 +1,10 @@
-import { Entities, SectionInfo } from "@/types";
+import { Entities, SectionInfo, StructurerSplitTextModalProps } from "@/types";
 import ModalWrapper from "../ModalWrapper";
 import { LuSplitSquareHorizontal } from "react-icons/lu";
 import { check } from "prettier";
 import EntityElement from "../annotator/EntityElement";
 import { splitEntities, updateMatches } from "@/utils/structurerUtils";
 import { toastError } from "@/toasts";
-
-export interface StructurerSplitTextModalProps {
-  setShowSplitSectionModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setSpliceSection: (section: SectionInfo | undefined) => void;
-  splitSection: SectionInfo;
-  setOutline: (outline: SectionInfo[]) => void;
-  outline: SectionInfo[];
-}
 
 const StructurerSplitSectionModal = (props: StructurerSplitTextModalProps) => {
   const {

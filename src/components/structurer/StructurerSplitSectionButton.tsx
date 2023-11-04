@@ -1,14 +1,6 @@
-import { SectionInfo } from "@/types";
+import { SectionInfo, StructurerSplitSectionButtonProps } from "@/types";
 import { LuSplitSquareVertical } from "react-icons/lu";
 import { Tooltip } from "react-tooltip";
-
-export interface StructurerSplitSectionButtonProps {
-  setShowSplitSectionModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setSplitSection: React.Dispatch<
-    React.SetStateAction<SectionInfo | undefined>
-  >;
-  section: SectionInfo;
-}
 
 const StructurerSplitSectionButton = (
   props: StructurerSplitSectionButtonProps

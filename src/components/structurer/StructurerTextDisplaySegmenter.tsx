@@ -13,6 +13,7 @@ import { TextAnnotator } from "@/utils/text-annotate/TextAnnotator";
 import StructurerCombineSectionButton from "./StructurerCombineSectionButton";
 import StructurerSplitSectionButton from "./StructurerSplitSectionButton";
 import StructurerSplitSectionModal from "./StructurerSplitSectionModal";
+import { LiaMarkerSolid } from "react-icons/lia";
 
 const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
   const {
@@ -80,7 +81,7 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
                   } text-right rounded-md p-1 transform hover:scale-105`}
                   onClick={() => setFocusedSection(section)}
                 >
-                  Label Entities
+                  <LiaMarkerSolid />
                 </button>
                 <StructurerSplitSectionButton
                   setShowSplitSectionModal={setShowSplitSectionModal}

@@ -378,6 +378,22 @@ export enum TextExtractionApiEndpoints {
   extractScanText = "extractScanText",
 }
 
+export interface StructurerSplitTextModalProps {
+  setShowSplitSectionModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setSpliceSection: (section: SectionInfo | undefined) => void;
+  splitSection: SectionInfo;
+  setOutline: (outline: SectionInfo[]) => void;
+  outline: SectionInfo[];
+}
+
+export interface StructurerSplitSectionButtonProps {
+  setShowSplitSectionModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setSplitSection: React.Dispatch<
+    React.SetStateAction<SectionInfo | undefined>
+  >;
+  section: SectionInfo;
+}
+
 export interface InputDict {
   resource_type: string;
   medical_term: string;
