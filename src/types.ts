@@ -394,6 +394,12 @@ export interface StructurerSplitSectionButtonProps {
   section: SectionInfo;
 }
 
+export interface StructurerLabelSectionButtonProps {
+  focusedSection: SectionInfo | undefined;
+  section: SectionInfo;
+  setFocusedSection: (section: SectionInfo) => void;
+}
+
 export interface InputDict {
   resource_type: string;
   medical_term: string;

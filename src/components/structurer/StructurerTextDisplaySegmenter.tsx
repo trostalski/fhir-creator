@@ -14,6 +14,7 @@ import StructurerCombineSectionButton from "./StructurerCombineSectionButton";
 import StructurerSplitSectionButton from "./StructurerSplitSectionButton";
 import StructurerSplitSectionModal from "./StructurerSplitSectionModal";
 import { LiaMarkerSolid } from "react-icons/lia";
+import StructurerLabelSectionButton from "./StructurerLabelSectionButton";
 
 const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
   const {
@@ -73,16 +74,11 @@ const StructurerTextDisplaySegmenter = (props: StructurerTextDisplayProps) => {
                 <span className="text-lg font-semibold flex-grow">
                   {section.key}:
                 </span>
-                <button
-                  className={`${
-                    focusedSection?.key === section.key
-                      ? "bg-gray-500"
-                      : "bg-blue-500"
-                  } text-right rounded-md p-1 transform hover:scale-105`}
-                  onClick={() => setFocusedSection(section)}
-                >
-                  <LiaMarkerSolid />
-                </button>
+                <StructurerLabelSectionButton
+                  focusedSection={focusedSection}
+                  section={section}
+                  setFocusedSection={setFocusedSection}
+                />
                 <StructurerSplitSectionButton
                   setShowSplitSectionModal={setShowSplitSectionModal}
                   setSplitSection={setSplitSection}
