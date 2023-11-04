@@ -1,14 +1,12 @@
-import { Outline, Entities, StructurerOutlineProps } from "@/types";
+import { StructurerOutlineProps } from "@/types";
 import StructurerOutlineSection from "./StructurerOutlineSection";
 import { useState } from "react";
 import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
-import { TiDownload } from "react-icons/ti";
-import { downloadOutlinePart } from "@/utils/structurerUtils";
 import StructurerOutlineDownloadButton from "./StructurerOutlineDownloadButton";
 
 const StructurerOutline = (props: StructurerOutlineProps) => {
   const { outline, setOutline } = props;
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(true);
 
   return (
     <div className="flex flex-col w-2/12 gap-1 h-[90vh]">
