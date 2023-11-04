@@ -5,10 +5,18 @@ import ExpandAccordionToggle from "../shared/ExpandAccordionToggle";
 import StructurerOutlineDownloadButton from "./StructurerOutlineDownloadButton";
 
 const StructurerOutlineSection = (props: StructurerOutlineSectionProps) => {
-  const { outline, setOutline, section, sectionRefs } = props;
+  const {
+    outline,
+    setOutline,
+    section,
+    sectionRefs,
+    expandedSections,
+    setExpandedSections,
+  } = props;
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
   const handleSectionClick = () => {
+    setExpandedSections({ ...expandedSections, [section.key]: true });
     const refIndex = outline.findIndex((s) => s.key === section.key);
     if (refIndex !== -1) {
       sectionRefs[refIndex].current?.scrollIntoView({
