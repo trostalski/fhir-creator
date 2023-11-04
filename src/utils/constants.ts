@@ -438,34 +438,75 @@ export const dummyOutline: Outline = {
 const dummyText: string =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vitae aliquam aliquam, nisl nisl aliquam nisl, vitae aliquam n";
 
+function generateDummyTextWithNewlines() {
+  const lorem =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n";
+
+  let largeText = "";
+  for (let i = 0; i < 20; i++) {
+    // repeat 20 times, you can increase this number for larger text
+    largeText += lorem + (i % 5 === 0 && i !== 0 ? "\n" : ""); // Add newline every 5 iterations, except the first
+  }
+
+  return largeText;
+}
+
 export const dummySections: SectionInfo[] = [
   {
     key: "Section0",
     startIndex: 1,
     endIndex: 100,
     askedFor: true,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vit",
+    text: generateDummyTextWithNewlines(),
   },
   {
     key: "Section1",
     startIndex: 2,
     endIndex: 100,
     askedFor: true,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vit",
+    text: generateDummyTextWithNewlines(),
   },
   {
     key: "Section3",
     startIndex: 3,
     endIndex: 100,
     askedFor: true,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vit",
+    text: generateDummyTextWithNewlines(),
   },
   {
     key: "Section4",
     startIndex: 4,
     endIndex: 100,
     askedFor: true,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vit",
+    text: generateDummyTextWithNewlines(),
+  },
+  {
+    key: "Section5",
+    startIndex: 5,
+    endIndex: 100,
+    askedFor: true,
+    text: generateDummyTextWithNewlines(),
+  },
+  {
+    key: "Section6",
+    startIndex: 6,
+    endIndex: 100,
+    askedFor: true,
+    text: generateDummyTextWithNewlines(),
+  },
+  {
+    key: "Section7",
+    startIndex: 7,
+    endIndex: 100,
+    askedFor: true,
+    text: generateDummyTextWithNewlines(),
+  },
+  {
+    key: "Section8",
+    startIndex: 8,
+    endIndex: 100,
+    askedFor: true,
+    text: generateDummyTextWithNewlines(),
   },
 ];
 
