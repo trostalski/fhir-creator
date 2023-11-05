@@ -5,8 +5,8 @@ import {
   ValueState,
   EntityElement,
   Entities,
-  UnmatchedEntities,
   NoMatchesLLM,
+  MatchedEntitiesLLM,
 } from "@/types";
 import { FormEvent } from "react";
 import { addMatches } from "./annotator_utils";
@@ -222,10 +222,7 @@ export const combineEntities = (
   entities2: Entities,
   updateIndex: number
 ): Entities => {
-  console.log("entities1: ", entities1);
-  console.log("entities2: ", entities2);
   const updatedEntities2 = updateMatches(entities2, updateIndex);
-  console.log(updatedEntities2);
   const combinedEntities: Entities = {};
   Object.keys(entities1).forEach((key) => {
     if (updatedEntities2[key]) {
@@ -305,7 +302,7 @@ export const EntityElementIntersectsSplitRange = (
 
 export const findNoMatches = (
   matchedOutline: Entities
-): UnmatchedEntities | undefined => {
+): Entities | undefined => {
   let noMatches: UnmatchedEntities | undefined = {};
   for (const key in matchedOutline) {
     for (const entity of matchedOutline[key]) {
@@ -325,7 +322,7 @@ export const findNoMatches = (
 };
 
 export const prepareNotMatchesLLM = (
-  unmatchedEntities: UnmatchedEntities
+  unmatchedEntities: Entities
 ): NoMatchesLLM => {
   const noMatchesLLM: NoMatchesLLM = {};
   for (const key in unmatchedEntities) {
@@ -349,66 +346,6 @@ export const entityElementHasMatches = (
   return false;
 };
 
-export const textToUnmatchedEntities = (
-  unmatchedEntities: UnmatchedEntities,
-  matchedEntities: Entities,
-  text: string
-) => {
-  if (!unmatchedEntities) {
-    return;
-  }
-  for (const key in unmatchedEntities) {
-    for (const entity of unmatchedEntities[key]) {
-      const unmatchedIndex = matchedEntities[key].findIndex(
-        // index of entity in matchedEntities
-        (matchedEntity) => {
-          return matchedEntity.item === entity.item;
-        }
-      );
-
-      // define the text that should be send to the LLM for retry, find the next upper and lower entityElements that were matched
-      const textStartIndex = findStartIndexForUnmatch(
-        unmatchedIndex,
-        matchedEntities[key]
-      );
-      const textEndIndex = findEndIndexForUnmatch(
-        unmatchedIndex,
-        matchedEntities[key]
-      );
-
-      const unmatchedText = text.substring(
-        textStartIndex ? textStartIndex : 0,
-        textEndIndex ? textEndIndex : text.length
-      );
-
-      entity.text = unmatchedText;
-    }
-  }
-};
-
-export const findStartIndexForUnmatch = (
-  unmatchedIndex: number,
-  entity: EntityElement[]
-): number | undefined => {
-  for (let i = unmatchedIndex; i >= 0; i--) {
-    if (entityElementHasMatches(entity[i])) {
-      return entity[i].matches![0][1];
-    }
-  }
-  return undefined;
-};
-export const findEndIndexForUnmatch = (
-  unmatchedIndex: number,
-  entity: EntityElement[]
-): number | undefined => {
-  for (let i = unmatchedIndex; i < entity.length; i++) {
-    if (entityElementHasMatches(entity[i])) {
-      return entity[i].matches![0][1];
-    }
-  }
-  return undefined;
-};
-
 export const handleUnmatchedEntities = async (
   matchedOutline: Entities,
   text: string,
@@ -416,7 +353,6 @@ export const handleUnmatchedEntities = async (
 ) => {
   const unmatchedEntities = findNoMatches(matchedOutline);
   if (unmatchedEntities) {
-    textToUnmatchedEntities(unmatchedEntities, matchedOutline, text);
     const noMatchesLLM = prepareNotMatchesLLM(unmatchedEntities);
     const matchedEntitiesLLM = await callLLMUnmatches(
       noMatchesLLM,
@@ -432,11 +368,6 @@ export const handleUnmatchedEntities = async (
       transformedMatchedEntitiesLLM,
       matchedEntitiesLLM
     );
-    console.log(
-      "matchedEntities after LLM Call: ",
-      transformedMatchedEntitiesLLM
-    );
-    console.log("matched outline after LLM call: ", matchedOutline);
   }
 };
 
@@ -495,10 +426,6 @@ export const mergeUnmatchedIntoEntities = (
   }
 };
 
-interface MatchedEntitiesLLM {
-  [key: string]: { [key: string]: string }[]; // first key: Entity (e.g. "Condition"), second key: entityElement (e.g. "diabetes")
-}
-
 export const transformUnmatchedEntitiesLLM = (
   matchedEntitiesLLM: MatchedEntitiesLLM
 ) => {
@@ -543,7 +470,6 @@ export const callLLMUnmatches = async (
     }
     const data = await response.json();
     if (data && data.entities) {
-      console.log("data", data);
       return data.entities as MatchedEntitiesLLM;
     } else {
       throw new Error(

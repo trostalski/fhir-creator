@@ -1,10 +1,4 @@
-import {
-  Entities,
-  EntityElement,
-  NoMatchesLLM,
-  StructurerWorkBenchLabelerProps,
-  UnmatchedEntities,
-} from "@/types";
+import { Entities, StructurerWorkBenchLabelerProps } from "@/types";
 import CategorySelector from "./CategorySelector";
 import { useState } from "react";
 import { resourceOptions } from "@/utils/constants";
@@ -15,13 +9,7 @@ import { useStore } from "@/stores/useStore";
 import { PuffLoader } from "react-spinners";
 import { addMatches, transformOutline } from "@/utils/annotator_utils";
 import { toast } from "react-toastify";
-import {
-  findNoMatches,
-  handleUnmatchedEntities,
-  prepareNotMatchesLLM,
-  textToUnmatchedEntities,
-} from "@/utils/structurerUtils";
-import { toastError } from "@/toasts";
+import { handleUnmatchedEntities } from "@/utils/structurerUtils";
 
 const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
   const {

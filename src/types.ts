@@ -350,14 +350,6 @@ export interface EntityElement {
   matches?: [number, number][];
 }
 
-export interface UnmatchedEntityElement extends EntityElement {
-  text?: string;
-}
-
-export interface UnmatchedEntities {
-  [key: string]: UnmatchedEntityElement[];
-}
-
 export interface NoMatchesLLM {
   [key: string]: {
     [key: string]: string;
@@ -370,6 +362,10 @@ export interface Entities {
 
 export interface StructurerOutlineDownloadButtonProps {
   outlinePart: SectionInfo[] | SectionInfo | Entities;
+}
+
+export interface MatchedEntitiesLLM {
+  [key: string]: { [key: string]: string }[]; // first key: Entity (e.g. "Condition"), second key: entityElement (e.g. "diabetes")
 }
 
 export interface OldOutline {

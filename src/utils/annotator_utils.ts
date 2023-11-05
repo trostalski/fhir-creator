@@ -1,3 +1,4 @@
+import { toastError } from "@/toasts";
 import {
   Color,
   ColorStore,
@@ -39,11 +40,17 @@ const caseInsensitiveFindIter = (
 export const addMatches = (outline: Entities, text: string): void => {
   for (const key in outline) {
     for (const item of outline[key]) {
-      const matches = Array.from(caseInsensitiveFindIter(item.item, text));
-      item.matches = matches.map((match) => [
-        match.index!,
-        match.index! + match[0].length,
-      ]);
+      try {
+        const matches = Array.from(caseInsensitiveFindIter(item.item, text));
+        item.matches = matches.map((match) => [
+          match.index!,
+          match.index! + match[0].length,
+        ]);
+      } catch (error) {
+        toastError(
+          `An error occurred during the processing of ${item}. Error: ${error.message}`
+        );
+      }
     }
   }
 };
