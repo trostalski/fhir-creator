@@ -1,4 +1,10 @@
-import { Entities, StructurerWorkBenchLabelerProps } from "@/types";
+import {
+  Entities,
+  EntityElement,
+  NoMatchesLLM,
+  StructurerWorkBenchLabelerProps,
+  UnmatchedEntities,
+} from "@/types";
 import CategorySelector from "./CategorySelector";
 import { useState } from "react";
 import { resourceOptions } from "@/utils/constants";
@@ -9,7 +15,13 @@ import { useStore } from "@/stores/useStore";
 import { PuffLoader } from "react-spinners";
 import { addMatches, transformOutline } from "@/utils/annotator_utils";
 import { toast } from "react-toastify";
-import TextSplitter from "./TextSplitter";
+import {
+  findNoMatches,
+  handleUnmatchedEntities,
+  prepareNotMatchesLLM,
+  textToUnmatchedEntities,
+} from "@/utils/structurerUtils";
+import { toastError } from "@/toasts";
 
 const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
   const {
@@ -79,6 +91,11 @@ const StructurerWorkBenchLabeler = (props: StructurerWorkBenchLabelerProps) => {
       if (data && data.outline) {
         let matchedOutline = transformOutline(data.outline);
         addMatches(matchedOutline, focusedSection.text);
+        await handleUnmatchedEntities(
+          matchedOutline,
+          focusedSection.text,
+          activeAPIKey
+        );
         setOutlineFromLabeler(matchedOutline);
       }
     } catch (error) {

@@ -3,6 +3,8 @@ import { ProfileTreeNode } from "./utils/buildTree";
 import { resourceTypeList } from "./utils/constants";
 import React, { RefObject } from "react";
 import seedrandom from "seedrandom";
+import EntityElement from "./components/annotator/EntityElement";
+import { extend } from "lodash";
 
 export interface PathItem {
   path: string;
@@ -346,6 +348,20 @@ export interface ValueState {
 export interface EntityElement {
   item: string;
   matches?: [number, number][];
+}
+
+export interface UnmatchedEntityElement extends EntityElement {
+  text?: string;
+}
+
+export interface UnmatchedEntities {
+  [key: string]: UnmatchedEntityElement[];
+}
+
+export interface NoMatchesLLM {
+  [key: string]: {
+    [key: string]: string;
+  }[];
 }
 
 export interface Entities {
